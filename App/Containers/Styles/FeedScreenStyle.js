@@ -6,14 +6,14 @@ import {
  } from 'react-native'
 import { Metrics, ApplicationStyles } from '../../Themes/'
 
-const windowSize = Dimensions.get('window');
+const windowSize = Dimensions.get('window')
 
 export default StyleSheet.create({
   ...ApplicationStyles.screen,
   image: {
-      height:100,
-      width: 100,
-      borderRadius: 50
+    height: 100,
+    width: 100,
+    borderRadius: 50
   },
   badge: {
     backgroundColor: 'red',
@@ -21,7 +21,7 @@ export default StyleSheet.create({
     width: 20,
     height: 20,
     left: 80,
-    top: 0,
+    top: 0
   },
   logo: {
     height: Metrics.images.logo,

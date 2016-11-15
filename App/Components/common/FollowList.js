@@ -3,7 +3,7 @@ import { ScrollView } from 'react-native'
 import axios from 'axios'
 import CommentDetail from './CommentDetail'
 
-class CommentList extends Component {
+class FollowList extends Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -16,7 +16,7 @@ class CommentList extends Component {
       .then(response => this.setState({ albums: response.data }))
   }
 
-  renderAlbums () {
+  renderFollows () {
     return this.state.albums.map(album =>
       <CommentDetail key={album.title} album={album} />)
   }
@@ -24,11 +24,10 @@ class CommentList extends Component {
   render () {
     return (
       <ScrollView>
-        {this.renderAlbums()}
+        {this.renderFollows()}
       </ScrollView>
     )
   }
-
 }
 
-export default CommentList
+export default FollowList

@@ -3,17 +3,16 @@
 
 import React, { Component } from 'react'
 import { View } from 'react-native'
-import FeedList from '../Components/common/FeedList'
+import UserFeedList from '../Components/common/UserFeedList'
 
 // Styles
 import styles from './Styles/FeedScreenStyle'
 
-export default class FeedScreen extends Component {
-
+export default class UserProfileScreen extends Component {
   render () {
     return (
       <View style={styles.mainContainer}>
-        <FeedList />
+        <UserFeedList />
       </View>
     )
   }

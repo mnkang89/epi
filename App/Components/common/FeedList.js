@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { ScrollView } from 'react-native'
 import axios from 'axios'
-import CommentDetail from './CommentDetail'
+import FeedDetail from './FeedDetail'
 
-class CommentList extends Component {
+class FeedList extends Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -18,7 +18,7 @@ class CommentList extends Component {
 
   renderAlbums () {
     return this.state.albums.map(album =>
-      <CommentDetail key={album.title} album={album} />)
+      <FeedDetail key={album.title} album={album} />)
   }
 
   render () {
@@ -31,4 +31,4 @@ class CommentList extends Component {
 
 }
 
-export default CommentList
+export default FeedList

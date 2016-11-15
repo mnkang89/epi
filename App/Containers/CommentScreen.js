@@ -1,93 +1,75 @@
 // @flow
 // EPISODE
 
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import {
-  ScrollView,
   Text,
-  Image,
   View,
-  AppRegistry,
   TextInput,
   TouchableHighlight,
-  Keyboard,
-  Dimensions,
-  LayoutAnimation,
-} from 'react-native';
-import { Actions as NavigationActions } from 'react-native-router-flux';
-import CommentList from '../Components/common/CommentList';
-import { Card, CardSection, Input, Button, Spinner } from '../Components/common';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+  Dimensions
+} from 'react-native'
+import KeyboardSpacer from 'react-native-keyboard-spacer'
+import CommentList from '../Components/common/CommentList'
 
 // Styles
 import styles from './Styles/FeedScreenStyle'
 
-const windowSize = Dimensions.get('window');
-const myprops={ offset:34 }
-
+const windowSize = Dimensions.get('window')
 
 class CommentScreen extends Component {
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
     this.state = {
-      visibleHeight: 0
-    };
+      text: '',
+      height: 25,
+      inputBottom: 40
+    }
   }
 
-  componentWillMount () {
-    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow.bind(this))
-    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.keyboardDidHide.bind(this))
-  }
-
-  componentWillUnmount () {
-    this.keyboardDidShowListener.remove()
-    this.keyboardDidHideListener.remove()
-  }
-
-  keyboardDidShow (e) {
-    const newSize = e.endCoordinates.height
+  onTextChange (event) {
+    const { contentSize, text } = event.nativeEvent
     this.setState({
-      visibleHeight: newSize
-    })
-  }
-
-  keyboardDidHide (e) {
-    this.setState({
-      visibleHeight: 0
+      text: text,
+      height: contentSize.height > 80 ? 80 : contentSize.height
     })
   }
 
   render () {
     return (
-        <View style={styles.mainContainer}>
-
-          <View style={{flex:8, backgroundColor: 'black'}}>
-            <CommentList />
-          </View>
-
-          <KeyboardAwareScrollView>
-            <View style={{flexDirection:'row'}}>
-              <View style={styles2.textContainer}>
-                <TextInput
-                  placeholder="댓글 쓰기.."
-                  style={styles2.input}/>
-              </View>
-              <View style={styles2.sendContainer}>
-                <TouchableHighlight>
-                  <Text style={styles2.sendButton}>게시</Text>
-                </TouchableHighlight>
-              </View>
-            </View>
-          </KeyboardAwareScrollView>
-
-          <View style={{height:40}}></View>
+      <View style={styles.mainContainer}>
+        <View style={{backgroundColor: 'black', flex: 1}}>
+          <CommentList />
         </View>
 
+        <View style={{flexDirection: 'row'}}>
+          <View style={styles2.textContainer}>
+            <TextInput
+              placeholder='댓글 쓰기..'
+              style={[styles2.input, {paddingTop: 5, marginBottom: 10, height: this.state.height}]}
+              multiline
+              onFocus={() => { this.setState({inputBottom: 0}) }}
+              onBlur={() => { this.setState({inputBottom: 40}) }}
+              onChange={this.onTextChange.bind(this)}
+              value={this.state.text} />
+          </View>
+          <View style={styles2.sendContainer}>
+            <TouchableHighlight>
+              <Text style={styles2.sendButton}>게시</Text>
+            </TouchableHighlight>
+          </View>
+        </View>
+        <View style={{
+          backgroundColor: 'black',
+          height: this.state.inputBottom
+        }} />
+        <KeyboardSpacer style={{backgroundColor: 'black'}} />
+      </View>
     )
   }
 }
 
-styles2 = {
+const styles2 = {
   textContainer: {
     paddingLeft: 10,
     justifyContent: 'center'
@@ -112,4 +94,4 @@ styles2 = {
     backgroundColor: '#ffffff'
   }
 }
-export default CommentScreen;
+export default CommentScreen
