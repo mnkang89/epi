@@ -1,8 +1,11 @@
 import React, { Component } from 'react'
-import { ScrollView, View, Image, TouchableOpacity, Text } from 'react-native'
-import { Actions as NavigationActions } from 'react-native-router-flux'
+import { Modal, ScrollView, View, Image, TouchableOpacity, Text } from 'react-native'
+
+import Icon from 'react-native-vector-icons/FontAwesome'
 import axios from 'axios'
 import FeedDetail from './FeedDetail'
+import FollowerList from './FollowerList'
+import FollowingList from './FollowList'
 import styles from '../../Containers/Styles/FeedScreenStyle'
 import { Colors } from '../../Themes'
 
@@ -11,7 +14,9 @@ class UserFeedList extends Component {
     super(props)
     this.state = {
       albums: [],
-      follow: 'gray'
+      follow: 'gray',
+      modalVisible: false,
+      followState: ''
     }
   }
 
@@ -23,6 +28,40 @@ class UserFeedList extends Component {
   renderFeeds () {
     return this.state.albums.map(album =>
       <FeedDetail key={album.title} album={album} />)
+  }
+
+  setModalVisible () {
+    this.setState({
+      modalVisible: false
+    })
+  }
+
+  followerPress () {
+    this.setState({
+      modalVisible: true,
+      followState: '팔로워'
+    })
+  }
+
+  followingPress () {
+    this.setState({
+      modalVisible: true,
+      followState: '팔로잉'
+    })
+  }
+
+  renderFollowComponent () {
+    if (this.state.followState === '팔로워') {
+      console.log('팔로워')
+      return (
+        <FollowerList />
+      )
+    } else {
+      console.log('팔로잉')
+      return (
+        <FollowingList />
+      )
+    }
   }
 
   render () {
@@ -38,11 +77,11 @@ class UserFeedList extends Component {
           <View style={{flex: 1, alignItems: 'center'}}>
             <Text style={{color: Colors.snow}}>신촌초보</Text>
             <View style={{flexDirection: 'row'}}>
-              <TouchableOpacity onPress={() => NavigationActions.followerScreen({type: 'reset'})}>
+              <TouchableOpacity onPress={() => this.followerPress()}>
                 <Text style={{color: Colors.snow}}>팔로워 10 </Text>
               </TouchableOpacity>
               <Text style={{color: Colors.snow}}> | </Text>
-              <TouchableOpacity onPress={() => NavigationActions.followScreen({type: 'reset'})}>
+              <TouchableOpacity onPress={() => this.followingPress()}>
                 <Text style={{color: Colors.snow}}>팔로잉 25 </Text>
               </TouchableOpacity>
             </View>
@@ -69,10 +108,64 @@ class UserFeedList extends Component {
           </View>
         </View>
         {this.renderFeeds()}
+        <Modal
+          animationType={'slide'}
+          transparent
+          visible={this.state.modalVisible}>
+          <View style={styles2.containerStyle}>
+            <View style={{backgroundColor: 'white', flex: 1, marginTop: 151, borderTopLeftRadius: 8, borderTopRightRadius: 8}}>
+              <View style={{flexDirection: 'row', height: 42.5, marginRight: 4.5, marginLeft: 4.5, borderBottomWidth: 0.5, borderBottomColor: 'rgb(204, 204, 204)'}}>
+                <TouchableOpacity
+                  onPress={() => {
+                    console.log(this.state.modalVisible)
+                    this.setModalVisible()
+                    console.log(this.state.modalVisible)
+                  }}
+                  style={{paddingTop: 10, paddingLeft: 16}}>
+                  <Icon
+                    name='chevron-down'
+                    size={16}
+                    style={{width: 16, height: 16, alignSelf: 'center', fontWeight: '300'}}
+                  />
+                </TouchableOpacity>
+                <Text style={{left: 140, marginTop: 10, fontSize: 17, fontWeight: 'bold'}}>{this.state.followState}</Text>
+              </View>
+              {this.renderFollowComponent()}
+            </View>
+          </View>
+        </Modal>
       </ScrollView>
     )
   }
 
+}
+
+const styles2 = {
+  containerStyle: {
+    backgroundColor: 'rgba(0, 0, 0, 0.70)',
+    position: 'relative',
+    flex: 1,
+    justifyContent: 'center'
+  },
+  textContainer: {
+    marginLeft: 6,
+    marginRight: 6,
+    marginTop: 5,
+    marginBottom: 5,
+    justifyContent: 'center'
+  },
+  sendContainer: {
+    marginTop: 5,
+    marginBottom: 5,
+    width: 43,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'black'
+  },
+  sendButton: {
+    fontSize: 13,
+    color: 'white'
+  }
 }
 
 export default UserFeedList

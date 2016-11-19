@@ -9,7 +9,7 @@ import {
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import Swiper from 'react-native-swiper'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import { Colors } from '../../Themes'
+import { Colors, Metrics } from '../../Themes/'
 
 import * as Animatable from 'react-native-animatable'
 
@@ -41,8 +41,9 @@ class FeedDetailClass extends Component {
     })
   }
 
-  onLongPress () {
-    NavigationActions.commentScreen({type: 'reset'})
+  onLongPress (visible) {
+    // NavigationActions.commentScreen({type: 'reset'})
+    // this.setState({modalVisible: visible})
   }
 
   renderAnimation () {
@@ -86,74 +87,68 @@ class FeedDetailClass extends Component {
     const { image } = this.props.album
     const {
             headerContentStyle,
-            headerTextStyle,
             imageStyle,
-            textStyle,
-            textContainerStyle
+            textStyle
           } = styles
 
     return (
-      <Swiper height={488} showsButtons showsPagination={false} >
-        <View>
-          <TouchableWithoutFeedback
-            delayLongPress={800}
-            onPress={this.onDoublePress.bind(this)}
-            onLongPress={this.onLongPress.bind(this)}>
-            <Image style={imageStyle} source={{ uri: image }}>
-              <View>
-                <View style={headerContentStyle}>
-                  <View style={{paddingTop: 10, paddingLeft: 10, paddingRight: 10}}>
-                    <Text style={headerTextStyle}>#독수리다방</Text>
-                    <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingTop: 0}}>
-                      <View style={{flexDirection: 'row'}}>
-                        <TouchableOpacity onPress={() => NavigationActions.userProfileScreen({type: 'reset'})}>
-                          <Image
-                            style={styles.profileStyle}
-                            source={{uri: 'https://facebook.github.io/react/img/logo_og.png'}}
-                          />
-                        </TouchableOpacity>
-                        <Text style={{color: Colors.snow, fontWeight: 'bold', paddingTop: 20, paddingLeft: 5}}>신촌초보</Text>
-                      </View>
-                      <View style={{paddingTop: 20}}>
-                        <Text style={{color: Colors.snow, fontSize: 10, justifyContent: 'flex-end'}}>재생 33,345</Text>
-                        <Text style={{color: Colors.snow, fontSize: 10, justifyContent: 'flex-end'}}>업데이트 1분 전</Text>
-                      </View>
-                    </View>
-                  </View>
-                </View>
-                {this.renderAnimation()}
+      <View>
+        <View style={headerContentStyle}>
+          <View style={{marginTop: 10, marginLeft: 15, marginRight: 15, marginBottom: 10}}>
+            <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+              <TouchableOpacity onPress={() => NavigationActions.userProfileScreen()}>
+                <Image
+                  style={styles.profileStyle}
+                  source={{uri: 'https://facebook.github.io/react/img/logo_og.png'}}
+                />
+              </TouchableOpacity>
+              <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+                <Text style={{color: Colors.snow, fontWeight: 'bold', paddingLeft: 5}}>신촌초보</Text>
+                <Text style={{color: Colors.snow, fontSize: 13, paddingLeft: 130, justifyContent: 'flex-end'}}>최근 업데이트 : 1분 전</Text>
               </View>
-            </Image>
-          </TouchableWithoutFeedback>
-          <View style={[textStyle, {paddingTop: 10, paddingLeft: 10}]}>
-            <Text style={textContainerStyle}>오늘날씨 인정</Text>
+            </View>
           </View>
         </View>
 
-        <View>
-          <Image style={imageStyle} source={{ uri: image }} />
-          <View style={textStyle}>
-            <Text style={textContainerStyle}>댓글</Text>
+        <Swiper height={345} showsPagination={false} >
+          <View style={{backgroundColor: 'black', paddingLeft: 15, paddingRight: 15}}>
+            <TouchableWithoutFeedback
+              delayLongPress={800}
+              onPress={this.onDoublePress.bind(this)}
+              onLongPress={() => {
+                // this.onLongPress(!this.state.modalVisible)
+                // console.log(this.state.modalVisible)
+              }}
+              >
+              <Image style={imageStyle} source={{ uri: image }}>
+                <View style={{height: 295, paddingTop: 80}}>
+                  {this.renderAnimation()}
+                </View>
+                <View style={{alignItems: 'center', backgroundColor: 'rgba(0,0,0,0)'}}>
+                  <Text style={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>코멘트를남길수있음니다웬만하면짧게남겨</Text>
+                  <Text style={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>최대 두 줄까지로 합시다 한줄 넘짧</Text>
+                </View>
+              </Image>
+            </TouchableWithoutFeedback>
+          </View>
+          {this.renderAlarm()}
+        </Swiper>
+
+        <View style={[textStyle, {backgroundColor: 'black', paddingTop: 15, marginLeft: 15, marginRight: 15}]}>
+          <View style={{flexDirection: 'row'}}>
+            <Text style={{fontSize: 13, paddingLeft: 145, color: 'white'}}>알림설정 99</Text>
+            <Text style={{fontSize: 13, paddingLeft: 10, color: 'white'}}>공감 9,999</Text>
+            <Text style={{fontSize: 13, paddingLeft: 10, color: 'white'}}>댓글 123</Text>
           </View>
         </View>
-
-        <View>
-          <Image style={imageStyle} source={{ uri: image }} />
-          <View style={textStyle}>
-            <Text style={textContainerStyle}>댓글</Text>
-          </View>
-        </View>
-
-        {this.renderAlarm()}
-      </Swiper>
+      </View>
     )
   }
 };
 
 const styles = {
   headerContentStyle: {
-    backgroundColor: 'rgba(0,0,0,.6)',
-    height: 118
+    backgroundColor: 'black'
   },
   headerTextStyle: {
     color: Colors.snow,
@@ -171,19 +166,20 @@ const styles = {
     marginRight: 10
   },
   imageStyle: {
-    height: 375,
-    flex: 1,
-    width: null
+    height: 345,
+    width: 345
   },
   profileStyle: {
-    height: 50,
-    width: 50,
-    borderRadius: 30
+    width: Metrics.icons.large,
+    height: Metrics.icons.large,
+    borderRadius: Metrics.icons.large / 2
   },
   textStyle: {
     backgroundColor: '#000000',
     flex: 1,
-    height: 113
+    height: 43,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgb(45, 45, 45)'
   },
   textContainerStyle: {
     color: Colors.snow,

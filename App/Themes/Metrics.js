@@ -21,7 +21,7 @@ const metrics = {
     tiny: 15,
     small: 20,
     medium: 30,
-    large: 45,
+    large: 36,
     xl: 60
   },
   images: {

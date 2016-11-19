@@ -33,6 +33,7 @@
 		EE0450F61DD1649500138F4A /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EE0450EE1DD1649500138F4A /* MaterialIcons.ttf */; };
 		EE0450F71DD1649500138F4A /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EE0450EF1DD1649500138F4A /* Octicons.ttf */; };
 		EE0450F81DD1649500138F4A /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EE0450F01DD1649500138F4A /* Zocial.ttf */; };
+		EE597A411DDDE8D000BA72E1 /* libAutoGrowTextInput.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EE597A2D1DDDE8B500BA72E1 /* libAutoGrowTextInput.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -169,6 +170,13 @@
 			remoteGlobalIDString = DA5891D81BA9A9FC002B4DB2;
 			remoteInfo = RNDeviceInfo;
 		};
+		EE597A2C1DDDE8B500BA72E1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EE597A281DDDE8B500BA72E1 /* AutoGrowTextInput.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D81C36501CDB667F00777FB9;
+			remoteInfo = AutoGrowTextInput;
+		};
 		EE7DC3F11DD6FB030085F7B1 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 6437EEE5AA7443CFA1E999D2 /* RCTCamera.xcodeproj */;
@@ -212,6 +220,7 @@
 		EE0450EE1DD1649500138F4A /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialIcons.ttf; sourceTree = "<group>"; };
 		EE0450EF1DD1649500138F4A /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Octicons.ttf; sourceTree = "<group>"; };
 		EE0450F01DD1649500138F4A /* Zocial.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Zocial.ttf; sourceTree = "<group>"; };
+		EE597A281DDDE8B500BA72E1 /* AutoGrowTextInput.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AutoGrowTextInput.xcodeproj; path = "../node_modules/react-native-autogrow-textinput/ios/AutoGrowTextInput.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -227,6 +236,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EE597A411DDDE8D000BA72E1 /* libAutoGrowTextInput.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
 				00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */,
 				00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */,
@@ -357,6 +367,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				EE597A281DDDE8B500BA72E1 /* AutoGrowTextInput.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
 				00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */,
 				00C302B51ABCB90400DB3ED1 /* RCTGeolocation.xcodeproj */,
@@ -426,6 +437,14 @@
 			);
 			name = Fonts;
 			path = ../../../Desktop/Fonts;
+			sourceTree = "<group>";
+		};
+		EE597A291DDDE8B500BA72E1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				EE597A2D1DDDE8B500BA72E1 /* libAutoGrowTextInput.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		EE7DC3ED1DD6FB030085F7B1 /* Products */ = {
@@ -505,6 +524,10 @@
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
 			projectReferences = (
+				{
+					ProductGroup = EE597A291DDDE8B500BA72E1 /* Products */;
+					ProjectRef = EE597A281DDDE8B500BA72E1 /* AutoGrowTextInput.xcodeproj */;
+				},
 				{
 					ProductGroup = 00C302A81ABCB8CE00DB3ED1 /* Products */;
 					ProjectRef = 00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */;
@@ -687,6 +710,13 @@
 			fileType = archive.ar;
 			path = libRNDeviceInfo.a;
 			remoteRef = EE0450E61DD1647A00138F4A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		EE597A2D1DDDE8B500BA72E1 /* libAutoGrowTextInput.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libAutoGrowTextInput.a;
+			remoteRef = EE597A2C1DDDE8B500BA72E1 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		EE7DC3F21DD6FB030085F7B1 /* libRCTCamera.a */ = {

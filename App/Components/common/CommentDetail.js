@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Text, View, Image } from 'react-native'
-import { Colors } from '../../Themes'
+import { Colors, Metrics } from '../../Themes/'
 
 class CommentDetail extends Component {
   constructor (props) {
@@ -19,19 +19,21 @@ class CommentDetail extends Component {
           } = styles
 
     return (
-      <View>
+      <View style={{marginLeft: 14.25, marginRight: 14.25}}>
         <View style={headerContentStyle}>
-          <Image
-            style={styles.imageStyle}
-            source={{uri: 'https://facebook.github.io/react/img/logo_og.png'}}
-          />
-          <View>
+          <View style={{alignItems: 'center', justifyContent: 'center'}}>
+            <Image
+              style={styles.imageStyle}
+              source={{uri: 'https://facebook.github.io/react/img/logo_og.png'}}
+            />
+          </View>
+          <View style={{marginLeft: 5, marginRight: 100}}>
             <View style={{flex: 1, flexDirection: 'row'}}>
               <Text style={userTextStyle}>{artist}</Text>
-              <Text style={dateTextStyle}>2016-11-12</Text>
             </View>
-            <View style={{flex: 2, marginTop: 10, marginBottom: 10}}>
-              <Text style={{color: Colors.snow, fontSize: 12}}>Welcome. Not sure where to begin? Click here to view our Student Orientatint and Departmental</Text>
+            <View style={{flex: 2, marginTop: 3, marginBottom: 10}}>
+              <Text style={{color: 'rgb(53, 53, 53)', fontSize: 15, lineHeight: 16}}>가나다라바바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차</Text>
+              <Text style={dateTextStyle}>2016-11-12 11:00:00</Text>
             </View>
           </View>
         </View>
@@ -43,21 +45,21 @@ class CommentDetail extends Component {
 const styles = {
   headerContentStyle: {
     flexDirection: 'row',
-    backgroundColor: 'black',
-    borderBottomWidth: 1,
-    borderColor: '#ddd'
+    backgroundColor: 'white',
+    borderBottomWidth: 0.5,
+    borderColor: 'rgb(231, 231, 231)'
   },
   userTextStyle: {
     paddingTop: 10,
-    color: Colors.snow,
-    fontSize: 10,
+    color: 'rgb(53, 53, 53)',
+    fontSize: 12.5,
+    fontWeight: 'bold',
     justifyContent: 'flex-start'
   },
   dateTextStyle: {
-    color: Colors.snow,
-    fontSize: 10,
-    paddingTop: 10,
-    left: 200
+    color: 'rgb(145, 145, 145)',
+    fontSize: 9,
+    paddingTop: 4
   },
   thumbnailStyle: {
     height: 50,
@@ -70,9 +72,9 @@ const styles = {
     marginRight: 10
   },
   imageStyle: {
-    height: 50,
-    width: 50,
-    borderRadius: 50
+    width: Metrics.icons.large,
+    height: Metrics.icons.large,
+    borderRadius: Metrics.icons.large / 2
   },
   textStyle: {
     backgroundColor: '#000000',

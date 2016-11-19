@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { ScrollView } from 'react-native'
 import axios from 'axios'
-import CommentDetail from './CommentDetail'
+import FollowDetail from './FollowDetail'
 
 class FollowList extends Component {
   constructor (props) {
@@ -18,7 +18,7 @@ class FollowList extends Component {
 
   renderFollows () {
     return this.state.albums.map(album =>
-      <CommentDetail key={album.title} album={album} />)
+      <FollowDetail key={album.title} album={album} />)
   }
 
   render () {

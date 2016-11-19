@@ -12,8 +12,9 @@ import CommentScreen from '../Containers/CommentScreen'
 import UserProfileScreen from '../Containers/UserProfileScreen'
 import FollowScreen from '../Containers/FollowScreen'
 import FollowerScreen from '../Containers/FollowerScreen'
-
+import AlertScreen from '../Containers/AlertScreen'
 import CameraScreen from '../Containers/CameraScreen'
+import ExploreScreen from '../Containers/ExploreScreen'
 import ProfileScreen from '../Containers/ProfileScreen'
 
 /* **************************
@@ -23,7 +24,7 @@ import ProfileScreen from '../Containers/ProfileScreen'
 class NavigationRouter extends Component {
   render () {
     return (
-      <Router>
+      <Router sceneStyle={{ backgroundColor: 'black' }}>
         <Scene
           key='root'
           navigationBarStyle={Styles.navBar}
@@ -37,13 +38,12 @@ class NavigationRouter extends Component {
             tabBarStyle={{backgroundColor: '#000000', justifyContent: 'center', alignItems: 'center', alignSelf: 'center', height: 40}}>
             <Scene
               key='homeTab'
-              initial
               icon={TabIcon}
               selectedTabIcon='home'
               tabIcon='home'
               leftButtonIconStyle={Styles.leftButton}
               navigationBarStyle={Styles.navBar}
-              titleStyle={{color: 'white', fontSize: 17}}>
+              titleStyle={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>
               <Scene
                 initial
                 key='feedScreen'
@@ -57,8 +57,7 @@ class NavigationRouter extends Component {
               <Scene
                 key='userProfileScreen'
                 component={UserProfileScreen}
-                title='댓글'
-                renderLeftButton={NavItems.chevronButton} />
+                title='프로필' />
               <Scene
                 key='followScreen'
                 component={FollowScreen}
@@ -76,11 +75,11 @@ class NavigationRouter extends Component {
               selectedTabIcon='bell-o'
               tabIcon='bell'
               navigationBarStyle={Styles.navBar}
-              titleStyle={{color: 'white', fontSize: 17}}>
+              titleStyle={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>
               <Scene
-                key='profileScreen'
-                component={ProfileScreen}
-                title='episode' />
+                key='alertScreen'
+                component={AlertScreen}
+                title='내소식' />
             </Scene>
             <Scene
               key='cameraTab'
@@ -99,14 +98,15 @@ class NavigationRouter extends Component {
             <Scene
               key='searchTab'
               icon={TabIcon}
+              initial
               selectedTabIcon='search'
               tabIcon='search'
               navigationBarStyle={Styles.navBar}
-              titleStyle={{color: 'white', fontSize: 17}}>
+              titleStyle={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>
               <Scene
-                key='profileScreen'
-                component={ProfileScreen}
-                title='episode' />
+                key='exploreScreen'
+                component={ExploreScreen}
+                title='우연한 발견' />
             </Scene>
             <Scene
               key='profileTab'

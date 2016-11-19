@@ -24,7 +24,7 @@ const store = createStore()
 class App extends Component {
   render () {
     return (
-      <Provider store={store}>
+      <Provider store={store} >
         <RootContainer />
       </Provider>
     )
