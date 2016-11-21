@@ -6,17 +6,16 @@ import { ApplicationStyles } from '../../Themes/'
 export default StyleSheet.create({
   ...ApplicationStyles.screen,
   container: {
-    flex: 1
+    flex: 1,
+    backgroundColor: 'white'
   },
   preview: {
-    flex: 4,
+    height: 375,
     justifyContent: 'flex-end',
     alignItems: 'center'
   },
   capture: {
-    flex: 2,
-    alignItems: 'center',
-    justifyContent: 'center'
+    flex: 1
   },
   captureButton: {
     backgroundColor: '#d3d3d3',

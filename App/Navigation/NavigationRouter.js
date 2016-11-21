@@ -83,6 +83,7 @@ class NavigationRouter extends Component {
             </Scene>
             <Scene
               key='cameraTab'
+              initial
               icon={TabIcon}
               selectedTabIcon='camera'
               tabIcon='camera'
@@ -98,7 +99,6 @@ class NavigationRouter extends Component {
             <Scene
               key='searchTab'
               icon={TabIcon}
-              initial
               selectedTabIcon='search'
               tabIcon='search'
               navigationBarStyle={Styles.navBar}
@@ -114,11 +114,11 @@ class NavigationRouter extends Component {
               selectedTabIcon='user'
               tabIcon='user'
               navigationBarStyle={Styles.navBar}
-              titleStyle={{color: 'white', fontSize: 17}}>
+              titleStyle={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>
               <Scene
                 key='profileScreen'
                 component={ProfileScreen}
-                title='episode' />
+                title='내 프로필' />
             </Scene>
           </Scene>
         </Scene>

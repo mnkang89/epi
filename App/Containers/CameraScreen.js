@@ -2,21 +2,40 @@
 import React, { Component } from 'react'
 import {
   View,
-  TouchableOpacity
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  Image,
+  TextInput,
+  Dimensions,
+  Text
 } from 'react-native'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import Camera from 'react-native-camera'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import ProgressBar from '../Components/common/Progress-Bar'
+
+import { Images } from '../Themes'
+// import KeyboardSpacer from 'react-native-keyboard-spacer'
 
 // Styles
 import styles from './Styles/CameraScreenStyle'
+
+const windowSize = Dimensions.get('window')
 
 export default class CameraScreen extends Component {
   constructor (props) {
     super(props)
     this.state = {
+      captureMode: Camera.constants.CaptureMode.still,
       cameraState: false,
-      cameraType: Camera.constants.Type.back
+      cameraType: Camera.constants.Type.back,
+      photo: '',
+      focus: false,
+      texting: false,
+      timer: false,
+      LeftTime: 15,
+      interval: null,
+      progress: 0
     }
   }
 
@@ -25,7 +44,52 @@ export default class CameraScreen extends Component {
       .then((data) => {
         console.log('hihi')
         console.log(data)
-        this.setState({cameraState: true})
+        this.setState({
+          photo: data.path
+        })
+        setTimeout(() => {
+          this.setState({
+            cameraState: true
+          })
+        }, 500)
+      })
+      .catch(err => console.error(err))
+  }
+
+  takeVideo () {
+    this.setState({
+      captureMode: Camera.constants.CaptureMode.video,
+      timer: true
+    })
+    this.state.interval = setInterval(() => {
+      if (this.state.LeftTime === 0) {
+        clearInterval(this.state.interval)
+        this.camera.stopCapture()
+        this.setState({
+          LeftTime: 15,
+          cameraState: true
+        })
+      } else {
+        this.setState({
+          LeftTime: this.state.LeftTime - 1,
+          progress: this.state.progress + 0.07
+        })
+      }
+    }, 1000)
+
+    this.camera.capture()
+      .then((data) => {
+        console.log('hihi')
+        console.log(data)
+        this.setState({
+          photo: data.path
+        })
+        setTimeout(() => {
+          this.setState({
+            LeftTime: 15,
+            cameraState: true
+          })
+        }, 500)
       })
       .catch(err => console.error(err))
   }
@@ -56,64 +120,131 @@ export default class CameraScreen extends Component {
     NavigationActions.homeTab()
   }
 
+  texting () {
+    this.setState({
+      focus: true,
+      texting: true
+    })
+  }
+
+  handleLongPressOut () {
+    if (this.state.timer) {
+      clearInterval(this.state.interval)
+      this.camera.stopCapture()
+      this.setState({
+        LeftTime: 15,
+        cameraState: true
+      })
+    }
+  }
+
   renderButtons () {
     if (this.state.cameraState) {
       return (
-        <View style={[styles.capture, { flexDirection: 'row' }]}>
-          <TouchableOpacity onPress={() => { this.setState({cameraState: false}) }}>
-            <Icon
-              name='times-circle'
-              size={25}
-              style={{right: 45, width: 25, height: 25, alignSelf: 'center', fontWeight: '300'}}
-            />
-          </TouchableOpacity>
+        <View style={styles.capture}>
+          <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+            <View style={{height: 103.5}} />
+            <View style={{flex: 1, flexDirection: 'row'}}>
+              <TouchableOpacity style={{marginTop: 27.5, marginRight: 57.5}} onPress={() => { this.setState({cameraState: false}) }}>
+                <Image style={{width: 30, height: 30}} source={Images.backChevron} />
+              </TouchableOpacity>
 
-          <TouchableOpacity onPress={this.uploadPicture.bind(this)}>
-            <View style={styles.captureButton}>
-              <Icon
-                name='long-arrow-up'
-                size={22}
-                style={{top: 24, left: 7, width: 22, height: 22, alignSelf: 'center', fontWeight: '300'}}
-              />
+              <TouchableOpacity onPress={this.uploadPicture.bind(this)}>
+                <Image style={{width: 85, height: 85}} source={Images.aftercaptureButton} />
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={this.texting.bind(this)} style={{marginTop: 27.5, marginLeft: 57}}>
+                <Image style={{width: 31, height: 31}} source={Images.write} />
+              </TouchableOpacity>
             </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity>
-            <Icon
-              name='pencil-square-o'
-              size={25}
-              style={{left: 45, width: 25, height: 25, alignSelf: 'center', fontWeight: '300'}}
-            />
-          </TouchableOpacity>
+          </View>
         </View>
       )
     } else {
       return (
         <View style={styles.capture}>
-          <TouchableOpacity style={{flex: 1}} onPress={this.switchCamera.bind(this)}>
-            <Icon
-              name='repeat'
-              size={20}
-              style={{top: 20, left: 160, width: 22, height: 22, alignSelf: 'center', fontWeight: '300'}}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity style={{flex: 2, justifyContent: 'center'}} onPress={this.takePicture.bind(this)}>
-            <View style={styles.captureButton} />
-          </TouchableOpacity>
-          <View style={{
-            flex: 1,
-            alignItems: 'center',
-            top: 20}}>
-            <TouchableOpacity onPress={this.chevronPress.bind(this)}>
+          <ProgressBar
+            fillStyle={{}}
+            style={{marginTop: 10}}
+            progress={this.state.progress}
+          />
+          <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+            <TouchableOpacity style={{height: 103.5}} onPress={this.switchCamera.bind(this)}>
               <Icon
-                name='chevron-down'
+                name='repeat'
                 size={20}
-                style={{width: 22, height: 22, alignSelf: 'center', fontWeight: '300'}}
+                style={{top: 20, left: 160, width: 22, height: 22, alignSelf: 'center', fontWeight: '300'}}
               />
             </TouchableOpacity>
+            <View style={{flex: 1, justifyContent: 'center', marginBottom: 103.5}}>
+              <TouchableWithoutFeedback
+                delayLongPress={1200}
+                onPress={this.takePicture.bind(this)}
+                onLongPress={this.takeVideo.bind(this)}
+                onPressOut={this.handleLongPressOut.bind(this)}
+              >
+                <Image style={{width: 85, height: 85}} source={Images.captureButton} />
+              </TouchableWithoutFeedback>
+            </View>
           </View>
-
         </View>
+      )
+    }
+  }
+
+  renderCommentInput () {
+    if (this.state.texting) {
+      return (
+        <TextInput
+          placeholder='코멘트 쓰기..'
+          style={styles2.input}
+          multiline
+          onBlur={() => {}}
+          autoFocus={this.state.focus} />
+      )
+    } else {
+      return
+    }
+  }
+
+  renderTimerComponent () {
+    if (this.state.timer) {
+      return (
+        <View style={{flexDirection: 'row', backgroundColor: 'rgba(0, 0, 0, 0)'}}>
+          <Text style={{color: 'white', fontSize: 15}}>00</Text>
+          <Text style={{color: 'white', fontSize: 15}}>:</Text>
+          <Text style={{color: 'white', fontSize: 15}}>{this.state.LeftTime}</Text>
+        </View>
+      )
+    } else {
+      return
+    }
+  }
+
+  renderCamera () {
+    if (this.state.cameraState) {
+      return (
+        <View>
+          <Image style={{ height: 375 }} source={{uri: this.state.photo}}>
+            <View style={styles2.textContainer}>
+              {this.renderCommentInput()}
+            </View>
+          </Image>
+        </View>
+      )
+    } else {
+      return (
+        <Camera
+          captureMode={this.state.captureMode}
+          captureTarget={Camera.constants.CaptureTarget.disk}
+          ref={(cam) => {
+            this.camera = cam
+          }}
+          type={this.state.cameraType}
+          style={styles.preview}
+          aspect={Camera.constants.Aspect.fill}>
+          {this.renderTimerComponent()}
+        </Camera>
       )
     }
   }
@@ -121,16 +252,36 @@ export default class CameraScreen extends Component {
   render () {
     return (
       <View style={styles.container}>
-        <Camera
-          ref={(cam) => {
-            this.camera = cam
-          }}
-          type={this.state.cameraType}
-          style={styles.preview}
-          aspect={Camera.constants.Aspect.fill} />
+        {this.renderCamera()}
         {this.renderButtons()}
       </View>
     )
   }
 
+}
+
+const styles2 = {
+  textContainer: {
+    marginTop: 330
+  },
+  sendContainer: {
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  sendButton: {
+    paddingLeft: 10,
+    fontSize: 14
+  },
+  input: {
+    width: windowSize.width - 45,
+    color: 'white',
+    paddingRight: 10,
+    paddingLeft: 10,
+    paddingTop: 5,
+    height: 32,
+    fontSize: 14,
+    fontWeight: 'bold',
+    alignSelf: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0)'
+  }
 }

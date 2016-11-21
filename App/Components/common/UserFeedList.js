@@ -7,14 +7,14 @@ import FeedDetail from './FeedDetail'
 import FollowerList from './FollowerList'
 import FollowingList from './FollowList'
 import styles from '../../Containers/Styles/FeedScreenStyle'
-import { Colors } from '../../Themes'
+import { Colors, Images } from '../../Themes'
 
 class UserFeedList extends Component {
   constructor (props) {
     super(props)
     this.state = {
       albums: [],
-      follow: 'gray',
+      follow: false,
       modalVisible: false,
       followState: ''
     }
@@ -64,46 +64,51 @@ class UserFeedList extends Component {
     }
   }
 
+  renderFollow () {
+    if (this.state.follow) {
+      return (
+        <Image
+          style={{width: 55.05, height: 27.9}}
+          source={Images.fllwingBtn}
+        />
+      )
+    } else {
+      return (
+        <Image
+          style={{width: 55.05, height: 27.9}}
+          source={Images.fllwBtn}
+        />
+      )
+    }
+  }
+
   render () {
     return (
       <ScrollView>
         <View style={{alignItems: 'center', backgroundColor: '#000000'}}>
           <View style={{flex: 2}}>
             <Image
-              style={styles.image}
+              style={[styles.image, {borderWidth: 0.5, borderColor: 'white', marginBottom: 14.5, marginTop: 39.5}]}
               source={{uri: 'https://facebook.github.io/react/img/logo_og.png'}}
             />
           </View>
           <View style={{flex: 1, alignItems: 'center'}}>
-            <Text style={{color: Colors.snow}}>신촌초보</Text>
-            <View style={{flexDirection: 'row'}}>
-              <TouchableOpacity onPress={() => this.followerPress()}>
-                <Text style={{color: Colors.snow}}>팔로워 10 </Text>
+            <Text style={{color: Colors.snow, fontSize: 25, fontWeight: 'bold'}}>신촌초보</Text>
+            <View style={{flexDirection: 'row', marginTop: 10.5}}>
+              <TouchableOpacity>
+                <Text style={{color: Colors.snow, fontSize: 12}}>팔로워 10 </Text>
               </TouchableOpacity>
-              <Text style={{color: Colors.snow}}> | </Text>
-              <TouchableOpacity onPress={() => this.followingPress()}>
-                <Text style={{color: Colors.snow}}>팔로잉 25 </Text>
+              <Text style={{color: Colors.snow, fontSize: 12}}> | </Text>
+              <TouchableOpacity>
+                <Text style={{color: Colors.snow, fontSize: 12}}>팔로잉 25 </Text>
               </TouchableOpacity>
             </View>
             <TouchableOpacity
-              style={{
-                width: 70,
-                marginTop: 5,
-                marginBottom: 10,
-                paddingTop: 5,
-                paddingBottom: 5,
-                alignItems: 'center',
-                borderWidth: 1,
-                borderRadius: 50,
-                backgroundColor: this.state.follow}}
+              style={{marginTop: 15}}
               onPress={() => {
-                if (this.state.follow === 'gray') {
-                  this.setState({follow: '#296CA3'})
-                } else {
-                  this.setState({follow: 'gray'})
-                }
+                this.setState({follow: !this.state.follow})
               }}>
-              <Text style={{color: 'white'}}>+팔로우</Text>
+              {this.renderFollow()}
             </TouchableOpacity>
           </View>
         </View>

@@ -30,19 +30,19 @@ class MyEpisodeList extends Component {
         <View style={{alignItems: 'center', backgroundColor: '#000000'}}>
           <View style={{flex: 2}}>
             <Image
-              style={styles.image}
+              style={[styles.image, {borderWidth: 0.5, borderColor: 'white', marginBottom: 14.5, marginTop: 39.5}]}
               source={{uri: 'https://facebook.github.io/react/img/logo_og.png'}}
             />
           </View>
-          <View style={{flex: 1, alignItems: 'center', marginBottom: 20}}>
-            <Text style={{color: Colors.snow}}>신촌초보</Text>
-            <View style={{flexDirection: 'row'}}>
+          <View style={{flex: 1, alignItems: 'center'}}>
+            <Text style={{color: Colors.snow, fontSize: 25, fontWeight: 'bold'}}>신촌초보</Text>
+            <View style={{flexDirection: 'row', marginTop: 10.5, marginBottom: 25.5}}>
               <TouchableOpacity>
-                <Text style={{color: Colors.snow}}>팔로워 10 </Text>
+                <Text style={{color: Colors.snow, fontSize: 12}}>팔로워 10 </Text>
               </TouchableOpacity>
-              <Text style={{color: Colors.snow}}> | </Text>
+              <Text style={{color: Colors.snow, fontSize: 12}}> | </Text>
               <TouchableOpacity>
-                <Text style={{color: Colors.snow}}>팔로잉 25 </Text>
+                <Text style={{color: Colors.snow, fontSize: 12}}>팔로잉 25 </Text>
               </TouchableOpacity>
             </View>
           </View>
