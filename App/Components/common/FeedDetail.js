@@ -21,7 +21,8 @@ class FeedDetailClass extends Component {
       lastPress: 0,
       animation: false,
       textList: ['좋아', '짜릿해', '맛있어', '최고야', '개좋아', '좋아', '짜릿해', '맛있어', '최고야', '개좋아'],
-      pressIn: 0
+      pressIn: 0,
+      modalVisible: false
     }
   }
 
@@ -116,8 +117,8 @@ class FeedDetailClass extends Component {
               delayLongPress={800}
               onPress={this.onDoublePress.bind(this)}
               onLongPress={() => {
-                // this.onLongPress(!this.state.modalVisible)
-                // console.log(this.state.modalVisible)
+                this.onLongPress(!this.state.modalVisible)
+                console.log(this.state.modalVisible)
               }}
               >
               <Image style={imageStyle} source={{ uri: image }}>

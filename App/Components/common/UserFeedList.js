@@ -95,11 +95,11 @@ class UserFeedList extends Component {
           <View style={{flex: 1, alignItems: 'center'}}>
             <Text style={{color: Colors.snow, fontSize: 25, fontWeight: 'bold'}}>신촌초보</Text>
             <View style={{flexDirection: 'row', marginTop: 10.5}}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => this.followerPress()}>
                 <Text style={{color: Colors.snow, fontSize: 12}}>팔로워 10 </Text>
               </TouchableOpacity>
               <Text style={{color: Colors.snow, fontSize: 12}}> | </Text>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => this.followingPress()}>
                 <Text style={{color: Colors.snow, fontSize: 12}}>팔로잉 25 </Text>
               </TouchableOpacity>
             </View>

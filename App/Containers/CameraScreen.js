@@ -11,8 +11,8 @@ import {
 } from 'react-native'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import Camera from 'react-native-camera'
+import {CameraKitCamera} from 'react-native-camera-kit'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import ProgressBar from '../Components/common/Progress-Bar'
 
 import { Images } from '../Themes'
 // import KeyboardSpacer from 'react-native-keyboard-spacer'
@@ -158,16 +158,14 @@ export default class CameraScreen extends Component {
               </TouchableOpacity>
             </View>
           </View>
+          <TouchableOpacity onPress={() => NavigationActions.homeTab()}>
+            <Text>back</Text>
+          </TouchableOpacity>
         </View>
       )
     } else {
       return (
         <View style={styles.capture}>
-          <ProgressBar
-            fillStyle={{}}
-            style={{marginTop: 10}}
-            progress={this.state.progress}
-          />
           <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
             <TouchableOpacity style={{height: 103.5}} onPress={this.switchCamera.bind(this)}>
               <Icon
@@ -187,6 +185,9 @@ export default class CameraScreen extends Component {
               </TouchableWithoutFeedback>
             </View>
           </View>
+          <TouchableOpacity onPress={() => NavigationActions.homeTab()}>
+            <Text>back</Text>
+          </TouchableOpacity>
         </View>
       )
     }
@@ -240,8 +241,10 @@ export default class CameraScreen extends Component {
           ref={(cam) => {
             this.camera = cam
           }}
+          captureQuality={Camera.constants.CaptureQuality.high}
           type={this.state.cameraType}
           style={styles.preview}
+          onZoomChanged={() => {}}
           aspect={Camera.constants.Aspect.fill}>
           {this.renderTimerComponent()}
         </Camera>

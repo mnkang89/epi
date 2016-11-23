@@ -1,6 +1,9 @@
 // @flow
 
-import { StyleSheet } from 'react-native'
+import {
+  Dimensions,
+  StyleSheet
+} from 'react-native'
 import { ApplicationStyles } from '../../Themes/'
 
 export default StyleSheet.create({
@@ -10,9 +13,10 @@ export default StyleSheet.create({
     backgroundColor: 'white'
   },
   preview: {
-    height: 375,
     justifyContent: 'flex-end',
-    alignItems: 'center'
+    alignItems: 'flex-end',
+    height: Dimensions.get('window').width,
+    width: Dimensions.get('window').width
   },
   capture: {
     flex: 1

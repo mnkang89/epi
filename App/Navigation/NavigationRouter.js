@@ -38,6 +38,7 @@ class NavigationRouter extends Component {
             tabBarStyle={{backgroundColor: '#000000', justifyContent: 'center', alignItems: 'center', alignSelf: 'center', height: 40}}>
             <Scene
               key='homeTab'
+              initial
               icon={TabIcon}
               selectedTabIcon='home'
               tabIcon='home'
@@ -83,7 +84,6 @@ class NavigationRouter extends Component {
             </Scene>
             <Scene
               key='cameraTab'
-              initial
               icon={TabIcon}
               selectedTabIcon='camera'
               tabIcon='camera'
