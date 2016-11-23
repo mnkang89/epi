@@ -11,7 +11,7 @@ import {
 } from 'react-native'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import Camera from 'react-native-camera'
-import {CameraKitCamera} from 'react-native-camera-kit'
+// import {CameraKitCamera} from 'react-native-camera-kit'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 import { Images } from '../Themes'
