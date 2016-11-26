@@ -4,6 +4,7 @@ import axios from 'axios'
 import ExploreDetail from './ExploreDetail'
 
 class ExploreList extends Component {
+
   constructor (props) {
     super(props)
     this.state = {

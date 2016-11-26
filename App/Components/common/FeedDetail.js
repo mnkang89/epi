@@ -4,14 +4,17 @@ import {
   View,
   Image,
   TouchableWithoutFeedback,
-  TouchableOpacity
+  TouchableOpacity,
+  ScrollView
  } from 'react-native'
 import { Actions as NavigationActions } from 'react-native-router-flux'
-import Swiper from 'react-native-swiper'
-import Icon from 'react-native-vector-icons/FontAwesome'
+// import Swiper from 'react-native-swiper'
+// import Icon from 'react-native-vector-icons/FontAwesome'
 import { Colors, Metrics } from '../../Themes/'
 
 import * as Animatable from 'react-native-animatable'
+
+// const scrollViewPadding = scrollViewWidth * 0.08
 
 class FeedDetailClass extends Component {
   constructor (props) {
@@ -65,25 +68,6 @@ class FeedDetailClass extends Component {
     }
   }
 
-  renderAlarm () {
-    return (
-      <View style={{flex: 1, backgroundColor: 'gray', alignItems: 'center', justifyContent: 'center'}}>
-        <View>
-          <Text style={{alignSelf: 'center'}}>아직 진행 중인 에피소드에요</Text>
-          <Text style={{alignSelf: 'center'}}>아래 버튼을 눌러서 다음 글이 올라오면</Text>
-          <Text style={{alignSelf: 'center'}}>알림을 받아보세요!</Text>
-        </View>
-        <View style={{marginTop: 30}}>
-          <Icon
-            name='bell'
-            size={60}
-            style={{width: 60, height: 60, alignSelf: 'center', fontWeight: '300'}}
-          />
-        </View>
-      </View>
-    )
-  }
-
   render () {
     const { image } = this.props.album
     const {
@@ -97,7 +81,7 @@ class FeedDetailClass extends Component {
         <View style={headerContentStyle}>
           <View style={{marginTop: 10, marginLeft: 15, marginRight: 15, marginBottom: 10}}>
             <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-              <TouchableOpacity onPress={() => NavigationActions.userProfileScreen()}>
+              <TouchableOpacity onPress={() => NavigationActions.userProfileScreen({duration: 100})}>
                 <Image
                   style={styles.profileStyle}
                   source={{uri: 'https://facebook.github.io/react/img/logo_og.png'}}
@@ -111,8 +95,16 @@ class FeedDetailClass extends Component {
           </View>
         </View>
 
-        <Swiper height={345} showsPagination={false} >
-          <View style={{backgroundColor: 'black', paddingLeft: 15, paddingRight: 15}}>
+        <ScrollView
+          style={{paddingLeft: 7.5, paddingRight: 7.5}}
+          horizontal
+          snapToAlignment={'start'}
+          snapToInterval={350}
+          showsHorizontalScrollIndicator
+          scrollEventThrottle={299}
+          directionalLockEnabled
+          decelerationRate={'fast'} >
+          <View style={{backgroundColor: 'black', paddingLeft: 4}}>
             <TouchableWithoutFeedback
               delayLongPress={800}
               onPress={this.onDoublePress.bind(this)}
@@ -132,8 +124,47 @@ class FeedDetailClass extends Component {
               </Image>
             </TouchableWithoutFeedback>
           </View>
-          {this.renderAlarm()}
-        </Swiper>
+          <View style={{backgroundColor: 'black', paddingLeft: 8}}>
+            <TouchableWithoutFeedback
+              delayLongPress={800}
+              onPress={this.onDoublePress.bind(this)}
+              onLongPress={() => {
+                this.onLongPress(!this.state.modalVisible)
+                console.log(this.state.modalVisible)
+              }}
+              >
+              <Image style={imageStyle} source={{ uri: image }}>
+                <View style={{height: 295, paddingTop: 80}}>
+                  {this.renderAnimation()}
+                </View>
+                <View style={{alignItems: 'center', backgroundColor: 'rgba(0,0,0,0)'}}>
+                  <Text style={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>코멘트를남길수있음니다웬만하면짧게남겨</Text>
+                  <Text style={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>최대 두 줄까지로 합시다 한줄 넘짧</Text>
+                </View>
+              </Image>
+            </TouchableWithoutFeedback>
+          </View>
+          <View style={{backgroundColor: 'black', paddingLeft: 8, paddingRight: 17.5}}>
+            <TouchableWithoutFeedback
+              delayLongPress={800}
+              onPress={this.onDoublePress.bind(this)}
+              onLongPress={() => {
+                this.onLongPress(!this.state.modalVisible)
+                console.log(this.state.modalVisible)
+              }}
+              >
+              <Image style={imageStyle} source={{ uri: image }}>
+                <View style={{height: 295, paddingTop: 80}}>
+                  {this.renderAnimation()}
+                </View>
+                <View style={{alignItems: 'center', backgroundColor: 'rgba(0,0,0,0)'}}>
+                  <Text style={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>코멘트를남길수있음니다웬만하면짧게남겨</Text>
+                  <Text style={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>최대 두 줄까지로 합시다 한줄 넘짧</Text>
+                </View>
+              </Image>
+            </TouchableWithoutFeedback>
+          </View>
+        </ScrollView>
 
         <View style={[textStyle, {backgroundColor: 'black', paddingTop: 15, marginLeft: 15, marginRight: 15}]}>
           <View style={{flexDirection: 'row'}}>

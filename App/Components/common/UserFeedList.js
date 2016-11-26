@@ -7,7 +7,7 @@ import FeedDetail from './FeedDetail'
 import FollowerList from './FollowerList'
 import FollowingList from './FollowList'
 import styles from '../../Containers/Styles/FeedScreenStyle'
-import { Colors, Images } from '../../Themes'
+import { Colors } from '../../Themes'
 
 class UserFeedList extends Component {
   constructor (props) {
@@ -67,17 +67,15 @@ class UserFeedList extends Component {
   renderFollow () {
     if (this.state.follow) {
       return (
-        <Image
-          style={{width: 55.05, height: 27.9}}
-          source={Images.fllwingBtn}
-        />
+        <View style={{borderWidth: 1, borderColor: 'rgb(53, 53, 53)', borderRadius: 5, padding: 5, backgroundColor: 'black'}}>
+          <Text style={{color: 'white'}}>팔로잉</Text>
+        </View>
       )
     } else {
       return (
-        <Image
-          style={{width: 55.05, height: 27.9}}
-          source={Images.fllwBtn}
-        />
+        <View style={{borderWidth: 1, borderColor: 'rgb(53, 53, 53)', borderRadius: 5, padding: 5, backgroundColor: 'white'}}>
+          <Text>팔로우</Text>
+        </View>
       )
     }
   }
@@ -88,7 +86,7 @@ class UserFeedList extends Component {
         <View style={{alignItems: 'center', backgroundColor: '#000000'}}>
           <View style={{flex: 2}}>
             <Image
-              style={[styles.image, {borderWidth: 0.5, borderColor: 'white', marginBottom: 14.5, marginTop: 39.5}]}
+              style={[styles.image, {borderWidth: 1, borderColor: 'white', marginBottom: 14.5, marginTop: 39.5}]}
               source={{uri: 'https://facebook.github.io/react/img/logo_og.png'}}
             />
           </View>

@@ -1,4 +1,5 @@
 'use strict'
+
 import React, { Component } from 'react'
 import {
   View,
@@ -11,6 +12,7 @@ import {
 } from 'react-native'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import Camera from 'react-native-camera'
+import Modal from 'react-native-modalbox'
 // import {CameraKitCamera} from 'react-native-camera-kit'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
@@ -35,8 +37,14 @@ export default class CameraScreen extends Component {
       timer: false,
       LeftTime: 15,
       interval: null,
-      progress: 0
+      progress: 0,
+      ModalOpen: true,
+      swipe: true
     }
+  }
+
+  componentDidMount () {
+    this.refs.modal.open()
   }
 
   takePicture () {
@@ -121,9 +129,14 @@ export default class CameraScreen extends Component {
   }
 
   texting () {
+    if (this.state.texting) {
+      this.refs.MyTextInput.focus()
+      return
+    }
     this.setState({
+      texting: true,
       focus: true,
-      texting: true
+      swipe: false
     })
   }
 
@@ -145,7 +158,7 @@ export default class CameraScreen extends Component {
           <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
             <View style={{height: 103.5}} />
             <View style={{flex: 1, flexDirection: 'row'}}>
-              <TouchableOpacity style={{marginTop: 27.5, marginRight: 57.5}} onPress={() => { this.setState({cameraState: false}) }}>
+              <TouchableOpacity style={{marginTop: 27.5, marginRight: 57.5}} onPress={() => { this.setState({cameraState: false, texting: false}) }}>
                 <Image style={{width: 30, height: 30}} source={Images.backChevron} />
               </TouchableOpacity>
 
@@ -158,7 +171,10 @@ export default class CameraScreen extends Component {
               </TouchableOpacity>
             </View>
           </View>
-          <TouchableOpacity onPress={() => NavigationActions.homeTab()}>
+          <TouchableOpacity onPress={() => {
+            this.refs.modal.close()
+            NavigationActions.homeTab()
+          }}>
             <Text>back</Text>
           </TouchableOpacity>
         </View>
@@ -185,9 +201,6 @@ export default class CameraScreen extends Component {
               </TouchableWithoutFeedback>
             </View>
           </View>
-          <TouchableOpacity onPress={() => NavigationActions.homeTab()}>
-            <Text>back</Text>
-          </TouchableOpacity>
         </View>
       )
     }
@@ -196,12 +209,26 @@ export default class CameraScreen extends Component {
   renderCommentInput () {
     if (this.state.texting) {
       return (
-        <TextInput
-          placeholder='코멘트 쓰기..'
-          style={styles2.input}
-          multiline
-          onBlur={() => {}}
-          autoFocus={this.state.focus} />
+        <View>
+          <TextInput
+            ref='MyTextInput'
+            placeholder='코멘트 쓰기..'
+            style={styles2.input}
+            multiline
+            onBlur={(event) => {
+              this.setState({focus: false, swipe: true})
+              console.log(this.state.focus)
+            }}
+            onFocus={() => {
+              this.setState({
+                focus: true, swipe: false
+              })
+              console.log('제대로눌림')
+              console.log(this.state.focus)
+            }}
+            autoFocus={this.state.focus}
+            />
+        </View>
       )
     } else {
       return
@@ -238,12 +265,14 @@ export default class CameraScreen extends Component {
         <Camera
           captureMode={this.state.captureMode}
           captureTarget={Camera.constants.CaptureTarget.disk}
+          captureAudio={false}
           ref={(cam) => {
             this.camera = cam
           }}
           captureQuality={Camera.constants.CaptureQuality.high}
           type={this.state.cameraType}
           style={styles.preview}
+          onFocusChanged={() => {}}
           onZoomChanged={() => {}}
           aspect={Camera.constants.Aspect.fill}>
           {this.renderTimerComponent()}
@@ -252,12 +281,35 @@ export default class CameraScreen extends Component {
     }
   }
 
+  onClose () {
+    NavigationActions.homeTab()
+  }
+
   render () {
     return (
-      <View style={styles.container}>
-        {this.renderCamera()}
-        {this.renderButtons()}
-      </View>
+      <Modal
+        ref={'modal'}
+        isOpen={this.state.ModalOpen}
+        style={{backgroundColor: 'rgba(0,0,0,0)'}}
+        position={'center'}
+        backdrop={false}
+        swipeToClose={this.state.swipe}
+        swipeThreshold={10}
+        onClosed={this.onClose.bind(this)}
+        >
+        <TouchableWithoutFeedback
+          onPress={() => {
+            if (this.state.texting) {
+              this.refs.MyTextInput.blur()
+              return
+            }
+          }}>
+          <View style={styles.container}>
+            {this.renderCamera()}
+            {this.renderButtons()}
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
     )
   }
 
@@ -285,6 +337,6 @@ const styles2 = {
     fontSize: 14,
     fontWeight: 'bold',
     alignSelf: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0)'
+    backgroundColor: 'rgba(0, 0, 0, 0.7)'
   }
 }

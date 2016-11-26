@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Scene, Router } from 'react-native-router-flux'
+import { Scene, Router, ActionConst, Actions } from 'react-native-router-flux'
 import Styles from './Styles/NavigationContainerStyle'
 import NavItems from './NavItems'
 import TabIcon from '../Components/TabIcon'
@@ -24,7 +24,8 @@ import ProfileScreen from '../Containers/ProfileScreen'
 class NavigationRouter extends Component {
   render () {
     return (
-      <Router sceneStyle={{ backgroundColor: 'black' }}>
+      <Router
+        sceneStyle={{ backgroundColor: 'black' }}>
         <Scene
           key='root'
           navigationBarStyle={Styles.navBar}
@@ -88,6 +89,9 @@ class NavigationRouter extends Component {
               selectedTabIcon='camera'
               tabIcon='camera'
               navigationBarStyle={Styles.navBar}
+              onPress={() => {
+                Actions.cameraScreen({isOpen: true, type: ActionConst.REFRESH})
+              }}
               titleStyle={{color: 'white', fontSize: 17}}>
               <Scene
                 key='cameraScreen'

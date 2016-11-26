@@ -1,6 +1,11 @@
 import React, { Component } from 'react'
-import { ScrollView, Text, View, Image, TouchableOpacity } from 'react-native'
+import { ScrollView, Dimensions, Text, View, Image, TouchableOpacity } from 'react-native'
 import { Colors, Metrics } from '../../Themes/'
+
+const screenWidth = Dimensions.get('window').width
+const scrollViewWidth = Math.round(screenWidth * 0.90)
+const cardWidth = scrollViewWidth * 0.80
+const paddingCard = scrollViewWidth * 0.02
 
 class FollowDetail extends Component {
   constructor (props) {
@@ -61,8 +66,13 @@ class FollowDetail extends Component {
         </View>
         <View style={{height: 162, marginLeft: 15, marginRight: 15}}>
           <ScrollView
+            snapToAlignment={'start'}
+            scrollEventThrottle={299}
+            directionalLockEnabled
+            decelerationRate={'fast'}
+            snapToInterval={cardWidth + paddingCard + paddingCard + 1}
+            showsHorizontalScrollIndicator
             horizontal
-            snapToAlignment='center'
           >
             <View style={{marginRight: 8.1}}>
               <Image style={{height: 146.6, width: 146.6}} source={{ uri: image }} />

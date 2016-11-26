@@ -18,7 +18,7 @@ class FollowDetail extends Component {
           onPress={() => {
             this.setState({follow: false})
           }}>
-          <View style={{borderWidth: 0.5, borderColor: 'rgb(53, 53, 53)', borderRadius: 5, padding: 5, backgroundColor: 'black'}}>
+          <View style={{borderWidth: 1, borderColor: 'rgb(53, 53, 53)', borderRadius: 5, padding: 5, backgroundColor: 'black'}}>
             <Text style={{color: 'white'}}>팔로잉</Text>
           </View>
         </TouchableOpacity>
@@ -29,7 +29,7 @@ class FollowDetail extends Component {
           onPress={() => {
             this.setState({follow: true})
           }}>
-          <View style={{borderWidth: 0.5, borderColor: 'rgb(53, 53, 53)', borderRadius: 5, padding: 5}}>
+          <View style={{borderWidth: 1, borderColor: 'rgb(53, 53, 53)', borderRadius: 5, padding: 5, backgroundColor: 'white'}}>
             <Text>팔로우</Text>
           </View>
         </TouchableOpacity>

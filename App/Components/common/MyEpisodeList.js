@@ -30,7 +30,7 @@ class MyEpisodeList extends Component {
         <View style={{alignItems: 'center', backgroundColor: '#000000'}}>
           <View style={{flex: 2}}>
             <Image
-              style={[styles.image, {borderWidth: 0.5, borderColor: 'white', marginBottom: 14.5, marginTop: 39.5}]}
+              style={[styles.image, {borderWidth: 1, borderColor: 'white', marginBottom: 14.5, marginTop: 39.5}]}
               source={{uri: 'https://facebook.github.io/react/img/logo_og.png'}}
             />
           </View>
