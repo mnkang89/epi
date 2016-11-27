@@ -34,6 +34,7 @@
 		EE0450F71DD1649500138F4A /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EE0450EF1DD1649500138F4A /* Octicons.ttf */; };
 		EE0450F81DD1649500138F4A /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EE0450F01DD1649500138F4A /* Zocial.ttf */; };
 		EE597A411DDDE8D000BA72E1 /* libAutoGrowTextInput.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EE597A2D1DDDE8B500BA72E1 /* libAutoGrowTextInput.a */; };
+		EE8E58F91DEB1C00009EA55A /* libRCTVideo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EE8E58F81DEB1BEC009EA55A /* libRCTVideo.a */; };
 		EED8BE891DE5208D00FC0BF4 /* libReactNativeCameraKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EED8BE881DE5207C00FC0BF4 /* libReactNativeCameraKit.a */; };
 /* End PBXBuildFile section */
 
@@ -185,6 +186,13 @@
 			remoteGlobalIDString = 4107012F1ACB723B00C6AA39;
 			remoteInfo = RCTCamera;
 		};
+		EE8E58F71DEB1BEC009EA55A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EE8E58F31DEB1BEC009EA55A /* RCTVideo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RCTVideo;
+		};
 		EED8BE871DE5207C00FC0BF4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = EED8BE831DE5207C00FC0BF4 /* ReactNativeCameraKit.xcodeproj */;
@@ -236,6 +244,7 @@
 		EE0450EF1DD1649500138F4A /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Octicons.ttf; sourceTree = "<group>"; };
 		EE0450F01DD1649500138F4A /* Zocial.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Zocial.ttf; sourceTree = "<group>"; };
 		EE597A281DDDE8B500BA72E1 /* AutoGrowTextInput.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AutoGrowTextInput.xcodeproj; path = "../node_modules/react-native-autogrow-textinput/ios/AutoGrowTextInput.xcodeproj"; sourceTree = "<group>"; };
+		EE8E58F31DEB1BEC009EA55A /* RCTVideo.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTVideo.xcodeproj; path = "../node_modules/react-native-video/RCTVideo.xcodeproj"; sourceTree = "<group>"; };
 		EED8BE831DE5207C00FC0BF4 /* ReactNativeCameraKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeCameraKit.xcodeproj; path = "../node_modules/react-native-camera-kit/ios/lib/ReactNativeCameraKit.xcodeproj"; sourceTree = "<group>"; };
 		EED8BEBF1DE5745600FC0BF4 /* ImageCropPicker.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ImageCropPicker.xcodeproj; path = "../node_modules/react-native-image-crop-picker/ios/ImageCropPicker.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -253,6 +262,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EE8E58F91DEB1C00009EA55A /* libRCTVideo.a in Frameworks */,
 				EED8BE891DE5208D00FC0BF4 /* libReactNativeCameraKit.a in Frameworks */,
 				EE597A411DDDE8D000BA72E1 /* libAutoGrowTextInput.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
@@ -385,6 +395,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				EE8E58F31DEB1BEC009EA55A /* RCTVideo.xcodeproj */,
 				EED8BEBF1DE5745600FC0BF4 /* ImageCropPicker.xcodeproj */,
 				EED8BE831DE5207C00FC0BF4 /* ReactNativeCameraKit.xcodeproj */,
 				EE597A281DDDE8B500BA72E1 /* AutoGrowTextInput.xcodeproj */,
@@ -471,6 +482,14 @@
 			isa = PBXGroup;
 			children = (
 				EE7DC3F21DD6FB030085F7B1 /* libRCTCamera.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		EE8E58F41DEB1BEC009EA55A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				EE8E58F81DEB1BEC009EA55A /* libRCTVideo.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -608,6 +627,10 @@
 				{
 					ProductGroup = 00C302E01ABCB9EE00DB3ED1 /* Products */;
 					ProjectRef = 00C302DF1ABCB9EE00DB3ED1 /* RCTVibration.xcodeproj */;
+				},
+				{
+					ProductGroup = EE8E58F41DEB1BEC009EA55A /* Products */;
+					ProjectRef = EE8E58F31DEB1BEC009EA55A /* RCTVideo.xcodeproj */;
 				},
 				{
 					ProductGroup = 139FDEE71B06529A00C62182 /* Products */;
@@ -773,6 +796,13 @@
 			fileType = archive.ar;
 			path = libRCTCamera.a;
 			remoteRef = EE7DC3F11DD6FB030085F7B1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		EE8E58F81DEB1BEC009EA55A /* libRCTVideo.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTVideo.a;
+			remoteRef = EE8E58F71DEB1BEC009EA55A /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		EED8BE881DE5207C00FC0BF4 /* libReactNativeCameraKit.a */ = {

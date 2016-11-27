@@ -12,7 +12,8 @@ const images = {
   write: require('../Images/write.png'),
   backChevron: require('../Images/backChevron.png'),
   fllwBtn: require('../Images/fllwBtn.png'),
-  fllwingBtn: require('../Images/fllwBtnCopy16.png')
+  fllwingBtn: require('../Images/fllwBtnCopy16.png'),
+  profileIcon: require('../Images/profileIcon.png')
 }
 
 export default images

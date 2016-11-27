@@ -7,6 +7,8 @@ import NavItems from './NavItems'
 import TabIcon from '../Components/TabIcon'
 
 // episode
+import GreetingScreen from '../Containers/GreetingScreen'
+
 import FeedScreen from '../Containers/FeedScreen'
 import CommentScreen from '../Containers/CommentScreen'
 import UserProfileScreen from '../Containers/UserProfileScreen'
@@ -26,6 +28,12 @@ class NavigationRouter extends Component {
     return (
       <Router
         sceneStyle={{ backgroundColor: 'black' }}>
+        <Scene
+          key='Greeting'
+          initial
+          hideNavBar
+          hideTabBar
+          component={GreetingScreen} />
         <Scene
           key='root'
           navigationBarStyle={Styles.navBar}
