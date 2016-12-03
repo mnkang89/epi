@@ -10,6 +10,7 @@ import styles from './Styles/RootContainerStyle'
 
 export default class RootContainer extends Component {
   componentDidMount () {
+    // 이 부분에서 api콜 시전되면 될듯?
   }
 
   render () {

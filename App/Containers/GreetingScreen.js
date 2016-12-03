@@ -9,30 +9,60 @@ import {
   Image,
   TextInput
 } from 'react-native'
+import { connect } from 'react-redux'
 import Video from 'react-native-video'
-import { Actions as NavigationActions } from 'react-native-router-flux'
+
+// import { Actions as NavigationActions } from 'react-native-router-flux'
 
 // Styles
 // import styles from './Styles/FeedScreenStyle'
 import { Images, Videos } from '../Themes'
 
+import SignInScreen from './SignInScreen'
+import LostPasswordScreen from './LostPasswordScreen'
+
 class GreetingScreen extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      first: true,
-      signUp: false,
-      signIn: false,
-      email: false,
-      password: false,
-      nickname: false,
-      emailPassword: false,
-      lostPassword: false
+      firstScreen: true,
+      signUpScreen: false,
+      signInScreen: false,
+      emailScreen: false,
+      passwordScreen: false,
+      nicknameScreen: false,
+      emailPasswordScreen: false,
+      lostPasswordScreen: false
     }
   }
 
+  lostPassword () {
+    this.setState({
+      firstScreen: false,
+      signUpScreen: false,
+      signInScreen: true,
+      emailScreen: false,
+      passwordScreen: false,
+      emailPasswordScreen: false,
+      lostPasswordScreen: true
+    })
+  }
+
+  sendPassword () {
+    this.setState({
+      firstScreen: true,
+      signUpScreen: false,
+      signInScreen: false,
+      emailScreen: false,
+      passwordScreen: false,
+      nicknameScreen: false,
+      emailPasswordScreen: false,
+      lostPasswordScreen: false
+    })
+  }
+
   conditionalRender () {
-    if (this.state.first) {
+    if (this.state.firstScreen) {
       return (
         <View style={{marginTop: 433}}>
           <View style={{marginLeft: 22.5, marginRight: 72, backgroundColor: 'rgba(0,0,0,0)'}}>
@@ -43,11 +73,14 @@ class GreetingScreen extends Component {
             onPress={
               () => {
                 this.setState({
-                  first: false,
-                  signUp: true,
-                  signIn: false,
-                  email: true,
-                  password: false
+                  firstScreen: false,
+                  signUpScreen: true,
+                  signInScreen: false,
+                  emailScreen: true,
+                  passwordScreen: false,
+                  lostPasswordScreen: false,
+                  emailPasswordScreen: false,
+                  nicknameScreen: false
                 })
               }
             } >
@@ -55,121 +88,40 @@ class GreetingScreen extends Component {
           </TouchableOpacity>
           <TouchableOpacity
             style={{marginTop: 20, marginLeft: 162.7, marginRight: 162.5}}
-            onPress={() => {
-              this.setState({
-                first: false,
-                signUp: false,
-                signIn: true,
-                email: false,
-                password: false,
-                emailPassword: true
-              })
-            }
-          } >
+            onPress={
+              () => {
+                this.setState({
+                  firstScreen: false,
+                  signUpScreen: false,
+                  signInScreen: true,
+                  emailScreen: false,
+                  passwordScreen: false,
+                  lostPasswordScreen: false,
+                  emailPasswordScreen: true,
+                  nicknameScreen: false
+                })
+              }
+            } >
             <Text style={{textDecorationLine: 'underline', backgroundColor: 'rgba(0,0,0,0)', color: 'white', fontSize: 15, alignSelf: 'center'}}>로그인</Text>
           </TouchableOpacity>
         </View>
       )
-    } else if (this.state.signIn) {
-      if (this.state.emailPassword) {
+    } else if (this.state.signInScreen) {
+      if (this.state.emailPasswordScreen) {
         return (
           <View style={{marginTop: 44}}>
-            <View style={{marginLeft: 21, marginRight: 70.5, marginBottom: 0, backgroundColor: 'rgba(0,0,0,0)'}}>
-              <Text style={{color: 'white', fontWeight: 'bold', fontSize: 60, marginBottom: 0}}>안녕하세요!</Text>
-            </View>
-            <View style={{marginTop: 8, marginLeft: 23, marginRight: 52, backgroundColor: 'rgba(0,0,0,0)'}}>
-              <Text style={{color: 'white', fontSize: 16}}>등록된 이메일과 비밀번호를 입력해주세요 😄</Text>
-            </View>
-            <View style={{marginTop: 78, marginLeft: 23, marginRight: 23, paddingBottom: 7.5, borderBottomWidth: 1, borderBottomColor: 'white', backgroundColor: 'rgba(0,0,0,0)'}}>
-              <TextInput
-                placeholder='이메일'
-                placeholderTextColor='white'
-                style={{fontWeight: 'bold', color: 'white', height: 20}}
-              />
-            </View>
-            <View style={{marginTop: 23, marginLeft: 23, marginRight: 23, paddingBottom: 7.5, borderBottomWidth: 1, borderBottomColor: 'white', backgroundColor: 'rgba(0,0,0,0)'}}>
-              <TextInput
-                placeholder='비밀번호 (최소 8자, 최대 12자)'
-                placeholderTextColor='white'
-                style={{fontWeight: 'bold', color: 'white', height: 20}}
-              />
-            </View>
-            <TouchableOpacity
-              style={{backgroundColor: 'white', paddingTop: 10, paddingBottom: 10, marginTop: 22, marginLeft: 22.5, marginRight: 22.5}}
-              onPress={
-                () => {
-                  this.setState({
-                    first: true,
-                    signUp: false,
-                    signIn: false,
-                    email: false,
-                    password: false,
-                    nickname: false,
-                    emailPassword: false,
-                    lostPassword: false
-                  })
-                  NavigationActions.root()
-                }
-              } >
-              <Text style={{color: 'black', fontWeight: 'bold', fontSize: 18, alignSelf: 'center'}}>로그인</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{marginTop: 20, marginLeft: 60, marginRight: 62, backgroundColor: 'rgba(0,0,0,0)'}}
-              onPress={() => {
-                this.setState({
-                  first: false,
-                  signUp: false,
-                  signIn: true,
-                  email: false,
-                  password: false,
-                  emailPassword: false,
-                  lostPassword: true
-                })
-              }
-            } >
-              <Text style={{textDecorationLine: 'underline', color: 'white', fontSize: 15, alignSelf: 'center'}}>비밀번호를 잊어버렸어요</Text>
-            </TouchableOpacity>
+            <SignInScreen lostPassword={this.lostPassword.bind(this)} />
           </View>
         )
-      } else if (this.state.lostPassword) {
+      } else if (this.state.lostPasswordScreen) {
         return (
           <View style={{marginTop: 44, backgroundColor: 'rgba(0,0,0,0)'}}>
-            <View style={{marginLeft: 21, marginRight: 70.5, marginBottom: 0, backgroundColor: 'rgba(0,0,0,0)'}}>
-              <Text style={{color: 'white', fontWeight: 'bold', fontSize: 60, marginBottom: 0}}>ㅠ.ㅠ</Text>
-            </View>
-            <View style={{marginTop: 17, marginLeft: 23, marginRight: 45, backgroundColor: 'rgba(0,0,0,0)'}}>
-              <Text style={{color: 'white', fontSize: 16}}>회원가입시 입력한 이메일을 알려주시면 비밀번호 변경 링크를 보내드려요 😉</Text>
-            </View>
-            <View style={{marginTop: 100, marginLeft: 23, marginRight: 23, paddingBottom: 7.5, borderBottomWidth: 1, borderBottomColor: 'white', backgroundColor: 'rgba(0,0,0,0)'}}>
-              <TextInput
-                placeholder='이메일'
-                placeholderTextColor='white'
-                style={{fontWeight: 'bold', color: 'white', height: 20}}
-              />
-            </View>
-            <TouchableOpacity
-              style={{backgroundColor: 'white', paddingTop: 10, paddingBottom: 10, marginTop: 22, marginLeft: 22.5, marginRight: 22.5}}
-              onPress={
-                () => {
-                  this.setState({
-                    first: true,
-                    signUp: false,
-                    signIn: false,
-                    email: false,
-                    password: false,
-                    nickname: false,
-                    emailPassword: false,
-                    lostPassword: false
-                  })
-                }
-              } >
-              <Text style={{color: 'black', fontWeight: 'bold', fontSize: 18, alignSelf: 'center'}}>임시비밀번호 전송</Text>
-            </TouchableOpacity>
+            <LostPasswordScreen sendPassword={this.sendPassword.bind(this)} />
           </View>
         )
       }
-    } else if (this.state.signUp) {
-      if (this.state.email) {
+    } else if (this.state.signUpScreen) {
+      if (this.state.emailScreen) {
         return (
           <View style={{marginTop: 44, backgroundColor: 'rgba(0,0,0,0)'}}>
             <View style={{marginLeft: 21, marginRight: 70.5, marginBottom: 0, backgroundColor: 'rgba(0,0,0,0)'}}>
@@ -190,10 +142,10 @@ class GreetingScreen extends Component {
               onPress={
                 () => {
                   this.setState({
-                    first: false,
-                    signUp: true,
-                    email: false,
-                    password: true
+                    firstScreen: false,
+                    signUpScreen: true,
+                    emailScreen: false,
+                    passwordScreen: true
                   })
                 }
               } >
@@ -201,7 +153,7 @@ class GreetingScreen extends Component {
             </TouchableOpacity>
           </View>
         )
-      } else if (this.state.password) {
+      } else if (this.state.passwordScreen) {
         return (
           <View style={{marginTop: 44, backgroundColor: 'rgba(0,0,0,0)'}}>
             <View style={{marginLeft: 21, marginRight: 70.5, marginBottom: 0, backgroundColor: 'rgba(0,0,0,0)'}}>
@@ -229,11 +181,11 @@ class GreetingScreen extends Component {
               onPress={
                 () => {
                   this.setState({
-                    first: false,
-                    signUp: true,
-                    email: false,
-                    password: false,
-                    nickname: true
+                    firstScreen: false,
+                    signUpScreen: true,
+                    emailScreen: false,
+                    passwordScreen: false,
+                    nicknameScreen: true
                   })
                 }
               } >
@@ -241,7 +193,7 @@ class GreetingScreen extends Component {
             </TouchableOpacity>
           </View>
         )
-      } else if (this.state.nickname) {
+      } else if (this.state.nicknameScreen) {
         return (
           <View style={{marginTop: 44, backgroundColor: 'rgba(0,0,0,0)'}}>
             <View style={{marginLeft: 21, marginRight: 70.5, marginBottom: 0, backgroundColor: 'rgba(0,0,0,0)'}}>
@@ -265,11 +217,11 @@ class GreetingScreen extends Component {
               onPress={
                 () => {
                   this.setState({
-                    first: true,
-                    signUp: false,
-                    email: false,
-                    password: false,
-                    nickname: false
+                    firstScreen: true,
+                    signUpScreen: false,
+                    emailScreen: false,
+                    passwordScreen: false,
+                    nicknameScreen: false
                   })
                 }
               } >
@@ -309,4 +261,14 @@ class GreetingScreen extends Component {
   }
 }
 
-export default GreetingScreen
+const mapStateToProps = (state) => {
+  return { }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    // attemptLogin: (username, password) => dispatch(LoginActions.loginRequest(username, password))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(GreetingScreen)

@@ -215,8 +215,9 @@ export default class CameraScreen extends Component {
             placeholder='코멘트 쓰기..'
             style={styles2.input}
             returnKeyType='done'
+            maxLength={50}
+            onSubmitEditing={event => this._onSubmit(event)}
             enablesReturnKeyAutomatically
-            multiline
             onBlur={(event) => {
               this.setState({focus: false, swipe: true})
               console.log(this.state.focus)

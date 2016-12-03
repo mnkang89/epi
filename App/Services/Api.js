@@ -16,7 +16,7 @@ const create = (baseURL = 'http://api.openweathermap.org/data/2.5/') => {
     headers: {
       'Cache-Control': 'no-cache'
     },
-    // 10 second timeout...
+    // 10 second timeout...ㅅ
     timeout: 10000
   })
 
