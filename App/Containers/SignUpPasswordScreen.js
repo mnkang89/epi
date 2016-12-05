@@ -6,7 +6,7 @@ import {
   TextInput
 } from 'react-native'
 import { connect } from 'react-redux'
-import SignupActions from '../Redux/LoginRedux'
+import SignupActions from '../Redux/SignupRedux'
 
 class SignUpPasswordScreen extends Component {
   constructor (props) {
@@ -45,10 +45,10 @@ class SignUpPasswordScreen extends Component {
   }
 
   handlePressPassword () {
-    const { password } = this.state
+    const { password, passwordCheck } = this.state
     this.isAttempting = true
     // attempt to check email - a saga is listening to pick it up from here.
-    this.props.checkPassword(password, password)
+    this.props.checkPassword(password, passwordCheck)
   }
 
   render () {
@@ -119,7 +119,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     // attemptLogin: (username, password) => dispatch(LoginActions.loginRequest(username, password))
-    checkPassword: (password, passwordCheck) => dispatch(SignupActions.passwordCheck(password, passwordCheck))
+    checkPassword: (password, passwordCheck) => dispatch(SignupActions.passwordRequest(password, passwordCheck))
   }
 }
 

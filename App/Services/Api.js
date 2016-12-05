@@ -33,6 +33,7 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
   }
 
   const getCity = (city) => api.get('weather', {q: city})
+
   // SignUp
   const checkEmail = (email) => {
     const formData = new FormData()

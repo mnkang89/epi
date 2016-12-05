@@ -10,9 +10,6 @@ export function * email (api, action) {
     yield put(SignupActions.emailFailure('WRONG'))
   } else {
     const response = yield call(api.checkEmail, email)
-    console.log('ㅗㅑㅗㅑ')
-    console.log(response)
-    console.log('ㅗㅑㅗㅑ')
 
     // dispatch successful email checking
     if (response.ok) {
