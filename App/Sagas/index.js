@@ -14,7 +14,7 @@ import { SignupTypes } from '../Redux/SignupRedux'
 
 import { startup } from './StartupSagas'
 import { login } from './LoginSagas'
-import { email, nickname, signup } from './SignupSagas'
+import { email, password, nickname, signup } from './SignupSagas'
 import { getTemperature } from './TemperatureSagas'
 
 /* ------------- API ------------- */
@@ -34,6 +34,8 @@ export default function * root () {
     /* --- SignUp --- */
     // email
     takeLatest(SignupTypes.EMAIL_CHECK, email, api),
+    // password
+    takeLatest(SignupTypes.PASSWORD_REQUEST, password),
     // nickname
     takeLatest(SignupTypes.NICKNAME_CHECK, nickname),
     // signup

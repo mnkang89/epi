@@ -8,6 +8,7 @@ export function * getTemperature (api, action) {
   // make the call to the api
   const response = yield call(api.getCity, city)
 
+  console.log(response)
   // success?
   if (response.ok) {
     const kelvin = path(['data', 'main', 'temp_max'], response)

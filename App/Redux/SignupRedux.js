@@ -9,9 +9,15 @@ const { Types, Creators } = createActions({
   emailCheck: ['email'],
   emailSuccess: ['email'],
   emailFailure: ['error'],
+
+  passwordRequest: ['password', 'passwordCheck'],
+  passwordSuccess: ['password'],
+  passwordFailure: ['error'],
+
   nicknameCheck: ['nickname'],
   nicknameSuccess: ['nickname'],
   nicknameFailure: ['error'],
+
   signupRequest: ['email', 'password', 'nickname'],
   signupSuccess: ['email'],
   signupFailure: ['error']
@@ -25,6 +31,7 @@ export default Creators
 export const INITIAL_STATE = Immutable({
   email: null,
   password: null,
+  passwordCheck: null,
   nickname: null,
   error: null,
   checking: false
@@ -48,6 +55,29 @@ export const emailValid = (state: Object, { email }: Object) =>
 
 // Invalid email
 export const emailInvalid = (state: Object, { error }: Object) =>
+  state.merge({
+    checking: false,
+    error
+  })
+
+// we're attempting to check password
+export const password = (state: Object, { password, passwordCheck }: Object) =>
+  state.merge({
+    checking: true,
+    password,
+    passwordCheck
+  })
+
+// Valid password
+export const passwordValid = (state: Object, { password }: Object) =>
+  state.merge({
+    checking: false,
+    error: null,
+    password
+  })
+
+// Invalid password
+export const passwordInvalid = (state: Object, { error }: Object) =>
   state.merge({
     checking: false,
     error
@@ -97,6 +127,10 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.EMAIL_CHECK]: email,
   [Types.EMAIL_SUCCESS]: emailValid,
   [Types.EMAIL_FAILURE]: emailInvalid,
+
+  [Types.PASSWORD_REQUEST]: password,
+  [Types.PASSWORD_SUCCESS]: passwordValid,
+  [Types.PASSWORD_FAILURE]: passwordInvalid,
 
   [Types.NICKNAME_CHECK]: nickname,
   [Types.NICKNAME_SUCCESS]: nickValid,
