@@ -16,7 +16,7 @@ const create = (baseURL = 'http://api.openweathermap.org/data/2.5/') => {
     headers: {
       'Cache-Control': 'no-cache'
     },
-    // 10 second timeout...ㅅ
+    // 10 second timeout...
     timeout: 10000
   })
 
@@ -33,37 +33,13 @@ const create = (baseURL = 'http://api.openweathermap.org/data/2.5/') => {
     api.addMonitor(console.tron.apisauce)
   }
 
-  // ------
-  // STEP 2
-  // ------
-  //
-  // Define some functions that call the api.  The goal is to provide
-  // a thin wrapper of the api layer providing nicer feeling functions
-  // rather than "get", "post" and friends.
-  //
-  // I generally don't like wrapping the output at this level because
-  // sometimes specific actions need to be take on `403` or `401`, etc.
-  //
-  // Since we can't hide from that, we embrace it by getting out of the
-  // way at this level.
-  //
   const getCity = (city) => api.get('weather', {q: city})
+  const checkEmail = (email) => api.post()
 
-  // ------
-  // STEP 3
-  // ------
-  //
-  // Return back a collection of functions that we would consider our
-  // interface.  Most of the time it'll be just the list of all the
-  // methods in step 2.
-  //
-  // Notice we're not returning back the `api` created in step 1?  That's
-  // because it is scoped privately.  This is one way to create truly
-  // private scoped goodies in JavaScript.
-  //
   return {
     // a list of the API functions from step 2
-    getCity
+    getCity,
+    checkEmail
   }
 }
 

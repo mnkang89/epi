@@ -48,7 +48,7 @@ class LostPasswordScreen extends Component {
 
   render () {
     return (
-      <View>
+      <View style={{marginTop: 44, backgroundColor: 'rgba(0,0,0,0)'}}>
         <View style={{marginLeft: 21, marginRight: 70.5, marginBottom: 0, backgroundColor: 'rgba(0,0,0,0)'}}>
           <Text style={{color: 'white', fontWeight: 'bold', fontSize: 60, marginBottom: 0}}>ㅠ.ㅠ</Text>
         </View>

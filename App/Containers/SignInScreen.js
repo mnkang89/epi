@@ -51,7 +51,7 @@ class SignInScreen extends Component {
     const editable = !fetching
 
     return (
-      <View>
+      <View style={{marginTop: 44}}>
         <View style={{marginLeft: 21, marginRight: 70.5, marginBottom: 0, backgroundColor: 'rgba(0,0,0,0)'}}>
           <Text style={{color: 'white', fontWeight: 'bold', fontSize: 60, marginBottom: 0}}>안녕하세요!</Text>
         </View>
@@ -118,7 +118,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    attemptLogin: (username, password) => dispatch(LoginActions.loginRequest(username, password))
+    attemptLogin: (email, password) => dispatch(LoginActions.loginRequest(email, password))
   }
 }
 
