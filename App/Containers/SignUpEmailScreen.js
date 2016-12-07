@@ -25,8 +25,10 @@ class SignUpEmailScreen extends Component {
     if (this.isAttempting && !newProps.checking && newProps.error === null) {
       console.log('유효한 이메일')
       this.props.signUpEmail()
-    } else if (this.isAttempting && !newProps.checking && newProps.error === 'WRONG') {
-      console.log('유효하지 않은 이메일')
+    } else if (this.isAttempting && !newProps.checking && newProps.error === 'VACANT') {
+      console.log('유효하지 않은 이메일(공백)')
+    } else if (this.isAttempting && !newProps.checking && newProps.error === 'DUPLICATED') {
+      console.log('유효하지 않은 이메일(중복)')
     }
   }
 

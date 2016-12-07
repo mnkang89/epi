@@ -29,7 +29,7 @@ export default function * root () {
   yield [
     // some sagas only receive an action
     takeLatest(StartupTypes.STARTUP, startup),
-    takeLatest(LoginTypes.LOGIN_REQUEST, login),
+    takeLatest(LoginTypes.LOGIN_REQUEST, login, api),
 
     /* --- SignUp --- */
     // email
@@ -37,9 +37,13 @@ export default function * root () {
     // password
     takeLatest(SignupTypes.PASSWORD_REQUEST, password),
     // nickname
-    takeLatest(SignupTypes.NICKNAME_CHECK, nickname),
+    takeLatest(SignupTypes.NICKNAME_CHECK, nickname, api),
     // signup
-    takeLatest(SignupTypes.SIGNUP_REQUEST, signup),
+    takeLatest(SignupTypes.SIGNUP_REQUEST, signup, api),
+
+    /* --- Token --- */
+    // 일단은 따로 saga를 거치지 않고 redux로 바로 던진다.
+    // takeLatest(SignupTypes.TOKEN_REQUEST, token, api),
 
     // some sagas receive extra parameters in addition to an action
     takeLatest(TemperatureTypes.TEMPERATURE_REQUEST, getTemperature, api)

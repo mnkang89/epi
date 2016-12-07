@@ -15,9 +15,6 @@ class FeedList extends Component {
     axios.get('https://rallycoding.herokuapp.com/api/music_albums')
       .then(response => {
         this.setState({ albums: response.data })
-        console.log('피드 콜성공')
-        // console.log(response.status)
-        Alert.alert(`status: ${response.status}`)
       })
   }
 

@@ -9,17 +9,50 @@ import {
 import { connect } from 'react-redux'
 // import LoginActions from '../Redux/LoginRedux'
 import { Images } from '../Themes'
+import SignupActions from '../Redux/SignupRedux'
+import { Actions as NavigationActions } from 'react-native-router-flux'
 
 class SignUpPasswordScreen extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      email: '',
-      password: ''
+      nickname: ''
+    }
+    this.isAttempting = false
+  }
+
+  componentWillReceiveProps (newProps) {
+    this.forceUpdate()
+    // Did the checking attempt complete?
+    console.log('닉네임 중복검사')
+    if (this.isAttempting && !newProps.checking && newProps.error === null) {
+      console.log('유효한 닉네임')
+      NavigationActions.root()
+    } else if (this.isAttempting && !newProps.checking && newProps.error === 'WRONG') {
+      console.log('유효하지 않은 닉네임')
     }
   }
 
+  handleChangeNickname = (text) => {
+    this.setState({ nickname: text })
+  }
+
+  handlePressNickname () {
+    const { nickname } = this.state
+    const { token, accountId } = this.props
+
+    this.isAttempting = true
+    // attempt to check email - a saga is listening to pick it up from here.
+    console.log(token)
+    console.log(accountId)
+    this.props.checkNickname(nickname, token, accountId)
+  }
+
   render () {
+    const { nickname } = this.state
+    const { checking } = this.props
+    const editable = !checking
+
     return (
       <View style={{marginTop: 44, backgroundColor: 'rgba(0,0,0,0)'}}>
         <View style={{marginLeft: 21, marginRight: 70.5, marginBottom: 0, backgroundColor: 'rgba(0,0,0,0)'}}>
@@ -33,16 +66,24 @@ class SignUpPasswordScreen extends Component {
         </View>
         <View style={{marginTop: 0, marginLeft: 23, marginRight: 23, paddingBottom: 7.5, borderBottomWidth: 1, borderBottomColor: 'white', backgroundColor: 'rgba(0,0,0,0)'}}>
           <TextInput
+            ref='emailCheck'
+            style={{fontWeight: 'bold', height: 20, color: 'white'}}
+            editable={editable}
+            value={nickname}
+            keyboardType='default'
+            returnKeyType='done'
+            autoCapitalize='none'
+            autoCorrect={false}
+            onChangeText={this.handleChangeNickname}
+            onSubmitEditing={this.handlePressNickname.bind(this)}
             placeholder='이름 (한글과 영문대소문자, 숫자만가능)'
             placeholderTextColor='white'
-            style={{fontWeight: 'bold', color: 'white', height: 20}}
           />
         </View>
         <TouchableOpacity
           style={{backgroundColor: 'white', paddingTop: 10, paddingBottom: 10, marginTop: 22, marginLeft: 22.5, marginRight: 22.5}}
-          onPress={
-            () => { this.props.signUpNickname() }
-          } >
+          onPress={this.handlePressNickname.bind(this)}
+          >
           <Text style={{color: 'black', fontWeight: 'bold', fontSize: 18, alignSelf: 'center'}}>가입</Text>
         </TouchableOpacity>
       </View>
@@ -52,14 +93,17 @@ class SignUpPasswordScreen extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    fetching: state.login.fetching,
-    error: state.login.error
+    checking: state.signup.checking,
+    error: state.signup.error,
+    token: state.token.token,
+    accountId: state.token.id
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     // attemptLogin: (username, password) => dispatch(LoginActions.loginRequest(username, password))
+    checkNickname: (nickname, token, accountId) => dispatch(SignupActions.nicknameCheck(nickname, token, accountId))
   }
 }
 

@@ -37,14 +37,50 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
   // SignUp
   const checkEmail = (email) => {
     const formData = new FormData()
+
     formData.append('email', email)
+
     return api.post('api/accounts/is-exist-email', formData)
+  }
+
+  const requestSignup = (email, password) => {
+    const formData = new FormData()
+
+    formData.append('email', email)
+    formData.append('password', password)
+
+    return api.post(`/api/accounts`, formData)
+  }
+
+  const requestNickname = (nickname, token, accountId) => {
+    const formData = new FormData()
+
+    formData.append('accountId', accountId)
+    formData.append('nickname', nickname)
+
+    api.setHeader('x-auth', token)
+    return api.post(`/api/accounts/${accountId}/nickname`, formData)
+  }
+
+  // Login
+  const requestLogin = (email, password) => {
+    const formData = new FormData()
+
+    formData.append('email', email)
+    formData.append('password', password)
+
+    return api.post(`/api/accounts/login`, { email: email, password: password })
   }
 
   return {
     // a list of the API functions from step 2
     getCity,
-    checkEmail
+
+    checkEmail,
+    requestSignup,
+    requestNickname,
+
+    requestLogin
   }
 }
 

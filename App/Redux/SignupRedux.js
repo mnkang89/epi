@@ -10,15 +10,15 @@ const { Types, Creators } = createActions({
   emailSuccess: ['email'],
   emailFailure: ['error'],
 
-  passwordRequest: ['password', 'passwordCheck'],
+  passwordRequest: ['email', 'password', 'passwordCheck'],
   passwordSuccess: ['password'],
   passwordFailure: ['error'],
 
-  nicknameCheck: ['nickname'],
+  nicknameCheck: ['nickname', 'token', 'accountId'],
   nicknameSuccess: ['nickname'],
   nicknameFailure: ['error'],
 
-  signupRequest: ['email', 'password', 'nickname'],
+  signupRequest: ['email', 'password'],
   signupSuccess: ['email'],
   signupFailure: ['error']
 })
@@ -33,8 +33,10 @@ export const INITIAL_STATE = Immutable({
   password: null,
   passwordCheck: null,
   nickname: null,
+  checking: false,
+  attempting: false,
   error: null,
-  checking: false
+  attemptingerror: null
 })
 
 /* ------------- Reducers ------------- */
@@ -61,7 +63,7 @@ export const emailInvalid = (state: Object, { error }: Object) =>
   })
 
 // we're attempting to check password
-export const password = (state: Object, { password, passwordCheck }: Object) =>
+export const password = (state: Object, { email, password, passwordCheck }: Object) =>
   state.merge({
     checking: true,
     password,
@@ -84,9 +86,10 @@ export const passwordInvalid = (state: Object, { error }: Object) =>
   })
 
 // we're attempting to check nickname
-export const nickname = (state: Object) =>
+export const nickname = (state: Object, { nickname, token, accountId }: Object) =>
   state.merge({
-    checking: true
+    checking: true,
+    nickname
   })
 
 // Valid nickname
@@ -94,7 +97,7 @@ export const nickValid = (state: Object, { nickname }: Object) =>
   state.merge({
     checking: false,
     error: null,
-    email
+    nickname
   })
 
 // Invalid nickname
@@ -105,15 +108,16 @@ export const nickInvalid = (state: Object, { error }: Object) =>
   })
 
 // we're attempting to check signup
-export const request = (state: Object) => INITIAL_STATE
+export const request = (state: Object, { email, password }: Object) =>
+  state.merge({ attempting: true, email, password })
 
 // we've successfully signup
-export const success = (state: Object, { username }: Object) =>
-  state.merge({ fetching: false, error: null, username })
+export const success = (state: Object, { email, password }: Object) =>
+  state.merge({ attempting: false, attemptingerror: null, email, password })
 
 // we've had a problem signup
 export const failure = (state: Object, { error }: Object) =>
-  state.merge({ fetching: false, error })
+  state.merge({ attempting: false, error })
 
 /*
 export const success = (state: Object, action: Object) => {

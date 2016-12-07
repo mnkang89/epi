@@ -21,13 +21,21 @@ class SignInScreen extends Component {
 
   componentWillReceiveProps (newProps) {
     this.forceUpdate()
+    console.log(newProps)
+
     // Did the login attempt complete?
     console.log('로그인?')
     if (this.isAttempting && !newProps.fetching && newProps.error === null) {
       console.log('로그인 성공')
       NavigationActions.root()
-    } else if (this.isAttempting && !newProps.fetching && newProps.error === 'WRONG') {
-      console.log('아이디, 비밀번호를 입력해주세요')
+    } else if (this.isAttempting && !newProps.fetching && newProps.error === 'VACANT_EMAIL') {
+      console.log('이메일을 입력해주세요')
+    } else if (this.isAttempting && !newProps.fetching && newProps.error === 'VACANT_PASSWORD') {
+      console.log('비밀번호를 입력해주세요')
+    } else if (this.isAttempting && !newProps.fetching && newProps.error === 'INVALID_EMAIL') {
+      console.log('유효하지 않은 이메일')
+    } else if (this.isAttempting && !newProps.fetching && newProps.error === 'INVALID_PASSWORD') {
+      console.log('유효하지 않은 비밀번호')
     }
   }
 

@@ -20,14 +20,24 @@ class SignUpPasswordScreen extends Component {
   }
 
   componentWillReceiveProps (newProps) {
+    // const { email, password } = newProps
     this.forceUpdate()
+
+    // TODO
+    console.log(newProps)
+
     // Did the checking attempt complete?
+    // TODO: this.isAttempting 존재유무 결정
     console.log('패스워드 중복검사')
-    if (this.isAttempting && !newProps.checking && newProps.error === null) {
+    if (this.isAttempting && !newProps.checking && newProps.error === null && newProps.attempting) {
       console.log('유효한 비밀번호')
+    } else if (this.isAttempting && !newProps.checking && newProps.error === 'NOT_MATCH') {
+      console.log('유효하지 않은 비밀번호(불일치)')
+    } else if (!newProps.attempting && newProps.attemptingerror === null) {
+      console.log('유효한 회원가입')
       this.props.signUpPassword()
-    } else if (this.isAttempting && !newProps.checking && newProps.error === 'WRONG') {
-      console.log('유효하지 않은 비밀번호')
+    } else if (!newProps.attempting && newProps.attemptingerror === 'WRONG') {
+      console.log('유효하지 않은 회원가입')
     }
   }
 
@@ -45,10 +55,11 @@ class SignUpPasswordScreen extends Component {
   }
 
   handlePressPassword () {
+    const { email } = this.props
     const { password, passwordCheck } = this.state
     this.isAttempting = true
     // attempt to check email - a saga is listening to pick it up from here.
-    this.props.checkPassword(password, passwordCheck)
+    this.props.checkPassword(email, password, passwordCheck)
   }
 
   render () {
@@ -111,15 +122,20 @@ class SignUpPasswordScreen extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    email: state.signup.email,
+    password: state.signup.password,
     checking: state.signup.checking,
-    error: state.signup.error
+    attempting: state.signup.attempting,
+    error: state.signup.error,
+    attemptingerror: state.signup.attemptingerror
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     // attemptLogin: (username, password) => dispatch(LoginActions.loginRequest(username, password))
-    checkPassword: (password, passwordCheck) => dispatch(SignupActions.passwordRequest(password, passwordCheck))
+    checkPassword: (email, password, passwordCheck) => dispatch(SignupActions.passwordRequest(email, password, passwordCheck))
+    // requestSignup: (email, password) => dispatch(SignupActions.signupRequest(email, password))
   }
 }
 
