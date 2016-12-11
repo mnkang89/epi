@@ -23,6 +23,7 @@ import SignUpPasswordScreen from './SignUpPasswordScreen'
 import SignUpNicknameScreen from './SignUpNicknameScreen'
 
 class GreetingScreen extends Component {
+
   constructor (props) {
     super(props)
     this.state = {

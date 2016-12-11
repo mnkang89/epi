@@ -20,8 +20,8 @@ import { getTemperature } from './TemperatureSagas'
 
 // episode
 import { login } from './LoginSagas'
-import { email, password, nickname, signup } from './SignupSagas'
-import { account } from './AccountSagas'
+import { email, password, nickname, profile, signup } from './SignupSagas'
+import { account, userEpisodes } from './AccountSagas'
 
 /* ------------- API ------------- */
 
@@ -48,6 +48,8 @@ export default function * root () {
     takeLatest(SignupTypes.PASSWORD_REQUEST, password),
     // nickname
     takeLatest(SignupTypes.NICKNAME_CHECK, nickname, api),
+    // profile
+    takeLatest(SignupTypes.PROFILE_REQUEST, profile, api),
     // signup
     takeLatest(SignupTypes.SIGNUP_REQUEST, signup, api),
 
@@ -56,6 +58,9 @@ export default function * root () {
     // takeLatest(SignupTypes.TOKEN_REQUEST, token, api),
 
     /* --- Account --- */
-    takeLatest(AccountTypes.INFO_REQUEST, account, api)
+    // user info
+    takeLatest(AccountTypes.INFO_REQUEST, account, api),
+    // user episode
+    takeLatest(AccountTypes.USER_EPISODES_REQUEST, userEpisodes, api)
   ]
 }

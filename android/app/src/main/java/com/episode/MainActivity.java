@@ -1,6 +1,15 @@
 package com.episode;
 
 import com.facebook.react.ReactActivity;
+import com.brentvatne.react.ReactVideoPackage;
+import com.oblador.vectoricons.VectorIconsPackage;
+import com.joshblour.reactnativepermissions.ReactNativePermissionsPackage;
+import com.airbnb.android.react.maps.MapsPackage;
+import com.imagepicker.ImagePickerPackage;
+import com.reactnative.ivpusic.imagepicker.PickerPackage;
+import com.i18n.reactnativei18n.ReactNativeI18n;
+import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
+import com.wix.RNCameraKit.RNCameraKitPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 
 public class MainActivity extends ReactActivity {

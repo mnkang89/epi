@@ -14,10 +14,11 @@ export function * account (api, action) {
     const accountId = path(['data', 'id'], response)
     const email = path(['data', 'email'], response)
     const nickname = path(['data', 'nickname'], response)
-    const numberOfFollower = path(['data', 'numberOfFollower'], response)
-    const numberOfFollowing = path(['data', 'numberOfFollowing'], response)
+    const followerCount = path(['data', 'followerCount'], response)
+    const followingCount = path(['data', 'followingCount'], response)
+    const profileImagePath = path(['data', 'profileImagePath'], response)
 
-    yield put(AccountActions.infoSuccess(accountId, email, nickname, numberOfFollower, numberOfFollowing))
+    yield put(AccountActions.infoSuccess(accountId, email, nickname, profileImagePath, followerCount, followingCount))
   } else {
     console.log('error')
     console.log(response)
@@ -26,5 +27,24 @@ export function * account (api, action) {
     // TODO: 에러 케이스 다루기
     console.log(message)
     yield put(AccountActions.infoFailure('WRONG'))
+  }
+}
+
+// attempts to get account
+export function * userEpisodes (api, action) {
+  const { token, active } = action
+  const response = yield call(api.requestUserEpisodes, token, active)
+
+  // dispatch successful email checking
+  if (response.ok) {
+    console.log('ok')
+    console.log(response)
+    const episodes = path(['data', 'episodes'], response)
+
+    yield put(AccountActions.userEpisodesSuccess(episodes))
+  } else {
+    console.log('error')
+    console.log(response)
+    yield put(AccountActions.episodeError('WRONG'))
   }
 }

@@ -5,7 +5,30 @@ const renderTexts = (TextArray) => {
   return TextArray.map(text => <Text key={TextArray.indexOf(text)} style={{fontSize: 17}}>{text}</Text>)
 }
 
-const ConfirmError = ({ children, visible, onAccept, TextArray }) => {
+const renderConfirm = (confirmStyle = 'confirm', onAccept, onSetting = null) => {
+  if (confirmStyle === 'confirm') {
+    return (
+      <View style={{paddingTop: 9}}>
+        <TouchableHighlight onPress={onAccept}>
+          <Text style={{fontSize: 15, fontWeight: 'bold'}}>확인</Text>
+        </TouchableHighlight>
+      </View>
+    )
+  } else if (confirmStyle === 'setting') {
+    return (
+      <View style={{paddingTop: 9, flex: 1, flexDirection: 'row', justifyContent: 'space-around'}}>
+        <TouchableHighlight onPress={onAccept}>
+          <Text style={{fontSize: 15, fontWeight: 'bold', marginRight: 92}}>확인</Text>
+        </TouchableHighlight>
+        <TouchableHighlight onPress={onSetting}>
+          <Text style={{fontSize: 15, fontWeight: 'bold'}}>설정</Text>
+        </TouchableHighlight>
+      </View>
+    )
+  }
+}
+
+const ConfirmError = ({ confirmStyle, visible, TextArray, onSetting, onAccept }) => {
   return (
     <Modal
       animationType={'none'}
@@ -26,11 +49,7 @@ const ConfirmError = ({ children, visible, onAccept, TextArray }) => {
             borderBottomColor: 'rgb(217, 217, 217)'}}>
             {renderTexts(TextArray)}
           </View>
-          <View style={{paddingTop: 9}}>
-            <TouchableHighlight onPress={onAccept}>
-              <Text style={{fontSize: 15, fontWeight: 'bold'}}>확인</Text>
-            </TouchableHighlight>
-          </View>
+          {renderConfirm(confirmStyle, onAccept, onSetting)}
         </View>
       </View>
     </Modal>

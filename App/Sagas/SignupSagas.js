@@ -100,6 +100,26 @@ export function * nickname (api, action) {
   }
 }
 
+export function * profile (api, action) {
+  const { photoSource, token, accountId } = action
+
+  if (photoSource === '') {
+    // dispatch failure
+    yield put(SignupActions.profileFailure('NO_PHOTO'))
+  } else {
+    const response = yield call(api.requestPhoto, photoSource, token, accountId)
+
+    // dispatch successful profile request
+    if (response.ok) {
+      console.log(response)
+      yield put(SignupActions.profileSuccess(photoSource))
+    } else {
+      console.log(response)
+      yield put(SignupActions.profileFailure('UPLOAD_FAIL'))
+    }
+  }
+}
+
 // attempts to signup
 export function * signup (api, action) {
   const { email, password } = action

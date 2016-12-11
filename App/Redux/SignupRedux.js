@@ -18,6 +18,10 @@ const { Types, Creators } = createActions({
   nicknameSuccess: ['nickname'],
   nicknameFailure: ['error'],
 
+  profileRequest: ['photoSource', 'token', 'accountId'],
+  profileSuccess: ['photoSource'],
+  profileFailure: ['photoerror'],
+
   signupRequest: ['email', 'password'],
   signupSuccess: ['email'],
   signupFailure: ['error']
@@ -33,10 +37,13 @@ export const INITIAL_STATE = Immutable({
   password: null,
   passwordCheck: null,
   nickname: null,
+  photoSource: null,
   checking: false,
   attempting: false,
+  photoAttempting: false,
   error: null,
-  attemptingerror: null
+  attemptingerror: null,
+  photoerror: null
 })
 
 /* ------------- Reducers ------------- */
@@ -107,6 +114,26 @@ export const nickInvalid = (state: Object, { error }: Object) =>
     error
   })
 
+// we're attempting to request profile image
+export const profile = (state: Object, { photoSource, token, accountId }: Object) =>
+  state.merge({
+    photoAttempting: true
+  })
+
+// Valid profile
+export const profileSuccess = (state: Object, { photoSource }: Object) =>
+  state.merge({
+    photoAttempting: false,
+    photoerror: null,
+    photoSource
+  })
+
+// Invalid profile
+export const profileFailure = (state: Object, { photoerror }: Object) =>
+  state.merge({
+    photoAttempting: false,
+    photoerror
+  })
 // we're attempting to check signup
 export const request = (state: Object, { email, password }: Object) =>
   state.merge({ attempting: true, email, password })
@@ -139,6 +166,10 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.NICKNAME_CHECK]: nickname,
   [Types.NICKNAME_SUCCESS]: nickValid,
   [Types.NICKNAME_FAILURE]: nickInvalid,
+
+  [Types.PROFILE_REQUEST]: profile,
+  [Types.PROFILE_SUCCESS]: profileSuccess,
+  [Types.PROFILE_FAILURE]: profileFailure,
 
   [Types.SIGNUP_REQUEST]: request,
   [Types.SIGNUP_SUCCESS]: success,

@@ -62,6 +62,21 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     return api.post(`/api/accounts/${accountId}/nickname`, formData)
   }
 
+  const requestPhoto = (photoSource, token, accountId) => {
+    const formData = new FormData()
+    console.log(photoSource)
+    const photo = {
+      uri: photoSource,
+      type: 'image/jpeg',
+      name: 'photo.jpg'
+    }
+
+    formData.append('file', photo)
+    api.setHeader('x-auth', token)
+
+    return api.post(`/api/accounts/${accountId}/profile-image`, formData)
+  }
+
   // Login
   const requestLogin = (email, password) => {
     const formData = new FormData()
@@ -79,6 +94,15 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     return api.get(`/api/accounts/${accountId}/summary`)
   }
 
+  const requestUserEpisodes = (token, active) => {
+    const formData = new FormData()
+
+    formData.append('active', active)
+    api.setHeader('x-auth', token)
+
+    return api.get(`/api/episodes`)
+  }
+
   return {
     // a list of the API functions from step 2
     getCity,
@@ -86,10 +110,12 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     checkEmail,
     requestSignup,
     requestNickname,
+    requestPhoto,
 
     requestLogin,
 
-    requestAccount
+    requestAccount,
+    requestUserEpisodes
   }
 }
 
