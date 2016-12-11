@@ -6,6 +6,7 @@ import {
   TextInput
 } from 'react-native'
 import { connect } from 'react-redux'
+import ConfirmError from '../Components/common/ConfirmError'
 // import LoginActions from '../Redux/LoginRedux'
 import SignupActions from '../Redux/SignupRedux'
 
@@ -13,7 +14,10 @@ class SignUpEmailScreen extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      email: ''
+      email: '',
+      error: '',
+      alertVisible: false,
+      alertTextArray: []
     }
     this.isAttempting = false
   }
@@ -27,8 +31,25 @@ class SignUpEmailScreen extends Component {
       this.props.signUpEmail()
     } else if (this.isAttempting && !newProps.checking && newProps.error === 'VACANT') {
       console.log('유효하지 않은 이메일(공백)')
+      this.setState({
+        error: newProps.error,
+        alertVisible: true,
+        alertTextArray: ['이메일을 입력해주세요.']
+      })
     } else if (this.isAttempting && !newProps.checking && newProps.error === 'DUPLICATED') {
       console.log('유효하지 않은 이메일(중복)')
+      this.setState({
+        error: newProps.error,
+        alertVisible: true,
+        alertTextArray: ['이미 사용 중인 이메일입니다.', '다시 한 번 확인해주세요.']
+      })
+    } else if (this.isAttempting && !newProps.checking && newProps.error === 'INVALID_FORMAT') {
+      console.log('유효하지 않은 이메일(이메일 형식)')
+      this.setState({
+        error: newProps.error,
+        alertVisible: true,
+        alertTextArray: ['이메일 형식이 맞지 않습니다.', '다시 한 번 확인해주세요.']
+      })
     }
   }
 
@@ -43,6 +64,13 @@ class SignUpEmailScreen extends Component {
     this.props.checkEmail(email)
   }
 
+  onDecline () {
+    this.setState({
+      alertVisible: false,
+      alertTextArray: []
+    })
+  }
+
   render () {
     const { email } = this.state
     const { checking } = this.props
@@ -50,6 +78,10 @@ class SignUpEmailScreen extends Component {
 
     return (
       <View style={{marginTop: 44, backgroundColor: 'rgba(0,0,0,0)'}}>
+        <ConfirmError
+          visible={this.state.alertVisible}
+          TextArray={this.state.alertTextArray}
+          onAccept={this.onDecline.bind(this)} />
         <View style={{marginLeft: 21, marginRight: 70.5, marginBottom: 0, backgroundColor: 'rgba(0,0,0,0)'}}>
           <Text style={{color: 'white', fontWeight: 'bold', fontSize: 60, marginBottom: 0}}>반가워요!</Text>
         </View>

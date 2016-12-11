@@ -199,7 +199,8 @@ const styles = {
   },
   imageStyle: {
     height: 345,
-    width: 345
+    width: 345,
+    borderRadius: 10
   },
   profileStyle: {
     width: Metrics.icons.large,

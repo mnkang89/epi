@@ -57,8 +57,8 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
 
     formData.append('accountId', accountId)
     formData.append('nickname', nickname)
-
     api.setHeader('x-auth', token)
+
     return api.post(`/api/accounts/${accountId}/nickname`, formData)
   }
 
@@ -72,6 +72,13 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     return api.post(`/api/accounts/login`, { email: email, password: password })
   }
 
+  // Account
+  const requestAccount = (token, accountId) => {
+    api.setHeader('x-auth', token)
+
+    return api.get(`/api/accounts/${accountId}/summary`)
+  }
+
   return {
     // a list of the API functions from step 2
     getCity,
@@ -80,7 +87,9 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     requestSignup,
     requestNickname,
 
-    requestLogin
+    requestLogin,
+
+    requestAccount
   }
 }
 

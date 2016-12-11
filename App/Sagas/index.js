@@ -7,15 +7,21 @@ import DebugSettings from '../Config/DebugSettings'
 
 import { StartupTypes } from '../Redux/StartupRedux'
 import { TemperatureTypes } from '../Redux/TemperatureRedux'
+
+// episode
 import { LoginTypes } from '../Redux/LoginRedux'
 import { SignupTypes } from '../Redux/SignupRedux'
+import { AccountTypes } from '../Redux/AccountRedux'
 
 /* ------------- Sagas ------------- */
 
 import { startup } from './StartupSagas'
+import { getTemperature } from './TemperatureSagas'
+
+// episode
 import { login } from './LoginSagas'
 import { email, password, nickname, signup } from './SignupSagas'
-import { getTemperature } from './TemperatureSagas'
+import { account } from './AccountSagas'
 
 /* ------------- API ------------- */
 
@@ -29,6 +35,10 @@ export default function * root () {
   yield [
     // some sagas only receive an action
     takeLatest(StartupTypes.STARTUP, startup),
+    // some sagas receive extra parameters in addition to an action
+    takeLatest(TemperatureTypes.TEMPERATURE_REQUEST, getTemperature, api),
+
+    /* --- LogIn --- */
     takeLatest(LoginTypes.LOGIN_REQUEST, login, api),
 
     /* --- SignUp --- */
@@ -45,7 +55,7 @@ export default function * root () {
     // 일단은 따로 saga를 거치지 않고 redux로 바로 던진다.
     // takeLatest(SignupTypes.TOKEN_REQUEST, token, api),
 
-    // some sagas receive extra parameters in addition to an action
-    takeLatest(TemperatureTypes.TEMPERATURE_REQUEST, getTemperature, api)
+    /* --- Account --- */
+    takeLatest(AccountTypes.INFO_REQUEST, account, api)
   ]
 }

@@ -6,6 +6,8 @@ import {
   TextInput
 } from 'react-native'
 import { connect } from 'react-redux'
+import ConfirmError from '../Components/common/ConfirmError'
+
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import LoginActions from '../Redux/LoginRedux'
 
@@ -14,7 +16,9 @@ class SignInScreen extends Component {
     super(props)
     this.state = {
       email: '',
-      password: ''
+      password: '',
+      alertVisible: false,
+      alertTextArray: []
     }
     this.isAttempting = false
   }
@@ -28,14 +32,41 @@ class SignInScreen extends Component {
     if (this.isAttempting && !newProps.fetching && newProps.error === null) {
       console.log('로그인 성공')
       NavigationActions.root()
+    } else if (this.isAttempting && !newProps.fetching && newProps.error === 'INVALID_FORMAT') {
+      console.log('유효하지 않은 형식')
+      this.setState({
+        error: newProps.error,
+        alertVisible: true,
+        alertTextArray: ['이메일 혹은 비밀번호가', '바르지 않습니다.', '다시 한 번 확인해주세요.']
+      })
     } else if (this.isAttempting && !newProps.fetching && newProps.error === 'VACANT_EMAIL') {
       console.log('이메일을 입력해주세요')
+      this.setState({
+        error: newProps.error,
+        alertVisible: true,
+        alertTextArray: ['이메일을 입력해주세요.']
+      })
     } else if (this.isAttempting && !newProps.fetching && newProps.error === 'VACANT_PASSWORD') {
       console.log('비밀번호를 입력해주세요')
+      this.setState({
+        error: newProps.error,
+        alertVisible: true,
+        alertTextArray: ['비밀번호를 입력해주세요.']
+      })
     } else if (this.isAttempting && !newProps.fetching && newProps.error === 'INVALID_EMAIL') {
       console.log('유효하지 않은 이메일')
+      this.setState({
+        error: newProps.error,
+        alertVisible: true,
+        alertTextArray: ['이메일 혹은 비밀번호가', '바르지 않습니다.', '다시 한 번 확인해주세요.']
+      })
     } else if (this.isAttempting && !newProps.fetching && newProps.error === 'INVALID_PASSWORD') {
       console.log('유효하지 않은 비밀번호')
+      this.setState({
+        error: newProps.error,
+        alertVisible: true,
+        alertTextArray: ['이메일 혹은 비밀번호가', '바르지 않습니다.', '다시 한 번 확인해주세요.']
+      })
     }
   }
 
@@ -53,6 +84,14 @@ class SignInScreen extends Component {
   handleChangePassword = (text) => {
     this.setState({ password: text })
   }
+
+  onDecline () {
+    this.setState({
+      alertVisible: false,
+      alertTextArray: []
+    })
+  }
+
   render () {
     const { email, password } = this.state
     const { fetching } = this.props
@@ -60,6 +99,10 @@ class SignInScreen extends Component {
 
     return (
       <View style={{marginTop: 44}}>
+        <ConfirmError
+          visible={this.state.alertVisible}
+          TextArray={this.state.alertTextArray}
+          onAccept={this.onDecline.bind(this)} />
         <View style={{marginLeft: 21, marginRight: 70.5, marginBottom: 0, backgroundColor: 'rgba(0,0,0,0)'}}>
           <Text style={{color: 'white', fontWeight: 'bold', fontSize: 60, marginBottom: 0}}>안녕하세요!</Text>
         </View>

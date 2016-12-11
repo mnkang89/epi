@@ -3,6 +3,19 @@ import { path } from 'ramda'
 import LoginActions from '../Redux/LoginRedux'
 import TokenActions from '../Redux/TokenRedux'
 
+let validateEmail = (email) => {
+  const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  return re.test(email)
+}
+
+let validatePassword = (password) => {
+  if (password.length >= 8 && password.length <= 12) {
+    return true
+  } else {
+    return false
+  }
+}
+
 // attempts to login
 export function * login (api, action) {
   const { email, password } = action
@@ -12,6 +25,8 @@ export function * login (api, action) {
     yield put(LoginActions.loginFailure('VACANT_EMAIL'))
   } else if (password === '') {
     yield put(LoginActions.loginFailure('VACANT_PASSWORD'))
+  } else if (!validateEmail(email) || !validatePassword(password)) {
+    yield put(LoginActions.loginFailure('INVALID_FORMAT'))
   } else {
     const response = yield call(api.requestLogin, email, password)
 
@@ -19,7 +34,7 @@ export function * login (api, action) {
     if (response.ok) {
       console.log(response)
       const accountId = path(['data', 'id'], response)
-      const token = path(['data', 'auth'], response)
+      const token = path(['data', 'token'], response)
 
       yield put(LoginActions.loginSuccess(email))
       yield put(TokenActions.tokenRequest(token))
@@ -29,7 +44,7 @@ export function * login (api, action) {
       const message = path(['data', 'responseMessage'], response)
 
       if (message === 'err_authentication_fail') {
-        yield put(LoginActions.loginFailure('AUTHENTICATION_FAIL'))
+        yield put(LoginActions.loginFailure('INVALID_EMAIL'))
       } else if (message === 'err_invalid_password') {
         yield put(LoginActions.loginFailure('INVALID_PASSWORD'))
       }

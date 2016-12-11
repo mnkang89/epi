@@ -6,6 +6,8 @@ import {
   TextInput
 } from 'react-native'
 import { connect } from 'react-redux'
+import ConfirmError from '../Components/common/ConfirmError'
+
 import SignupActions from '../Redux/SignupRedux'
 
 class SignUpPasswordScreen extends Component {
@@ -14,7 +16,10 @@ class SignUpPasswordScreen extends Component {
     this.state = {
       password: '',
       passwordCheck: '',
-      passwordEdit: false
+      passwordEdit: false,
+      error: '',
+      alertVisible: false,
+      alertTextArray: []
     }
     this.isAttempting = false
   }
@@ -31,8 +36,27 @@ class SignUpPasswordScreen extends Component {
     console.log('패스워드 중복검사')
     if (this.isAttempting && !newProps.checking && newProps.error === null && newProps.attempting) {
       console.log('유효한 비밀번호')
+    } else if (this.isAttempting && !newProps.checking && newProps.error === 'VACANT') {
+      console.log('유효하지 않은 비밀번호(공백)')
+      this.setState({
+        error: newProps.error,
+        alertVisible: true,
+        alertTextArray: ['비밀번호를 입력해주세요.']
+      })
     } else if (this.isAttempting && !newProps.checking && newProps.error === 'NOT_MATCH') {
       console.log('유효하지 않은 비밀번호(불일치)')
+      this.setState({
+        error: newProps.error,
+        alertVisible: true,
+        alertTextArray: ['비밀번호가 일치하지 않습니다.']
+      })
+    } else if (this.isAttempting && !newProps.checking && newProps.error === 'INVALID_FORMAT') {
+      console.log('유효하지 않은 비밀번호(비밀번호 형식)')
+      this.setState({
+        error: newProps.error,
+        alertVisible: true,
+        alertTextArray: ['비밀번호를 다시 한 번', '확인해주세요.']
+      })
     } else if (!newProps.attempting && newProps.attemptingerror === null) {
       console.log('유효한 회원가입')
       this.props.signUpPassword()
@@ -62,6 +86,13 @@ class SignUpPasswordScreen extends Component {
     this.props.checkPassword(email, password, passwordCheck)
   }
 
+  onDecline () {
+    this.setState({
+      alertVisible: false,
+      alertTextArray: []
+    })
+  }
+
   render () {
     const { password, passwordCheck } = this.state
     const { checking } = this.props
@@ -69,6 +100,10 @@ class SignUpPasswordScreen extends Component {
 
     return (
       <View style={{marginTop: 44, backgroundColor: 'rgba(0,0,0,0)'}}>
+        <ConfirmError
+          visible={this.state.alertVisible}
+          TextArray={this.state.alertTextArray}
+          onAccept={this.onDecline.bind(this)} />
         <View style={{marginLeft: 21, marginRight: 70.5, marginBottom: 0, backgroundColor: 'rgba(0,0,0,0)'}}>
           <Text style={{color: 'white', fontWeight: 'bold', fontSize: 60, marginBottom: 0}}>반가워요!</Text>
         </View>

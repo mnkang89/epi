@@ -3,12 +3,33 @@ import { path } from 'ramda'
 import SignupActions from '../Redux/SignupRedux'
 import TokenActions from '../Redux/TokenRedux'
 
+let validateEmail = (email) => {
+  const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  return re.test(email)
+}
+
+let validatePassword = (password) => {
+  if (password.length >= 8 && password.length <= 12) {
+    return true
+  } else {
+    return false
+  }
+}
+
+let invalidateNickname = (nickname) => {
+  const re = /[^(가-힣a-zA-Z0-9)]/
+  return re.test(nickname)
+}
+
 // attempts to check email
 export function * email (api, action) {
   const { email } = action
+
   if (email === '') {
     // dispatch failure
     yield put(SignupActions.emailFailure('VACANT'))
+  } else if (!validateEmail(email)) {
+    yield put(SignupActions.emailFailure('INVALID_FORMAT'))
   } else {
     const response = yield call(api.checkEmail, email)
 
@@ -31,10 +52,17 @@ export function * email (api, action) {
 // attempts to check nickname
 export function * password (action) {
   const { email, password, passwordCheck } = action
-  if (password === passwordCheck) {
-    // password matched
-    yield put(SignupActions.passwordSuccess(password))
-    yield put(SignupActions.signupRequest(email, password))
+  if (password === '') {
+    yield put(SignupActions.passwordFailure('VACANT'))
+  } else if (password === passwordCheck) {
+    if (!validatePassword(password)) {
+      // password format check
+      yield put(SignupActions.passwordFailure('INVALID_FORMAT'))
+    } else {
+      // password matched
+      yield put(SignupActions.passwordSuccess(password))
+      yield put(SignupActions.signupRequest(email, password))
+    }
   } else {
     // password not matched
     yield put(SignupActions.passwordFailure('NOT_MATCH'))
@@ -47,6 +75,9 @@ export function * nickname (api, action) {
   if (nickname === '') {
     // dispatch failure
     yield put(SignupActions.nicknameFailure('VACANT'))
+  } else if (invalidateNickname(nickname)) {
+    // dispatch failure
+    yield put(SignupActions.nicknameFailure('INVALID_FORMAT'))
   } else {
     const response = yield call(api.requestNickname, nickname, token, accountId)
 
