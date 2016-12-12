@@ -13,6 +13,7 @@ export default class ProfileScreen extends Component {
     return (
       <View style={styles.mainContainer}>
         <MyEpisodeList />
+        <View style={{height: 50}} />
       </View>
     )
   }

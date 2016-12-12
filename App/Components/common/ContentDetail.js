@@ -65,7 +65,7 @@ class ContentDetailClass extends Component {
 
     if (content.type === 'Image') {
       return (
-        <View style={{backgroundColor: 'black', paddingLeft: 4}}>
+        <View style={{backgroundColor: 'black', paddingLeft: 8, paddingRight: 0}}>
           <TouchableWithoutFeedback
             delayLongPress={800}
             onPress={this.onDoublePress.bind(this)}
@@ -87,7 +87,7 @@ class ContentDetailClass extends Component {
       )
     } else {
       return (
-        <View style={{backgroundColor: 'black', paddingLeft: 4}}>
+        <View style={{backgroundColor: 'black', paddingLeft: 8}}>
           <TouchableWithoutFeedback
             delayLongPress={800}
             onPress={this.onDoublePress.bind(this)}
@@ -104,7 +104,7 @@ class ContentDetailClass extends Component {
                 }}                             // Store reference
                 paused={false}                 // Pauses playback entirely.
                 resizeMode='cover'             // Fill the whole screen at aspect ratio.
-                repeat                         // Repeat forever.
+                repeat={false}                         // Repeat forever.
                 playInBackground={false}       // Audio continues to play when app entering background.
                 playWhenInactive              // [iOS] Video continues to play when control or notification center are shown.
                 progressUpdateInterval={250.0} // [iOS] Interval to fire onProgress (default to ~250ms)

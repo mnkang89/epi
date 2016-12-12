@@ -3,7 +3,6 @@ import { path } from 'ramda'
 import LoginActions from '../Redux/LoginRedux'
 import TokenActions from '../Redux/TokenRedux'
 
-/*
 let validateEmail = (email) => {
   const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
   return re.test(email)
@@ -16,22 +15,18 @@ let validatePassword = (password) => {
     return false
   }
 }
-*/
 
 // attempts to login
 export function * login (api, action) {
   const { email, password } = action
-  /*
-    else if (!validateEmail(email) || !validatePassword(password)) {
-      yield put(LoginActions.loginFailure('INVALID_FORMAT'))
-    }
-  */
 
   if (email === '') {
     // dispatch failure
     yield put(LoginActions.loginFailure('VACANT_EMAIL'))
   } else if (password === '') {
     yield put(LoginActions.loginFailure('VACANT_PASSWORD'))
+  } else if (!validateEmail(email) || !validatePassword(password)) {
+    yield put(LoginActions.loginFailure('INVALID_FORMAT'))
   } else {
     const response = yield call(api.requestLogin, email, password)
 

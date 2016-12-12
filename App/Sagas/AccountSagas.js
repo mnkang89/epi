@@ -32,14 +32,14 @@ export function * account (api, action) {
 
 // attempts to get account
 export function * userEpisodes (api, action) {
-  const { token, active } = action
-  const response = yield call(api.requestUserEpisodes, token, active)
+  const { token, accountId, active } = action
+  const response = yield call(api.requestUserEpisodes, token, accountId, active)
 
   // dispatch successful email checking
   if (response.ok) {
     console.log('ok')
     console.log(response)
-    const episodes = path(['data', 'episodes'], response)
+    const episodes = path(['data', 'items'], response)
 
     yield put(AccountActions.userEpisodesSuccess(episodes))
   } else {

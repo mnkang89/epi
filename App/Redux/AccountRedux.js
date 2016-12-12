@@ -23,6 +23,7 @@ const { Types, Creators } = createActions({
 
   userEpisodesRequest: [
     'token',
+    'accountId',
     'active'
   ],
   userEpisodesSuccess: [
@@ -68,7 +69,7 @@ export const infofailure = (state: Object, { error }: Object) =>
   state.merge({ attempting: false, error })
 
 // we're attempting to check signup
-export const userEpisodesRequest = (state: Object, { token, active }: Object) =>
+export const userEpisodesRequest = (state: Object, { token, accountId, active }: Object) =>
   state.merge({ episodesRequesting: true })
 
 // we've successfully signup

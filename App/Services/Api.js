@@ -89,18 +89,21 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
 
   // Account
   const requestAccount = (token, accountId) => {
+    console.log('POST userAccount api콜 발생')
     api.setHeader('x-auth', token)
 
     return api.get(`/api/accounts/${accountId}/summary`)
   }
 
-  const requestUserEpisodes = (token, active) => {
+  const requestUserEpisodes = (token, accountId, active) => {
+    console.log('POST userEpisode api콜 발생')
     const formData = new FormData()
 
-    formData.append('active', active)
+    formData.append('accountId', accountId)
+    formData.append('withFollowing', active)
     api.setHeader('x-auth', token)
 
-    return api.get(`/api/episodes`)
+    return api.get(`/api/feeds`)
   }
 
   return {

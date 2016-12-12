@@ -24,15 +24,6 @@ export default class FeedScreen extends Component {
       modalVisible: false
     }
   }
-/*
-  onTextChange (event) {
-    const { contentSize, text } = event.nativeEvent
-    this.setState({
-      text: text,
-      height: contentSize.height > 80 ? 80 : contentSize.height
-    })
-  }
-*/
 
   setModalVisible () {
     this.setState({modalVisible: false})
@@ -47,6 +38,7 @@ export default class FeedScreen extends Component {
           </TouchableOpacity>
         </View>
         <FeedList />
+        <View style={{height: 50}} />
         <Modal
           animationType={'slide'}
           transparent
