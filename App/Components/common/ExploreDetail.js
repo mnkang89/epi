@@ -1,17 +1,17 @@
 import React, { Component } from 'react'
 import { ScrollView, Dimensions, Text, View, Image, TouchableOpacity } from 'react-native'
 import { Colors, Metrics } from '../../Themes/'
+import Video from 'react-native-video'
 
 const screenWidth = Dimensions.get('window').width
 const scrollViewWidth = Math.round(screenWidth * 0.90)
 const cardWidth = scrollViewWidth * 0.80
 const paddingCard = scrollViewWidth * 0.02
 
-class FollowDetail extends Component {
+class ExploreDetail extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      albums: [],
       follow: false
     }
   }
@@ -42,11 +42,49 @@ class FollowDetail extends Component {
     }
   }
 
+  renderContents () {
+    const contents = this.props.episode.contents
+    // <ExploreContentDetail key={contents.indexOf(content)} content={content} />)
+    return contents.map(content => {
+      if (content.type === 'Image') {
+        return (
+          <View key={contents.indexOf(content)} style={{marginRight: 8.1}}>
+            <Image style={{height: 146.6, width: 146.6}} source={{ uri: content.path }} />
+          </View>
+        )
+      } else {
+        return (
+          <View key={contents.indexOf(content)} style={{marginRight: 8.1}}>
+            <View style={{height: 146.6, width: 146.6}}>
+              <Video
+                source={{uri: content.path}}   // Can be a URL or a local file.
+                muted
+                ref={(ref) => {
+                  this.player = ref
+                }}                             // Store reference
+                paused={false}                 // Pauses playback entirely.
+                resizeMode='cover'             // Fill the whole screen at aspect ratio.
+                repeat={false}                         // Repeat forever.
+                playInBackground={false}       // Audio continues to play when app entering background.
+                playWhenInactive              // [iOS] Video continues to play when control or notification center are shown.
+                progressUpdateInterval={250.0} // [iOS] Interval to fire onProgress (default to ~250ms)
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0
+                }} />
+            </View>
+          </View>
+        )
+      }
+    }
+    )
+  }
+
   render () {
-    const { artist, image } = this.props.album
-    const {
-            userTextStyle
-          } = styles
+    const { userTextStyle } = styles
 
     return (
       <View>
@@ -58,7 +96,7 @@ class FollowDetail extends Component {
             />
           </View>
           <View style={{marginLeft: 5, marginTop: 20}}>
-            <Text style={userTextStyle}>{artist}</Text>
+            <Text style={userTextStyle}>작성자</Text>
           </View>
           <View style={{marginLeft: 170.5, marginTop: 14.5}}>
             {this.renderFollowButton()}
@@ -72,23 +110,8 @@ class FollowDetail extends Component {
             decelerationRate={'fast'}
             snapToInterval={cardWidth + paddingCard + paddingCard + 1}
             showsHorizontalScrollIndicator
-            horizontal
-          >
-            <View style={{marginRight: 8.1}}>
-              <Image style={{height: 146.6, width: 146.6}} source={{ uri: image }} />
-            </View>
-            <View style={{marginRight: 8.1}}>
-              <Image style={{height: 146.6, width: 146.6}} source={{ uri: image }} />
-            </View>
-            <View style={{marginRight: 8.1}}>
-              <Image style={{height: 146.6, width: 146.6}} source={{ uri: image }} />
-            </View>
-            <View style={{marginRight: 8.1}}>
-              <Image style={{height: 146.6, width: 146.6}} source={{ uri: image }} />
-            </View>
-            <View style={{marginRight: 8.1}}>
-              <Image style={{height: 146.6, width: 146.6}} source={{ uri: image }} />
-            </View>
+            horizontal >
+            {this.renderContents()}
           </ScrollView>
         </View>
       </View>
@@ -143,4 +166,4 @@ const styles = {
   }
 }
 
-export default FollowDetail
+export default ExploreDetail

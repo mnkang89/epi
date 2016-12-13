@@ -1,25 +1,31 @@
 import React, { Component } from 'react'
 import { ScrollView } from 'react-native'
-import axios from 'axios'
+import { connect } from 'react-redux'
+
 import ExploreDetail from './ExploreDetail'
+import AccountActions from '../../Redux/AccountRedux'
 
 class ExploreList extends Component {
 
   constructor (props) {
     super(props)
     this.state = {
-      albums: []
+      apisodes: [],
+      follow: 'gray'
     }
   }
 
-  componentWillMount () {
-    axios.get('https://rallycoding.herokuapp.com/api/music_albums')
-      .then(response => this.setState({ albums: response.data }))
+  componentDidMount () {
+    const { token, accountId } = this.props
+    const active = false
+
+    this.isAttempting = true
+    this.props.requestUserEpisodes(token, accountId, active)
   }
 
   renderExplores () {
-    return this.state.albums.map(album =>
-      <ExploreDetail key={album.title} album={album} />)
+    return this.props.items.map(item =>
+      <ExploreDetail key={item.episode.id} episode={item.episode} />)
   }
 
   render () {
@@ -31,4 +37,25 @@ class ExploreList extends Component {
   }
 }
 
-export default ExploreList
+const mapStateToProps = (state) => {
+  return {
+    token: state.token.token,
+    accountId: state.token.id,
+
+    nickname: state.account.nickname,
+    profileImagePath: state.account.profileImagePath,
+    followerCount: state.account.followerCount,
+    followingCount: state.account.followingCount,
+
+    items: state.account.episodes
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    requestInfo: (token, accountId) => dispatch(AccountActions.infoRequest(token, accountId)),
+    requestUserEpisodes: (token, accountId, active) => dispatch(AccountActions.userEpisodesRequest(token, accountId, active))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ExploreList)
