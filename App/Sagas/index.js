@@ -14,9 +14,7 @@ import { EpisodeTypes } from '../Redux/EpisodeRedux'
 import { ContentTypes } from '../Redux/ContentRedux'
 
 /* ------------- Sagas ------------- */
-
-import { getTemperature } from './TemperatureSagas'
-
+// episode
 import { login } from './LoginSagas'
 import { email, password, nickname, profile, signup } from './SignupSagas'
 import { account, userEpisodes, checkUserEpisode } from './AccountSagas'
