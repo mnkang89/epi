@@ -116,11 +116,9 @@ class SignUpPasswordScreen extends Component {
           // Permissions.openSettings()
         } else if (response === 'authorized') {
           // 사진 라이브러리 가서 사진 가저오는 로직
-          ImagePickerIOS.openSelectDialog(
-            {
-              showImages: true,
-              showVideos: false
-            },
+          // openSelectDialog
+          ImagePickerIOS.openCameraDialog(
+            { },
             (data) => {
               console.log('사진선택')
               this.setState({
