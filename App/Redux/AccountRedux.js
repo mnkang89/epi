@@ -30,7 +30,19 @@ const { Types, Creators } = createActions({
     'episodes'
   ],
   userEpisodesFailure: [
-    'episodeError'
+    'episodesError'
+  ],
+
+  userEpisodeCheck: [
+    'token',
+    'active'
+  ],
+  userEpisodeCheckSuccess: [
+    'episodeStatus',
+    'activeEpisodeId'
+  ],
+  userEpisodeCheckFailure: [
+    'error'
   ]
 })
 
@@ -51,7 +63,10 @@ export const INITIAL_STATE = Immutable({
 
   episodes: [],
   episodesRequesting: false,
-  episodesError: null
+  episodesError: null,
+
+  episodeStatus: null,
+  activeEpisodeId: null
 })
 
 /* ------------- Reducers ------------- */
@@ -80,6 +95,13 @@ export const userEpisodesSuccess = (state: Object, { episodes }: Object) =>
 export const userEpisodesFailure = (state: Object, { episodesError }: Object) =>
   state.merge({ episodesRequesting: false, episodesError })
 
+// we're attempting to check signup
+export const userEpisodeCheck = (state: Object, { token, active }: Object) =>
+  state.merge({ episodesRequesting: true })
+export const userEpisodeCheckSuccess = (state: Object, { episodeStatus, activeEpisodeId }: Object) =>
+  state.merge({ episodesRequesting: false, episodeStatus, activeEpisodeId })
+export const userEpisodeCheckFailure = (state: Object, { error }: Object) =>
+  state.merge({ episodesRequesting: false, error })
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
@@ -89,5 +111,9 @@ export const reducer = createReducer(INITIAL_STATE, {
 
   [Types.USER_EPISODES_REQUEST]: userEpisodesRequest,
   [Types.USER_EPISODES_SUCCESS]: userEpisodesSuccess,
-  [Types.USER_EPISODES_FAILURE]: userEpisodesFailure
+  [Types.USER_EPISODES_FAILURE]: userEpisodesFailure,
+
+  [Types.USER_EPISODE_CHECK]: userEpisodeCheck,
+  [Types.USER_EPISODE_CHECK_SUCCESS]: userEpisodeCheckSuccess,
+  [Types.USER_EPISODE_CHECK_FAILURE]: userEpisodeCheckFailure
 })

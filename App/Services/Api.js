@@ -89,13 +89,23 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
 
   // Account
   const requestAccount = (token, accountId) => {
-    console.log('POST userAccount api콜 발생')
+    // console.log('POST userAccount api콜 발생')
     api.setHeader('x-auth', token)
 
     return api.get(`/api/accounts/${accountId}/summary`)
   }
 
-  const requestUserEpisodes = (token, accountId, active) => {
+  const checkUserEpisode = (token, active) => {
+    console.log('GET userEpisode api콜 발생')
+    const formData = new FormData()
+
+    formData.append('active', active)
+    api.setHeader('x-auth', token)
+
+    return api.get(`/api/episodes`, { active: active })
+  }
+
+  const requestUserFeeds = (token, accountId, active) => {
     console.log('POST userEpisode api콜 발생')
     const formData = new FormData()
 
@@ -104,6 +114,31 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     api.setHeader('x-auth', token)
 
     return api.get(`/api/feeds`)
+  }
+
+  // episode
+  const postEpisode = (token) => {
+    console.log('POST episode api콜 발생')
+    api.setHeader('x-auth', token)
+
+    return api.post(`/api/episodes`)
+  }
+
+  // content
+  const postContent = (token, episodeId, fileType, file) => {
+    console.log('POST content api콜 발생')
+    const formData = new FormData()
+    const photo = {
+      uri: file,
+      type: 'image/jpeg',
+      name: 'photo.jpg'
+    }
+    formData.append('episodeId', episodeId)
+    formData.append('type', fileType)
+    formData.append('file', photo)
+    api.setHeader('x-auth', token)
+
+    return api.post(`/api/contents`, formData)
   }
 
   return {
@@ -118,7 +153,11 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     requestLogin,
 
     requestAccount,
-    requestUserEpisodes
+    checkUserEpisode,
+    requestUserFeeds,
+
+    postEpisode,
+    postContent
   }
 }
 

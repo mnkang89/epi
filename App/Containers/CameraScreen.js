@@ -11,20 +11,22 @@ import {
   Text
 } from 'react-native'
 import { Actions as NavigationActions } from 'react-native-router-flux'
+import { connect } from 'react-redux'
 import Camera from 'react-native-camera'
 import Modal from 'react-native-modalbox'
-// import {CameraKitCamera} from 'react-native-camera-kit'
 import Icon from 'react-native-vector-icons/FontAwesome'
-
 import { Images } from '../Themes'
-// import KeyboardSpacer from 'react-native-keyboard-spacer'
+
+import AccountActions from '../Redux/AccountRedux'
+import EpisodeActions from '../Redux/EpisodeRedux'
+import ContentActions from '../Redux/ContentRedux'
 
 // Styles
 import styles from './Styles/CameraScreenStyle'
 
 const windowSize = Dimensions.get('window')
 
-export default class CameraScreen extends Component {
+class CameraScreen extends Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -39,11 +41,14 @@ export default class CameraScreen extends Component {
       interval: null,
       progress: 0,
       ModalOpen: true,
-      swipe: true
+      swipe: true,
+      fileType: 'Image'
     }
   }
 
   componentDidMount () {
+    // 여기에서 현재 active한 에피소드가 있는지 없는지 체크하고 컨디셔널 렌더링
+    this.props.checkUserEpisode(this.props.token, true)
     this.refs.modal.open()
   }
 
@@ -53,6 +58,7 @@ export default class CameraScreen extends Component {
         console.log('hihi')
         console.log(data)
         this.setState({
+          fileType: 'Image',
           photo: data.path
         })
         setTimeout(() => {
@@ -67,6 +73,7 @@ export default class CameraScreen extends Component {
   takeVideo () {
     this.setState({
       captureMode: Camera.constants.CaptureMode.video,
+      fileType: 'Video',
       timer: true
     })
     this.state.interval = setInterval(() => {
@@ -104,11 +111,29 @@ export default class CameraScreen extends Component {
 
   // 사진만 업로드
   uploadPicture () {
-    // 에피소드 업데이트 api콜 하는 부분
+    const { token } = this.props
+    const file = this.state.photo
+    const fileType = this.state.fileType
+
     if (this.state.cameraState) {
-      console.log('upload')
-      NavigationActions.homeTab()
       this.setState({cameraState: false})
+      console.log('upload')
+      console.log(this.props.episodeStatus)
+      if (this.props.episodeStatus) {
+        const episodeId = this.props.activeEpisodeId
+        console.log(episodeId)
+        console.log(token)
+        console.log(fileType)
+        console.log(file)
+        this.props.postUserContent(token, episodeId, fileType, file)
+        console.log('실행끝')
+      } else {
+        console.log(token)
+        console.log(fileType)
+        console.log(file)
+        this.props.postUserEpisode(token, fileType, file)
+      }
+      // NavigationActions.homeTab()
     }
   }
 
@@ -266,15 +291,17 @@ export default class CameraScreen extends Component {
     } else {
       return (
         <Camera
-          captureMode={this.state.captureMode}
-          captureTarget={Camera.constants.CaptureTarget.disk}
-          captureAudio={false}
           ref={(cam) => {
             this.camera = cam
           }}
-          captureQuality={Camera.constants.CaptureQuality.high}
-          type={this.state.cameraType}
           style={styles.preview}
+          captureMode={this.state.captureMode}
+          captureQuality={Camera.constants.CaptureQuality.low}
+          captureAudio={false}
+          captureTarget={Camera.constants.CaptureTarget.disk}
+          type={this.state.cameraType}
+          torchMode={Camera.constants.TorchMode.on}
+          defaultOnFocusComponent={false}
           onFocusChanged={() => {}}
           onZoomChanged={() => {}}
           aspect={Camera.constants.Aspect.fill}>
@@ -343,3 +370,21 @@ const styles2 = {
     backgroundColor: 'rgba(0, 0, 0, 0.7)'
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    token: state.token.token,
+    activeEpisodeId: state.account.activeEpisodeId,
+    episodeStatus: state.account.episodeStatus
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    checkUserEpisode: (token, active) => dispatch(AccountActions.userEpisodeCheck(token, active)),
+    postUserEpisode: (token, fileType, file) => dispatch(EpisodeActions.userEpisodePost(token, fileType, file)),
+    postUserContent: (token, episodeId, fileType, file) => dispatch(ContentActions.userContentPost(token, episodeId, fileType, file))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CameraScreen)

@@ -7,19 +7,21 @@ import DebugSettings from '../Config/DebugSettings'
 
 import { TemperatureTypes } from '../Redux/TemperatureRedux'
 
-// episode
 import { LoginTypes } from '../Redux/LoginRedux'
 import { SignupTypes } from '../Redux/SignupRedux'
 import { AccountTypes } from '../Redux/AccountRedux'
+import { EpisodeTypes } from '../Redux/EpisodeRedux'
+import { ContentTypes } from '../Redux/ContentRedux'
 
 /* ------------- Sagas ------------- */
 
 import { getTemperature } from './TemperatureSagas'
 
-// episode
 import { login } from './LoginSagas'
 import { email, password, nickname, profile, signup } from './SignupSagas'
-import { account, userEpisodes } from './AccountSagas'
+import { account, userEpisodes, checkUserEpisode } from './AccountSagas'
+import { postEpisode } from './EpisodeSagas'
+import { postContent } from './ContentSagas'
 
 /* ------------- API ------------- */
 
@@ -57,6 +59,16 @@ export default function * root () {
     // user info
     takeLatest(AccountTypes.INFO_REQUEST, account, api),
     // user episode
-    takeLatest(AccountTypes.USER_EPISODES_REQUEST, userEpisodes, api)
+    takeLatest(AccountTypes.USER_EPISODES_REQUEST, userEpisodes, api),
+    // check user episode
+    takeLatest(AccountTypes.USER_EPISODE_CHECK, checkUserEpisode, api),
+
+    /* --- Episode --- */
+    // post epissode
+    takeLatest(EpisodeTypes.USER_EPISODE_POST, postEpisode, api),
+
+    /* --- Content --- */
+    // post content
+    takeLatest(ContentTypes.USER_CONTENT_POST, postContent, api)
   ]
 }

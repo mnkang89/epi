@@ -33,7 +33,7 @@ export function * account (api, action) {
 // attempts to get account
 export function * userEpisodes (api, action) {
   const { token, accountId, active } = action
-  const response = yield call(api.requestUserEpisodes, token, accountId, active)
+  const response = yield call(api.requestUserFeeds, token, accountId, active)
 
   // dispatch successful email checking
   if (response.ok) {
@@ -45,6 +45,29 @@ export function * userEpisodes (api, action) {
   } else {
     console.log('error')
     console.log(response)
-    yield put(AccountActions.episodeError('WRONG'))
+    yield put(AccountActions.userEpisodesFailure('WRONG'))
+  }
+}
+
+export function * checkUserEpisode (api, action) {
+  const { token, active } = action
+  const response = yield call(api.checkUserEpisode, token, active)
+
+  // dispatch successful email checking
+  if (response.ok) {
+    console.log('ok')
+    console.log(response)
+    const episodes = path(['data', 'episodes'], response)
+
+    if (episodes.length === 0) {
+      yield put(AccountActions.userEpisodeCheckSuccess(false, null))
+    } else {
+      const activeEpisodeId = episodes[0].id
+      yield put(AccountActions.userEpisodeCheckSuccess(true, activeEpisodeId))
+    }
+  } else {
+    console.log('error')
+    console.log(response)
+    yield put(AccountActions.userEpisodeCheckFailure('WRONG'))
   }
 }
