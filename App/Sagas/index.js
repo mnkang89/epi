@@ -5,8 +5,6 @@ import DebugSettings from '../Config/DebugSettings'
 
 /* ------------- Types ------------- */
 
-import { TemperatureTypes } from '../Redux/TemperatureRedux'
-
 import { LoginTypes } from '../Redux/LoginRedux'
 import { SignupTypes } from '../Redux/SignupRedux'
 import { AccountTypes } from '../Redux/AccountRedux'
@@ -32,8 +30,6 @@ const api = DebugSettings.useFixtures ? FixtureAPI : API.create()
 export default function * root () {
   yield [
     // some sagas receive extra parameters in addition to an action
-    takeLatest(TemperatureTypes.TEMPERATURE_REQUEST, getTemperature, api),
-
     /* --- LogIn --- */
     takeLatest(LoginTypes.LOGIN_REQUEST, login, api),
 
