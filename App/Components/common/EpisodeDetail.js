@@ -9,6 +9,7 @@ import {
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import * as Animatable from 'react-native-animatable'
 import { Colors, Metrics } from '../../Themes/'
+import { convert2TimeDiffString } from '../../Lib/Utilities'
 
 import ContentDetail from './ContentDetail'
 
@@ -81,6 +82,10 @@ class EpisodeDetailClass extends Component {
       textStyle
     } = styles
 
+    const likeCount = this.props.episode.contents
+      .map(content =>content.likeCount).reduce( (a,b) => a+b);
+    const timeDiffString = convert2TimeDiffString(this.props.episode.createDateTime);
+
     return (
       <View>
         <View style={headerContentStyle}>
@@ -93,8 +98,8 @@ class EpisodeDetailClass extends Component {
                 />
               </TouchableOpacity>
               <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-                <Text style={{color: Colors.snow, fontWeight: 'bold', paddingLeft: 5}}>신촌초보</Text>
-                <Text style={{color: Colors.snow, fontSize: 13, paddingLeft: 130, justifyContent: 'flex-end'}}>최근 업데이트 : 1분 전</Text>
+                <Text style={{color: Colors.snow, fontWeight: 'bold', paddingLeft: 5}}>{this.props.episode.nickname}</Text>
+                <Text style={{color: Colors.snow, fontSize: 13, paddingLeft: 130, justifyContent: 'flex-end'}}>최근 업데이트 : {timeDiffString}</Text>
               </View>
             </View>
           </View>
@@ -115,9 +120,9 @@ class EpisodeDetailClass extends Component {
 
         <View style={[textStyle, {backgroundColor: 'black', paddingTop: 15, marginLeft: 15, marginRight: 15}]}>
           <View style={{flexDirection: 'row'}}>
-            <Text style={{fontSize: 13, paddingLeft: 145, color: 'white'}}>알림설정 99</Text>
-            <Text style={{fontSize: 13, paddingLeft: 10, color: 'white'}}>공감 9,999</Text>
-            <Text style={{fontSize: 13, paddingLeft: 10, color: 'white'}}>댓글 123</Text>
+            <Text style={{fontSize: 13, paddingRight: 10, color: 'white'}}>알림설정 : {this.props.episode.subscriberCount}</Text>
+            <Text style={{fontSize: 13, paddingRight: 10, color: 'white'}}>공감 : {likeCount}</Text>
+            <Text style={{fontSize: 13, paddingRight: 10, color: 'white'}}>댓글 123</Text>
           </View>
         </View>
       </View>
@@ -159,7 +164,8 @@ const styles = {
     flex: 1,
     height: 43,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgb(45, 45, 45)'
+    borderBottomColor: 'rgb(45, 45, 45)',
+    alignItems: 'flex-end'
   },
   textContainerStyle: {
     color: Colors.snow,
