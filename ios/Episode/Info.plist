@@ -19,7 +19,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>201612121920</string>
+	<string>201612160937</string>
 	<key>LSApplicationCategoryType</key>
 	<string></string>
 	<key>LSRequiresIPhoneOS</key>
@@ -41,11 +41,11 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string></string>
+	<string>to take photo</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>to get location of photo</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string></string>
+	<string>to upload photo</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Entypo.ttf</string>
@@ -85,5 +85,13 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSCalendarsUsageDescription</key>
+	<string>no needed</string>
+	<key>CFBundleDisplayName</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>no needed</string>
 </dict>
 </plist>
