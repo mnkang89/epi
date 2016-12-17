@@ -108,7 +108,6 @@ class EpisodeDetailClass extends Component {
         <ScrollView
           style={{paddingLeft: 7.5, paddingRight: 7.5}}
           horizontal
-          onScroll={() => { console.log('onScroll!') }}
           snapToAlignment={'start'}
           snapToInterval={350}
           showsHorizontalScrollIndicator

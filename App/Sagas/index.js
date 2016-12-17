@@ -15,8 +15,8 @@ import { ContentTypes } from '../Redux/ContentRedux'
 // episode
 import { login } from './LoginSagas'
 import { email, password, nickname, profile, signup } from './SignupSagas'
-import { account, userEpisodes, checkUserEpisode } from './AccountSagas'
-import { postEpisode } from './EpisodeSagas'
+import { account, checkUserEpisode } from './AccountSagas'
+import { userEpisodes, postEpisode, putEpisode } from './EpisodeSagas'
 import { postContent } from './ContentSagas'
 
 /* ------------- API ------------- */
@@ -52,14 +52,16 @@ export default function * root () {
     /* --- Account --- */
     // user info
     takeLatest(AccountTypes.INFO_REQUEST, account, api),
-    // user episode
-    takeLatest(AccountTypes.USER_EPISODES_REQUEST, userEpisodes, api),
     // check user episode
     takeLatest(AccountTypes.USER_EPISODE_CHECK, checkUserEpisode, api),
 
     /* --- Episode --- */
-    // post epissode
+    // get user episode
+    takeLatest(EpisodeTypes.USER_EPISODES_REQUEST, userEpisodes, api),
+    // post episode
     takeLatest(EpisodeTypes.USER_EPISODE_POST, postEpisode, api),
+    // put episode
+    takeLatest(EpisodeTypes.USER_EPISODE_PUT, putEpisode, api),
 
     /* --- Content --- */
     // post content

@@ -6,10 +6,11 @@ import {
   TextInput
 } from 'react-native'
 import { connect } from 'react-redux'
+import { Actions as NavigationActions } from 'react-native-router-flux'
 import ConfirmError from '../Components/common/ConfirmError'
 
-import { Actions as NavigationActions } from 'react-native-router-flux'
 import LoginActions from '../Redux/LoginRedux'
+import EpisodeActions from '../Redux/EpisodeRedux'
 
 class SignInScreen extends Component {
   constructor (props) {
@@ -31,7 +32,13 @@ class SignInScreen extends Component {
     console.log('로그인?')
     if (this.isAttempting && !newProps.fetching && newProps.error === null) {
       console.log('로그인 성공')
-      NavigationActions.root()
+      const { token, accountId } = this.props
+      const active = false
+
+      this.props.requestUserEpisodes(token, accountId, active)
+      setTimeout(() => {
+        NavigationActions.root()
+      }, 500)
     } else if (this.isAttempting && !newProps.fetching && newProps.error === 'INVALID_FORMAT') {
       console.log('유효하지 않은 형식')
       this.setState({
@@ -162,6 +169,8 @@ class SignInScreen extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    token: state.token.token,
+    accountId: state.token.id,
     fetching: state.login.fetching,
     error: state.login.error
   }
@@ -169,7 +178,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    attemptLogin: (email, password) => dispatch(LoginActions.loginRequest(email, password))
+    attemptLogin: (email, password) => dispatch(LoginActions.loginRequest(email, password)),
+    requestUserEpisodes: (token, accountId, active) => dispatch(EpisodeActions.userEpisodesRequest(token, accountId, active))
   }
 }
 

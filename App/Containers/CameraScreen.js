@@ -46,6 +46,11 @@ class CameraScreen extends Component {
     }
   }
 
+  componentWillReceiveProps () {
+    console.log('카메라스크린 componentWillReceiveProps!!!!!!!!!!!!!!!!!!!')
+    this.props.checkUserEpisode(this.props.token, true)
+  }
+
   componentDidMount () {
     // 여기에서 현재 active한 에피소드가 있는지 없는지 체크하고 컨디셔널 렌더링
     this.props.checkUserEpisode(this.props.token, true)
@@ -111,29 +116,29 @@ class CameraScreen extends Component {
 
   // 사진만 업로드
   uploadPicture () {
-    const { token } = this.props
+    const { token, accountId } = this.props
     const file = this.state.photo
     const fileType = this.state.fileType
+    const active = false
 
     if (this.state.cameraState) {
       this.setState({cameraState: false})
-      console.log('upload')
-      console.log(this.props.episodeStatus)
+
       if (this.props.episodeStatus) {
         const episodeId = this.props.activeEpisodeId
-        console.log(episodeId)
-        console.log(token)
-        console.log(fileType)
-        console.log(file)
+
         this.props.postUserContent(token, episodeId, fileType, file)
-        console.log('실행끝')
+        setTimeout(() => {
+          this.props.requestUserEpisodes(token, accountId, active)
+        }, 1000)
+        NavigationActions.homeTab()
       } else {
-        console.log(token)
-        console.log(fileType)
-        console.log(file)
         this.props.postUserEpisode(token, fileType, file)
+        setTimeout(() => {
+          this.props.requestUserEpisodes(token, accountId, active)
+        }, 1000)
+        NavigationActions.refresh({key: 'homeTab'})
       }
-      // NavigationActions.homeTab()
     }
   }
 
@@ -277,6 +282,38 @@ class CameraScreen extends Component {
     }
   }
 
+  endEpiBtnPress () {
+    console.log('endepibtn')
+    const { token, accountId } = this.props
+    const episodeId = this.props.activeEpisodeId
+    const active = false
+
+    this.props.putUserEpisode(token, episodeId, active)
+    this.props.requestUserEpisodes(token, accountId, active)
+    NavigationActions.refresh({key: 'homeTab'})
+  }
+
+  renderEpisodeStatusButton () {
+    console.log('알다가도 모르겠다~')
+    if (this.props.episodeStatus) {
+      return (
+        <View>
+          <TouchableOpacity onPress={
+            () => {
+              this.endEpiBtnPress()
+            }
+          }>
+            <Image style={{width: 28.5, height: 28.5, position: 'relative', bottom: 320, right: 335}} source={Images.endEpBtn} />
+          </TouchableOpacity>
+        </View>
+      )
+    } else {
+      return (
+        <View />
+      )
+    }
+  }
+
   renderCamera () {
     if (this.state.cameraState) {
       return (
@@ -296,16 +333,16 @@ class CameraScreen extends Component {
           }}
           style={styles.preview}
           captureMode={this.state.captureMode}
-          captureQuality={Camera.constants.CaptureQuality.low}
+          captureQuality={Camera.constants.CaptureQuality.high}
           captureAudio={false}
           captureTarget={Camera.constants.CaptureTarget.disk}
           type={this.state.cameraType}
-          torchMode={Camera.constants.TorchMode.on}
           defaultOnFocusComponent={false}
           onFocusChanged={() => {}}
           onZoomChanged={() => {}}
           aspect={Camera.constants.Aspect.fill}>
-          {this.renderTimerComponent()}
+          {this.renderEpisodeStatusButton()}
+          {this.renderTimerComponent.bind(this)}
         </Camera>
       )
     }
@@ -374,6 +411,8 @@ const styles2 = {
 const mapStateToProps = (state) => {
   return {
     token: state.token.token,
+    accountId: state.token.id,
+
     activeEpisodeId: state.account.activeEpisodeId,
     episodeStatus: state.account.episodeStatus
   }
@@ -382,7 +421,11 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     checkUserEpisode: (token, active) => dispatch(AccountActions.userEpisodeCheck(token, active)),
+
+    requestUserEpisodes: (token, accountId, active) => dispatch(EpisodeActions.userEpisodesRequest(token, accountId, active)),
     postUserEpisode: (token, fileType, file) => dispatch(EpisodeActions.userEpisodePost(token, fileType, file)),
+    putUserEpisode: (token, episodeId, active) => dispatch(EpisodeActions.userEpisodePut(token, episodeId, active)),
+
     postUserContent: (token, episodeId, fileType, file) => dispatch(ContentActions.userContentPost(token, episodeId, fileType, file))
   }
 }

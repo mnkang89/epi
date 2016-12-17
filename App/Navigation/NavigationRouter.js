@@ -23,7 +23,12 @@ import ProfileScreen from '../Containers/ProfileScreen'
 * Documentation: https://github.com/aksonov/react-native-router-flux
 ***************************/
 /*
-
+<Scene
+  initial
+  key='Greeting'
+  hideNavBar
+  hideTabBar
+  component={GreetingScreen} />
 */
 
 class NavigationRouter extends Component {

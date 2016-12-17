@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 
 import ExploreDetail from './ExploreDetail'
 import AccountActions from '../../Redux/AccountRedux'
+import EpisodeActions from '../../Redux/EpisodeRedux'
 
 class ExploreList extends Component {
 
@@ -47,14 +48,14 @@ const mapStateToProps = (state) => {
     followerCount: state.account.followerCount,
     followingCount: state.account.followingCount,
 
-    items: state.account.episodes
+    items: state.episode.episodes
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     requestInfo: (token, accountId) => dispatch(AccountActions.infoRequest(token, accountId)),
-    requestUserEpisodes: (token, accountId, active) => dispatch(AccountActions.userEpisodesRequest(token, accountId, active))
+    requestUserEpisodes: (token, accountId, active) => dispatch(EpisodeActions.userEpisodesRequest(token, accountId, active))
   }
 }
 

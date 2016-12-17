@@ -30,25 +30,6 @@ export function * account (api, action) {
   }
 }
 
-// attempts to get account
-export function * userEpisodes (api, action) {
-  const { token, accountId, active } = action
-  const response = yield call(api.requestUserFeeds, token, accountId, active)
-
-  // dispatch successful email checking
-  if (response.ok) {
-    console.log('ok')
-    console.log(response)
-    const episodes = path(['data', 'items'], response)
-
-    yield put(AccountActions.userEpisodesSuccess(episodes))
-  } else {
-    console.log('error')
-    console.log(response)
-    yield put(AccountActions.userEpisodesFailure('WRONG'))
-  }
-}
-
 export function * checkUserEpisode (api, action) {
   const { token, active } = action
   const response = yield call(api.checkUserEpisode, token, active)

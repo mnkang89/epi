@@ -1,30 +1,49 @@
 import React, { Component } from 'react'
 import { ScrollView } from 'react-native'
 import { connect } from 'react-redux'
+import _ from 'lodash'
 
 import EpisodeDetail from './EpisodeDetail'
 import AccountActions from '../../Redux/AccountRedux'
+import EpisodeActions from '../../Redux/EpisodeRedux'
 
 class FeedList extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      apisodes: [],
+      episodes: [],
       follow: 'gray'
+    }
+  }
+
+  componentWillReceiveProps (nextProps) {
+    if (_.isEqual(this.props.items, nextProps.items)) {
+      console.log('아이템같음')
+      console.log(nextProps.items)
+      console.log(this.props.items)
+      return
+    } else {
+      console.log('아이템다름')
+      console.log(nextProps.items)
+      console.log(this.props.items)
+      // const { token, accountId } = nextProps
+      // const active = false
+      // this.props.requestUserEpisodes(token, accountId, active)
     }
   }
 
   componentDidMount () {
     const { token, accountId } = this.props
-    const active = false
+    // const active = false
 
     this.isAttempting = true
     // attempt to check email - a saga is listening to pick it up from here.
     this.props.requestInfo(token, accountId)
-    this.props.requestUserEpisodes(token, accountId, active)
+    // this.props.requestUserEpisodes(token, accountId, active)
   }
 
   renderEpisodes () {
+    console.log(this.props)
     return this.props.items.map(item =>
       <EpisodeDetail key={item.episode.id} episode={item.episode} />)
   }
@@ -43,20 +62,14 @@ const mapStateToProps = (state) => {
   return {
     token: state.token.token,
     accountId: state.token.id,
-
-    nickname: state.account.nickname,
-    profileImagePath: state.account.profileImagePath,
-    followerCount: state.account.followerCount,
-    followingCount: state.account.followingCount,
-
-    items: state.account.episodes
+    items: state.episode.episodes
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     requestInfo: (token, accountId) => dispatch(AccountActions.infoRequest(token, accountId)),
-    requestUserEpisodes: (token, accountId, active) => dispatch(AccountActions.userEpisodesRequest(token, accountId, active))
+    requestUserEpisodes: (token, accountId, active) => dispatch(EpisodeActions.userEpisodesRequest(token, accountId, active))
   }
 }
 
