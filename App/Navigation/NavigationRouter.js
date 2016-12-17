@@ -11,7 +11,6 @@ import GreetingScreen from '../Containers/GreetingScreen'
 
 import FeedScreen from '../Containers/FeedScreen'
 import CommentScreen from '../Containers/CommentScreen'
-import UserProfileScreen from '../Containers/UserProfileScreen'
 import FollowScreen from '../Containers/FollowScreen'
 import FollowerScreen from '../Containers/FollowerScreen'
 import AlertScreen from '../Containers/AlertScreen'
@@ -72,10 +71,6 @@ class NavigationRouter extends Component {
                 component={CommentScreen}
                 title='댓글'
                 renderLeftButton={NavItems.chevronButton} />
-              <Scene
-                key='userProfileScreen'
-                component={UserProfileScreen}
-                title='프로필' />
               <Scene
                 key='followScreen'
                 component={FollowScreen}
