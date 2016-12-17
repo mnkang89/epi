@@ -38,14 +38,6 @@
 		D0DCD4B6714C4F24B5EA0523 /* libRCTCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1222B62DEB9241F49BA3B278 /* libRCTCamera.a */; };
 		D78C69076C974DABBD6D80E9 /* libAirMaps.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FB2F17D431C54D27A6D0C882 /* libAirMaps.a */; };
 		E59E032AADE84A44B7DF36E1 /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4DA47E7992F43A3978EFDBA /* libRNDeviceInfo.a */; };
-		EE0450F11DD1649500138F4A /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EE0450E91DD1649500138F4A /* Entypo.ttf */; };
-		EE0450F21DD1649500138F4A /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EE0450EA1DD1649500138F4A /* EvilIcons.ttf */; };
-		EE0450F31DD1649500138F4A /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EE0450EB1DD1649500138F4A /* FontAwesome.ttf */; };
-		EE0450F41DD1649500138F4A /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EE0450EC1DD1649500138F4A /* Foundation.ttf */; };
-		EE0450F51DD1649500138F4A /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EE0450ED1DD1649500138F4A /* Ionicons.ttf */; };
-		EE0450F61DD1649500138F4A /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EE0450EE1DD1649500138F4A /* MaterialIcons.ttf */; };
-		EE0450F71DD1649500138F4A /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EE0450EF1DD1649500138F4A /* Octicons.ttf */; };
-		EE0450F81DD1649500138F4A /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EE0450F01DD1649500138F4A /* Zocial.ttf */; };
 		EE597A411DDDE8D000BA72E1 /* libAutoGrowTextInput.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EE597A2D1DDDE8B500BA72E1 /* libAutoGrowTextInput.a */; };
 		EE8E58F91DEB1C00009EA55A /* libRCTVideo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EE8E58F81DEB1BEC009EA55A /* libRCTVideo.a */; };
 		EED8BE891DE5208D00FC0BF4 /* libReactNativeCameraKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EED8BE881DE5207C00FC0BF4 /* libReactNativeCameraKit.a */; };
@@ -1096,15 +1088,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EE0450F61DD1649500138F4A /* MaterialIcons.ttf in Resources */,
-				EE0450F71DD1649500138F4A /* Octicons.ttf in Resources */,
-				EE0450F81DD1649500138F4A /* Zocial.ttf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				EE0450F31DD1649500138F4A /* FontAwesome.ttf in Resources */,
-				EE0450F21DD1649500138F4A /* EvilIcons.ttf in Resources */,
-				EE0450F51DD1649500138F4A /* Ionicons.ttf in Resources */,
-				EE0450F41DD1649500138F4A /* Foundation.ttf in Resources */,
-				EE0450F11DD1649500138F4A /* Entypo.ttf in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				526D3CADEE1D4C0CA667FF11 /* Entypo.ttf in Resources */,
 				7F741452CDB0451CA0C986FB /* EvilIcons.ttf in Resources */,
