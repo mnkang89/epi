@@ -82,7 +82,7 @@ class EpisodeDetailClass extends Component {
     } = styles
 
     const likeCount = this.props.episode.contents
-      .map(content => content.likeCount).reduce((a, b) => a + b)
+      .map(content => content.likeCount).reduce((a, b) => a + b, 0)
     const timeDiffString = convert2TimeDiffString(this.props.episode.createDateTime)
 
     return (
