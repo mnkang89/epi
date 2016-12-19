@@ -6,12 +6,11 @@ class CommentDetail extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      albums: []
     }
   }
 
   render () {
-    const { artist } = this.props.album
+    const { accountId, message } = this.props.comment
     const {
             headerContentStyle,
             userTextStyle,
@@ -29,10 +28,10 @@ class CommentDetail extends Component {
           </View>
           <View style={{marginLeft: 5, marginRight: 100}}>
             <View style={{flex: 1, flexDirection: 'row'}}>
-              <Text style={userTextStyle}>{artist}</Text>
+              <Text style={userTextStyle}>{accountId}</Text>
             </View>
             <View style={{flex: 2, marginTop: 3, marginBottom: 10}}>
-              <Text style={{color: 'rgb(53, 53, 53)', fontSize: 15, lineHeight: 16}}>가나다라바바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차</Text>
+              <Text style={{color: 'rgb(53, 53, 53)', fontSize: 15, lineHeight: 16}}>{message}</Text>
               <Text style={dateTextStyle}>2016-11-12 11:00:00</Text>
             </View>
           </View>

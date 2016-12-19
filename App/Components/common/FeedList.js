@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ScrollView } from 'react-native'
+import { RefreshControl, ScrollView } from 'react-native'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 
@@ -11,7 +11,7 @@ class FeedList extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      episodes: [],
+      refreshing: false,
       follow: 'gray'
     }
   }
@@ -26,6 +26,15 @@ class FeedList extends Component {
       console.log('아이템다름')
       console.log(nextProps.items)
       console.log(this.props.items)
+      console.log('윌리시브에서 리프레슁 상태 1')
+      console.log(this.state.refreshing)
+      if (this.state.refreshing) {
+        this.setState({refreshing: false})
+        console.log('윌리시브에서 리프레슁 상태 2')
+        setTimeout(() => {
+          console.log(this.state.refreshing)
+        }, 100)
+      }
       // const { token, accountId } = nextProps
       // const active = false
       // this.props.requestUserEpisodes(token, accountId, active)
@@ -42,6 +51,15 @@ class FeedList extends Component {
     // this.props.requestUserEpisodes(token, accountId, active)
   }
 
+  onRefresh () {
+    console.log('onRefresh에서 리프레슁 상태')
+    console.log(this.state.refreshing)
+    const { token, accountId } = this.props
+    const active = false
+    this.setState({refreshing: true})
+    this.props.requestUserEpisodes(token, accountId, active)
+  }
+
   renderEpisodes () {
     console.log(this.props)
     return this.props.items.map(item =>
@@ -50,7 +68,13 @@ class FeedList extends Component {
 
   render () {
     return (
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={this.onRefresh.bind(this)}
+          />}
+        >
         {this.renderEpisodes()}
       </ScrollView>
     )

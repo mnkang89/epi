@@ -10,6 +10,7 @@ import { SignupTypes } from '../Redux/SignupRedux'
 import { AccountTypes } from '../Redux/AccountRedux'
 import { EpisodeTypes } from '../Redux/EpisodeRedux'
 import { ContentTypes } from '../Redux/ContentRedux'
+import { CommentTypes } from '../Redux/CommentRedux'
 
 /* ------------- Sagas ------------- */
 // episode
@@ -18,6 +19,7 @@ import { email, password, nickname, profile, signup } from './SignupSagas'
 import { account, checkUserEpisode } from './AccountSagas'
 import { userEpisodes, postEpisode, putEpisode } from './EpisodeSagas'
 import { postContent } from './ContentSagas'
+import { postComment, getComment } from './CommentSagas'
 
 /* ------------- API ------------- */
 
@@ -56,15 +58,21 @@ export default function * root () {
     takeLatest(AccountTypes.USER_EPISODE_CHECK, checkUserEpisode, api),
 
     /* --- Episode --- */
-    // get user episode
-    takeLatest(EpisodeTypes.USER_EPISODES_REQUEST, userEpisodes, api),
     // post episode
     takeLatest(EpisodeTypes.USER_EPISODE_POST, postEpisode, api),
     // put episode
     takeLatest(EpisodeTypes.USER_EPISODE_PUT, putEpisode, api),
+    // get user episode
+    takeLatest(EpisodeTypes.USER_EPISODES_REQUEST, userEpisodes, api),
 
     /* --- Content --- */
     // post content
-    takeLatest(ContentTypes.USER_CONTENT_POST, postContent, api)
+    takeLatest(ContentTypes.USER_CONTENT_POST, postContent, api),
+
+    /* --- Comment --- */
+    // post comment
+    takeLatest(CommentTypes.COMMENT_POST, postComment, api),
+    // get comment
+    takeLatest(CommentTypes.COMMENT_GET, getComment, api)
   ]
 }

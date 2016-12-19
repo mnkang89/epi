@@ -13,7 +13,8 @@ export default () => {
     token: require('./TokenRedux').reducer,
     account: require('./AccountRedux').reducer,
     episode: require('./EpisodeRedux').reducer,
-    content: require('./ContentRedux').reducer
+    content: require('./ContentRedux').reducer,
+    comment: require('./CommentRedux').reducer
   })
 
   return configureStore(rootReducer, rootSaga)

@@ -2,41 +2,93 @@
 // EPISODE
 
 import React, { Component } from 'react'
-import { Modal, Text, TouchableHighlight, TouchableOpacity, View, Dimensions } from 'react-native'
+import { Modal, Text, TouchableOpacity, View, Dimensions } from 'react-native'
+import { connect } from 'react-redux'
 // import Actions from '../Actions/Creators'
 import KeyboardSpacer from 'react-native-keyboard-spacer'
+import _ from 'lodash'
+
 import Icon from 'react-native-vector-icons/FontAwesome'
 import FeedList from '../Components/common/FeedList'
 import CommentList from '../Components/common/CommentList'
 import {AutoGrowingTextInput} from 'react-native-autogrow-textinput'
-
-const windowSize = Dimensions.get('window')
-// Styles
 import styles from './Styles/FeedScreenStyle'
 
-export default class FeedScreen extends Component {
+import CommentActions from '../Redux/CommentRedux'
+
+const windowSize = Dimensions.get('window')
+
+class FeedScreen extends Component {
   constructor (props) {
     super(props)
     this.state = {
       text: '',
       height: 5,
       inputBottom: 40,
-      modalVisible: false
+      modalVisible: false,
+      message: ''
     }
   }
 
-  setModalVisible () {
+  componentDidMount () {
+    this.props.resetCommentModal()
+  }
+  // TODO: 어렵구만!!!!!!!!!!
+  componentWillReceiveProps (nextProps) {
+    console.log('* --- componentWillReceiveProps --- *')
+    console.log(this.props)
+    console.log(nextProps)
+
+    if (nextProps.visible) {
+      // TODO: comment쪽에 두어도 좋지 않을지? 고민해보기.
+      // const { token } = this.props
+      // const { episodeId } = nextProps
+      if (nextProps.commentPosting) {
+        console.log('아직 코멘트 포스팅중')
+        return
+      } else if (
+        this.props.commentPosting === true &&
+        nextProps.commentPosting === false) {
+        console.log('코멘트 포스팅 끝')
+      } else if (!_.isEqual(this.props.comments, nextProps.comments)) {
+        console.log('코멘트 포스팅 후 새로고침')
+      } else {
+        console.log('코멘트 첫 진입')
+        const modalVisible = nextProps.visible
+
+        this.setState({
+          modalVisible
+        })
+      }
+    }
+  }
+
+  resetCommentModal () {
+    console.log('modalVisible리프레쉬')
     this.setState({modalVisible: false})
+    setTimeout(() => {
+      this.props.resetCommentModal()
+    }, 500)
+  }
+
+  handleChangeMessage = (text) => {
+    this.setState({ message: text })
+    console.log(this.state.message)
+  }
+
+  onCommentButtonPress () {
+    const { token, episodeId, contentId } = this.props
+    const message = this.state.message
+    this.setState({message: ''})
+
+    this.props.postComment(token, episodeId, contentId, message)
   }
 
   render () {
+    const message = this.state.message
+
     return (
       <View style={styles.mainContainer}>
-        <View style={{backgroundColor: 'black'}}>
-          <TouchableOpacity onPress={() => { this.setState({modalVisible: true}) }}>
-            <Text>ShowModal</Text>
-          </TouchableOpacity>
-        </View>
         <FeedList />
         <View style={{height: 50}} />
         <Modal
@@ -48,9 +100,7 @@ export default class FeedScreen extends Component {
               <View style={{flexDirection: 'row', height: 42.5, marginRight: 4.5, marginLeft: 4.5, borderBottomWidth: 0.5, borderBottomColor: 'rgb(204, 204, 204)'}}>
                 <TouchableOpacity
                   onPress={() => {
-                    console.log(this.state.modalVisible)
-                    this.setModalVisible()
-                    console.log(this.state.modalVisible)
+                    this.resetCommentModal()
                   }}
                   style={{paddingTop: 10, paddingLeft: 16}}>
                   <Icon
@@ -61,15 +111,23 @@ export default class FeedScreen extends Component {
                 </TouchableOpacity>
                 <Text style={{left: 140, marginTop: 10, fontSize: 17, fontWeight: 'bold'}}>댓글</Text>
               </View>
-              <CommentList />
+              <CommentList comments={this.props.comments} />
               <View style={{flexDirection: 'row', backgroundColor: 'rgb(236, 236, 236)'}}>
                 <View style={styles2.textContainer}>
-                  <AutoGrowingTextInput style={styles2.input} placeholder={'댓글을 입력하세요...'} maxHeight={70} />
+                  <AutoGrowingTextInput
+                    style={styles2.input}
+                    placeholder={'댓글을 입력하세요...'}
+                    value={message}
+                    autoCapitalize='none'
+                    autoCorrect={false}
+                    onChangeText={this.handleChangeMessage}
+                    maxHeight={70} />
                 </View>
                 <View style={styles2.sendContainer}>
-                  <TouchableHighlight>
+                  <TouchableOpacity
+                    onPress={this.onCommentButtonPress.bind(this)}>
                     <Text style={styles2.sendButton}>게시</Text>
-                  </TouchableHighlight>
+                  </TouchableOpacity>
                 </View>
               </View>
               <KeyboardSpacer style={{backgroundColor: 'black'}} />
@@ -119,21 +177,25 @@ const styles2 = {
   }
 }
 
-/*
 const mapStateToProps = (state) => {
   return {
-    // modalVisible: state.visible
-    // comments: state.comments.items,
+    token: state.token.token,
+    contentId: state.comment.contentId,
+    episodeId: state.comment.episodeId,
+
+    visible: state.comment.visible,
+
+    comments: state.comment.comments,
+    commentPosting: state.comment.commentPosting
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    toComment: NavigationActions.comment,
-    fetchComments: (articleId) => dispatch(Actions.fetchComments(articleId)),
-    joinArticle: (data) => dispatch(Actions.joinArticle(data))
+    resetCommentModal: () => dispatch(CommentActions.resetComment()),
+    postComment: (token, episodeId, contentId, message) => dispatch(CommentActions.commentPost(token, episodeId, contentId, message)),
+    getComment: (token, episodeId) => dispatch(CommentActions.commentGet(token, episodeId))
   }
 }
 
-*/
-// export default connect(mapStateToProps, mapDispatchToProps)(FeedScreen)
+export default connect(mapStateToProps, mapDispatchToProps)(FeedScreen)

@@ -6,73 +6,29 @@ import {
   TouchableOpacity,
   ScrollView
  } from 'react-native'
-import * as Animatable from 'react-native-animatable'
+// import * as Animatable from 'react-native-animatable'
 import { Colors, Metrics } from '../../Themes/'
 import { convert2TimeDiffString } from '../../Lib/Utilities'
 
 import ContentDetail from './ContentDetail'
 
-// const scrollViewPadding = scrollViewWidth * 0.08
-
-class EpisodeDetailClass extends Component {
+class EpisodeDetail extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      lastPress: 0,
-      animation: false,
-      textList: ['좋아', '짜릿해', '맛있어', '최고야', '개좋아', '좋아', '짜릿해', '맛있어', '최고야', '개좋아'],
-      pressIn: 0,
-      modalVisible: false
-    }
-  }
-
-  onDoublePress () {
-    const delta = new Date().getTime() - this.state.lastPress
-
-    if (delta < 500) {
-      // double tap happend
-      console.log('더블탭발생')
-      this.setState({
-        animation: true
-      })
-    }
-
-    this.setState({
-      lastPress: new Date().getTime()
-    })
-  }
-
-  onLongPress (visible) {
-    // NavigationActions.commentScreen({type: 'reset'})
-    // this.setState({modalVisible: visible})
-  }
-
-  renderAnimation () {
-    const textIndex = Math.floor(Math.random() * 10)
-    const message = this.state.textList
-
-    if (this.state.animation) {
-      return (
-        <Animatable.Text
-          animation='zoomIn'
-          style={{ textAlign: 'center', color: 'white', fontSize: 100, backgroundColor: 'rgba(0,0,0,0)' }}
-          onAnimationEnd={() => { this.setState({animation: false}) }}>
-          {message[textIndex]}
-        </Animatable.Text>
-      )
-    } else {
-      return
     }
   }
 
   renderContents () {
     const contents = this.props.episode.contents
-    /*
-    return this.props.episodes.map(episode =>
-      <EpisodeDetail key={episode.id} episode={episode} />)
-    */
+    const episodeId = this.props.episode.id
+
     return contents.map(content =>
-      <ContentDetail key={contents.indexOf(content)} content={content} />)
+      <ContentDetail
+        key={contents.indexOf(content)}
+        episodeId={episodeId}
+        content={content} />
+    )
   }
 
   render () {
@@ -81,10 +37,20 @@ class EpisodeDetailClass extends Component {
       textStyle
     } = styles
 
+    const active = this.props.episode.active
+    const activeEpisodeLength = this.props.episode.contents.length
     const likeCount = this.props.episode.contents
       .map(content => content.likeCount).reduce((a, b) => a + b, 0)
     const timeDiffString = convert2TimeDiffString(this.props.episode.createDateTime)
 
+    // var는 es6에서 deprecated.. 어떻게 대체할지 고민해보자. state으로 처리할시 발생하는 성능문제
+    var xPosition = 0
+
+    if (active) {
+      xPosition = (activeEpisodeLength - 1) * 350
+    } else {
+      xPosition = 0
+    }
     return (
       <View>
         <View style={headerContentStyle}>
@@ -106,6 +72,7 @@ class EpisodeDetailClass extends Component {
 
         <ScrollView
           style={{paddingLeft: 7.5, paddingRight: 7.5}}
+          contentOffset={{x: xPosition, y: 0}}
           horizontal
           snapToAlignment={'start'}
           snapToInterval={350}
@@ -180,5 +147,5 @@ const styles = {
   }
 }
 
-const EpisodeDetail = Animatable.createAnimatableComponent(EpisodeDetailClass)
+// const EpisodeDetail = Animatable.createAnimatableComponent(EpisodeDetailClass)
 export default EpisodeDetail

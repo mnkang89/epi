@@ -3,12 +3,6 @@ import apisauce from 'apisauce'
 
 // our "constructor"
 const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstalk.com/') => {
-  // ------
-  // STEP 1
-  // ------
-  //
-  // Create and configure an apisauce-based api object.
-  //
   const api = apisauce.create({
     // base URL is read from the "constructor"
     baseURL,
@@ -19,14 +13,6 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     timeout: 10000
   })
 
-  // Force OpenWeather API Key on all requests
-  // api.addRequestTransform((request) => {
-  //
-  // })
-
-  // Wrap api's addMonitor to allow the calling code to attach
-  // additional monitors in the future.  But only in __DEV__ and only
-  // if we've attached Reactotron to console (it isn't during unit tests).
   if (__DEV__ && console.tron) {
     console.tron.log('Hello, I\'m an example of how to log via Reactotron.')
     api.addMonitor(console.tron.apisauce)
@@ -147,12 +133,33 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
       type: 'image/jpeg',
       name: 'photo.jpg'
     }
+
     formData.append('episodeId', episodeId)
     formData.append('type', fileType)
     formData.append('file', photo)
     api.setHeader('x-auth', token)
 
     return api.post(`/api/contents`, formData)
+  }
+
+  // comment
+  const postComment = (token, contentId, message) => {
+    console.log('POST comment api콜 발생')
+    const formData = new FormData()
+
+    formData.append('contentId', contentId)
+    formData.append('message', message)
+    api.setHeader('x-auth', token)
+
+    return api.post(`/api/comments`, formData)
+  }
+
+  const getComment = (token, episodeId) => {
+    console.log(episodeId)
+    console.log('GET comment api콜 발생')
+    api.setHeader('x-auth', token)
+
+    return api.get(`/api/comments?owner=episode&ownerId=${episodeId}`)
   }
 
   return {
@@ -173,8 +180,10 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     postEpisode,
     putEpisode,
 
-    postContent
+    postContent,
 
+    postComment,
+    getComment
   }
 }
 

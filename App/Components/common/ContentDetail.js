@@ -6,8 +6,10 @@ import {
   TouchableWithoutFeedback
  } from 'react-native'
 import Video from 'react-native-video'
-// import { Actions as NavigationActions } from 'react-native-router-flux'
+import { connect } from 'react-redux'
 import * as Animatable from 'react-native-animatable'
+
+import CommentActions from '../../Redux/CommentRedux'
 
 class ContentDetailClass extends Component {
   constructor (props) {
@@ -30,6 +32,7 @@ class ContentDetailClass extends Component {
       this.setState({
         animation: true
       })
+      
     }
 
     this.setState({
@@ -37,9 +40,16 @@ class ContentDetailClass extends Component {
     })
   }
 
-  onLongPress (visible) {
-    // NavigationActions.commentScreen({type: 'reset'})
-    // this.setState({modalVisible: visible})
+  onLongPress () {
+    const {token, episodeId} = this.props
+    const contentId = this.props.content.id
+    // const visible = true
+
+    console.log('에피소드 아이디는?')
+    console.log(episodeId)
+
+    this.props.getComment(token, episodeId, contentId)
+    // this.props.openCommentModal(episodeId, contentId, visible)
   }
 
   renderAnimation () {
@@ -69,10 +79,7 @@ class ContentDetailClass extends Component {
           <TouchableWithoutFeedback
             delayLongPress={800}
             onPress={this.onDoublePress.bind(this)}
-            onLongPress={() => {
-              this.onLongPress(!this.state.modalVisible)
-              console.log(this.state.modalVisible)
-            }} >
+            onLongPress={() => this.onLongPress()} >
             <Image style={imageStyle} source={{ uri: content.path }}>
               <View style={{height: 295, paddingTop: 80}}>
                 {this.renderAnimation()}
@@ -91,10 +98,7 @@ class ContentDetailClass extends Component {
           <TouchableWithoutFeedback
             delayLongPress={800}
             onPress={this.onDoublePress.bind(this)}
-            onLongPress={() => {
-              this.onLongPress(!this.state.modalVisible)
-              console.log(this.state.modalVisible)
-            }} >
+            onLongPress={this.onLongPress.bind(this)} >
             <View style={{height: 345, width: 345}}>
               <Video
                 source={{uri: content.path}}   // Can be a URL or a local file.
@@ -149,5 +153,18 @@ const styles = {
   }
 }
 
+const mapStateToProps = (state) => {
+  return {
+    token: state.token.token
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getComment: (token, episodeId, contentId) => dispatch(CommentActions.commentGet(token, episodeId, contentId)),
+    openCommentModal: (episodeId, contentId, visible) => dispatch(CommentActions.openComment(episodeId, contentId, visible))
+  }
+}
+
 const ContentDetail = Animatable.createAnimatableComponent(ContentDetailClass)
-export default ContentDetail
+export default connect(mapStateToProps, mapDispatchToProps)(ContentDetail)
