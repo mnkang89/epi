@@ -32,7 +32,6 @@ class ContentDetailClass extends Component {
       this.setState({
         animation: true
       })
-      
     }
 
     this.setState({

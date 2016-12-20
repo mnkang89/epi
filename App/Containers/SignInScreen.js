@@ -77,6 +77,16 @@ class SignInScreen extends Component {
     }
   }
 
+  shouldComponentUpdate (nextProps, nextState) {
+    if (
+      nextState.email !== this.state.email ||
+      nextState.password !== this.state.password) {
+      console.log('이메일, 패스워드 변경')
+      return false
+    }
+    return true
+  }
+
   handlePressLogin = () => {
     const { email, password } = this.state
     this.isAttempting = true
@@ -100,7 +110,6 @@ class SignInScreen extends Component {
   }
 
   render () {
-    const { email, password } = this.state
     const { fetching } = this.props
     const editable = !fetching
 
@@ -120,7 +129,6 @@ class SignInScreen extends Component {
           <TextInput
             ref='email'
             style={{fontWeight: 'bold', color: 'white', height: 20}}
-            value={email}
             editable={editable}
             keyboardType='default'
             returnKeyType='next'
@@ -136,7 +144,6 @@ class SignInScreen extends Component {
           <TextInput
             ref='password'
             style={{fontWeight: 'bold', color: 'white', height: 20}}
-            value={password}
             editable={editable}
             keyboardType='default'
             returnKeyType='go'

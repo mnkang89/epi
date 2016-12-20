@@ -2,7 +2,14 @@
 // EPISODE
 
 import React, { Component } from 'react'
-import { Modal, Text, TouchableOpacity, View, Dimensions } from 'react-native'
+import {
+  Modal,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+  Dimensions
+} from 'react-native'
 import { connect } from 'react-redux'
 // import Actions from '../Actions/Creators'
 import KeyboardSpacer from 'react-native-keyboard-spacer'
@@ -33,7 +40,7 @@ class FeedScreen extends Component {
   componentDidMount () {
     this.props.resetCommentModal()
   }
-  // TODO: 어렵구만!!!!!!!!!!
+
   componentWillReceiveProps (nextProps) {
     console.log('* --- componentWillReceiveProps --- *')
     console.log(this.props)
@@ -63,6 +70,14 @@ class FeedScreen extends Component {
     }
   }
 
+  shouldComponentUpdate (nextProps, nextState) {
+    if (nextState.message !== this.state.message) {
+      console.log('메세지값 변경')
+      return false
+    }
+    return true
+  }
+
   resetCommentModal () {
     console.log('modalVisible리프레쉬')
     this.setState({modalVisible: false})
@@ -73,20 +88,18 @@ class FeedScreen extends Component {
 
   handleChangeMessage = (text) => {
     this.setState({ message: text })
-    console.log(this.state.message)
   }
 
   onCommentButtonPress () {
     const { token, episodeId, contentId } = this.props
     const message = this.state.message
     this.setState({message: ''})
+    this.refs.commentInput.clear()
 
     this.props.postComment(token, episodeId, contentId, message)
   }
 
   render () {
-    const message = this.state.message
-
     return (
       <View style={styles.mainContainer}>
         <FeedList />
@@ -115,16 +128,17 @@ class FeedScreen extends Component {
               <View style={{flexDirection: 'row', backgroundColor: 'rgb(236, 236, 236)'}}>
                 <View style={styles2.textContainer}>
                   <AutoGrowingTextInput
+                    ref='commentInput'
                     style={styles2.input}
                     placeholder={'댓글을 입력하세요...'}
-                    value={message}
                     autoCapitalize='none'
                     autoCorrect={false}
                     onChangeText={this.handleChangeMessage}
                     maxHeight={70} />
                 </View>
-                <View style={styles2.sendContainer}>
+                <View>
                   <TouchableOpacity
+                    style={styles2.sendContainer}
                     onPress={this.onCommentButtonPress.bind(this)}>
                     <Text style={styles2.sendButton}>게시</Text>
                   </TouchableOpacity>
@@ -154,9 +168,9 @@ const styles2 = {
     justifyContent: 'center'
   },
   sendContainer: {
-    marginTop: 5,
-    marginBottom: 5,
+    height: 35,
     width: 43,
+    marginTop: 4,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'black'
