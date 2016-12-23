@@ -10,6 +10,7 @@ import { connect } from 'react-redux'
 import * as Animatable from 'react-native-animatable'
 
 import CommentActions from '../../Redux/CommentRedux'
+import ContentActions from '../../Redux/ContentRedux'
 
 class ContentDetailClass extends Component {
   constructor (props) {
@@ -19,19 +20,43 @@ class ContentDetailClass extends Component {
       animation: false,
       textList: ['좋아', '짜릿해', '맛있어', '최고야', '개좋아', '좋아', '짜릿해', '맛있어', '최고야', '개좋아'],
       pressIn: 0,
-      modalVisible: false
+      modalVisible: false,
+      liked: this.props.content.liked,
+      IsAnimationTypeLike: this.props.content.liked,
+      disabled: false
     }
   }
 
   onDoublePress () {
     const delta = new Date().getTime() - this.state.lastPress
+    const { token } = this.props
+    const contentId = this.props.content.id
 
     if (delta < 500) {
       // double tap happend
       console.log('더블탭발생')
-      this.setState({
-        animation: true
-      })
+
+      if (this.state.liked) {
+        console.log(`like여부는 트루${this.state.liked}`)
+        this.setState({
+          animation: true,
+          IsAnimationTypeLike: false,
+          liked: false,
+          disabled: false
+        })
+        // delete날리기
+        this.props.deleteLike(token, contentId)
+      } else {
+        console.log(`like여부는 폴스${this.state.liked}`)
+        this.setState({
+          animation: true,
+          IsAnimationTypeLike: true,
+          liked: true,
+          disabled: false
+        })
+        // post날리기
+        this.props.postLike(token, contentId)
+      }
     }
 
     this.setState({
@@ -48,7 +73,6 @@ class ContentDetailClass extends Component {
     console.log(episodeId)
 
     this.props.getComment(token, episodeId, contentId)
-    // this.props.openCommentModal(episodeId, contentId, visible)
   }
 
   renderAnimation () {
@@ -56,14 +80,46 @@ class ContentDetailClass extends Component {
     const message = this.state.textList
 
     if (this.state.animation) {
-      return (
-        <Animatable.Text
-          animation='zoomIn'
-          style={{ textAlign: 'center', color: 'white', fontSize: 100, backgroundColor: 'rgba(0,0,0,0)' }}
-          onAnimationEnd={() => { this.setState({animation: false}) }}>
-          {message[textIndex]}
-        </Animatable.Text>
-      )
+      if (this.state.IsAnimationTypeLike) {
+        return (
+          <Animatable.Text
+            animation='zoomIn'
+            style={{ textAlign: 'center', color: 'white', fontSize: 100, backgroundColor: 'rgba(0,0,0,0)' }}
+            onAnimationEnd={() => {
+              this.setState({
+                animation: false
+              })
+            }}>
+            {message[textIndex]}
+          </Animatable.Text>
+        )
+      } else {
+        return (
+          <Animatable.View
+            animation='fadeIn'
+            duration={1000}
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+            onAnimationEnd={() => {
+              this.setState({
+                animation: false
+              })
+            }}>
+            <View style={{
+              borderRadius: 4,
+              backgroundColor: 'rgba(0,0,0,0.7)',
+              width: 200,
+              height: 37,
+              marginTop: 50,
+              alignItems: 'center',
+              justifyContent: 'center'}}>
+              <Text style={{fontSize: 15, color: 'white'}}>공감을 취소했습니다.</Text>
+            </View>
+          </Animatable.View>
+        )
+      }
     } else {
       return
     }
@@ -76,7 +132,7 @@ class ContentDetailClass extends Component {
       return (
         <View style={{backgroundColor: 'black', paddingLeft: 8, paddingRight: 0}}>
           <TouchableWithoutFeedback
-            delayLongPress={800}
+            delayLongPress={200}
             onPress={this.onDoublePress.bind(this)}
             onLongPress={() => this.onLongPress()} >
             <Image style={imageStyle} source={{ uri: content.path }}>
@@ -95,6 +151,7 @@ class ContentDetailClass extends Component {
       return (
         <View style={{backgroundColor: 'black', paddingLeft: 8}}>
           <TouchableWithoutFeedback
+            disabled={this.state.disabled}
             delayLongPress={800}
             onPress={this.onDoublePress.bind(this)}
             onLongPress={this.onLongPress.bind(this)} >
@@ -161,7 +218,9 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     getComment: (token, episodeId, contentId) => dispatch(CommentActions.commentGet(token, episodeId, contentId)),
-    openCommentModal: (episodeId, contentId, visible) => dispatch(CommentActions.openComment(episodeId, contentId, visible))
+    openCommentModal: (episodeId, contentId, visible) => dispatch(CommentActions.openComment(episodeId, contentId, visible)),
+    postLike: (token, contentId) => dispatch(ContentActions.likePost(token, contentId)),
+    deleteLike: (token, contentId) => dispatch(ContentActions.likeDelete(token, contentId))
   }
 }
 

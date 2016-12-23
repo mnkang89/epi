@@ -5,7 +5,6 @@ import React, { Component } from 'react'
 import {
   Modal,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
   Dimensions

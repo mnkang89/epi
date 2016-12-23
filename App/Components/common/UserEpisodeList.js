@@ -8,25 +8,29 @@ import styles from '../../Containers/Styles/FeedScreenStyle'
 import AccountActions from '../../Redux/AccountRedux'
 import EpisodeActions from '../../Redux/EpisodeRedux'
 
-class MyEpisodeList extends Component {
+class UserEpisodeList extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      apisodes: [],
+      episodes: [],
       follow: 'gray'
     }
   }
 
-  componentDidMount () {
-    /*
-      const { token, accountId } = this.props
-      const active = false
+  componentWillReceiveProps (nextProps) {
+    console.log('fetch성공')
+    console.log(this.props)
+  }
 
-      this.isAttempting = true
-      // attempt to check email - a saga is listening to pick it up from here.
-      this.props.requestInfo(token, accountId)
-      this.props.requestUserEpisodes(token, accountId, active)
-    */
+  componentWillMount () {
+    console.log(this.props)
+    const { token, id } = this.props
+    const active = false
+
+    this.isAttempting = true
+
+    this.props.requestOtherInfo(token, id)
+    this.props.requestOtherEpisodes(token, id, active)
   }
 
   renderEpisodes () {
@@ -73,22 +77,21 @@ class MyEpisodeList extends Component {
 const mapStateToProps = (state) => {
   return {
     token: state.token.token,
-    accountId: state.token.id,
 
-    nickname: state.account.nickname,
-    profileImagePath: state.account.profileImagePath,
-    followerCount: state.account.followerCount,
-    followingCount: state.account.followingCount,
+    nickname: state.account.otherNickname,
+    profileImagePath: state.account.otherProfileImagePath,
+    followerCount: state.account.otherFollowerCount,
+    followingCount: state.account.otherFollowingCount,
 
-    items: state.episode.episodes
+    items: state.episode.otherEpisodes
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    requestInfo: (token, accountId) => dispatch(AccountActions.infoRequest(token, accountId)),
-    requestUserEpisodes: (token, accountId, active) => dispatch(EpisodeActions.userEpisodesRequest(token, accountId, active))
+    requestOtherInfo: (token, accountId) => dispatch(AccountActions.otherInfoRequest(token, accountId)),
+    requestOtherEpisodes: (token, accountId, active) => dispatch(EpisodeActions.otherEpisodesRequest(token, accountId, active))
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MyEpisodeList)
+export default connect(mapStateToProps, mapDispatchToProps)(UserEpisodeList)

@@ -11,6 +11,7 @@ import ConfirmError from '../Components/common/ConfirmError'
 
 import LoginActions from '../Redux/LoginRedux'
 import EpisodeActions from '../Redux/EpisodeRedux'
+import FeedActions from '../Redux/FeedRedux'
 
 class SignInScreen extends Component {
   constructor (props) {
@@ -36,6 +37,8 @@ class SignInScreen extends Component {
       const active = false
 
       this.props.requestUserEpisodes(token, accountId, active)
+      // user프로필 리스트 하기 위해 만들었다
+      // this.props.requestBestFeeds(token)
       setTimeout(() => {
         NavigationActions.root()
       }, 500)
@@ -186,7 +189,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     attemptLogin: (email, password) => dispatch(LoginActions.loginRequest(email, password)),
-    requestUserEpisodes: (token, accountId, active) => dispatch(EpisodeActions.userEpisodesRequest(token, accountId, active))
+    requestUserEpisodes: (token, accountId, active) => dispatch(EpisodeActions.userEpisodesRequest(token, accountId, active)),
+    requestBestFeeds: (token) => dispatch(FeedActions.bestFeedsRequest(token))
   }
 }
 

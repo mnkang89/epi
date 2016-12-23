@@ -86,7 +86,9 @@ const mapStateToProps = (state) => {
   return {
     token: state.token.token,
     accountId: state.token.id,
+    // items: state.feed.bestFeeds
     items: state.episode.episodes
+
   }
 }
 

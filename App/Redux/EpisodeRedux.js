@@ -18,6 +18,18 @@ const { Types, Creators } = createActions({
     'episodesError'
   ],
 
+  otherEpisodesRequest: [
+    'token',
+    'accountId',
+    'active'
+  ],
+  otherEpisodesSuccess: [
+    'otherEpisodes'
+  ],
+  otherEpisodesFailure: [
+    'otherEpisodesError'
+  ],
+
   userEpisodePost: [
     'token',
     'fileType',
@@ -53,6 +65,10 @@ export const INITIAL_STATE = Immutable({
   episodesRequesting: true,
   episodesError: null,
 
+  otherEpisodes: [],
+  otherEpisodesRequesting: true,
+  otherEpisodesError: null,
+
   episodeId: null,
   episodePosting: false,
   error: null,
@@ -70,15 +86,23 @@ export const userEpisodesSuccess = (state: Object, { episodes }: Object) =>
 export const userEpisodesFailure = (state: Object, { episodesError }: Object) =>
   state.merge({ episodesRequesting: false, episodesError })
 
+// other user episodes
+export const otherEpisodesRequest = (state: Object, { token, accountId, active }: Object) =>
+  state.merge({ otherEpisodesRequesting: true })
+
+export const otherEpisodesSuccess = (state: Object, { otherEpisodes }: Object) =>
+  state.merge({ otherEpisodesRequesting: false, otherEpisodesError: null, otherEpisodes })
+
+export const otherEpisodesFailure = (state: Object, { otherEpisodesError }: Object) =>
+  state.merge({ otherEpisodesRequesting: false, otherEpisodesError })
+
 // we're attempting to check posting Episode
 export const userEpisodePost = (state: Object, { token }: Object) =>
   state.merge({ episodePosting: true })
 
-// we've successfully posting Episode
 export const userEpisodePostSuccess = (state: Object, { episodeId }: Object) =>
   state.merge({ episodePosting: false, error: null, episodeId })
 
-// we've had a problem posting Episode
 export const userEpisodePostFailure = (state: Object, { error }: Object) =>
   state.merge({ episodePosting: false, error })
 
@@ -86,11 +110,9 @@ export const userEpisodePostFailure = (state: Object, { error }: Object) =>
 export const userEpisodePut = (state: Object, { token }: Object) =>
   state.merge({ episodePutting: true })
 
-// we've successfully posting Episode
 export const userEpisodePutSuccess = (state: Object, { episodeId }: Object) =>
   state.merge({ episodePutting: false, error: null, episodeId })
 
-// we've had a problem posting Episode
 export const userEpisodePutFailure = (state: Object, { error }: Object) =>
   state.merge({ episodePutting: false, error })
 
@@ -100,6 +122,10 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.USER_EPISODES_REQUEST]: userEpisodesRequest,
   [Types.USER_EPISODES_SUCCESS]: userEpisodesSuccess,
   [Types.USER_EPISODES_FAILURE]: userEpisodesFailure,
+
+  [Types.OTHER_EPISODES_REQUEST]: otherEpisodesRequest,
+  [Types.OTHER_EPISODES_SUCCESS]: otherEpisodesSuccess,
+  [Types.OTHER_EPISODES_FAILURE]: otherEpisodesFailure,
 
   [Types.USER_EPISODE_POST]: userEpisodePost,
   [Types.USER_EPISODE_POST_SUCCESS]: userEpisodePostSuccess,

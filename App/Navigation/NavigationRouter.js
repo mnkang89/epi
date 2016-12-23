@@ -17,6 +17,7 @@ import AlertScreen from '../Containers/AlertScreen'
 import CameraScreen from '../Containers/CameraScreen'
 import ExploreScreen from '../Containers/ExploreScreen'
 import ProfileScreen from '../Containers/ProfileScreen'
+import UserProfileScreen from '../Containers/UserProfileScreen'
 
 /* **************************
 * Documentation: https://github.com/aksonov/react-native-router-flux
@@ -66,6 +67,10 @@ class NavigationRouter extends Component {
                 key='feedScreen'
                 component={FeedScreen}
                 title='episode' />
+              <Scene
+                key='userProfileScreen'
+                component={UserProfileScreen}
+                title='프로필' />
               <Scene
                 key='commentScreen'
                 component={CommentScreen}

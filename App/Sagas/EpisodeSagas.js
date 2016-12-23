@@ -24,6 +24,27 @@ export function * userEpisodes (api, action) {
   }
 }
 
+// attempts to get episodes
+export function * otherEpisodes (api, action) {
+  console.log('other 에피소드 사가 진입')
+  const { token, accountId, active } = action
+  const response = yield call(api.requestOtherFeeds, token, accountId, active)
+  console.log(response)
+
+  // dispatch successful email checking
+  if (response.ok) {
+    console.log('other ok')
+    console.log(response)
+    const episodes = path(['data', 'items'], response)
+
+    yield put(EpisodeActions.otherEpisodesSuccess(episodes))
+  } else {
+    console.log('error')
+    console.log(response)
+    yield put(EpisodeActions.otherEpisodesFailure('WRONG'))
+  }
+}
+
 // attempts to post episode
 export function * postEpisode (api, action) {
   console.log('postEpisode사가워커 진입!!')

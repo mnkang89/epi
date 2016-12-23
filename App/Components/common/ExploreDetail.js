@@ -2,6 +2,9 @@ import React, { Component } from 'react'
 import { ScrollView, Dimensions, Text, View, Image, TouchableOpacity } from 'react-native'
 import { Colors, Metrics } from '../../Themes/'
 import Video from 'react-native-video'
+import { connect } from 'react-redux'
+
+import AccountActions from '../../Redux/AccountRedux'
 
 const screenWidth = Dimensions.get('window').width
 const scrollViewWidth = Math.round(screenWidth * 0.90)
@@ -16,14 +19,26 @@ class ExploreDetail extends Component {
     }
   }
 
+  onFollowPress () {
+    console.log(this.props)
+    const { token, id } = this.props
+    const accountId = this.props.episode.accountId
+
+    // 팔로우 스테이트 체킹 API발생
+    // follow스테이트가 api리스펀스로 안오면 새로운 리퀘스트가 날라가야 되는 구조
+    if (this.state.follow) {
+      this.props.deleteFollow(token, id, accountId)
+    } else {
+      this.props.postFollow(token, id, accountId)
+    }
+  }
+
   renderFollowButton () {
     if (this.state.follow) {
       return (
         <TouchableOpacity
-          onPress={() => {
-            this.setState({follow: false})
-          }}>
-          <View style={{borderWidth: 0.5, borderColor: 'rgb(217, 217, 217)', borderRadius: 5, paddingTop: 8, paddingBottom: 8, paddingRight: 6.4, paddingLeft: 6.4, backgroundColor: 'white'}}>
+          onPress={this.onFollowPress.bind(this)}>
+          <View style={{borderWidth: 0.5, borderColor: 'rgb(217, 217, 217)', borderRadius: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 8, paddingLeft: 8, backgroundColor: 'white'}}>
             <Text style={{color: 'black'}}>팔로잉</Text>
           </View>
         </TouchableOpacity>
@@ -31,10 +46,8 @@ class ExploreDetail extends Component {
     } else {
       return (
         <TouchableOpacity
-          onPress={() => {
-            this.setState({follow: true})
-          }}>
-          <View style={{borderWidth: 0.5, borderColor: 'rgb(217, 217, 217)', borderRadius: 5, paddingTop: 8, paddingBottom: 8, paddingRight: 6.4, paddingLeft: 6.4}}>
+          onPress={this.onFollowPress.bind(this)}>
+          <View style={{borderWidth: 0.5, borderColor: 'rgb(217, 217, 217)', borderRadius: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 8, paddingLeft: 8}}>
             <Text style={{color: 'rgb(217, 217, 217)'}}>팔로우</Text>
           </View>
         </TouchableOpacity>
@@ -98,7 +111,7 @@ class ExploreDetail extends Component {
           <View style={{marginLeft: 5, marginTop: 20}}>
             <Text style={userTextStyle}>작성자</Text>
           </View>
-          <View style={{marginLeft: 170.5, marginTop: 14.5}}>
+          <View style={{marginLeft: 215, marginTop: 14.5}}>
             {this.renderFollowButton()}
           </View>
         </View>
@@ -166,4 +179,18 @@ const styles = {
   }
 }
 
-export default ExploreDetail
+const mapStateToProps = (state) => {
+  return {
+    token: state.token.token,
+    id: state.token.id
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    postFollow: (token, id, accountId) => dispatch(AccountActions.followPost(token, id, accountId)),
+    deleteFollow: (token, id, accountId) => dispatch(AccountActions.followDelete(token, id, accountId))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ExploreDetail)

@@ -11,15 +11,17 @@ import { AccountTypes } from '../Redux/AccountRedux'
 import { EpisodeTypes } from '../Redux/EpisodeRedux'
 import { ContentTypes } from '../Redux/ContentRedux'
 import { CommentTypes } from '../Redux/CommentRedux'
+import { FeedTypes } from '../Redux/FeedRedux'
 
 /* ------------- Sagas ------------- */
 // episode
 import { login } from './LoginSagas'
 import { email, password, nickname, profile, signup } from './SignupSagas'
-import { account, checkUserEpisode } from './AccountSagas'
-import { userEpisodes, postEpisode, putEpisode } from './EpisodeSagas'
-import { postContent } from './ContentSagas'
+import { account, otherInfo, checkUserEpisode, postFollow, deleteFollow } from './AccountSagas'
+import { userEpisodes, otherEpisodes, postEpisode, putEpisode } from './EpisodeSagas'
+import { postContent, postLike, deleteLike } from './ContentSagas'
 import { postComment, getComment } from './CommentSagas'
+import { getBestFeeds } from './FeedSagas'
 
 /* ------------- API ------------- */
 
@@ -54,8 +56,14 @@ export default function * root () {
     /* --- Account --- */
     // user info
     takeLatest(AccountTypes.INFO_REQUEST, account, api),
+    // other info
+    takeLatest(AccountTypes.OTHER_INFO_REQUEST, otherInfo, api),
     // check user episode
     takeLatest(AccountTypes.USER_EPISODE_CHECK, checkUserEpisode, api),
+    // post follow
+    takeLatest(AccountTypes.FOLLOW_POST, postFollow, api),
+    // delete follow
+    takeLatest(AccountTypes.FOLLOW_DELETE, deleteFollow, api),
 
     /* --- Episode --- */
     // post episode
@@ -64,15 +72,25 @@ export default function * root () {
     takeLatest(EpisodeTypes.USER_EPISODE_PUT, putEpisode, api),
     // get user episode
     takeLatest(EpisodeTypes.USER_EPISODES_REQUEST, userEpisodes, api),
+    // get other episode
+    takeLatest(EpisodeTypes.OTHER_EPISODES_REQUEST, otherEpisodes, api),
 
     /* --- Content --- */
     // post content
     takeLatest(ContentTypes.USER_CONTENT_POST, postContent, api),
+    // post like
+    takeLatest(ContentTypes.LIKE_POST, postLike, api),
+    // delete like
+    takeLatest(ContentTypes.LIKE_DELETE, deleteLike, api),
 
     /* --- Comment --- */
     // post comment
     takeLatest(CommentTypes.COMMENT_POST, postComment, api),
     // get comment
-    takeLatest(CommentTypes.COMMENT_GET, getComment, api)
+    takeLatest(CommentTypes.COMMENT_GET, getComment, api),
+
+    /* --- Feed --- */
+    // get BestFeeds
+    takeLatest(FeedTypes.BEST_FEEDS_REQUEST, getBestFeeds, api)
   ]
 }

@@ -4,24 +4,22 @@ import { connect } from 'react-redux'
 
 import ExploreDetail from './ExploreDetail'
 import AccountActions from '../../Redux/AccountRedux'
-import EpisodeActions from '../../Redux/EpisodeRedux'
+import FeedActions from '../../Redux/FeedRedux'
 
 class ExploreList extends Component {
 
   constructor (props) {
     super(props)
     this.state = {
-      apisodes: [],
       follow: 'gray'
     }
   }
 
   componentDidMount () {
-    const { token, accountId } = this.props
-    const active = false
+    const { token } = this.props
 
     this.isAttempting = true
-    this.props.requestUserEpisodes(token, accountId, active)
+    this.props.requestBestFeeds(token)
   }
 
   renderExplores () {
@@ -48,14 +46,14 @@ const mapStateToProps = (state) => {
     followerCount: state.account.followerCount,
     followingCount: state.account.followingCount,
 
-    items: state.episode.episodes
+    items: state.feed.bestFeeds
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     requestInfo: (token, accountId) => dispatch(AccountActions.infoRequest(token, accountId)),
-    requestUserEpisodes: (token, accountId, active) => dispatch(EpisodeActions.userEpisodesRequest(token, accountId, active))
+    requestBestFeeds: (token) => dispatch(FeedActions.bestFeedsRequest(token))
   }
 }
 

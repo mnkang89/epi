@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, View, Modal, TouchableHighlight, TouchableOpacity } from 'react-native'
+import { Text, View, Modal, TouchableOpacity } from 'react-native'
 
 const renderTexts = (TextArray) => {
   return TextArray.map(text => <Text key={TextArray.indexOf(text)} style={{fontSize: 17}}>{text}</Text>)

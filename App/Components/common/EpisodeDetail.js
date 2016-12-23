@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   ScrollView
  } from 'react-native'
-// import * as Animatable from 'react-native-animatable'
+import { Actions as NavigationActions } from 'react-native-router-flux'
 import { Colors, Metrics } from '../../Themes/'
 import { convert2TimeDiffString } from '../../Lib/Utilities'
 
@@ -29,6 +29,15 @@ class EpisodeDetail extends Component {
         episodeId={episodeId}
         content={content} />
     )
+  }
+
+  onProfilePress () {
+    const accountId = this.props.episode.accountId
+    console.log(accountId)
+    NavigationActions.userProfileScreen({
+      type: 'push',
+      id: accountId
+    })
   }
 
   render () {
@@ -56,7 +65,8 @@ class EpisodeDetail extends Component {
         <View style={headerContentStyle}>
           <View style={{marginTop: 10, marginLeft: 15, marginRight: 15, marginBottom: 10}}>
             <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-              <TouchableOpacity onPress={() => {}}>
+              <TouchableOpacity
+                onPress={this.onProfilePress.bind(this)}>
                 <Image
                   style={styles.profileStyle}
                   source={{uri: 'https://facebook.github.io/react/img/logo_og.png'}}

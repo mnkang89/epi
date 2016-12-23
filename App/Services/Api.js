@@ -81,6 +81,12 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     return api.get(`/api/accounts/${accountId}/summary`)
   }
 
+  const requestOtherInfo = (token, accountId) => {
+    api.setHeader('x-auth', token)
+
+    return api.get(`/api/accounts/${accountId}/summary`)
+  }
+
   const checkUserEpisode = (token, active) => {
     console.log('GET userEpisode api콜 발생')
     const formData = new FormData()
@@ -100,6 +106,40 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     api.setHeader('x-auth', token)
 
     return api.get(`/api/feeds`)
+  }
+
+  const requestOtherFeeds = (token, accountId, active) => {
+    console.log('GET otherEpisode api콜 발생')
+    console.log(accountId)
+    console.log(active)
+    const formData = new FormData()
+
+    formData.append('accountId', accountId)
+    formData.append('withFollowing', active)
+    api.setHeader('x-auth', token)
+
+    return api.get(`/api/feeds?accountId=${accountId}&withFollowing=${active}`)
+  }
+
+  const postFollow = (token, id, accountId) => {
+    console.log('POST account/follow api콜 발생')
+    const formData = new FormData()
+
+    formData.append('id', id)
+    api.setHeader('x-auth', token)
+
+    return api.post(`/api/accounts/${accountId}/follow`, formData)
+  }
+
+  const deleteFollow = (token, id, accountId) => {
+    console.log('DELETE account/follow api콜 발생')
+    const formData = new FormData()
+
+    formData.append('contentId', id)
+    api.setHeader('x-auth', token)
+
+    return api.delete(`/api/accounts/${accountId}/follow?id=${id}`)
+    // return api.delete(`/api/accounts/${accountId}/follow`, formData)
   }
 
   // episode
@@ -142,6 +182,28 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     return api.post(`/api/contents`, formData)
   }
 
+  const postLike = (token, contentId) => {
+    console.log('POST content/like api콜 발생')
+    const formData = new FormData()
+
+    formData.append('contentId', contentId)
+    api.setHeader('x-auth', token)
+
+    return api.post(`/api/contents/like`, formData)
+  }
+
+  const deleteLike = (token, contentId) => {
+    console.log('DELETE content/like api콜 발생')
+    const formData = new FormData()
+
+    formData.append('contentId', contentId)
+    api.setHeader('x-auth', token)
+    console.log(contentId)
+
+    return api.delete(`/api/contents/like?contentId=${contentId}`)
+    // return api.delete(`/api/contents/like`, { data: {formData} })
+  }
+
   // comment
   const postComment = (token, contentId, message) => {
     console.log('POST comment api콜 발생')
@@ -162,6 +224,14 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     return api.get(`/api/comments?owner=episode&ownerId=${episodeId}`)
   }
 
+  // feeds
+  const getBestFeeds = (token) => {
+    console.log('GET bestFeeds api콜 발생')
+    api.setHeader('x-auth', token)
+
+    return api.get(`/api/feeds/best`)
+  }
+
   return {
     // a list of the API functions from step 2
     getCity,
@@ -174,16 +244,26 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     requestLogin,
 
     requestAccount,
+    requestOtherInfo,
+
     checkUserEpisode,
     requestUserFeeds,
+    requestOtherFeeds,
+
+    postFollow,
+    deleteFollow,
 
     postEpisode,
     putEpisode,
 
     postContent,
+    postLike,
+    deleteLike,
 
     postComment,
-    getComment
+    getComment,
+
+    getBestFeeds
   }
 }
 
