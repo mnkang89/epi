@@ -65,14 +65,12 @@ class ContentDetailClass extends Component {
   }
 
   onLongPress () {
+    console.log('onlongpress 눌림')
     const {token, episodeId} = this.props
     const contentId = this.props.content.id
-    // const visible = true
-
-    console.log('에피소드 아이디는?')
-    console.log(episodeId)
 
     this.props.getComment(token, episodeId, contentId)
+    console.log('onlongpress 끝남')
   }
 
   renderAnimation () {
@@ -132,7 +130,7 @@ class ContentDetailClass extends Component {
       return (
         <View style={{backgroundColor: 'black', paddingLeft: 8, paddingRight: 0}}>
           <TouchableWithoutFeedback
-            delayLongPress={200}
+            delayLongPress={800}
             onPress={this.onDoublePress.bind(this)}
             onLongPress={() => this.onLongPress()} >
             <Image style={imageStyle} source={{ uri: content.path }}>
