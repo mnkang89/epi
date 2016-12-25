@@ -8,5 +8,9 @@ export default StyleSheet.create({
     marginLeft: Metrics.baseMargin,
     backgroundColor: Colors.transparent,
     width: Metrics.icons.medium
+  },
+  episodeLogo: {
+    width: 90.5,
+    height: 22
   }
 })

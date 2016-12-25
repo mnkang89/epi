@@ -7,8 +7,11 @@ export default {
     flex: 1
   },
   navBar: {
+    height: 65,
     backgroundColor: '#000000',
-    borderBottomColor: '#000000'
+    borderBottomColor: '#000000',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   title: {
     color: Colors.snow,

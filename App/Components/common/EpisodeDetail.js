@@ -7,7 +7,7 @@ import {
   ScrollView
  } from 'react-native'
 import { Actions as NavigationActions } from 'react-native-router-flux'
-import { Colors, Metrics } from '../../Themes/'
+import { Colors, Images, Metrics } from '../../Themes/'
 import { convert2TimeDiffString } from '../../Lib/Utilities'
 
 import ContentDetail from './ContentDetail'
@@ -16,7 +16,20 @@ class EpisodeDetail extends Component {
   constructor (props) {
     super(props)
     this.state = {
+      likeCount: this.props.episode.contents.map(content => content.likeCount).reduce((a, b) => a + b, 0)
     }
+  }
+
+  like () {
+    this.setState({
+      likeCount: this.state.likeCount + 1
+    })
+  }
+
+  dislike () {
+    this.setState({
+      likeCount: this.state.likeCount - 1
+    })
   }
 
   renderContents () {
@@ -26,8 +39,12 @@ class EpisodeDetail extends Component {
     return contents.map(content =>
       <ContentDetail
         key={contents.indexOf(content)}
+        length={contents.length}
+        number={contents.indexOf(content)}
         episodeId={episodeId}
-        content={content} />
+        content={content}
+        like={this.like.bind(this)}
+        dislike={this.dislike.bind(this)} />
     )
   }
 
@@ -48,15 +65,18 @@ class EpisodeDetail extends Component {
 
     const active = this.props.episode.active
     const activeEpisodeLength = this.props.episode.contents.length
+    const commentCount = this.props.episode.contents.map(content => content.commentCount).reduce((a, b) => a + b, 0)
+    /*
     const likeCount = this.props.episode.contents
       .map(content => content.likeCount).reduce((a, b) => a + b, 0)
+    */
     const timeDiffString = convert2TimeDiffString(this.props.episode.createDateTime)
 
     // var는 es6에서 deprecated.. 어떻게 대체할지 고민해보자. state으로 처리할시 발생하는 성능문제
     var xPosition = 0
 
     if (active) {
-      xPosition = (activeEpisodeLength - 1) * 350
+      xPosition = (activeEpisodeLength - 1) * 353
     } else {
       xPosition = 0
     }
@@ -64,17 +84,16 @@ class EpisodeDetail extends Component {
       <View>
         <View style={headerContentStyle}>
           <View style={{marginTop: 10, marginLeft: 15, marginRight: 15, marginBottom: 10}}>
-            <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
               <TouchableOpacity
                 onPress={this.onProfilePress.bind(this)}>
                 <Image
                   style={styles.profileStyle}
-                  source={{uri: 'https://facebook.github.io/react/img/logo_og.png'}}
-                />
+                  source={Images.profileImage} />
               </TouchableOpacity>
-              <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-                <Text style={{color: Colors.snow, fontWeight: 'bold', paddingLeft: 5}}>{this.props.episode.nickname}</Text>
-                <Text style={{color: Colors.snow, fontSize: 13, paddingLeft: 130, justifyContent: 'flex-end'}}>최근 업데이트 : {timeDiffString}</Text>
+              <View>
+                <Text style={{color: Colors.snow, fontWeight: 'bold'}}>{this.props.episode.nickname}</Text>
+                <Text style={{color: Colors.snow, fontSize: 13}}>최근 업데이트 : {timeDiffString}</Text>
               </View>
             </View>
           </View>
@@ -85,7 +104,7 @@ class EpisodeDetail extends Component {
           contentOffset={{x: xPosition, y: 0}}
           horizontal
           snapToAlignment={'start'}
-          snapToInterval={350}
+          snapToInterval={353}
           showsHorizontalScrollIndicator
           scrollEventThrottle={1000}
           directionalLockEnabled={false}
@@ -94,10 +113,10 @@ class EpisodeDetail extends Component {
         </ScrollView>
 
         <View style={[textStyle, {backgroundColor: 'black', paddingTop: 15, marginLeft: 15, marginRight: 15}]}>
-          <View style={{flexDirection: 'row'}}>
+          <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
             <Text style={{fontSize: 13, paddingRight: 10, color: 'white'}}>알림설정 : {this.props.episode.subscriberCount}</Text>
-            <Text style={{fontSize: 13, paddingRight: 10, color: 'white'}}>공감 : {likeCount}</Text>
-            <Text style={{fontSize: 13, paddingRight: 10, color: 'white'}}>댓글 123</Text>
+            <Text style={{fontSize: 13, paddingRight: 10, color: 'white'}}>공감 : {this.state.likeCount}</Text>
+            <Text style={{fontSize: 13, color: 'white'}}>댓글: {commentCount}</Text>
           </View>
         </View>
       </View>

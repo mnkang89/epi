@@ -50,20 +50,20 @@ class LostPasswordScreen extends Component {
     return (
       <View style={{marginTop: 44, backgroundColor: 'rgba(0,0,0,0)'}}>
         <View style={{marginLeft: 21, marginRight: 70.5, marginBottom: 0, backgroundColor: 'rgba(0,0,0,0)'}}>
-          <Text style={{color: 'white', fontWeight: 'bold', fontSize: 60, marginBottom: 0}}>ㅠ.ㅠ</Text>
+          <Text style={{color: 'white', opacity: 0.9, fontWeight: 'bold', fontSize: 60, marginBottom: 0}}>ㅠ.ㅠ</Text>
         </View>
         <View style={{marginTop: 17, marginLeft: 23, marginRight: 45, backgroundColor: 'rgba(0,0,0,0)'}}>
-          <Text style={{color: 'white', fontSize: 16}}>회원가입시 입력한 이메일을 알려주시면 비밀번호 변경 링크를 보내드려요 😉</Text>
+          <Text style={{color: 'white', opacity: 0.9, fontSize: 16}}>회원가입시 입력한 이메일을 알려주시면 비밀번호 변경 링크를 보내드려요 😉</Text>
         </View>
-        <View style={{marginTop: 100, marginLeft: 23, marginRight: 23, paddingBottom: 7.5, borderBottomWidth: 1, borderBottomColor: 'white', backgroundColor: 'rgba(0,0,0,0)'}}>
+        <View style={{marginTop: 100, marginLeft: 23, marginRight: 23, paddingBottom: 7.5, borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.5)', backgroundColor: 'rgba(0,0,0,0)'}}>
           <TextInput
             placeholder='이메일'
-            placeholderTextColor='white'
+            placeholderTextColor='rgba(255,255,255,0.5)'
             style={{fontWeight: 'bold', color: 'white', height: 20}}
           />
         </View>
         <TouchableOpacity
-          style={{backgroundColor: 'white', paddingTop: 10, paddingBottom: 10, marginTop: 22, marginLeft: 22.5, marginRight: 22.5}}
+          style={{backgroundColor: 'rgba(255,255,255,0.9)', paddingTop: 10, paddingBottom: 10, marginTop: 22, marginLeft: 22.5, marginRight: 22.5}}
           onPress={
             () => {
               this.props.sendPassword()

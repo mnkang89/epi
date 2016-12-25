@@ -16,6 +16,7 @@ class ContentDetailClass extends Component {
   constructor (props) {
     super(props)
     this.state = {
+      paddingRight: this.props.number + 1 === this.props.length ? 14.5 : 0,
       lastPress: 0,
       animation: false,
       textList: ['좋아', '짜릿해', '맛있어', '최고야', '개좋아', '좋아', '짜릿해', '맛있어', '최고야', '개좋아'],
@@ -44,6 +45,7 @@ class ContentDetailClass extends Component {
           liked: false,
           disabled: false
         })
+        this.props.dislike()
         // delete날리기
         this.props.deleteLike(token, contentId)
       } else {
@@ -54,6 +56,7 @@ class ContentDetailClass extends Component {
           liked: true,
           disabled: false
         })
+        this.props.like()
         // post날리기
         this.props.postLike(token, contentId)
       }
@@ -125,10 +128,11 @@ class ContentDetailClass extends Component {
 
   renderContent (content) {
     const { imageStyle } = styles
+    const paddingRight = this.state.paddingRight
 
     if (content.type === 'Image') {
       return (
-        <View style={{backgroundColor: 'black', paddingLeft: 8, paddingRight: 0}}>
+        <View style={{backgroundColor: 'black', paddingLeft: 8, paddingRight: paddingRight}}>
           <TouchableWithoutFeedback
             delayLongPress={800}
             onPress={this.onDoublePress.bind(this)}
@@ -138,8 +142,22 @@ class ContentDetailClass extends Component {
                 {this.renderAnimation()}
               </View>
               <View style={{alignItems: 'center', backgroundColor: 'rgba(0,0,0,0)'}}>
-                <Text style={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>코멘트를남길수있음니다웬만하면짧게남겨</Text>
-                <Text style={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>최대 두 줄까지로 합시다 한줄 넘짧</Text>
+                <Text
+                  style={{
+                    textShadowOffset: {width: 1, height: 2},
+                    textShadowColor: 'rgba(0, 0, 0, 0.5)',
+                    textShadowRadius: 1,
+                    color: 'white',
+                    fontSize: 20,
+                    fontWeight: 'bold' }}>코멘트를남길수있음니다웬만하면짧게남겨</Text>
+                <Text
+                  style={{
+                    textShadowOffset: {width: 1, height: 2},
+                    textShadowColor: 'rgba(0, 0, 0, 0.5)',
+                    textShadowRadius: 1,
+                    color: 'white',
+                    fontSize: 20,
+                    fontWeight: 'bold' }}>최대 두 줄까지로 합시다 한줄 넘짧</Text>
               </View>
             </Image>
           </TouchableWithoutFeedback>
@@ -171,8 +189,7 @@ class ContentDetailClass extends Component {
                   top: 0,
                   left: 0,
                   right: 0,
-                  bottom: 0,
-                  borderRadius: 10
+                  bottom: 0
                 }} />
               <View style={{height: 295, paddingTop: 80}}>
                 {this.renderAnimation()}
@@ -202,8 +219,7 @@ class ContentDetailClass extends Component {
 const styles = {
   imageStyle: {
     height: 345,
-    width: 345,
-    borderRadius: 10
+    width: 345
   }
 }
 

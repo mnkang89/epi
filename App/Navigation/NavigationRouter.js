@@ -37,12 +37,6 @@ class NavigationRouter extends Component {
       <Router
         sceneStyle={{ backgroundColor: 'black' }}>
         <Scene
-          initial
-          key='Greeting'
-          hideNavBar
-          hideTabBar
-          component={GreetingScreen} />
-        <Scene
           key='root'
           navigationBarStyle={Styles.navBar}
           titleStyle={Styles.title}
@@ -52,7 +46,7 @@ class NavigationRouter extends Component {
           <Scene
             key='tabBar'
             tabs
-            tabBarStyle={{backgroundColor: '#000000', justifyContent: 'center', alignItems: 'center', alignSelf: 'center', height: 40}}>
+            tabBarStyle={{backgroundColor: '#000000', justifyContent: 'center', alignItems: 'center', alignSelf: 'center', height: 48.5}}>
             <Scene
               key='homeTab'
               initial
@@ -66,7 +60,7 @@ class NavigationRouter extends Component {
                 initial
                 key='feedScreen'
                 component={FeedScreen}
-                title='episode' />
+                renderTitle={NavItems.episodeLogo} />
               <Scene
                 key='userProfileScreen'
                 component={UserProfileScreen}
@@ -112,7 +106,7 @@ class NavigationRouter extends Component {
               <Scene
                 key='cameraScreen'
                 component={CameraScreen}
-                title='episode'
+                renderTitle={NavItems.episodeLogo}
                 hideNavBar
                 hideTabBar />
             </Scene>

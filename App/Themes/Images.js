@@ -14,7 +14,9 @@ const images = {
   fllwBtn: require('../Images/fllwBtn.png'),
   fllwingBtn: require('../Images/fllwBtnCopy16.png'),
   profileIcon: require('../Images/profileIcon.png'),
-  endEpBtn: require('../Images/endEpBtnCopy.png')
+  endEpBtn: require('../Images/endEpBtnCopy.png'),
+  episodeLogo: require('../Images/episodeCopy.png'),
+  profileImage: require('../Images/profileImage.png')
 }
 
 export default images

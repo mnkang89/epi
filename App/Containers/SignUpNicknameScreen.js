@@ -169,17 +169,17 @@ class SignUpPasswordScreen extends Component {
           onAccept={this.onDecline.bind(this)}
           onSetting={this.onSetting.bind(this)} />
         <View style={{marginLeft: 21, marginRight: 70.5, marginBottom: 0, backgroundColor: 'rgba(0,0,0,0)'}}>
-          <Text style={{color: 'white', fontWeight: 'bold', fontSize: 60, marginBottom: 0}}>고마워요!</Text>
+          <Text style={{color: 'white', opacity: 0.9, fontWeight: 'bold', fontSize: 60, marginBottom: 0}}>고마워요!</Text>
         </View>
         <View style={{marginTop: 8, marginLeft: 23, marginRight: 86, backgroundColor: 'rgba(0,0,0,0)'}}>
-          <Text style={{color: 'white', fontSize: 16}}>에피소드에서 사용할 프로필사진과 이름을 설정해주세요 😀</Text>
+          <Text style={{color: 'white', opacity: 0.9, fontSize: 16}}>에피소드에서 사용할 프로필사진과 이름을 설정해주세요 😀</Text>
         </View>
         <TouchableOpacity
           style={{marginTop: 18, marginBottom: 28}}
           onPress={this.getProfileImage.bind(this)}>
           {this.renderProfileImage()}
         </TouchableOpacity>
-        <View style={{marginTop: 0, marginLeft: 23, marginRight: 23, paddingBottom: 7.5, borderBottomWidth: 1, borderBottomColor: 'white', backgroundColor: 'rgba(0,0,0,0)'}}>
+        <View style={{marginTop: 0, marginLeft: 23, marginRight: 23, paddingBottom: 7.5, borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.5)', backgroundColor: 'rgba(0,0,0,0)'}}>
           <TextInput
             ref='emailCheck'
             style={{fontWeight: 'bold', height: 20, color: 'white'}}
@@ -192,11 +192,11 @@ class SignUpPasswordScreen extends Component {
             onChangeText={this.handleChangeNickname}
             onSubmitEditing={this.handlePressNickname.bind(this)}
             placeholder='이름 (한글과 영문대소문자, 숫자만가능)'
-            placeholderTextColor='white'
+            placeholderTextColor='rgba(255,255,255,0.5)'
           />
         </View>
         <TouchableOpacity
-          style={{backgroundColor: 'white', paddingTop: 10, paddingBottom: 10, marginTop: 22, marginLeft: 22.5, marginRight: 22.5}}
+          style={{backgroundColor: 'rgba(255,255,255,0.9)', paddingTop: 10, paddingBottom: 10, marginTop: 22, marginLeft: 22.5, marginRight: 22.5}}
           onPress={this.handlePressNickname.bind(this)}
           >
           <Text style={{color: 'black', fontWeight: 'bold', fontSize: 18, alignSelf: 'center'}}>가입</Text>

@@ -1,11 +1,11 @@
 // @flow
 
 import React from 'react'
-import { TouchableOpacity } from 'react-native'
+import { View, TouchableOpacity, Image } from 'react-native'
 import styles from './Styles/NavItemsStyle'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import { Colors, Metrics } from '../Themes'
+import { Colors, Metrics, Images } from '../Themes'
 
 const openDrawer = () => {
   NavigationActions.refresh({
@@ -15,6 +15,16 @@ const openDrawer = () => {
 }
 
 export default {
+  episodeLogo () {
+    return (
+      <View style={{
+        paddingTop: 13
+      }}>
+        <Image source={Images.episodeLogo} style={styles.episodeLogo} />
+      </View>
+    )
+  },
+
   backButton () {
     return (
       <TouchableOpacity onPress={NavigationActions.pop}>

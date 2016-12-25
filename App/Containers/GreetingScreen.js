@@ -97,10 +97,10 @@ class GreetingScreen extends Component {
       return (
         <View style={{marginTop: 433}}>
           <View style={{marginLeft: 22.5, marginRight: 72, backgroundColor: 'rgba(0,0,0,0)'}}>
-            <Text style={{color: 'white', fontWeight: 'bold', fontSize: 72}}>episode</Text>
+            <Text style={{color: 'white', opacity: 0.9, fontWeight: 'bold', fontSize: 72}}>episode</Text>
           </View>
           <TouchableOpacity
-            style={{backgroundColor: 'white', paddingTop: 10, paddingBottom: 10, marginTop: 32, marginLeft: 22.5, marginRight: 22.5}}
+            style={{backgroundColor: 'rgba(255,255,255,0.9)', paddingTop: 10, paddingBottom: 10, marginTop: 32, marginLeft: 22.5, marginRight: 22.5}}
             onPress={
               () => {
                 this.setState({
@@ -186,7 +186,9 @@ class GreetingScreen extends Component {
             bottom: 0
           }}
         />
-        {this.conditionalRender()}
+        <View style={{backgroundColor: 'rgba(0,0,0,0.5)', height: 667}}>
+          {this.conditionalRender()}
+        </View>
       </View>
     )
   }

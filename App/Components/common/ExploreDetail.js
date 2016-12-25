@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { ScrollView, Dimensions, Text, View, Image, TouchableOpacity } from 'react-native'
-import { Colors, Metrics } from '../../Themes/'
+import { Colors, Images, Metrics } from '../../Themes/'
 import Video from 'react-native-video'
 import { connect } from 'react-redux'
 
@@ -105,7 +105,7 @@ class ExploreDetail extends Component {
           <View style={{alignItems: 'center', justifyContent: 'center'}}>
             <Image
               style={styles.imageStyle}
-              source={{uri: 'https://facebook.github.io/react/img/logo_og.png'}}
+              source={Images.profileImage}
             />
           </View>
           <View style={{marginLeft: 5, marginTop: 20}}>

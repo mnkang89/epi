@@ -123,12 +123,12 @@ class SignInScreen extends Component {
           TextArray={this.state.alertTextArray}
           onAccept={this.onDecline.bind(this)} />
         <View style={{marginLeft: 21, marginRight: 70.5, marginBottom: 0, backgroundColor: 'rgba(0,0,0,0)'}}>
-          <Text style={{color: 'white', fontWeight: 'bold', fontSize: 60, marginBottom: 0}}>안녕하세요!</Text>
+          <Text style={{color: 'white', opacity: 0.9, fontWeight: 'bold', fontSize: 60, marginBottom: 0}}>안녕하세요!</Text>
         </View>
         <View style={{marginTop: 8, marginLeft: 23, marginRight: 52, backgroundColor: 'rgba(0,0,0,0)'}}>
-          <Text style={{color: 'white', fontSize: 16}}>등록된 이메일과 비밀번호를 입력해주세요 😄</Text>
+          <Text style={{color: 'white', opacity: 0.9, fontSize: 16}}>등록된 이메일과 비밀번호를 입력해주세요 😄</Text>
         </View>
-        <View style={{marginTop: 78, marginLeft: 23, marginRight: 23, paddingBottom: 7.5, borderBottomWidth: 1, borderBottomColor: 'white', backgroundColor: 'rgba(0,0,0,0)'}}>
+        <View style={{marginTop: 78, marginLeft: 23, marginRight: 23, paddingBottom: 7.5, borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.5)', backgroundColor: 'rgba(0,0,0,0)'}}>
           <TextInput
             ref='email'
             style={{fontWeight: 'bold', color: 'white', height: 20}}
@@ -140,10 +140,10 @@ class SignInScreen extends Component {
             onChangeText={this.handleChangeEmail}
             onSubmitEditing={() => this.refs.password.focus()}
             placeholder='이메일'
-            placeholderTextColor='white'
+            placeholderTextColor='rgba(255,255,255,0.5)'
           />
         </View>
-        <View style={{marginTop: 23, marginLeft: 23, marginRight: 23, paddingBottom: 7.5, borderBottomWidth: 1, borderBottomColor: 'white', backgroundColor: 'rgba(0,0,0,0)'}}>
+        <View style={{marginTop: 23, marginLeft: 23, marginRight: 23, paddingBottom: 7.5, borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.5)', backgroundColor: 'rgba(0,0,0,0)'}}>
           <TextInput
             ref='password'
             style={{fontWeight: 'bold', color: 'white', height: 20}}
@@ -156,11 +156,11 @@ class SignInScreen extends Component {
             onChangeText={this.handleChangePassword}
             onSubmitEditing={this.handlePressLogin}
             placeholder='비밀번호 (최소 8자, 최대 12자)'
-            placeholderTextColor='white'
+            placeholderTextColor='rgba(255,255,255,0.5)'
           />
         </View>
         <TouchableOpacity
-          style={{backgroundColor: 'white', paddingTop: 10, paddingBottom: 10, marginTop: 22, marginLeft: 22.5, marginRight: 22.5}}
+          style={{backgroundColor: 'rgba(255,255,255,0.9)', paddingTop: 10, paddingBottom: 10, marginTop: 22, marginLeft: 22.5, marginRight: 22.5}}
           onPress={this.handlePressLogin} >
           <Text style={{color: 'black', fontWeight: 'bold', fontSize: 18, alignSelf: 'center'}}>로그인</Text>
         </TouchableOpacity>
