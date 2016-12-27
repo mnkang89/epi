@@ -13,6 +13,7 @@ import {
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 import Camera from 'react-native-camera'
+import Video from 'react-native-video'
 import Modal from 'react-native-modalbox'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { Images } from '../Themes'
@@ -55,6 +56,8 @@ class CameraScreen extends Component {
     // 여기에서 현재 active한 에피소드가 있는지 없는지 체크하고 컨디셔널 렌더링
     this.props.checkUserEpisode(this.props.token, true)
     this.refs.modal.open()
+    console.log('스테이틎들ㄹ')
+    console.log(this.state)
   }
 
   takePicture () {
@@ -77,17 +80,35 @@ class CameraScreen extends Component {
 
   takeVideo () {
     this.setState({
-      captureMode: Camera.constants.CaptureMode.video,
       fileType: 'Video',
-      timer: true
+      timer: true})
+    this.camera.capture({
+      mode: Camera.constants.CaptureMode.video
     })
+    .then((data) => {
+      console.log('video capture success')
+      console.log(data)
+      console.log(data.path)
+      clearInterval(this.state.interval)
+      this.setState({
+        photo: data.path,
+        LeftTime: 15
+      })
+      setTimeout(() => {
+        this.setState({
+          cameraState: true
+        })
+      }, 500)
+    })
+    .catch(err => console.log(err))
+
     this.state.interval = setInterval(() => {
       if (this.state.LeftTime === 0) {
         clearInterval(this.state.interval)
         this.camera.stopCapture()
         this.setState({
-          LeftTime: 15,
-          cameraState: true
+          timer: false,
+          LeftTime: 15
         })
       } else {
         this.setState({
@@ -96,22 +117,6 @@ class CameraScreen extends Component {
         })
       }
     }, 1000)
-
-    this.camera.capture()
-      .then((data) => {
-        console.log('hihi')
-        console.log(data)
-        this.setState({
-          photo: data.path
-        })
-        setTimeout(() => {
-          this.setState({
-            LeftTime: 15,
-            cameraState: true
-          })
-        }, 500)
-      })
-      .catch(err => console.error(err))
   }
 
   // 사진만 업로드
@@ -171,14 +176,8 @@ class CameraScreen extends Component {
   }
 
   handleLongPressOut () {
-    if (this.state.timer) {
-      clearInterval(this.state.interval)
-      this.camera.stopCapture()
-      this.setState({
-        LeftTime: 15,
-        cameraState: true
-      })
-    }
+    console.log('long press out')
+    this.camera.stopCapture()
   }
 
   renderButtons () {
@@ -188,7 +187,21 @@ class CameraScreen extends Component {
           <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
             <View style={{height: 103.5}} />
             <View style={{flex: 1, flexDirection: 'row'}}>
-              <TouchableOpacity style={{marginTop: 27.5, marginRight: 57.5}} onPress={() => { this.setState({cameraState: false, texting: false}) }}>
+              <TouchableOpacity
+                style={{marginTop: 27.5, marginRight: 57.5}}
+                onPress={() => {
+                  this.setState({
+                    cameraState: false,
+                    cameraType: Camera.constants.Type.back,
+                    photo: '',
+                    focus: false,
+                    texting: false,
+                    timer: false,
+                    LeftTime: 15,
+                    interval: null,
+                    fileType: 'Image'
+                  })
+                }}>
                 <Image style={{width: 30, height: 30}} source={Images.backChevron} />
               </TouchableOpacity>
 
@@ -201,12 +214,6 @@ class CameraScreen extends Component {
               </TouchableOpacity>
             </View>
           </View>
-          <TouchableOpacity onPress={() => {
-            this.refs.modal.close()
-            NavigationActions.homeTab()
-          }}>
-            <Text>back</Text>
-          </TouchableOpacity>
         </View>
       )
     } else {
@@ -222,9 +229,14 @@ class CameraScreen extends Component {
             </TouchableOpacity>
             <View style={{flex: 1, justifyContent: 'center', marginBottom: 103.5}}>
               <TouchableWithoutFeedback
-                delayLongPress={1200}
+                delayLongPress={300}
                 onPress={this.takePicture.bind(this)}
-                onLongPress={this.takeVideo.bind(this)}
+                onLongPress={
+                  () => {
+                    console.log('camera longpress~')
+                    this.takeVideo()
+                  }
+                }
                 onPressOut={this.handleLongPressOut.bind(this)}
               >
                 <Image style={{width: 85, height: 85}} source={Images.captureButton} />
@@ -278,6 +290,7 @@ class CameraScreen extends Component {
         </View>
       )
     } else {
+      console.log('timer 없으')
       return
     }
   }
@@ -315,16 +328,51 @@ class CameraScreen extends Component {
   }
 
   renderCamera () {
+    console.log('uri')
+    console.log(this.state.photo)
+    console.log('hi')
     if (this.state.cameraState) {
-      return (
-        <View>
-          <Image style={{ height: 375 }} source={{uri: this.state.photo}}>
+      console.log('주소는?')
+      console.log(this.state.photo)
+      if (this.state.fileType === 'Image') {
+        return (
+          <View>
+            <Image style={{ height: 375 }} source={{uri: this.state.photo}}>
+              <View style={styles2.textContainer}>
+                {this.renderCommentInput()}
+              </View>
+            </Image>
+          </View>
+        )
+      } else {
+        return (
+          <View>
+            <Video
+              source={{uri: this.state.photo}}   // Can be a URL or a local file.
+              muted
+              ref={(ref) => {
+                this.player = ref
+              }}                             // Store reference
+              paused={false}                 // Pauses playback entirely.
+              resizeMode='cover'             // Fill the whole screen at aspect ratio.
+              repeat={false}                         // Repeat forever.
+              playInBackground={false}       // Audio continues to play when app entering background.
+              playWhenInactive              // [iOS] Video continues to play when control or notification center are shown.
+              progressUpdateInterval={250.0} // [iOS] Interval to fire onProgress (default to ~250ms)
+              style={{
+                height: 375,
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0
+              }} />
             <View style={styles2.textContainer}>
               {this.renderCommentInput()}
             </View>
-          </Image>
-        </View>
-      )
+          </View>
+        )
+      }
     } else {
       return (
         <Camera
@@ -333,22 +381,25 @@ class CameraScreen extends Component {
           }}
           style={styles.preview}
           captureMode={this.state.captureMode}
+          captureTarget={Camera.constants.CaptureTarget.disk}
           captureQuality={Camera.constants.CaptureQuality.high}
           captureAudio={false}
-          captureTarget={Camera.constants.CaptureTarget.disk}
           type={this.state.cameraType}
           defaultOnFocusComponent={false}
           onFocusChanged={() => {}}
           onZoomChanged={() => {}}
           aspect={Camera.constants.Aspect.fill}>
           {this.renderEpisodeStatusButton()}
-          {this.renderTimerComponent.bind(this)}
+          {this.renderTimerComponent()}
         </Camera>
       )
     }
   }
 
   onClose () {
+    this.setState({
+      fileType: 'Image'
+    })
     NavigationActions.homeTab()
   }
 

@@ -57,6 +57,11 @@ class EpisodeDetail extends Component {
     })
   }
 
+  handleScroll (event) {
+    const xPoint = event.nativeEvent.contentOffset.x
+    console.log(xPoint)
+  }
+
   render () {
     const {
       headerContentStyle,
@@ -102,11 +107,12 @@ class EpisodeDetail extends Component {
         <ScrollView
           style={{paddingLeft: 7.5, paddingRight: 7.5}}
           contentOffset={{x: xPosition, y: 0}}
+          onScroll={this.handleScroll.bind(this)}
+          scrollEventThrottle={5000}
           horizontal
           snapToAlignment={'start'}
           snapToInterval={353}
           showsHorizontalScrollIndicator
-          scrollEventThrottle={1000}
           directionalLockEnabled={false}
           decelerationRate={'fast'} >
           {this.renderContents()}
@@ -122,7 +128,7 @@ class EpisodeDetail extends Component {
       </View>
     )
   }
-};
+}
 
 const styles = {
   headerContentStyle: {

@@ -9,9 +9,7 @@ export default {
   navBar: {
     height: 65,
     backgroundColor: '#000000',
-    borderBottomColor: '#000000',
-    justifyContent: 'center',
-    alignItems: 'center'
+    borderBottomColor: '#000000'
   },
   title: {
     color: Colors.snow,

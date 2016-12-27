@@ -168,10 +168,13 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
   const postContent = (token, episodeId, fileType, file) => {
     console.log('POST content api콜 발생')
     const formData = new FormData()
+    const savedForm = fileType === 'Image' ? 'image/jpeg' : 'video/mov'
+    const savedName = fileType === 'Image' ? 'photo.jpg' : 'video.mov'
+
     const photo = {
       uri: file,
-      type: 'image/jpeg',
-      name: 'photo.jpg'
+      type: savedForm,
+      name: savedName
     }
 
     formData.append('episodeId', episodeId)

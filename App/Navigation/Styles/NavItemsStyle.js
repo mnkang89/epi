@@ -10,6 +10,8 @@ export default StyleSheet.create({
     width: Metrics.icons.medium
   },
   episodeLogo: {
+    alignSelf: 'center',
+    marginTop: 13,
     width: 90.5,
     height: 22
   }
