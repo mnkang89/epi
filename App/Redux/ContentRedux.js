@@ -10,7 +10,8 @@ const { Types, Creators } = createActions({
     'token',
     'episodeId',
     'fileType',
-    'file'
+    'file',
+    'message'
   ],
   userContentPostSuccess: [
     'contentId'
@@ -51,6 +52,7 @@ export const INITIAL_STATE = Immutable({
   episodeId: null,
   fileType: null,
   file: null,
+  message: null,
   contentId: null,
   contentPosting: false,
   error: null,
@@ -62,8 +64,8 @@ export const INITIAL_STATE = Immutable({
 /* ------------- Reducers ------------- */
 
 // we're attempting to check posting Content
-export const postContent = (state: Object, { token, episodeId, fileType, file }: Object) =>
-  state.merge({ contentPosting: true, episodeId, fileType, file })
+export const postContent = (state: Object, { token, episodeId, fileType, file, message }: Object) =>
+  state.merge({ contentPosting: true, episodeId, fileType, file, message })
 
 export const postContentSuccess = (state: Object, { contentId }: Object) =>
   state.merge({ contentPosting: false, error: null, contentId })

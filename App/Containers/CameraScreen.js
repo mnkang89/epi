@@ -32,8 +32,8 @@ class CameraScreen extends Component {
     super(props)
     this.state = {
       captureMode: Camera.constants.CaptureMode.still,
-      cameraState: false,
       cameraType: Camera.constants.Type.back,
+      cameraState: false,
       photo: '',
       focus: false,
       texting: false,
@@ -43,7 +43,8 @@ class CameraScreen extends Component {
       progress: 0,
       ModalOpen: true,
       swipe: true,
-      fileType: 'Image'
+      fileType: 'Image',
+      message: ''
     }
   }
 
@@ -58,6 +59,14 @@ class CameraScreen extends Component {
     this.refs.modal.open()
     console.log('스테이틎들ㄹ')
     console.log(this.state)
+  }
+
+  shouldComponentUpdate (nextProps, nextState) {
+    if (nextState.message !== this.state.message) {
+      console.log('메세지값 변경')
+      return false
+    }
+    return true
   }
 
   takePicture () {
@@ -124,7 +133,16 @@ class CameraScreen extends Component {
     const { token, accountId } = this.props
     const file = this.state.photo
     const fileType = this.state.fileType
+    const message = this.state.message
     const active = false
+
+    if (this.state.texting) {
+      this.setState({
+        message: '',
+        texting: false
+      })
+      this.refs.MyTextInput.clear()
+    }
 
     if (this.state.cameraState) {
       this.setState({cameraState: false})
@@ -132,7 +150,7 @@ class CameraScreen extends Component {
       if (this.props.episodeStatus) {
         const episodeId = this.props.activeEpisodeId
 
-        this.props.postUserContent(token, episodeId, fileType, file)
+        this.props.postUserContent(token, episodeId, fileType, file, message)
         setTimeout(() => {
           this.props.requestUserEpisodes(token, accountId, active)
         }, 1000)
@@ -145,11 +163,6 @@ class CameraScreen extends Component {
         NavigationActions.refresh({key: 'homeTab'})
       }
     }
-  }
-
-  // 글과 함께 사진 업로드
-  uploadPictureWithText () {
-    // 에피소드 업데이트 api콜 하는 부분
   }
 
   switchCamera () {
@@ -178,6 +191,10 @@ class CameraScreen extends Component {
   handleLongPressOut () {
     console.log('long press out')
     this.camera.stopCapture()
+  }
+
+  handleChangeMessage = (text) => {
+    this.setState({ message: text })
   }
 
   renderButtons () {
@@ -254,11 +271,12 @@ class CameraScreen extends Component {
         <View>
           <TextInput
             ref='MyTextInput'
-            placeholder='코멘트 쓰기..'
             style={styles2.input}
+            maxLength={38}
+            placeholder='코멘트 쓰기..'
             returnKeyType='done'
-            maxLength={50}
-            onSubmitEditing={event => this._onSubmit(event)}
+            autoCapitalize='none'
+            autoCorrect={false}
             enablesReturnKeyAutomatically
             onBlur={(event) => {
               this.setState({focus: false, swipe: true})
@@ -271,8 +289,8 @@ class CameraScreen extends Component {
               console.log('제대로눌림')
               console.log(this.state.focus)
             }}
-            autoFocus={this.state.focus}
-            />
+            onChangeText={this.handleChangeMessage}
+            autoFocus={this.state.focus} />
         </View>
       )
     } else {
@@ -477,7 +495,7 @@ const mapDispatchToProps = (dispatch) => {
     postUserEpisode: (token, fileType, file) => dispatch(EpisodeActions.userEpisodePost(token, fileType, file)),
     putUserEpisode: (token, episodeId, active) => dispatch(EpisodeActions.userEpisodePut(token, episodeId, active)),
 
-    postUserContent: (token, episodeId, fileType, file) => dispatch(ContentActions.userContentPost(token, episodeId, fileType, file))
+    postUserContent: (token, episodeId, fileType, file, message) => dispatch(ContentActions.userContentPost(token, episodeId, fileType, file, message))
   }
 }
 

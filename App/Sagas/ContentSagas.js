@@ -5,8 +5,8 @@ import ContentActions from '../Redux/ContentRedux'
 // attempts to get account
 export function * postContent (api, action) {
   console.log('postContent사가워커 진입!!')
-  const { token, episodeId, fileType, file } = action
-  const response = yield call(api.postContent, token, episodeId, fileType, file)
+  const { token, episodeId, fileType, file, message } = action
+  const response = yield call(api.postContent, token, episodeId, fileType, file, message)
   console.log('postContent사가워커 진입!!')
 
   // dispatch successful email checking

@@ -11,7 +11,7 @@ import * as Animatable from 'react-native-animatable'
 
 import CommentActions from '../../Redux/CommentRedux'
 import ContentActions from '../../Redux/ContentRedux'
-
+// textList: ['좋아', '😀', '짜릿해', '맛있어', '최고야', '개좋아', '좋아', '짜릿해', '맛있어', '최고야', '개좋아'],
 class ContentDetailClass extends Component {
   constructor (props) {
     super(props)
@@ -19,7 +19,7 @@ class ContentDetailClass extends Component {
       paddingRight: this.props.number + 1 === this.props.length ? 14.5 : 0,
       lastPress: 0,
       animation: false,
-      textList: ['좋아', '짜릿해', '맛있어', '최고야', '개좋아', '좋아', '짜릿해', '맛있어', '최고야', '개좋아'],
+      textList: [ '😀', '😀', '😀', '😀', '😀', '😀', '😀', '😀', '😀', '😀' ],
       pressIn: 0,
       modalVisible: false,
       liked: this.props.content.liked,
@@ -149,15 +149,9 @@ class ContentDetailClass extends Component {
                     textShadowRadius: 1,
                     color: 'white',
                     fontSize: 20,
-                    fontWeight: 'bold' }}>코멘트를남길수있음니다웬만하면짧게남겨</Text>
-                <Text
-                  style={{
-                    textShadowOffset: {width: 1, height: 2},
-                    textShadowColor: 'rgba(0, 0, 0, 0.5)',
-                    textShadowRadius: 1,
-                    color: 'white',
-                    fontSize: 20,
-                    fontWeight: 'bold' }}>최대 두 줄까지로 합시다 한줄 넘짧</Text>
+                    fontWeight: 'bold' }}>
+                  {content.message}
+                </Text>
               </View>
             </Image>
           </TouchableWithoutFeedback>
@@ -195,8 +189,16 @@ class ContentDetailClass extends Component {
                 {this.renderAnimation()}
               </View>
               <View style={{alignItems: 'center', backgroundColor: 'rgba(0,0,0,0)'}}>
-                <Text style={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>코멘트를남길수있음니다웬만하면짧게남겨</Text>
-                <Text style={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>최대 두 줄까지로 합시다 한줄 넘짧</Text>
+                <Text
+                  style={{
+                    textShadowOffset: {width: 1, height: 2},
+                    textShadowColor: 'rgba(0, 0, 0, 0.5)',
+                    textShadowRadius: 1,
+                    color: 'white',
+                    fontSize: 20,
+                    fontWeight: 'bold' }}>
+                  {content.message}
+                </Text>
               </View>
             </View>
           </TouchableWithoutFeedback>

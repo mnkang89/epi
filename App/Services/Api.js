@@ -165,7 +165,7 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
   }
 
   // content
-  const postContent = (token, episodeId, fileType, file) => {
+  const postContent = (token, episodeId, fileType, file, message) => {
     console.log('POST content api콜 발생')
     const formData = new FormData()
     const savedForm = fileType === 'Image' ? 'image/jpeg' : 'video/mov'
@@ -180,6 +180,7 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     formData.append('episodeId', episodeId)
     formData.append('type', fileType)
     formData.append('file', photo)
+    formData.append('message', message)
     api.setHeader('x-auth', token)
 
     return api.post(`/api/contents`, formData)

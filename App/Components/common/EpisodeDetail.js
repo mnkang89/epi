@@ -97,8 +97,8 @@ class EpisodeDetail extends Component {
                   source={Images.profileImage} />
               </TouchableOpacity>
               <View>
-                <Text style={{color: Colors.snow, fontWeight: 'bold'}}>{this.props.episode.nickname}</Text>
-                <Text style={{color: Colors.snow, fontSize: 13}}>최근 업데이트 : {timeDiffString}</Text>
+                <Text style={{color: 'rgb(217,217,217)', fontWeight: 'bold'}}>{this.props.episode.nickname}</Text>
+                <Text style={{color: 'rgb(217,217,217)', fontSize: 13}}>최근 업데이트 : {timeDiffString}</Text>
               </View>
             </View>
           </View>
@@ -120,9 +120,8 @@ class EpisodeDetail extends Component {
 
         <View style={[textStyle, {backgroundColor: 'black', paddingTop: 15, marginLeft: 15, marginRight: 15}]}>
           <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
-            <Text style={{fontSize: 13, paddingRight: 10, color: 'white'}}>알림설정 : {this.props.episode.subscriberCount}</Text>
-            <Text style={{fontSize: 13, paddingRight: 10, color: 'white'}}>공감 : {this.state.likeCount}</Text>
-            <Text style={{fontSize: 13, color: 'white'}}>댓글: {commentCount}</Text>
+            <Text style={{fontSize: 13, paddingRight: 10, color: 'rgb(217,217,217)'}}>공감 {this.state.likeCount}</Text>
+            <Text style={{fontSize: 13, color: 'rgb(217,217,217)'}}>댓글 {commentCount}</Text>
           </View>
         </View>
       </View>
