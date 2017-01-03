@@ -36,10 +36,10 @@ export const convert2TimeDiffString = (datetimeStr : string) => {
   if (timeDiffInSeconds > 86400) {
     return datetime.toLocaleDateString()
   } else if (timeDiffInSeconds > 3600) {
-      return Math.floor(timeDiffInSeconds / 3600) + '시간전'
+    return Math.floor(timeDiffInSeconds / 3600) + '시간전'
   } else if (timeDiffInSeconds > 60) {
-      return Math.floor(timeDiffInSeconds / 60) + '분전'
+    return Math.floor(timeDiffInSeconds / 60) + '분전'
   } else {
-      return timeDiffInSeconds + '초전'
-    }
+    return timeDiffInSeconds + '초전'
+  }
 }

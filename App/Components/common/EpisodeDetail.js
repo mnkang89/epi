@@ -75,7 +75,8 @@ class EpisodeDetail extends Component {
     const likeCount = this.props.episode.contents
       .map(content => content.likeCount).reduce((a, b) => a + b, 0)
     */
-    const timeDiffString = convert2TimeDiffString(this.props.episode.createDateTime)
+    const timeDiffString = convert2TimeDiffString(
+      this.props.episode.updatedDateTime || this.props.episode.createDateTime)
 
     // var는 es6에서 deprecated.. 어떻게 대체할지 고민해보자. state으로 처리할시 발생하는 성능문제
     var xPosition = 0
