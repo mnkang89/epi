@@ -52,6 +52,17 @@ const { Types, Creators } = createActions({
   ],
   userEpisodePutFailure: [
     'error'
+  ],
+
+  singleEpisodeRequest: [
+    'token',
+    'episodeId'
+  ],
+  singleEpisodeSuccess: [
+    'singleEpisode'
+  ],
+  singleEpisodeFailure: [
+    'singleError'
   ]
 })
 
@@ -73,7 +84,11 @@ export const INITIAL_STATE = Immutable({
   episodePosting: false,
   error: null,
 
-  episodePutting: false
+  episodePutting: false,
+
+  singleEpisode: [],
+  singleEpisodeRequesting: false,
+  singleError: null
 })
 
 /* ------------- Reducers ------------- */
@@ -116,6 +131,16 @@ export const userEpisodePutSuccess = (state: Object, { episodeId }: Object) =>
 export const userEpisodePutFailure = (state: Object, { error }: Object) =>
   state.merge({ episodePutting: false, error })
 
+// we're attempting to get Episode
+export const singleEpisodeRequest = (state: Object, { token }: Object) =>
+  state.merge({ singleEpisodeRequesting: true })
+
+export const singleEpisodeSuccess = (state: Object, { singleEpisode }: Object) =>
+  state.merge({ singleEpisodeRequesting: false, singleError: null, singleEpisode })
+
+export const singleEpisodeFailure = (state: Object, { singleError }: Object) =>
+  state.merge({ singleEpisodeRequesting: false, singleError })
+
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
@@ -133,5 +158,9 @@ export const reducer = createReducer(INITIAL_STATE, {
 
   [Types.USER_EPISODE_PUT]: userEpisodePut,
   [Types.USER_EPISODE_PUT_SUCCESS]: userEpisodePutSuccess,
-  [Types.USER_EPISODE_PUT_FAILURE]: userEpisodePutFailure
+  [Types.USER_EPISODE_PUT_FAILURE]: userEpisodePutFailure,
+
+  [Types.SINGLE_EPISODE_REQUEST]: singleEpisodeRequest,
+  [Types.SINGLE_EPISODE_SUCCESS]: singleEpisodeSuccess,
+  [Types.SINGLE_EPISODE_FAILURE]: singleEpisodeFailure
 })

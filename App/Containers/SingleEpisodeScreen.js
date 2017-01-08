@@ -14,7 +14,7 @@ import KeyboardSpacer from 'react-native-keyboard-spacer'
 import _ from 'lodash'
 
 import Icon from 'react-native-vector-icons/FontAwesome'
-import FeedList from '../Components/common/FeedList'
+import SingleEpisodeList from '../Components/common/SingleEpisodeList'
 import CommentList from '../Components/common/CommentList'
 import {AutoGrowingTextInput} from 'react-native-autogrow-textinput'
 import styles from './Styles/FeedScreenStyle'
@@ -23,20 +23,26 @@ import CommentActions from '../Redux/CommentRedux'
 
 const windowSize = Dimensions.get('window')
 
-class FeedScreen extends Component {
+class SingleEpisodeScreen extends Component {
   constructor (props) {
     super(props)
     this.state = {
       text: '',
       height: 5,
       inputBottom: 40,
-      modalVisible: false,
+      modalVisible: this.props.modal,
       message: ''
     }
   }
 
   componentDidMount () {
+    console.log(this.props)
     this.props.resetCommentModal()
+
+    if (this.state.modalVisible) {
+      const { token, episodeId } = this.props
+      this.props.getComment(token, episodeId)
+    }
   }
 
   componentWillReceiveProps (nextProps) {
@@ -100,7 +106,7 @@ class FeedScreen extends Component {
   render () {
     return (
       <View style={styles.mainContainer}>
-        <FeedList />
+        <SingleEpisodeList episodeId={this.props.episodeId} contentId={this.props.contentId} />
         <View style={{height: 50}} />
         <Modal
           animationType={'slide'}
@@ -192,8 +198,6 @@ const styles2 = {
 const mapStateToProps = (state) => {
   return {
     token: state.token.token,
-    contentId: state.comment.contentId,
-    episodeId: state.comment.episodeId,
 
     visible: state.comment.visible,
 
@@ -210,4 +214,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(FeedScreen)
+export default connect(mapStateToProps, mapDispatchToProps)(SingleEpisodeScreen)

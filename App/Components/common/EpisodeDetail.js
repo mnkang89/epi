@@ -79,7 +79,8 @@ class EpisodeDetail extends Component {
       this.props.episode.updatedDateTime || this.props.episode.createDateTime)
 
     // var는 es6에서 deprecated.. 어떻게 대체할지 고민해보자. state으로 처리할시 발생하는 성능문제
-    var xPosition = 0
+    // 2017/01/01 let으로 바꿧음
+    let xPosition = 0
 
     if (active) {
       xPosition = (activeEpisodeLength - 1) * 353

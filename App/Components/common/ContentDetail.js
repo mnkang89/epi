@@ -129,6 +129,7 @@ class ContentDetailClass extends Component {
   renderContent (content) {
     const { imageStyle } = styles
     const paddingRight = this.state.paddingRight
+    const message = content.message === 'undefined' ? '' : content.message
 
     if (content.type === 'Image') {
       return (
@@ -150,7 +151,7 @@ class ContentDetailClass extends Component {
                     color: 'white',
                     fontSize: 20,
                     fontWeight: 'bold' }}>
-                  {content.message}
+                  {message}
                 </Text>
               </View>
             </Image>
@@ -197,7 +198,7 @@ class ContentDetailClass extends Component {
                     color: 'white',
                     fontSize: 20,
                     fontWeight: 'bold' }}>
-                  {content.message}
+                  {message}
                 </Text>
               </View>
             </View>

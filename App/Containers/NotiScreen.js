@@ -5,12 +5,12 @@ import React, { Component } from 'react'
 import {
   View
 } from 'react-native'
-import AlertList from '../Components/common/AlertList'
+import NotiList from '../Components/common/NotiList'
 
 // Styles
 import styles from './Styles/FeedScreenStyle'
 
-class AlertScreen extends Component {
+class NotiScreen extends Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -21,11 +21,11 @@ class AlertScreen extends Component {
     return (
       <View style={styles.mainContainer}>
         <View style={{backgroundColor: 'black', flex: 1}}>
-          <AlertList />
+          <NotiList />
         </View>
       </View>
     )
   }
 }
 
-export default AlertScreen
+export default NotiScreen

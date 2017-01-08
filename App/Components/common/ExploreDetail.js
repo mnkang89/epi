@@ -15,14 +15,14 @@ class ExploreDetail extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      follow: false
+      follow: this.props.following
     }
   }
 
   onFollowPress () {
-    console.log(this.props)
-    const { token, id } = this.props
-    const accountId = this.props.episode.accountId
+    const { token } = this.props
+    const id = this.props.episode.accountId
+    const accountId = this.props.id
 
     // 팔로우 스테이트 체킹 API발생
     // follow스테이트가 api리스펀스로 안오면 새로운 리퀘스트가 날라가야 되는 구조
@@ -97,6 +97,8 @@ class ExploreDetail extends Component {
   }
 
   render () {
+    console.log('팔로잉여부')
+    console.log(this.props.following)
     const { userTextStyle } = styles
 
     return (

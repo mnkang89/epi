@@ -13,11 +13,12 @@ import FeedScreen from '../Containers/FeedScreen'
 import CommentScreen from '../Containers/CommentScreen'
 import FollowScreen from '../Containers/FollowScreen'
 import FollowerScreen from '../Containers/FollowerScreen'
-import AlertScreen from '../Containers/AlertScreen'
+import NotiScreen from '../Containers/NotiScreen'
 import CameraScreen from '../Containers/CameraScreen'
 import ExploreScreen from '../Containers/ExploreScreen'
 import ProfileScreen from '../Containers/ProfileScreen'
 import UserProfileScreen from '../Containers/UserProfileScreen'
+import SingleEpisodeScreen from '../Containers/SingleEpisodeScreen'
 
 /* **************************
 * Documentation: https://github.com/aksonov/react-native-router-flux
@@ -29,6 +30,10 @@ import UserProfileScreen from '../Containers/UserProfileScreen'
   hideNavBar
   hideTabBar
   component={GreetingScreen} />
+  <Scene
+    key='singleEpisodeScreen'
+    component={SingleEpisodeScreen}
+    title='내소식' />
 */
 
 class NavigationRouter extends Component {
@@ -59,12 +64,13 @@ class NavigationRouter extends Component {
               icon={TabIcon}
               selectedTabIcon='home'
               tabIcon='home'
-              leftButtonIconStyle={Styles.leftButton}
               navigationBarStyle={Styles.navBar}
+              leftButtonIconStyle={Styles.leftButton}
               titleStyle={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>
               <Scene
                 initial
                 key='feedScreen'
+                panHandlers={null}
                 component={FeedScreen}
                 renderTitle={NavItems.episodeLogo} />
               <Scene
@@ -93,11 +99,22 @@ class NavigationRouter extends Component {
               selectedTabIcon='bell-o'
               tabIcon='bell'
               navigationBarStyle={Styles.navBar}
+              leftButtonIconStyle={Styles.leftButton}
               titleStyle={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>
               <Scene
-                key='alertScreen'
-                component={AlertScreen}
+                key='notiScreen'
+                panHandlers={null}
+                component={NotiScreen}
                 title='내소식' />
+              <Scene
+                key='singleEpisodeScreen'
+                component={SingleEpisodeScreen}
+                direction='vertical'
+                title='에피소드' />
+              <Scene
+                key='userProfileScreen'
+                component={UserProfileScreen}
+                title='프로필' />
             </Scene>
             <Scene
               key='cameraTab'
@@ -111,6 +128,7 @@ class NavigationRouter extends Component {
               titleStyle={{color: 'white', fontSize: 17}}>
               <Scene
                 key='cameraScreen'
+                panHandlers={null}
                 component={CameraScreen}
                 renderTitle={NavItems.episodeLogo}
                 hideNavBar
@@ -125,6 +143,7 @@ class NavigationRouter extends Component {
               titleStyle={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>
               <Scene
                 key='exploreScreen'
+                panHandlers={null}
                 component={ExploreScreen}
                 title='우연한 발견' />
             </Scene>
@@ -137,6 +156,7 @@ class NavigationRouter extends Component {
               titleStyle={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>
               <Scene
                 key='profileScreen'
+                panHandlers={null}
                 component={ProfileScreen}
                 title='내 프로필' />
             </Scene>

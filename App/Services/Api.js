@@ -164,6 +164,16 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     return api.put(`/api/episodes/${episodeId}?active=${active}`)
   }
 
+  const requestSingleEpisode = (token, episodeId) => {
+    console.log('GET singleEpisode api콜 발생')
+    const formData = new FormData()
+
+    formData.append('episodeId', episodeId)
+    api.setHeader('x-auth', token)
+
+    return api.get(`/api/episodes/${episodeId}`)
+  }
+
   // content
   const postContent = (token, episodeId, fileType, file, message) => {
     console.log('POST content api콜 발생')
@@ -236,6 +246,14 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     return api.get(`/api/feeds/best`)
   }
 
+  // noties
+  const getNoties = (token) => {
+    console.log('GET noties api콜 발생')
+    api.setHeader('x-auth', token)
+
+    return api.get(`/api/notifications`)
+  }
+
   return {
     // a list of the API functions from step 2
     getCity,
@@ -259,6 +277,7 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
 
     postEpisode,
     putEpisode,
+    requestSingleEpisode,
 
     postContent,
     postLike,
@@ -267,7 +286,9 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     postComment,
     getComment,
 
-    getBestFeeds
+    getBestFeeds,
+
+    getNoties
   }
 }
 

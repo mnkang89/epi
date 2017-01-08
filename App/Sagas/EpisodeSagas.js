@@ -92,3 +92,22 @@ export function * putEpisode (api, action) {
     yield put(EpisodeActions.userEpisodePutFailure('WRONG'))
   }
 }
+
+// attempts to get single episode
+export function * singleEpisode (api, action) {
+  console.log('싱글 에피소드 사가 진입')
+  const { token, episodeId } = action
+  const response = yield call(api.requestSingleEpisode, token, episodeId)
+
+  if (response.ok) {
+    console.log('ok')
+    console.log(response)
+    const singleEpisode = path(['data', 'episodes'], response)
+
+    yield put(EpisodeActions.singleEpisodeSuccess(singleEpisode))
+  } else {
+    console.log('error')
+    console.log(response)
+    yield put(EpisodeActions.singleEpisodeFailure('WRONG'))
+  }
+}

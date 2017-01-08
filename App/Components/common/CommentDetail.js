@@ -29,7 +29,8 @@ class CommentDetail extends Component {
   }
 
   render () {
-    const { accountId, message } = this.props.comment
+    const { message } = this.props.comment
+    const { nickname } = this.props.comment.account
     const {
             headerContentStyle,
             userTextStyle,
@@ -47,7 +48,7 @@ class CommentDetail extends Component {
           </View>
           <View style={{width: 250, marginLeft: 5, marginRight: 11}}>
             <View style={{flex: 1, flexDirection: 'row'}}>
-              <Text style={userTextStyle}>{accountId}</Text>
+              <Text style={userTextStyle}>{nickname}</Text>
             </View>
             <View style={{flex: 2, marginTop: 3, marginBottom: 10}}>
               <Text style={{color: 'rgb(53, 53, 53)', fontSize: 15, lineHeight: 16}}>{message}</Text>

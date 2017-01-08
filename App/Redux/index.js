@@ -15,7 +15,8 @@ export default () => {
     episode: require('./EpisodeRedux').reducer,
     content: require('./ContentRedux').reducer,
     comment: require('./CommentRedux').reducer,
-    feed: require('./FeedRedux').reducer
+    feed: require('./FeedRedux').reducer,
+    noti: require('./NotiRedux').reducer
   })
 
   return configureStore(rootReducer, rootSaga)
