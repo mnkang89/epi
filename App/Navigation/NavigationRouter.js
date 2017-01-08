@@ -43,12 +43,12 @@ class NavigationRouter extends Component {
         sceneStyle={{ backgroundColor: 'black' }}>
         <Scene
           key='Greeting'
+          initial
           hideNavBar
           hideTabBar
           component={GreetingScreen} />
         <Scene
           key='root'
-          initial
           navigationBarStyle={Styles.navBar}
           titleStyle={Styles.title}
           leftButtonIconStyle={Styles.leftButton}
