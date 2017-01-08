@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { ScrollView, Dimensions, Text, View, Image, TouchableOpacity } from 'react-native'
-import { Colors, Metrics } from '../../Themes/'
+import { Colors, Images, Metrics } from '../../Themes/'
 import Video from 'react-native-video'
 import { connect } from 'react-redux'
 
@@ -97,6 +97,19 @@ class ExploreDetail extends Component {
     )
   }
 
+  renderProfileImage () {
+    if (this.props.account.profileImagePath) {
+      return (<Image
+        style={styles.imageStyle}
+        source={{uri: this.props.account.profileImagePath}} />
+       )
+    } else {
+      return (<Image
+        style={styles.imageStyle}
+        source={Images.profileImage} />
+      ) }
+  }
+
   render () {
     console.log('팔로잉여부')
     console.log(this.props.following)
@@ -106,10 +119,7 @@ class ExploreDetail extends Component {
       <View>
         <View style={{flexDirection: 'row', justifyContent: 'space-between', height: 57.5, marginLeft: 15, marginRight: 14.45, backgroundColor: 'black'}}>
           <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-            <Image
-              style={styles.imageStyle}
-              source={{uri: this.props.account.profileImagePath}}
-            />
+            {this.renderProfileImage()}
             <View style={{marginLeft: 5}}>
               <Text style={userTextStyle}>{this.props.account.nickname}</Text>
             </View>
