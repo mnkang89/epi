@@ -7,7 +7,7 @@ import {
   ScrollView
  } from 'react-native'
 import { Actions as NavigationActions } from 'react-native-router-flux'
-import { Colors, Metrics } from '../../Themes/'
+import { Colors, Images, Metrics } from '../../Themes/'
 import { convert2TimeDiffString } from '../../Lib/Utilities'
 
 import ContentDetail from './ContentDetail'
@@ -62,6 +62,20 @@ class EpisodeDetail extends Component {
     console.log(xPoint)
   }
 
+  renderProfileImage () {
+    if (this.props.account.profileImagePath) {
+      return (<Image
+        style={styles.profileStyle}
+        source={{uri: this.props.account.profileImagePath}} />
+    )
+    } else {
+      return (<Image
+        style={styles.profileStyle}
+        source={Images.profileImage} />
+    )
+    }
+  }
+
   render () {
     const {
       headerContentStyle,
@@ -96,9 +110,7 @@ class EpisodeDetail extends Component {
                 <View>
                   <TouchableOpacity
                     onPress={this.onProfilePress.bind(this)}>
-                    <Image
-                      style={styles.profileStyle}
-                      source={{uri: this.props.account.profileImagePath}} />
+                    {this.renderProfileImage()}
                   </TouchableOpacity>
                 </View>
                 <View style={{justifyContent: 'flex-start', paddingLeft: 5}}>
