@@ -1,6 +1,7 @@
 package com.episode;
 
 import com.facebook.react.ReactActivity;
+import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import com.brentvatne.react.ReactVideoPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.joshblour.reactnativepermissions.ReactNativePermissionsPackage;
