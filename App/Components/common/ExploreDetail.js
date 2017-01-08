@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { ScrollView, Dimensions, Text, View, Image, TouchableOpacity } from 'react-native'
-import { Colors, Images, Metrics } from '../../Themes/'
+import { Colors, Metrics } from '../../Themes/'
 import Video from 'react-native-video'
 import { connect } from 'react-redux'
 
@@ -108,11 +108,11 @@ class ExploreDetail extends Component {
           <View style={{alignItems: 'center', justifyContent: 'center'}}>
             <Image
               style={styles.imageStyle}
-              source={Images.profileImage}
+              source={{ uri: this.props.profileImagePath }}
             />
           </View>
           <View style={{marginLeft: 5, marginTop: 20}}>
-            <Text style={userTextStyle}>작성자</Text>
+            <Text style={userTextStyle}>{this.props.nickname}</Text>
           </View>
           <View style={{marginLeft: 215, marginTop: 14.5}}>
             {this.renderFollowButton()}

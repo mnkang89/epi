@@ -24,7 +24,7 @@ class ExploreList extends Component {
 
   renderExplores () {
     return this.props.items.map(item =>
-      <ExploreDetail key={item.episode.id} episode={item.episode} following={item.following} />)
+      <ExploreDetail key={item.episode.id} episode={item.episode} following={item.following} nickname={item.account.nickname} profileImagePath={item.account.profileImagePath} />)
   }
 
   render () {
