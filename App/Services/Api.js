@@ -121,24 +121,22 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     return api.get(`/api/feeds?accountId=${accountId}&withFollowing=${active}`)
   }
 
-  const postFollow = (token, id, accountId) => {
+  const postFollow = (token, id) => {
     console.log('POST account/follow api콜 발생')
     const formData = new FormData()
 
     formData.append('id', id)
     api.setHeader('x-auth', token)
 
-    return api.post(`/api/accounts/${accountId}/follow`, formData)
+    return api.post(`/api/accounts/follow`, formData)
   }
 
-  const deleteFollow = (token, id, accountId) => {
+  const deleteFollow = (token, id) => {
     console.log('DELETE account/follow api콜 발생')
-    const formData = new FormData()
 
-    formData.append('contentId', id)
     api.setHeader('x-auth', token)
 
-    return api.delete(`/api/accounts/${accountId}/follow?id=${id}`)
+    return api.delete(`/api/accounts/follow?id=${id}`)
     // return api.delete(`/api/accounts/${accountId}/follow`, formData)
   }
 

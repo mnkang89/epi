@@ -13,7 +13,7 @@ class UserEpisodeList extends Component {
     super(props)
     this.state = {
       episodes: [],
-      follow: 'gray'
+      follow: this.props.following
     }
   }
 
@@ -31,6 +31,44 @@ class UserEpisodeList extends Component {
 
     this.props.requestOtherInfo(token, id)
     this.props.requestOtherEpisodes(token, id, active)
+  }
+
+  onFollowPress () {
+    const { token } = this.props
+    const id = this.props.id
+    // const accountId = this.props.id
+
+    // 팔로우 스테이트 체킹 API발생
+    // follow스테이트가 api리스펀스로 안오면 새로운 리퀘스트가 날라가야 되는 구조
+    if (this.state.follow) {
+      this.props.deleteFollow(token, id)
+      this.setState({ follow: false })
+    } else {
+      this.props.postFollow(token, id)
+      this.setState({ follow: true })
+    }
+  }
+
+  renderFollowButton () {
+    if (this.state.follow) {
+      return (
+        <TouchableOpacity
+          onPress={this.onFollowPress.bind(this)}>
+          <View style={{borderWidth: 0.5, borderColor: 'rgb(217, 217, 217)', borderRadius: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 8, paddingLeft: 8, backgroundColor: 'white'}}>
+            <Text style={{color: 'black'}}>팔로잉</Text>
+          </View>
+        </TouchableOpacity>
+      )
+    } else {
+      return (
+        <TouchableOpacity
+          onPress={this.onFollowPress.bind(this)}>
+          <View style={{borderWidth: 0.5, borderColor: 'rgb(217, 217, 217)', borderRadius: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 8, paddingLeft: 8}}>
+            <Text style={{color: 'rgb(217, 217, 217)'}}>팔로우</Text>
+          </View>
+        </TouchableOpacity>
+      )
+    }
   }
 
   renderEpisodes () {
@@ -59,6 +97,9 @@ class UserEpisodeList extends Component {
             </TouchableOpacity>
           </View>
         </View>
+        <View style={{marginTop: 10}}>
+          {this.renderFollowButton()}
+        </View>
       </View>
     )
   }
@@ -82,6 +123,7 @@ const mapStateToProps = (state) => {
     profileImagePath: state.account.otherProfileImagePath,
     followerCount: state.account.otherFollowerCount,
     followingCount: state.account.otherFollowingCount,
+    following: state.account.otherFollowing,
 
     items: state.episode.otherEpisodes
   }
@@ -90,7 +132,10 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     requestOtherInfo: (token, accountId) => dispatch(AccountActions.otherInfoRequest(token, accountId)),
-    requestOtherEpisodes: (token, accountId, active) => dispatch(EpisodeActions.otherEpisodesRequest(token, accountId, active))
+    requestOtherEpisodes: (token, accountId, active) => dispatch(EpisodeActions.otherEpisodesRequest(token, accountId, active)),
+
+    postFollow: (token, id) => dispatch(AccountActions.followPost(token, id)),
+    deleteFollow: (token, id) => dispatch(AccountActions.followDelete(token, id))
   }
 }
 

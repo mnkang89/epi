@@ -32,7 +32,8 @@ const { Types, Creators } = createActions({
     'otherNickname',
     'otherProfileImagePath',
     'otherFollowerCount',
-    'otherFollowingCount'
+    'otherFollowingCount',
+    'otherFollowing'
   ],
   otherInfoFailure: [
     'error'
@@ -52,8 +53,7 @@ const { Types, Creators } = createActions({
 
   followPost: [
     'token',
-    'id',
-    'accountId'
+    'id'
   ],
   followPostSuccess: [
     'response'
@@ -64,8 +64,7 @@ const { Types, Creators } = createActions({
 
   followDelete: [
     'token',
-    'id',
-    'accountId'
+    'id'
   ],
   followDeleteSuccess: [
     'response'
@@ -96,6 +95,7 @@ export const INITIAL_STATE = Immutable({
   otherProfileImagePath: null,
   otherFollowerCount: null,
   otherFollowingCount: null,
+  otherFollowing: null,
 
   episodeChecking: false,
   episodeStatus: null,
@@ -121,8 +121,8 @@ export const infofailure = (state: Object, { error }: Object) =>
 export const otherInfoRequest = (state: Object, { token, otherAccountId }: Object) =>
   state.merge({ attempting: true, otherAccountId })
 
-export const otherInfoSuccess = (state: Object, { otherAccountId, otherEmail, otherNickname, otherProfileImagePath, otherFollowerCount, otherFollowingCount }: Object) =>
-  state.merge({ attempting: false, otherAccountId, otherEmail, otherNickname, otherProfileImagePath, otherFollowerCount, otherFollowingCount })
+export const otherInfoSuccess = (state: Object, { otherAccountId, otherEmail, otherNickname, otherProfileImagePath, otherFollowerCount, otherFollowingCount, otherFollowing }: Object) =>
+  state.merge({ attempting: false, otherAccountId, otherEmail, otherNickname, otherProfileImagePath, otherFollowerCount, otherFollowingCount, otherFollowing })
 
 export const otherInfoFailure = (state: Object, { error }: Object) =>
   state.merge({ attempting: false, error })
@@ -138,7 +138,7 @@ export const userEpisodeCheckFailure = (state: Object, { error }: Object) =>
   state.merge({ episodeChecking: false, error })
 
 // follow POST
-export const postFollow = (state: Object, { token, id, accountId }: Object) =>
+export const postFollow = (state: Object, { token, id }: Object) =>
   state.merge({ followPosting: true })
 
 export const postFollowSuccess = (state: Object, { response }: Object) =>
@@ -148,7 +148,7 @@ export const postFollowFailure = (state: Object, { error }: Object) =>
   state.merge({ followPosting: false })
 
 // follow DELETE
-export const deleteFollow = (state: Object, { token, id, accountId }: Object) =>
+export const deleteFollow = (state: Object, { token, id }: Object) =>
   state.merge({ followDeleting: true })
 
 export const deleteFollowSuccess = (state: Object, { response }: Object) =>

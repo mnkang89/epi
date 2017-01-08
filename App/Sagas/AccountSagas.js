@@ -46,9 +46,10 @@ export function * otherInfo (api, action) {
     const nickname = path(['data', 'nickname'], response)
     const followerCount = path(['data', 'followerCount'], response)
     const followingCount = path(['data', 'followingCount'], response)
+    const following = path(['data', 'following'], response)
     const profileImagePath = path(['data', 'profileImagePath'], response)
 
-    yield put(AccountActions.otherInfoSuccess(accountId, email, nickname, profileImagePath, followerCount, followingCount))
+    yield put(AccountActions.otherInfoSuccess(accountId, email, nickname, profileImagePath, followerCount, followingCount, following))
   } else {
     console.log('error')
     console.log(response)
@@ -86,8 +87,8 @@ export function * checkUserEpisode (api, action) {
 // attempts to post follow
 export function * postFollow (api, action) {
   console.log('postFollow사가워커 진입!!')
-  const { token, id, accountId } = action
-  const response = yield call(api.postFollow, token, id, accountId)
+  const { token, id } = action
+  const response = yield call(api.postFollow, token, id)
 
   // dispatch successful email checking
   if (response.ok) {
@@ -107,8 +108,8 @@ export function * postFollow (api, action) {
 // attempts to delete follow
 export function * deleteFollow (api, action) {
   console.log('deleteFollow사가워커 진입!!')
-  const { token, id, accountId } = action
-  const response = yield call(api.deleteFollow, token, id, accountId)
+  const { token, id } = action
+  const response = yield call(api.deleteFollow, token, id)
 
   // dispatch successful email checking
   if (response.ok) {

@@ -22,14 +22,15 @@ class ExploreDetail extends Component {
   onFollowPress () {
     const { token } = this.props
     const id = this.props.episode.accountId
-    const accountId = this.props.id
+    // TODO: follow API 수정하기
+    // const accountId = this.props.id
 
     // 팔로우 스테이트 체킹 API발생
     // follow스테이트가 api리스펀스로 안오면 새로운 리퀘스트가 날라가야 되는 구조
     if (this.state.follow) {
-      this.props.deleteFollow(token, id, accountId)
+      this.props.deleteFollow(token, id)
     } else {
-      this.props.postFollow(token, id, accountId)
+      this.props.postFollow(token, id)
     }
   }
 
@@ -190,8 +191,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    postFollow: (token, id, accountId) => dispatch(AccountActions.followPost(token, id, accountId)),
-    deleteFollow: (token, id, accountId) => dispatch(AccountActions.followDelete(token, id, accountId))
+    postFollow: (token, id) => dispatch(AccountActions.followPost(token, id)),
+    deleteFollow: (token, id) => dispatch(AccountActions.followDelete(token, id))
   }
 }
 
