@@ -7,7 +7,7 @@ import {
   ScrollView
  } from 'react-native'
 import { Actions as NavigationActions } from 'react-native-router-flux'
-import { Colors, Images, Metrics } from '../../Themes/'
+import { Colors, Metrics } from '../../Themes/'
 import { convert2TimeDiffString } from '../../Lib/Utilities'
 
 import ContentDetail from './ContentDetail'
@@ -91,15 +91,21 @@ class EpisodeDetail extends Component {
       <View>
         <View style={headerContentStyle}>
           <View style={{marginTop: 10, marginLeft: 15, marginRight: 15, marginBottom: 10}}>
-            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <TouchableOpacity
-                onPress={this.onProfilePress.bind(this)}>
-                <Image
-                  style={styles.profileStyle}
-                  source={Images.profileImage} />
-              </TouchableOpacity>
+            <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+              <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
+                <View>
+                  <TouchableOpacity
+                    onPress={this.onProfilePress.bind(this)}>
+                    <Image
+                      style={styles.profileStyle}
+                      source={{uri: this.props.account.profileImagePath}} />
+                  </TouchableOpacity>
+                </View>
+                <View style={{justifyContent: 'flex-start', paddingLeft: 5}}>
+                  <Text style={{color: 'rgb(217,217,217)', fontWeight: 'bold'}}>{this.props.account.nickname}</Text>
+                </View>
+              </View>
               <View>
-                <Text style={{color: 'rgb(217,217,217)', fontWeight: 'bold'}}>{this.props.episode.nickname}</Text>
                 <Text style={{color: 'rgb(217,217,217)', fontSize: 13}}>최근 업데이트 : {timeDiffString}</Text>
               </View>
             </View>

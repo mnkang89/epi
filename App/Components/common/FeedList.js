@@ -63,7 +63,7 @@ class FeedList extends Component {
   renderEpisodes () {
     console.log(this.props)
     return this.props.items.map(item =>
-      <EpisodeDetail key={item.episode.id} episode={item.episode} />)
+      <EpisodeDetail key={item.episode.id} episode={item.episode} account={item.account} />)
   }
 
   renderFeeds () {
