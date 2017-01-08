@@ -33,12 +33,14 @@ export const convert2TimeDiffString = (datetimeStr : string) => {
   if (!datetimeStr || datetimeStr === '') return ''
   let datetime = new Date(datetimeStr)
   let timeDiffInSeconds = new Date() - datetime
-  if (timeDiffInSeconds > 86400) {
+  let hourInMillis = 3600000
+  let minuteInMillis = 60000
+  if (timeDiffInSeconds > 86400000) {
     return datetime.toLocaleDateString()
-  } else if (timeDiffInSeconds > 3600) {
-    return Math.floor(timeDiffInSeconds / 3600) + '시간전'
-  } else if (timeDiffInSeconds > 60) {
-    return Math.floor(timeDiffInSeconds / 60) + '분전'
+  } else if (timeDiffInSeconds > hourInMillis) {
+    return Math.floor(timeDiffInSeconds / hourInMillis) + '시간전'
+  } else if (timeDiffInSeconds > minuteInMillis) {
+    return Math.floor(timeDiffInSeconds / minuteInMillis) + '분전'
   } else {
     return timeDiffInSeconds + '초전'
   }
