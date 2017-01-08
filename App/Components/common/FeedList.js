@@ -46,7 +46,6 @@ class FeedList extends Component {
     // const active = false
 
     this.isAttempting = true
-    // attempt to check email - a saga is listening to pick it up from here.
     this.props.requestInfo(token, accountId)
     // this.props.requestUserEpisodes(token, accountId, active)
   }
@@ -55,9 +54,10 @@ class FeedList extends Component {
     console.log('onRefresh에서 리프레슁 상태')
     console.log(this.state.refreshing)
     const { token, accountId } = this.props
-    const active = false
+    const withFollowing = true
+
     this.setState({refreshing: true})
-    this.props.requestUserEpisodes(token, accountId, active)
+    this.props.requestUserEpisodes(token, accountId, withFollowing)
   }
 
   renderEpisodes () {
@@ -123,7 +123,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     requestInfo: (token, accountId) => dispatch(AccountActions.infoRequest(token, accountId)),
-    requestUserEpisodes: (token, accountId, active) => dispatch(EpisodeActions.userEpisodesRequest(token, accountId, active))
+    requestUserEpisodes: (token, accountId, withFollowing) => dispatch(EpisodeActions.userEpisodesRequest(token, accountId, withFollowing))
   }
 }
 

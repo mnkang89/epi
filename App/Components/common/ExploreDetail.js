@@ -104,17 +104,17 @@ class ExploreDetail extends Component {
 
     return (
       <View>
-        <View style={{height: 57.5, marginLeft: 15, marginRight: 14.45, flexDirection: 'row', backgroundColor: 'black'}}>
-          <View style={{alignItems: 'center', justifyContent: 'center'}}>
+        <View style={{flexDirection: 'row', justifyContent: 'space-between', height: 57.5, marginLeft: 15, marginRight: 14.45, backgroundColor: 'black'}}>
+          <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
             <Image
               style={styles.imageStyle}
-              source={{ uri: this.props.profileImagePath }}
+              source={{uri: this.props.account.profileImagePath}}
             />
+            <View style={{marginLeft: 5}}>
+              <Text style={userTextStyle}>{this.props.account.nickname}</Text>
+            </View>
           </View>
-          <View style={{marginLeft: 5, marginTop: 20}}>
-            <Text style={userTextStyle}>{this.props.nickname}</Text>
-          </View>
-          <View style={{marginLeft: 215, marginTop: 14.5}}>
+          <View style={{marginTop: 14.5}}>
             {this.renderFollowButton()}
           </View>
         </View>
