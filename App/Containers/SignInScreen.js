@@ -34,9 +34,9 @@ class SignInScreen extends Component {
     if (this.isAttempting && !newProps.fetching && newProps.error === null) {
       console.log('로그인 성공')
       const { token, accountId } = this.props
-      const active = false
+      const withFollowing = true
 
-      this.props.requestUserEpisodes(token, accountId, active)
+      this.props.requestUserEpisodes(token, accountId, withFollowing)
       // user프로필 리스트 하기 위해 만들었다
       // this.props.requestBestFeeds(token)
       setTimeout(() => {

@@ -38,7 +38,7 @@ class CameraScreen extends Component {
       focus: false,
       texting: false,
       timer: false,
-      LeftTime: 15,
+      LeftTime: 5,
       interval: null,
       progress: 0,
       ModalOpen: true,
@@ -101,7 +101,7 @@ class CameraScreen extends Component {
       clearInterval(this.state.interval)
       this.setState({
         photo: data.path,
-        LeftTime: 15
+        LeftTime: 5
       })
       setTimeout(() => {
         this.setState({
@@ -117,7 +117,7 @@ class CameraScreen extends Component {
         this.camera.stopCapture()
         this.setState({
           timer: false,
-          LeftTime: 15
+          LeftTime: 5
         })
       } else {
         this.setState({
@@ -156,7 +156,7 @@ class CameraScreen extends Component {
         }, 1000)
         NavigationActions.homeTab()
       } else {
-        this.props.postUserEpisode(token, fileType, file)
+        this.props.postUserEpisode(token, fileType, file, message)
         setTimeout(() => {
           this.props.requestUserEpisodes(token, accountId, active)
         }, 1000)
@@ -214,7 +214,7 @@ class CameraScreen extends Component {
                     focus: false,
                     texting: false,
                     timer: false,
-                    LeftTime: 15,
+                    LeftTime: 5,
                     interval: null,
                     fileType: 'Image'
                   })
@@ -492,7 +492,7 @@ const mapDispatchToProps = (dispatch) => {
     checkUserEpisode: (token, active) => dispatch(AccountActions.userEpisodeCheck(token, active)),
 
     requestUserEpisodes: (token, accountId, active) => dispatch(EpisodeActions.userEpisodesRequest(token, accountId, active)),
-    postUserEpisode: (token, fileType, file) => dispatch(EpisodeActions.userEpisodePost(token, fileType, file)),
+    postUserEpisode: (token, fileType, file, message) => dispatch(EpisodeActions.userEpisodePost(token, fileType, file, message)),
     putUserEpisode: (token, episodeId, active) => dispatch(EpisodeActions.userEpisodePut(token, episodeId, active)),
 
     postUserContent: (token, episodeId, fileType, file, message) => dispatch(ContentActions.userContentPost(token, episodeId, fileType, file, message))

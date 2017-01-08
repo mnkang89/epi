@@ -97,15 +97,15 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     return api.get(`/api/episodes`, { active: active })
   }
 
-  const requestUserFeeds = (token, accountId, active) => {
+  const requestUserFeeds = (token, accountId, withFollowing) => {
     console.log('GET userEpisode api콜 발생')
     const formData = new FormData()
 
     formData.append('accountId', accountId)
-    formData.append('withFollowing', active)
+    formData.append('withFollowing', withFollowing)
     api.setHeader('x-auth', token)
 
-    return api.get(`/api/feeds`)
+    return api.get(`/api/feeds?withFollowing=${withFollowing}`)
   }
 
   const requestOtherFeeds = (token, accountId, active) => {

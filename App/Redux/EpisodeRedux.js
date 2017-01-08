@@ -33,7 +33,8 @@ const { Types, Creators } = createActions({
   userEpisodePost: [
     'token',
     'fileType',
-    'file'
+    'file',
+    'message'
   ],
   userEpisodePostSuccess: [
     'episodeId'

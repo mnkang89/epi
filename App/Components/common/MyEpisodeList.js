@@ -29,6 +29,10 @@ class MyEpisodeList extends Component {
     */
   }
 
+  onProfileImagePress () {
+    //
+  }
+
   renderEpisodes () {
     return this.props.items.map(item =>
       <EpisodeDetail key={item.episode.id} episode={item.episode} />)
@@ -38,10 +42,11 @@ class MyEpisodeList extends Component {
     return (
       <View style={{alignItems: 'center', backgroundColor: '#000000'}}>
         <View style={{flex: 2}}>
-          <Image
-            style={[styles.image, {borderWidth: 1, borderColor: 'white', marginBottom: 14.5, marginTop: 39.5}]}
-            source={{uri: this.props.profileImagePath}}
-          />
+          <TouchableOpacity onPress={this.onProfileImagePress()}>
+            <Image
+              style={[styles.image, {borderWidth: 1, borderColor: 'white', marginBottom: 14.5, marginTop: 39.5}]}
+              source={{uri: this.props.profileImagePath}} />
+          </TouchableOpacity>
         </View>
         <View style={{flex: 1, alignItems: 'center'}}>
           <Text style={{color: Colors.snow, fontSize: 25, fontWeight: 'bold'}}>{this.props.nickname}</Text>

@@ -48,7 +48,7 @@ export function * otherEpisodes (api, action) {
 // attempts to post episode
 export function * postEpisode (api, action) {
   console.log('postEpisode사가워커 진입!!')
-  const { token, fileType, file } = action
+  const { token, fileType, file, message } = action
   const response = yield call(api.postEpisode, token)
   console.log(action)
 
@@ -61,7 +61,7 @@ export function * postEpisode (api, action) {
     const episodeId = episodes[0].id
 
     yield put(EpisodeActions.userEpisodePostSuccess(episodeId))
-    yield put(ContentActions.userContentPost(token, episodeId, fileType, file))
+    yield put(ContentActions.userContentPost(token, episodeId, fileType, file, message))
   } else {
     console.log('error')
     console.log(response)
