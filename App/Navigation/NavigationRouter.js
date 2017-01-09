@@ -43,12 +43,12 @@ class NavigationRouter extends Component {
         sceneStyle={{ backgroundColor: 'black' }}>
         <Scene
           key='Greeting'
-          initial
           hideNavBar
           hideTabBar
           component={GreetingScreen} />
         <Scene
           key='root'
+          initial
           navigationBarStyle={Styles.navBar}
           titleStyle={Styles.title}
           leftButtonIconStyle={Styles.leftButton}
@@ -139,6 +139,7 @@ class NavigationRouter extends Component {
               icon={TabIcon}
               selectedTabIcon='search'
               tabIcon='search'
+              leftButtonIconStyle={Styles.leftButton}
               navigationBarStyle={Styles.navBar}
               titleStyle={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>
               <Scene
@@ -150,6 +151,10 @@ class NavigationRouter extends Component {
                 key='searchTouserProfileScreen'
                 component={UserProfileScreen}
                 title='프로필' />
+              <Scene
+                key='searchTosingleEpisodeScreen'
+                component={SingleEpisodeScreen}
+                title='에피소드' />
             </Scene>
             <Scene
               key='profileTab'

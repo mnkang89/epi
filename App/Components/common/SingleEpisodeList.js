@@ -50,9 +50,11 @@ class SingleEpisodeList extends Component {
   }
 
   renderEpisodes () {
-    console.log(this.props)
+    const account = this.props.account
+    console.log('보자보자')
+    console.log(account)
     return this.props.items.map(item =>
-      <EpisodeDetail key={item.id} episode={item} />)
+      <EpisodeDetail key={item.id} episode={item} account={account} />)
   }
 
   render () {

@@ -106,7 +106,7 @@ class SingleEpisodeScreen extends Component {
   render () {
     return (
       <View style={styles.mainContainer}>
-        <SingleEpisodeList episodeId={this.props.episodeId} contentId={this.props.contentId} />
+        <SingleEpisodeList episodeId={this.props.episodeId} contentId={this.props.contentId} account={this.props.account} />
         <View style={{height: 50}} />
         <Modal
           animationType={'slide'}

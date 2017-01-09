@@ -46,6 +46,18 @@ class ExploreDetail extends Component {
     })
   }
 
+  onEpisodePress () {
+    const episodeId = this.props.episode.id
+    const account = this.props.account
+    NavigationActions.searchTosingleEpisodeScreen({
+      type: 'push',
+      modal: false,
+      episodeId,
+      account,
+      contentId: null
+    })
+  }
+
   renderFollowButton () {
     if (this.state.follow) {
       return (
@@ -142,18 +154,20 @@ class ExploreDetail extends Component {
             {this.renderFollowButton()}
           </View>
         </View>
-        <View style={{height: 162, marginLeft: 15, marginRight: 15}}>
-          <ScrollView
-            snapToAlignment={'start'}
-            scrollEventThrottle={299}
-            directionalLockEnabled
-            decelerationRate={'fast'}
-            snapToInterval={cardWidth + paddingCard + paddingCard + 1}
-            showsHorizontalScrollIndicator
-            horizontal >
-            {this.renderContents()}
-          </ScrollView>
-        </View>
+        <TouchableOpacity onPress={this.onEpisodePress.bind(this)}>
+          <View style={{height: 162, marginLeft: 15, marginRight: 15}}>
+            <ScrollView
+              snapToAlignment={'start'}
+              scrollEventThrottle={299}
+              directionalLockEnabled
+              decelerationRate={'fast'}
+              snapToInterval={cardWidth + paddingCard + paddingCard + 1}
+              showsHorizontalScrollIndicator
+              horizontal >
+              {this.renderContents()}
+            </ScrollView>
+          </View>
+        </TouchableOpacity>
       </View>
     )
   }
