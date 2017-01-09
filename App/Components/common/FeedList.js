@@ -6,6 +6,7 @@ import _ from 'lodash'
 import EpisodeDetail from './EpisodeDetail'
 import AccountActions from '../../Redux/AccountRedux'
 import EpisodeActions from '../../Redux/EpisodeRedux'
+import { Actions } from 'react-native-router-flux'
 
 class FeedList extends Component {
   constructor (props) {
@@ -78,7 +79,7 @@ class FeedList extends Component {
             <Text style={{fontSize: 16, color: 'white'}}>팔로우 해보세요!</Text>
           </View>
           <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 18}}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={Actions.searchTab}>
               <View style={{paddingTop: 5, paddingBottom: 5, paddingLeft: 7, paddingRight: 7, borderRadius: 4, borderWidth: 1, borderColor: 'white'}}>
                 <Text style={{fontSize: 16, color: 'white'}}>에피소드 탐색</Text>
               </View>
