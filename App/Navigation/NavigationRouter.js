@@ -74,7 +74,7 @@ class NavigationRouter extends Component {
                 component={FeedScreen}
                 renderTitle={NavItems.episodeLogo} />
               <Scene
-                key='userProfileScreen'
+                key='feedTouserProfileScreen'
                 component={UserProfileScreen}
                 title='프로필' />
               <Scene
@@ -112,7 +112,7 @@ class NavigationRouter extends Component {
                 direction='vertical'
                 title='에피소드' />
               <Scene
-                key='userProfileScreen'
+                key='notiTouserProfileScreen'
                 component={UserProfileScreen}
                 title='프로필' />
             </Scene>
@@ -146,6 +146,10 @@ class NavigationRouter extends Component {
                 panHandlers={null}
                 component={ExploreScreen}
                 title='우연한 발견' />
+              <Scene
+                key='searchTouserProfileScreen'
+                component={UserProfileScreen}
+                title='프로필' />
             </Scene>
             <Scene
               key='profileTab'

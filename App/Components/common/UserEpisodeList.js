@@ -73,7 +73,7 @@ class UserEpisodeList extends Component {
 
   renderEpisodes () {
     return this.props.items.map(item =>
-      <EpisodeDetail key={item.episode.id} episode={item.episode} />)
+      <EpisodeDetail key={item.episode.id} episode={item.episode} account={item.account} />)
   }
 
   renderProfileInfo () {

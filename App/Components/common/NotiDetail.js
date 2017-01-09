@@ -34,7 +34,7 @@ class NotiDetail extends Component {
     } else if (this.state.type === 'follow') {
       const { accountId } = this.props.noti.notiRelateEntityMeta
 
-      NavigationActions.userProfileScreen({
+      NavigationActions.notiTouserProfileScreen({
         type: 'push',
         id: accountId
       })

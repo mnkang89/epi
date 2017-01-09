@@ -3,6 +3,7 @@ import { ScrollView, Dimensions, Text, View, Image, TouchableOpacity } from 'rea
 import { Colors, Images, Metrics } from '../../Themes/'
 import Video from 'react-native-video'
 import { connect } from 'react-redux'
+import { Actions as NavigationActions } from 'react-native-router-flux'
 
 import AccountActions from '../../Redux/AccountRedux'
 
@@ -29,9 +30,20 @@ class ExploreDetail extends Component {
     // follow스테이트가 api리스펀스로 안오면 새로운 리퀘스트가 날라가야 되는 구조
     if (this.state.follow) {
       this.props.deleteFollow(token, id)
+      this.setState({follow: false})
     } else {
       this.props.postFollow(token, id)
+      this.setState({follow: true})
     }
+  }
+
+  onProfileImagePress () {
+    const accountId = this.props.account.id
+    console.log(accountId)
+    NavigationActions.searchTouserProfileScreen({
+      type: 'push',
+      id: accountId
+    })
   }
 
   renderFollowButton () {
@@ -119,7 +131,9 @@ class ExploreDetail extends Component {
       <View>
         <View style={{flexDirection: 'row', justifyContent: 'space-between', height: 57.5, marginLeft: 15, marginRight: 14.45, backgroundColor: 'black'}}>
           <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-            {this.renderProfileImage()}
+            <TouchableOpacity onPress={this.onProfileImagePress.bind(this)}>
+              {this.renderProfileImage()}
+            </TouchableOpacity>
             <View style={{marginLeft: 5}}>
               <Text style={userTextStyle}>{this.props.account.nickname}</Text>
             </View>
@@ -143,7 +157,7 @@ class ExploreDetail extends Component {
       </View>
     )
   }
-};
+}
 
 const styles = {
   headerContentStyle: {

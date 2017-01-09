@@ -51,7 +51,7 @@ class EpisodeDetail extends Component {
   onProfilePress () {
     const accountId = this.props.episode.accountId
     console.log(accountId)
-    NavigationActions.userProfileScreen({
+    NavigationActions.feedTouserProfileScreen({
       type: 'push',
       id: accountId
     })
