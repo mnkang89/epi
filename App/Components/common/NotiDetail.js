@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Text, View, Image, TouchableOpacity } from 'react-native'
 import { Actions as NavigationActions } from 'react-native-router-flux'
-import { Colors, Metrics } from '../../Themes/'
+import { Colors, Images, Metrics } from '../../Themes/'
 
 class NotiDetail extends Component {
   constructor (props) {
@@ -12,32 +12,55 @@ class NotiDetail extends Component {
   }
 
   onNotiPress () {
-    if (this.state.type === 'comment') {
-      const { episodeId } = this.props.noti.notiRelateEntityMeta
-      console.log(episodeId)
+    const { episodeId, contentId } = this.props.noti.notiRelateEntityMeta
+    const account = this.props.noti.notiCreateAccount
 
+    if (this.state.type === 'comment') {
       NavigationActions.singleEpisodeScreen({
         type: 'push',
         modal: true,
+        account,
         episodeId,
         contentId: null
       })
     } else if (this.state.type === 'like') {
-      const { episodeId, contentId } = this.props.noti.notiRelateEntityMeta
-
       NavigationActions.singleEpisodeScreen({
         type: 'push',
         modal: false,
+        account,
         episodeId,
         contentId
       })
     } else if (this.state.type === 'follow') {
-      const { accountId } = this.props.noti.notiRelateEntityMeta
+      const accountId = this.props.noti.notiRelateEntityMeta
 
       NavigationActions.notiTouserProfileScreen({
         type: 'push',
         id: accountId
       })
+    }
+  }
+
+  onProfilePress () {
+    const accountId = this.props.noti.notiCreateAccount.id
+
+    NavigationActions.notiTouserProfileScreen({
+      type: 'push',
+      id: accountId
+    })
+  }
+
+  renderProfileImage () {
+    if (this.props.noti.notiCreateAccount.profileImagePath) {
+      return (<Image
+        style={styles.imageStyle}
+        source={{uri: this.props.noti.notiCreateAccount.profileImagePath}} />
+    )
+    } else {
+      return (<Image
+        style={styles.imageStyle}
+        source={Images.profileImage} />
+    )
     }
   }
 
@@ -48,10 +71,10 @@ class NotiDetail extends Component {
       <TouchableOpacity onPress={this.onNotiPress.bind(this)}>
         <View style={{height: 55, marginLeft: 15, marginRight: 15, borderBottomWidth: 1, borderColor: 'rgb(45, 45, 45)', flexDirection: 'row', backgroundColor: 'black'}}>
           <View style={{alignItems: 'center', justifyContent: 'center'}}>
-            <Image
-              style={styles.imageStyle}
-              source={{uri: 'https://facebook.github.io/react/img/logo_og.png'}}
-            />
+            <TouchableOpacity
+              onPress={this.onProfilePress.bind(this)}>
+              {this.renderProfileImage()}
+            </TouchableOpacity>
           </View>
           <View style={{marginLeft: 11.5, marginRight: 24.5, justifyContent: 'center'}}>
             <View style={{marginRight: 24.5}}>

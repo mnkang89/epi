@@ -35,7 +35,7 @@ class MyEpisodeList extends Component {
 
   renderEpisodes () {
     return this.props.items.map(item =>
-      <EpisodeDetail key={item.episode.id} episode={item.episode} />)
+      <EpisodeDetail key={item.episode.id} episode={item.episode} account={this.props.account} />)
   }
 
   renderProfileInfo () {
@@ -85,6 +85,7 @@ const mapStateToProps = (state) => {
     followerCount: state.account.followerCount,
     followingCount: state.account.followingCount,
 
+    account: state.account,
     items: state.episode.episodes
   }
 }
