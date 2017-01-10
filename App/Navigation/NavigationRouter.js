@@ -37,8 +37,7 @@ class NavigationRouter extends Component {
           component={connect(mapStateToProps)(Switch)}
           tabs
           unmountScenes
-          selector={props => props.isLoggedIn ? 'main' : 'Greeting'}
-          >
+          selector={props => props.isLoggedIn ? 'main' : 'Greeting'} >
           <Scene
             key='Greeting'
             hideNavBar
