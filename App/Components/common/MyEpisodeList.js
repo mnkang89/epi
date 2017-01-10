@@ -1,19 +1,25 @@
 import React, { Component } from 'react'
-import { ScrollView, View, Image, TouchableOpacity, Text } from 'react-native'
+import { ScrollView, View, Image, ImagePickerIOS, TouchableOpacity, Text } from 'react-native'
 import { connect } from 'react-redux'
-import { Colors } from '../../Themes'
-import EpisodeDetail from './EpisodeDetail'
+import Permissions from 'react-native-permissions'
+
+import { Colors, Images } from '../../Themes'
 import styles from '../../Containers/Styles/FeedScreenStyle'
 
-import AccountActions from '../../Redux/AccountRedux'
+import ConfirmError from './ConfirmError'
+import EpisodeDetail from './EpisodeDetail'
+
 import EpisodeActions from '../../Redux/EpisodeRedux'
+import SignupActions from '../../Redux/SignupRedux'
 
 class MyEpisodeList extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      apisodes: [],
-      follow: 'gray'
+      alertVisible: false,
+      alertTextArray: [],
+      confirmStyle: 'confirm',
+      photoSource: this.props.account.profileImagePath
     }
   }
 
@@ -30,7 +36,57 @@ class MyEpisodeList extends Component {
   }
 
   onProfileImagePress () {
-    //
+    const { token, accountId } = this.props
+
+    Permissions.getPermissionStatus('photo')
+      .then(response => {
+        // response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
+        if (response === 'undetermined') {
+          Permissions.requestPermission('photo').then(response => {
+            Permissions.openSettings()
+          })
+        } else if (response === 'denied') {
+          this.setState({
+            alertVisible: true,
+            alertTextArray: ['설정에서 ‘사진’ 접근권한을', '허용해주세요.'],
+            confirmStyle: 'setting'
+          })
+        } else if (response === 'authorized') {
+          // 사진 라이브러리 가서 사진 가저오는 로직
+          // openSelectDialog
+          ImagePickerIOS.openSelectDialog(
+            { },
+            (data) => {
+              console.log('사진선택')
+              this.setState({
+                photoSource: data
+              })
+              this.props.requestProfileImage(data, token, accountId)
+            },
+            () => {
+              console.log('에러')
+            }
+          )
+        }
+      })
+  }
+
+  onDecline () {
+    this.setState({
+      alertVisible: false,
+      alertTextArray: [],
+      confirmStyle: 'confirm'
+    })
+  }
+
+  onSetting () {
+    console.log('온세팅')
+    this.setState({
+      alertVisible: false,
+      alertTextArray: [],
+      confirmStyle: 'confirm'
+    })
+    Permissions.openSettings()
   }
 
   renderEpisodes () {
@@ -38,14 +94,23 @@ class MyEpisodeList extends Component {
       <EpisodeDetail key={item.episode.id} episode={item.episode} account={this.props.account} />)
   }
 
+  renderProfileImage () {
+    if (this.state.photoSource) {
+      return (
+        <Image
+          style={[styles.image, {borderWidth: 1, borderColor: 'white', marginBottom: 14.5, marginTop: 39.5}]}
+          source={{uri: this.state.photoSource}} />)
+    } else {
+      return (<Image source={Images.profileIcon} style={{alignSelf: 'center'}} />)
+    }
+  }
+
   renderProfileInfo () {
     return (
       <View style={{alignItems: 'center', backgroundColor: '#000000'}}>
         <View style={{flex: 2}}>
-          <TouchableOpacity onPress={this.onProfileImagePress()}>
-            <Image
-              style={[styles.image, {borderWidth: 1, borderColor: 'white', marginBottom: 14.5, marginTop: 39.5}]}
-              source={{uri: this.props.profileImagePath}} />
+          <TouchableOpacity onPress={this.onProfileImagePress.bind(this)}>
+            {this.renderProfileImage()}
           </TouchableOpacity>
         </View>
         <View style={{flex: 1, alignItems: 'center'}}>
@@ -67,6 +132,12 @@ class MyEpisodeList extends Component {
   render () {
     return (
       <ScrollView>
+        <ConfirmError
+          confirmStyle={this.state.confirmStyle}
+          visible={this.state.alertVisible}
+          TextArray={this.state.alertTextArray}
+          onAccept={this.onDecline.bind(this)}
+          onSetting={this.onSetting.bind(this)} />
         {this.renderProfileInfo()}
         {this.renderEpisodes()}
       </ScrollView>
@@ -92,8 +163,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    requestInfo: (token, accountId) => dispatch(AccountActions.infoRequest(token, accountId)),
-    requestUserEpisodes: (token, accountId, active) => dispatch(EpisodeActions.userEpisodesRequest(token, accountId, active))
+    requestUserEpisodes: (token, accountId, active) => dispatch(EpisodeActions.userEpisodesRequest(token, accountId, active)),
+    requestProfileImage: (photoSource, token, accountId) => dispatch(SignupActions.profileRequest(photoSource, token, accountId))
   }
 }
 
