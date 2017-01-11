@@ -16,7 +16,9 @@ import Camera from 'react-native-camera'
 import Video from 'react-native-video'
 import Modal from 'react-native-modalbox'
 import Icon from 'react-native-vector-icons/FontAwesome'
+
 import { Images } from '../Themes'
+import ConfirmError from '../Components/common/ConfirmError'
 
 import AccountActions from '../Redux/AccountRedux'
 import EpisodeActions from '../Redux/EpisodeRedux'
@@ -31,12 +33,17 @@ class CameraScreen extends Component {
   constructor (props) {
     super(props)
     this.state = {
+      confirmStyle: 'confirm',
+      alertVisible: false,
+      alertTextArray: [],
+
       captureMode: Camera.constants.CaptureMode.still,
       cameraType: Camera.constants.Type.back,
       cameraState: false,
       photo: '',
       focus: false,
       texting: false,
+
       timer: false,
       LeftTime: 5,
       interval: null,
@@ -57,23 +64,60 @@ class CameraScreen extends Component {
     // 여기에서 현재 active한 에피소드가 있는지 없는지 체크하고 컨디셔널 렌더링
     this.props.checkUserEpisode(this.props.token, true)
     this.refs.modal.open()
-    console.log('스테이틎들ㄹ')
-    console.log(this.state)
   }
 
   shouldComponentUpdate (nextProps, nextState) {
     if (nextState.message !== this.state.message) {
-      console.log('메세지값 변경')
       return false
     }
     return true
   }
 
+  handleLongPressOut () {
+    console.log('long press out')
+    this.camera.stopCapture()
+  }
+
+  handleChangeMessage = (text) => {
+    this.setState({ message: text })
+  }
+
+  onClose () {
+    this.setState({
+      fileType: 'Image'
+    })
+    NavigationActions.homeTab()
+  }
+
+  onDecline () {
+    this.setState({
+      alertVisible: false,
+      alertTextArray: [],
+      confirmStyle: 'confirm'
+    })
+  }
+
+  onPutting () {
+    console.log('온푸팅')
+    const { token, accountId } = this.props
+    const episodeId = this.props.activeEpisodeId
+    const active = false
+
+    this.setState({
+      alertVisible: false,
+      alertTextArray: [],
+      confirmStyle: 'confirm'
+    })
+
+    this.props.putUserEpisode(token, episodeId, active)
+    this.props.requestUserEpisodes(token, accountId, active)
+
+    NavigationActions.refresh({key: 'homeTab'})
+  }
+
   takePicture () {
     this.camera.capture()
       .then((data) => {
-        console.log('hihi')
-        console.log(data)
         this.setState({
           fileType: 'Image',
           photo: data.path
@@ -96,7 +140,6 @@ class CameraScreen extends Component {
     })
     .then((data) => {
       console.log('video capture success')
-      console.log(data)
       console.log(data.path)
       clearInterval(this.state.interval)
       this.setState({
@@ -128,7 +171,6 @@ class CameraScreen extends Component {
     }, 1000)
   }
 
-  // 사진만 업로드
   uploadPicture () {
     const { token, accountId } = this.props
     const file = this.state.photo
@@ -165,15 +207,19 @@ class CameraScreen extends Component {
     }
   }
 
-  switchCamera () {
-    const state = this.state
-    state.cameraType = state.cameraType === Camera.constants.Type.back ? Camera.constants.Type.front : Camera.constants.Type.back
-    this.setState(state)
-    console.log(this.state)
+  endEpiBtnPress () {
+    this.setState({
+      alertVisible: true,
+      alertTextArray: ['정말 종료하실거예요?😢'],
+      confirmStyle: 'setting'
+    })
   }
 
-  chevronPress () {
-    NavigationActions.homeTab()
+  switchCamera () {
+    const state = this.state
+
+    state.cameraType = state.cameraType === Camera.constants.Type.back ? Camera.constants.Type.front : Camera.constants.Type.back
+    this.setState(state)
   }
 
   texting () {
@@ -186,15 +232,6 @@ class CameraScreen extends Component {
       focus: true,
       swipe: false
     })
-  }
-
-  handleLongPressOut () {
-    console.log('long press out')
-    this.camera.stopCapture()
-  }
-
-  handleChangeMessage = (text) => {
-    this.setState({ message: text })
   }
 
   renderButtons () {
@@ -313,30 +350,16 @@ class CameraScreen extends Component {
     }
   }
 
-  endEpiBtnPress () {
-    console.log('endepibtn')
-    const { token, accountId } = this.props
-    const episodeId = this.props.activeEpisodeId
-    const active = false
-
-    this.props.putUserEpisode(token, episodeId, active)
-    this.props.requestUserEpisodes(token, accountId, active)
-    NavigationActions.refresh({key: 'homeTab'})
-  }
-
   renderEpisodeStatusButton () {
     console.log('알다가도 모르겠다~')
     if (this.props.episodeStatus) {
+      console.log('에피소드 있음')
       return (
-        <View>
-          <TouchableOpacity onPress={
-            () => {
-              this.endEpiBtnPress()
-            }
-          }>
-            <Image style={{width: 28.5, height: 28.5, position: 'relative', bottom: 320, right: 335}} source={Images.endEpBtn} />
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity
+          style={{width: 28.5, height: 28.5}}
+          onPress={() => { this.endEpiBtnPress() }}>
+          <Image style={{width: 28.5, height: 28.5, position: 'relative', bottom: 320, right: 335}} source={Images.endEpBtn} />
+        </TouchableOpacity>
       )
     } else {
       return (
@@ -414,13 +437,6 @@ class CameraScreen extends Component {
     }
   }
 
-  onClose () {
-    this.setState({
-      fileType: 'Image'
-    })
-    NavigationActions.homeTab()
-  }
-
   render () {
     return (
       <Modal
@@ -441,6 +457,14 @@ class CameraScreen extends Component {
             }
           }}>
           <View style={styles.container}>
+            <ConfirmError
+              confirmStyle={this.state.confirmStyle}
+              visible={this.state.alertVisible}
+              TextArray={this.state.alertTextArray}
+              onAccept={this.onPutting.bind(this)}
+              onSetting={this.onDecline.bind(this)}
+              AcceptText='물론이죠(단호)'
+              SettingText='아니에요😀' />
             {this.renderCamera()}
             {this.renderButtons()}
           </View>

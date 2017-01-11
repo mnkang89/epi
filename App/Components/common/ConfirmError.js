@@ -5,7 +5,9 @@ const renderTexts = (TextArray) => {
   return TextArray.map(text => <Text key={TextArray.indexOf(text)} style={{fontSize: 17}}>{text}</Text>)
 }
 
-const renderConfirm = (confirmStyle = 'confirm', onAccept, onSetting = null) => {
+const renderConfirm = (confirmStyle = 'confirm', onAccept, onSetting = null, AcceptText = '확인해', SettingText = '설정') => {
+  console.log(AcceptText)
+
   if (confirmStyle === 'confirm') {
     return (
       <TouchableOpacity onPress={onAccept}>
@@ -15,26 +17,26 @@ const renderConfirm = (confirmStyle = 'confirm', onAccept, onSetting = null) => 
           alignItems: 'center',
           justifyContent: 'center'
         }}>
-          <Text style={{fontSize: 15, fontWeight: 'bold'}}>확인</Text>
+          <Text style={{fontSize: 15, fontWeight: 'bold'}}>{AcceptText}</Text>
         </View>
       </TouchableOpacity>
     )
   } else if (confirmStyle === 'setting') {
     // TODO: 터치영역 넓히기
     return (
-      <View style={{paddingTop: 9, flex: 1, flexDirection: 'row', justifyContent: 'space-around'}}>
-        <TouchableOpacity onPress={onAccept}>
-          <Text style={{fontSize: 15, fontWeight: 'bold', marginRight: 92}}>확인</Text>
+      <View style={{paddingTop: 9, flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+        <TouchableOpacity style={{flex: 1, alignItems: 'center'}} onPress={onAccept}>
+          <Text style={{fontSize: 15, fontWeight: 'bold'}}>{AcceptText}</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={onSetting}>
-          <Text style={{fontSize: 15, fontWeight: 'bold'}}>설정</Text>
+        <TouchableOpacity style={{flex: 1, alignItems: 'center'}} onPress={onSetting}>
+          <Text style={{fontSize: 15, fontWeight: 'bold'}}>{SettingText}</Text>
         </TouchableOpacity>
       </View>
     )
   }
 }
 
-const ConfirmError = ({ confirmStyle, visible, TextArray, onSetting, onAccept }) => {
+const ConfirmError = ({ confirmStyle, visible, TextArray, onSetting, onAccept, AcceptText, SettingText }) => {
   return (
     <Modal
       animationType={'none'}
@@ -55,7 +57,7 @@ const ConfirmError = ({ confirmStyle, visible, TextArray, onSetting, onAccept })
             borderBottomColor: 'rgb(217, 217, 217)'}}>
             {renderTexts(TextArray)}
           </View>
-          {renderConfirm(confirmStyle, onAccept, onSetting)}
+          {renderConfirm(confirmStyle, onAccept, onSetting, AcceptText, SettingText)}
         </View>
       </View>
     </Modal>
