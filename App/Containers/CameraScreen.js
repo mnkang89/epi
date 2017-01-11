@@ -36,6 +36,10 @@ class CameraScreen extends Component {
       confirmStyle: 'confirm',
       alertVisible: false,
       alertTextArray: [],
+      onAccept: null,
+      onSetting: null,
+      AcceptText: '',
+      SettingText: '',
 
       captureMode: Camera.constants.CaptureMode.still,
       cameraType: Camera.constants.Type.back,
@@ -56,7 +60,7 @@ class CameraScreen extends Component {
   }
 
   componentWillReceiveProps () {
-    console.log('카메라스크린 componentWillReceiveProps!!!!!!!!!!!!!!!!!!!')
+    console.log('카메라스크린 componentWillReceiveProps')
     this.props.checkUserEpisode(this.props.token, true)
   }
 
@@ -90,6 +94,7 @@ class CameraScreen extends Component {
   }
 
   onDecline () {
+    console.log('거절눌림')
     this.setState({
       alertVisible: false,
       alertTextArray: [],
@@ -98,7 +103,7 @@ class CameraScreen extends Component {
   }
 
   onPutting () {
-    console.log('온푸팅')
+    console.log('푸팅 버튼 눌림')
     const { token, accountId } = this.props
     const episodeId = this.props.activeEpisodeId
     const active = false
@@ -113,6 +118,24 @@ class CameraScreen extends Component {
     this.props.requestUserEpisodes(token, accountId, active)
 
     NavigationActions.refresh({key: 'homeTab'})
+  }
+
+  onBackAccept () {
+    this.setState({
+      alertVisible: false,
+      alertTextArray: [],
+      confirmStyle: 'confirm',
+
+      cameraState: false,
+      cameraType: Camera.constants.Type.back,
+      photo: '',
+      focus: false,
+      texting: false,
+      timer: false,
+      LeftTime: 5,
+      interval: null,
+      fileType: 'Image'
+    })
   }
 
   takePicture () {
@@ -211,7 +234,25 @@ class CameraScreen extends Component {
     this.setState({
       alertVisible: true,
       alertTextArray: ['정말 종료하실거예요?😢'],
-      confirmStyle: 'setting'
+
+      confirmStyle: 'setting',
+      onAccept: this.onPutting.bind(this),
+      onSetting: this.onDecline.bind(this),
+      AcceptText: '물론이죠(단호)',
+      SettingText: '아니에요😀'
+    })
+  }
+
+  backChevronPress () {
+    this.setState({
+      alertVisible: true,
+      alertTextArray: ['입력된 내용이 사라집니다.', '정말 뒤로 돌아가실건가요?'],
+
+      confirmStyle: 'setting',
+      onAccept: this.onBackAccept.bind(this),
+      onSetting: this.onDecline.bind(this),
+      AcceptText: '네',
+      SettingText: '아니요'
     })
   }
 
@@ -243,19 +284,7 @@ class CameraScreen extends Component {
             <View style={{flex: 1, flexDirection: 'row'}}>
               <TouchableOpacity
                 style={{marginTop: 27.5, marginRight: 57.5}}
-                onPress={() => {
-                  this.setState({
-                    cameraState: false,
-                    cameraType: Camera.constants.Type.back,
-                    photo: '',
-                    focus: false,
-                    texting: false,
-                    timer: false,
-                    LeftTime: 5,
-                    interval: null,
-                    fileType: 'Image'
-                  })
-                }}>
+                onPress={this.backChevronPress.bind(this)}>
                 <Image style={{width: 30, height: 30}} source={Images.backChevron} />
               </TouchableOpacity>
 
@@ -461,10 +490,10 @@ class CameraScreen extends Component {
               confirmStyle={this.state.confirmStyle}
               visible={this.state.alertVisible}
               TextArray={this.state.alertTextArray}
-              onAccept={this.onPutting.bind(this)}
-              onSetting={this.onDecline.bind(this)}
-              AcceptText='물론이죠(단호)'
-              SettingText='아니에요😀' />
+              onAccept={this.state.onAccept}
+              onSetting={this.state.onSetting}
+              AcceptText={this.state.AcceptText}
+              SettingText={this.state.SettingText} />
             {this.renderCamera()}
             {this.renderButtons()}
           </View>
