@@ -76,6 +76,16 @@ class EpisodeDetail extends Component {
     }
   }
 
+  renderActiveRed () {
+    if (this.props.episode.active) {
+      return (
+        <View style={{top: 7, left: 33, height: 5.5, width: 5.5, borderRadius: 2.75, backgroundColor: '#FC1617'}} />
+      )
+    } else {
+      return
+    }
+  }
+
   render () {
     const {
       headerContentStyle,
@@ -108,6 +118,7 @@ class EpisodeDetail extends Component {
             <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
               <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
                 <View>
+                  {this.renderActiveRed()}
                   <TouchableOpacity
                     onPress={this.onProfilePress.bind(this)}>
                     {this.renderProfileImage()}
