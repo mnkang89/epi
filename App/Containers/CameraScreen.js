@@ -15,6 +15,7 @@ import { connect } from 'react-redux'
 import Camera from 'react-native-camera'
 import Video from 'react-native-video'
 import Modal from 'react-native-modalbox'
+import Permissions from 'react-native-permissions'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 import { Images } from '../Themes'
@@ -33,6 +34,8 @@ class CameraScreen extends Component {
   constructor (props) {
     super(props)
     this.state = {
+      cameraAuthorized: true,
+
       confirmStyle: 'confirm',
       alertVisible: false,
       alertTextArray: [],
@@ -68,10 +71,36 @@ class CameraScreen extends Component {
     // 여기에서 현재 active한 에피소드가 있는지 없는지 체크하고 컨디셔널 렌더링
     this.props.checkUserEpisode(this.props.token, true)
     this.refs.modal.open()
+
+    // TODO: 카메라 퍼미션
+    Permissions.getPermissionStatus('camera')
+      .then(response => {
+        console.log(response)
+        if (response === 'undetermined') {
+          Permissions.requestPermission('camera').then(response => {
+            // returns once the user has chosen to 'allow' or to 'not allow' access
+            // response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
+            this.setState({
+              cameraAuthorized: false
+            })
+            Permissions.openSettings()
+          })
+        } else if (response === 'denied') {
+          this.setState({
+            cameraAuthorized: false
+          })
+        } else if (response === 'authorized') {
+          this.setState({
+            cameraAuthorized: true
+          })
+        }
+      })
   }
 
   shouldComponentUpdate (nextProps, nextState) {
-    if (nextState.message !== this.state.message) {
+    if (nextState.message !== this.state.message &&
+        nextState.cameraAuthorized !== this.state.cameraAuthorized) {
+      console.log('업데이트 안도비니')
       return false
     }
     return true
@@ -93,8 +122,18 @@ class CameraScreen extends Component {
     NavigationActions.homeTab()
   }
 
+  onCameraSetting () {
+    console.log('온 카메라 세팅')
+    this.setState({
+      alertVisible: false,
+      alertTextArray: [],
+      confirmStyle: 'confirm'
+    })
+    Permissions.openSettings()
+  }
+
   onDecline () {
-    console.log('거절눌림')
+    console.log('거절 눌림')
     this.setState({
       alertVisible: false,
       alertTextArray: [],
@@ -276,7 +315,9 @@ class CameraScreen extends Component {
   }
 
   renderButtons () {
+    console.log('11')
     if (this.state.cameraState) {
+      console.log('22')
       return (
         <View style={styles.capture}>
           <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
@@ -300,6 +341,7 @@ class CameraScreen extends Component {
         </View>
       )
     } else {
+      console.log('33')
       return (
         <View style={styles.capture}>
           <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
@@ -333,6 +375,7 @@ class CameraScreen extends Component {
 
   renderCommentInput () {
     if (this.state.texting) {
+      console.log('44')
       return (
         <View>
           <TextInput
@@ -360,12 +403,14 @@ class CameraScreen extends Component {
         </View>
       )
     } else {
+      console.log('55')
       return
     }
   }
 
   renderTimerComponent () {
     if (this.state.timer) {
+      console.log('66')
       return (
         <View style={{flexDirection: 'row', backgroundColor: 'rgba(0, 0, 0, 0)'}}>
           <Text style={{color: 'white', fontSize: 15}}>00</Text>
@@ -374,15 +419,15 @@ class CameraScreen extends Component {
         </View>
       )
     } else {
-      console.log('timer 없으')
+      console.log('77')
       return
     }
   }
 
   renderEpisodeStatusButton () {
-    console.log('알다가도 모르겠다~')
+    console.log('77')
     if (this.props.episodeStatus) {
-      console.log('에피소드 있음')
+      console.log('88')
       return (
         <TouchableOpacity
           style={{width: 28.5, height: 28.5}}
@@ -391,6 +436,7 @@ class CameraScreen extends Component {
         </TouchableOpacity>
       )
     } else {
+      console.log('99')
       return (
         <View />
       )
@@ -398,13 +444,12 @@ class CameraScreen extends Component {
   }
 
   renderCamera () {
-    console.log('uri')
-    console.log(this.state.photo)
-    console.log('hi')
-    if (this.state.cameraState) {
-      console.log('주소는?')
-      console.log(this.state.photo)
+    console.log('111')
+    if (
+      this.state.cameraState &&
+      this.state.cameraAuthorized) {
       if (this.state.fileType === 'Image') {
+        console.log('222')
         return (
           <View>
             <Image style={{ height: 375 }} source={{uri: this.state.photo}}>
@@ -415,6 +460,7 @@ class CameraScreen extends Component {
           </View>
         )
       } else {
+        console.log('333')
         return (
           <View>
             <Video
@@ -443,7 +489,10 @@ class CameraScreen extends Component {
           </View>
         )
       }
-    } else {
+    } else if (
+      !this.state.cameraState &&
+      this.state.cameraAuthorized) {
+      console.log('444')
       return (
         <Camera
           ref={(cam) => {
@@ -463,10 +512,19 @@ class CameraScreen extends Component {
           {this.renderTimerComponent()}
         </Camera>
       )
+    } else if (!this.state.cameraAuthorized) {
+      console.log('555')
+      return (
+        <View style={{height: 375, alignItems: 'center', justifyContent: 'center', backgroundColor: 'black'}}>
+          <Text style={{fontSize: 17, color: 'rgb(255,255,255)'}}>휴대폰 설정에서 카메라 사용을</Text>
+          <Text style={{fontSize: 15, color: 'rgb(255,255,255)'}}>허용해주세요😱</Text>
+        </View>
+      )
     }
   }
 
   render () {
+    console.log('666')
     return (
       <Modal
         ref={'modal'}
