@@ -8,8 +8,10 @@ import {
   Image,
   TextInput,
   Dimensions,
-  Text
+  Text,
+  Modal as NativeModal
 } from 'react-native'
+
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 import Camera from 'react-native-camera'
@@ -20,6 +22,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 
 import { Images } from '../Themes'
 import ConfirmError from '../Components/common/ConfirmError'
+import ProgressBar from '../Components/common/Progress-Bar'
 
 import AccountActions from '../Redux/AccountRedux'
 import EpisodeActions from '../Redux/EpisodeRedux'
@@ -34,8 +37,14 @@ class CameraScreen extends Component {
   constructor (props) {
     super(props)
     this.state = {
+      // ModalwindowSize.
+      ModalOpen: true,
+      swipe: true,
+
+      // Permission
       cameraAuthorized: true,
 
+      // ConfirmError
       confirmStyle: 'confirm',
       alertVisible: false,
       alertTextArray: [],
@@ -44,6 +53,7 @@ class CameraScreen extends Component {
       AcceptText: '',
       SettingText: '',
 
+      // Camera
       captureMode: Camera.constants.CaptureMode.still,
       cameraType: Camera.constants.Type.back,
       cameraState: false,
@@ -51,12 +61,12 @@ class CameraScreen extends Component {
       focus: false,
       texting: false,
 
+      // Video
       timer: false,
       LeftTime: 5,
       interval: null,
       progress: 0,
-      ModalOpen: true,
-      swipe: true,
+
       fileType: 'Image',
       message: ''
     }
@@ -78,37 +88,47 @@ class CameraScreen extends Component {
         console.log(response)
         if (response === 'undetermined') {
           Permissions.requestPermission('camera').then(response => {
-            // returns once the user has chosen to 'allow' or to 'not allow' access
-            // response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
+            console.log('auth')
             this.setState({
               cameraAuthorized: false
             })
             Permissions.openSettings()
           })
         } else if (response === 'denied') {
+          console.log('auth')
           this.setState({
             cameraAuthorized: false
           })
+          Permissions.openSettings()
         } else if (response === 'authorized') {
+          console.log('auth')
           this.setState({
             cameraAuthorized: true
           })
         }
       })
+    console.log(this.props)
   }
 
+  /*
   shouldComponentUpdate (nextProps, nextState) {
-    if (nextState.message !== this.state.message &&
-        nextState.cameraAuthorized !== this.state.cameraAuthorized) {
-      console.log('업데이트 안도비니')
+    if (nextState.message !== this.state.message) {
+      console.log('업데이트 안해도됨')
       return false
     }
     return true
   }
+  */
 
   handleLongPressOut () {
     console.log('long press out')
+    clearInterval(this.state.interval)
     this.camera.stopCapture()
+    this.setState({
+      timer: false,
+      LeftTime: 5,
+      progress: 0
+    })
   }
 
   handleChangeMessage = (text) => {
@@ -116,10 +136,23 @@ class CameraScreen extends Component {
   }
 
   onClose () {
+    console.log('hihi')
     this.setState({
       fileType: 'Image'
     })
-    NavigationActions.homeTab()
+    if (this.props.beforeScreen === 'homeTab') {
+      console.log('hometab')
+      NavigationActions.homeTab()
+    } else if (this.props.beforeScreen === 'alarmTab') {
+      console.log('alarmtab')
+      NavigationActions.alarmTab()
+    } else if (this.props.beforeScreen === 'searchTab') {
+      console.log('searchtab')
+      NavigationActions.searchTab()
+    } else if (this.props.beforeScreen === 'profileTab') {
+      console.log('profiletab')
+      NavigationActions.profileTab()
+    }
   }
 
   onCameraSetting () {
@@ -165,6 +198,8 @@ class CameraScreen extends Component {
       alertTextArray: [],
       confirmStyle: 'confirm',
 
+      message: '',
+
       cameraState: false,
       cameraType: Camera.constants.Type.back,
       photo: '',
@@ -206,7 +241,9 @@ class CameraScreen extends Component {
       clearInterval(this.state.interval)
       this.setState({
         photo: data.path,
-        LeftTime: 5
+        timer: false,
+        LeftTime: 5,
+        progress: 0
       })
       setTimeout(() => {
         this.setState({
@@ -222,12 +259,13 @@ class CameraScreen extends Component {
         this.camera.stopCapture()
         this.setState({
           timer: false,
-          LeftTime: 5
+          LeftTime: 5,
+          progress: 0
         })
       } else {
         this.setState({
           LeftTime: this.state.LeftTime - 1,
-          progress: this.state.progress + 0.07
+          progress: this.state.progress + 3750 * 2
         })
       }
     }, 1000)
@@ -240,13 +278,10 @@ class CameraScreen extends Component {
     const message = this.state.message
     const active = false
 
-    if (this.state.texting) {
-      this.setState({
-        message: '',
-        texting: false
-      })
-      this.refs.MyTextInput.clear()
-    }
+    this.setState({
+      message: '',
+      texting: false
+    })
 
     if (this.state.cameraState) {
       this.setState({cameraState: false})
@@ -258,13 +293,13 @@ class CameraScreen extends Component {
         setTimeout(() => {
           this.props.requestUserEpisodes(token, accountId, active)
         }, 1000)
-        NavigationActions.homeTab()
+        NavigationActions.feedScreen({type: 'replace'})
       } else {
         this.props.postUserEpisode(token, fileType, file, message)
         setTimeout(() => {
           this.props.requestUserEpisodes(token, accountId, active)
         }, 1000)
-        NavigationActions.refresh({key: 'homeTab'})
+        NavigationActions.feedScreen({type: 'replace'})
       }
     }
   }
@@ -283,16 +318,30 @@ class CameraScreen extends Component {
   }
 
   backChevronPress () {
-    this.setState({
-      alertVisible: true,
-      alertTextArray: ['입력된 내용이 사라집니다.', '정말 뒤로 돌아가실건가요?'],
+    if (this.state.message !== '') {
+      this.setState({
+        alertVisible: true,
+        alertTextArray: ['입력된 내용이 사라집니다.', '정말 뒤로 돌아가실건가요?'],
 
-      confirmStyle: 'setting',
-      onAccept: this.onBackAccept.bind(this),
-      onSetting: this.onDecline.bind(this),
-      AcceptText: '네',
-      SettingText: '아니요'
-    })
+        confirmStyle: 'setting',
+        onAccept: this.onBackAccept.bind(this),
+        onSetting: this.onDecline.bind(this),
+        AcceptText: '네',
+        SettingText: '아니요'
+      })
+    } else {
+      this.setState({
+        cameraState: false,
+        cameraType: Camera.constants.Type.back,
+        photo: '',
+        focus: false,
+        texting: false,
+        timer: false,
+        LeftTime: 5,
+        interval: null,
+        fileType: 'Image'
+      })
+    }
   }
 
   switchCamera () {
@@ -312,6 +361,22 @@ class CameraScreen extends Component {
       focus: true,
       swipe: false
     })
+  }
+
+  renderAuthDenied () {
+    console.log(this.state.cameraAuthorized)
+    if (this.state.cameraAuthorized) {
+      return (
+        <View />
+      )
+    } else {
+      return (
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'black'}}>
+          <Text style={{fontSize: 17, color: 'rgb(255,255,255)'}}>휴대폰 설정에서 카메라 사용을</Text>
+          <Text style={{fontSize: 17, color: 'rgb(255,255,255)'}}>허용해주세요😱</Text>
+        </View>
+      )
+    }
   }
 
   renderButtons () {
@@ -344,15 +409,19 @@ class CameraScreen extends Component {
       console.log('33')
       return (
         <View style={styles.capture}>
-          <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-            <TouchableOpacity style={{height: 103.5}} onPress={this.switchCamera.bind(this)}>
-              <Icon
-                name='repeat'
-                size={20}
-                style={{top: 20, left: 160, width: 22, height: 22, alignSelf: 'center', fontWeight: '300'}}
-              />
-            </TouchableOpacity>
-            <View style={{flex: 1, justifyContent: 'center', marginBottom: 103.5}}>
+          <View style={{flex: 1}}>
+            <View style={{flex: 1, alignItems: 'flex-end'}}>
+              <TouchableOpacity
+                style={{marginRight: 10, marginTop: 10}}
+                onPress={this.switchCamera.bind(this)}>
+                <Icon
+                  name='repeat'
+                  size={20}
+                  style={{width: 22, height: 22, alignSelf: 'center', fontWeight: '300'}}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', marginBottom: 103.5}}>
               <TouchableWithoutFeedback
                 delayLongPress={300}
                 onPress={this.takePicture.bind(this)}
@@ -378,33 +447,64 @@ class CameraScreen extends Component {
       console.log('44')
       return (
         <View>
-          <TextInput
-            ref='MyTextInput'
-            style={styles2.input}
-            maxLength={38}
-            placeholder='코멘트 쓰기..'
-            returnKeyType='done'
-            autoCapitalize='none'
-            autoCorrect={false}
-            enablesReturnKeyAutomatically
-            onBlur={(event) => {
-              this.setState({focus: false, swipe: true})
-              console.log(this.state.focus)
-            }}
-            onFocus={() => {
-              this.setState({
-                focus: true, swipe: false
-              })
-              console.log('제대로눌림')
-              console.log(this.state.focus)
-            }}
-            onChangeText={this.handleChangeMessage}
-            autoFocus={this.state.focus} />
+          <NativeModal
+            animationType={'none'}
+            transparent
+            visible={this.state.texting}>
+            <View style={{flex: 1, height: windowSize.height, width: windowSize.width, backgroundColor: 'rgba(0,0,0,0.59)'}}>
+              <TouchableWithoutFeedback
+                onPress={() => {
+                  if (this.state.texting) {
+                    this.refs.MyTextInput.blur()
+                    this.setState({
+                      texting: false
+                    })
+                    return
+                  }
+                }}>
+                <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', paddingTop: 15}}>
+                  <TextInput
+                    ref='MyTextInput'
+                    value={this.state.message}
+                    style={styles2.input}
+                    maxLength={38}
+                    placeholder='코멘트 쓰기..'
+                    returnKeyType='done'
+                    autoCapitalize='none'
+                    autoCorrect={false}
+                    enablesReturnKeyAutomatically
+                    onBlur={(event) => {
+                      this.setState({focus: false, swipe: true})
+                      console.log(this.state.focus)
+                    }}
+                    onFocus={() => {
+                      this.setState({
+                        focus: true, swipe: false
+                      })
+                      console.log('제대로눌림')
+                      console.log(this.state.focus)
+                    }}
+                    onChangeText={this.handleChangeMessage}
+                    autoFocus={this.state.focus} />
+                </View>
+              </TouchableWithoutFeedback>
+            </View>
+          </NativeModal>
         </View>
       )
     } else {
       console.log('55')
-      return
+      return (
+        <View style={{backgroundColor: 'rgba(0,0,0,0)', paddingLeft: 7.5, paddingRight: 7.5}}>
+          <Text style={{
+            textShadowOffset: {width: 1, height: 2},
+            textShadowColor: 'rgba(0, 0, 0, 0.5)',
+            textShadowRadius: 1,
+            color: 'white',
+            fontSize: 20,
+            fontWeight: 'bold' }}>{this.state.message}</Text>
+        </View>
+      )
     }
   }
 
@@ -412,28 +512,36 @@ class CameraScreen extends Component {
     if (this.state.timer) {
       console.log('66')
       return (
-        <View style={{flexDirection: 'row', backgroundColor: 'rgba(0, 0, 0, 0)'}}>
-          <Text style={{color: 'white', fontSize: 15}}>00</Text>
-          <Text style={{color: 'white', fontSize: 15}}>:</Text>
-          <Text style={{color: 'white', fontSize: 15}}>{this.state.LeftTime}</Text>
+        <View style={{flex: 1, justifyContent: 'flex-end'}}>
+          <ProgressBar
+            fillStyle={{backgroundColor: 'rgb(250,0,0)', height: 10}}
+            backgroundStyle={{backgroundColor: '#cccccc', borderRadius: 2, height: 10}}
+            style={{width: windowSize.width}}
+            progress={this.state.progress}
+          />
         </View>
       )
     } else {
-      console.log('77')
-      return
+      console.log('808')
+      return (
+        <View />
+      )
     }
   }
 
   renderEpisodeStatusButton () {
     console.log('77')
-    if (this.props.episodeStatus) {
+    if (this.props.episodeStatus &&
+        this.state.cameraAuthorized) {
       console.log('88')
       return (
-        <TouchableOpacity
-          style={{width: 28.5, height: 28.5}}
-          onPress={() => { this.endEpiBtnPress() }}>
-          <Image style={{width: 28.5, height: 28.5, position: 'relative', bottom: 320, right: 335}} source={Images.endEpBtn} />
-        </TouchableOpacity>
+        <View style={{flex: 1, alignSelf: 'flex-start'}}>
+          <TouchableOpacity
+            style={{marginTop: 30, marginLeft: 10}}
+            onPress={() => { this.endEpiBtnPress() }}>
+            <Image style={{width: 28.5, height: 28.5}} source={Images.endEpBtn} />
+          </TouchableOpacity>
+        </View>
       )
     } else {
       console.log('99')
@@ -446,8 +554,7 @@ class CameraScreen extends Component {
   renderCamera () {
     console.log('111')
     if (
-      this.state.cameraState &&
-      this.state.cameraAuthorized) {
+      this.state.cameraState) {
       if (this.state.fileType === 'Image') {
         console.log('222')
         return (
@@ -489,9 +596,7 @@ class CameraScreen extends Component {
           </View>
         )
       }
-    } else if (
-      !this.state.cameraState &&
-      this.state.cameraAuthorized) {
+    } else if (!this.state.cameraState) {
       console.log('444')
       return (
         <Camera
@@ -509,16 +614,9 @@ class CameraScreen extends Component {
           onZoomChanged={() => {}}
           aspect={Camera.constants.Aspect.fill}>
           {this.renderEpisodeStatusButton()}
+          {this.renderAuthDenied()}
           {this.renderTimerComponent()}
         </Camera>
-      )
-    } else if (!this.state.cameraAuthorized) {
-      console.log('555')
-      return (
-        <View style={{height: 375, alignItems: 'center', justifyContent: 'center', backgroundColor: 'black'}}>
-          <Text style={{fontSize: 17, color: 'rgb(255,255,255)'}}>휴대폰 설정에서 카메라 사용을</Text>
-          <Text style={{fontSize: 15, color: 'rgb(255,255,255)'}}>허용해주세요😱</Text>
-        </View>
       )
     }
   }
@@ -554,6 +652,10 @@ class CameraScreen extends Component {
               SettingText={this.state.SettingText} />
             {this.renderCamera()}
             {this.renderButtons()}
+            <TouchableOpacity
+              onPress={this.onClose.bind(this)}>
+              <Text>BACK</Text>
+            </TouchableOpacity>
           </View>
         </TouchableWithoutFeedback>
       </Modal>
@@ -575,16 +677,17 @@ const styles2 = {
     fontSize: 14
   },
   input: {
-    width: windowSize.width - 45,
-    color: 'white',
-    paddingRight: 10,
-    paddingLeft: 10,
-    paddingTop: 5,
+    width: windowSize.width - 15,
     height: 32,
-    fontSize: 14,
+
+    color: 'white',
+    fontSize: 20,
     fontWeight: 'bold',
+    textShadowOffset: {width: 1, height: 2},
+    textShadowColor: 'rgba(0, 0, 0, 0.5)',
+    textShadowRadius: 1,
     alignSelf: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.7)'
+    backgroundColor: 'rgba(0, 0, 0, 0)'
   }
 }
 
@@ -593,6 +696,7 @@ const mapStateToProps = (state) => {
     token: state.token.token,
     accountId: state.token.id,
 
+    beforeScreen: state.screen.beforeScreen,
     activeEpisodeId: state.account.activeEpisodeId,
     episodeStatus: state.account.episodeStatus
   }

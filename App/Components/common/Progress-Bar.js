@@ -16,7 +16,7 @@ export default class ProgressBar extends Component {
 
     this.props.style = styles
     this.props.easing = Easing.linear(Easing.ease)
-    this.props.easingDuration = 100
+    this.props.easingDuration = 500
   }
 
   componentDidUpdate (prevProps, prevState) {
@@ -26,10 +26,7 @@ export default class ProgressBar extends Component {
   }
 
   render () {
-    const fillWidth = this.state.progress.interpolate({
-      inputRange: [0, 1],
-      outputRange: [0 * this.props.style.width, 1 * this.props.style.width]
-    })
+    const fillWidth = this.state.progress
 
     return (
       <View style={[styles.background, this.props.backgroundStyle, this.props.style]}>

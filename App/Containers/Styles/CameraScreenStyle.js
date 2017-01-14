@@ -13,8 +13,8 @@ export default StyleSheet.create({
     backgroundColor: 'white'
   },
   preview: {
-    justifyContent: 'flex-end',
-    alignItems: 'flex-end',
+    justifyContent: 'center',
+    alignItems: 'center',
     height: Dimensions.get('window').width,
     width: Dimensions.get('window').width
   },

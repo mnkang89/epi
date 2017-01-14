@@ -21,11 +21,7 @@ import ProfileScreen from '../Containers/ProfileScreen'
 import UserProfileScreen from '../Containers/UserProfileScreen'
 import SingleEpisodeScreen from '../Containers/SingleEpisodeScreen'
 
-const mapStateToProps = (state) => {
-  return {
-    isLoggedIn: state.token.id !== null && state.token.token !== null
-  }
-}
+import ScreenActions from '../Redux/ScreenRedux'
 
 class NavigationRouter extends Component {
   render () {
@@ -61,6 +57,10 @@ class NavigationRouter extends Component {
                 icon={TabIcon}
                 selectedTabIcon='home'
                 tabIcon='home'
+                onPress={() => {
+                  this.props.registerScreen('homeTab')
+                  Actions.homeTab()
+                }}
                 navigationBarStyle={Styles.navBar}
                 leftButtonIconStyle={Styles.leftButton}
                 titleStyle={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>
@@ -95,6 +95,10 @@ class NavigationRouter extends Component {
                 icon={TabIcon}
                 selectedTabIcon='bell-o'
                 tabIcon='bell'
+                onPress={() => {
+                  this.props.registerScreen('alarmTab')
+                  Actions.alarmTab()
+                }}
                 navigationBarStyle={Styles.navBar}
                 leftButtonIconStyle={Styles.leftButton}
                 titleStyle={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>
@@ -136,6 +140,10 @@ class NavigationRouter extends Component {
                 icon={TabIcon}
                 selectedTabIcon='search'
                 tabIcon='search'
+                onPress={() => {
+                  this.props.registerScreen('searchTab')
+                  Actions.searchTab()
+                }}
                 leftButtonIconStyle={Styles.leftButton}
                 navigationBarStyle={Styles.navBar}
                 titleStyle={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>
@@ -158,6 +166,10 @@ class NavigationRouter extends Component {
                 icon={TabIcon}
                 selectedTabIcon='user'
                 tabIcon='user'
+                onPress={() => {
+                  this.props.registerScreen('profileTab')
+                  Actions.profileTab()
+                }}
                 navigationBarStyle={Styles.navBar}
                 titleStyle={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>
                 <Scene
@@ -174,4 +186,17 @@ class NavigationRouter extends Component {
   }
 }
 
-export default NavigationRouter
+const mapStateToProps = (state) => {
+  return {
+    isLoggedIn: state.token.id !== null && state.token.token !== null,
+    beforeScreen: state.screen.beforeScreen
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    registerScreen: (beforeScreen) => dispatch(ScreenActions.screenRegister(beforeScreen))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(NavigationRouter)
