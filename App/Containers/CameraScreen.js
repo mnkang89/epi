@@ -293,13 +293,15 @@ class CameraScreen extends Component {
         setTimeout(() => {
           this.props.requestUserEpisodes(token, accountId, active)
         }, 1000)
-        NavigationActions.feedScreen({type: 'replace'})
+        console.log('카메라리플레이스1')
+        NavigationActions.homeTab()
       } else {
         this.props.postUserEpisode(token, fileType, file, message)
         setTimeout(() => {
           this.props.requestUserEpisodes(token, accountId, active)
         }, 1000)
-        NavigationActions.feedScreen({type: 'replace'})
+        console.log('카메라리플레이스2')
+        NavigationActions.homeTab()
       }
     }
   }
@@ -652,10 +654,6 @@ class CameraScreen extends Component {
               SettingText={this.state.SettingText} />
             {this.renderCamera()}
             {this.renderButtons()}
-            <TouchableOpacity
-              onPress={this.onClose.bind(this)}>
-              <Text>BACK</Text>
-            </TouchableOpacity>
           </View>
         </TouchableWithoutFeedback>
       </Modal>
