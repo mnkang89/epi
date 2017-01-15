@@ -67,12 +67,12 @@ class EpisodeDetail extends Component {
       return (<Image
         style={styles.profileStyle}
         source={{uri: this.props.account.profileImagePath}} />
-    )
+      )
     } else {
       return (<Image
         style={styles.profileStyle}
         source={Images.profileImage} />
-    )
+      )
     }
   }
 

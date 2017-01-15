@@ -126,12 +126,13 @@ class ExploreDetail extends Component {
       return (<Image
         style={styles.imageStyle}
         source={{uri: this.props.account.profileImagePath}} />
-       )
+      )
     } else {
       return (<Image
         style={styles.imageStyle}
         source={Images.profileImage} />
-      ) }
+      )
+    }
   }
 
   render () {
