@@ -49,7 +49,7 @@
     "react-native-router-flux": "^3.35.0",
     "react-native-swiper": "^1.5.3",
     "react-native-vector-icons": "^2.1.0",
-    "react-native-video": "^0.9.0",
+    "react-native-video": "git+https://github.com/react-native-community/react-native-video.git",
     "react-redux": "^4.4.2",
     "reactotron": "^0.9.0",
     "realm": "^0.15.0",
