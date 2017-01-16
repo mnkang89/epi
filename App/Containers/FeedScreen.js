@@ -11,12 +11,12 @@ import {
 } from 'react-native'
 import { connect } from 'react-redux'
 import KeyboardSpacer from 'react-native-keyboard-spacer'
+import {AutoGrowingTextInput} from 'react-native-autogrow-textinput'
+import Icon from 'react-native-vector-icons/FontAwesome'
 import _ from 'lodash'
 
-import Icon from 'react-native-vector-icons/FontAwesome'
-import FeedList from '../Components/common/FeedList'
-import CommentList from '../Components/common/CommentList'
-import {AutoGrowingTextInput} from 'react-native-autogrow-textinput'
+import FeedList from '../Components/FeedList'
+import CommentList from '../Components/CommentList'
 import styles from './Styles/FeedScreenStyle'
 
 import CommentActions from '../Redux/CommentRedux'

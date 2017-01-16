@@ -3,7 +3,7 @@
 
 import React, { Component } from 'react'
 import { View } from 'react-native'
-import UserEpisodeList from '../Components/common/UserEpisodeList'
+import UserEpisodeList from '../Components/UserEpisodeList'
 
 // Styles
 import styles from './Styles/FeedScreenStyle'

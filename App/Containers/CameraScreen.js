@@ -22,7 +22,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 
 import { Images } from '../Themes'
 import ConfirmError from '../Components/common/ConfirmError'
-import ProgressBar from '../Components/common/Progress-Bar'
+import ProgressBar from '../Components/camera/Progress-Bar'
 
 import AccountActions from '../Redux/AccountRedux'
 import EpisodeActions from '../Redux/EpisodeRedux'

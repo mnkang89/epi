@@ -5,7 +5,7 @@ import React, { Component } from 'react'
 import {
   View
 } from 'react-native'
-import ExploreList from '../Components/common/ExploreList'
+import ExploreList from '../Components/ExploreList'
 
 // Styles
 import styles from './Styles/FeedScreenStyle'

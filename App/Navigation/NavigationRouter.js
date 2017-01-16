@@ -4,16 +4,13 @@ import React, { Component } from 'react'
 import { Scene, Router, ActionConst, Actions } from 'react-native-router-flux'
 import Styles from './Styles/NavigationContainerStyle'
 import NavItems from './NavItems'
-import TabIcon from '../Components/TabIcon'
+import TabIcon from '../Components/common/TabIcon'
 import { connect } from 'react-redux'
 
 // episode
-import GreetingScreen from '../Containers/GreetingScreen'
+import GreetingScreen from '../Containers/Auth/GreetingScreen'
 
 import FeedScreen from '../Containers/FeedScreen'
-import CommentScreen from '../Containers/CommentScreen'
-import FollowScreen from '../Containers/FollowScreen'
-import FollowerScreen from '../Containers/FollowerScreen'
 import NotiScreen from '../Containers/NotiScreen'
 import CameraScreen from '../Containers/CameraScreen'
 import ExploreScreen from '../Containers/ExploreScreen'
@@ -67,21 +64,6 @@ class NavigationRouter extends Component {
                 key='feedTouserProfileScreen'
                 component={UserProfileScreen}
                 title='프로필' />
-              <Scene
-                key='commentScreen'
-                component={CommentScreen}
-                title='댓글'
-                renderLeftButton={NavItems.chevronButton} />
-              <Scene
-                key='followScreen'
-                component={FollowScreen}
-                title='follow'
-                renderLeftButton={NavItems.chevronButton} />
-              <Scene
-                key='followerScreen'
-                component={FollowerScreen}
-                title='follower'
-                renderLeftButton={NavItems.chevronButton} />
             </Scene>
             <Scene
               key='alarmTab'

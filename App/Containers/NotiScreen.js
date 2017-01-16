@@ -5,7 +5,7 @@ import React, { Component } from 'react'
 import {
   View
 } from 'react-native'
-import NotiList from '../Components/common/NotiList'
+import NotiList from '../Components/NotiList'
 
 // Styles
 import styles from './Styles/FeedScreenStyle'
