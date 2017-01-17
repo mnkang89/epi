@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import { ScrollView } from 'react-native'
 import { connect } from 'react-redux'
 
@@ -6,6 +6,14 @@ import NotiDetail from './NotiDetail'
 import NotiActions from '../Redux/NotiRedux'
 
 class NotiList extends Component {
+
+  static propTypes = {
+    token: PropTypes.string,
+    noties: PropTypes.array,
+
+    requestNoties: PropTypes.func
+  }
+
   constructor (props) {
     super(props)
     this.state = {
@@ -36,7 +44,6 @@ class NotiList extends Component {
 const mapStateToProps = (state) => {
   return {
     token: state.token.token,
-
     noties: state.noti.noties
   }
 }

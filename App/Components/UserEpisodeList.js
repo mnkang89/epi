@@ -1,6 +1,6 @@
 // TODO: *프로필 컴포넌트 따로 만들고 에피소드 리스트 리팩토링해서 재활용성 높이기
 
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import { ScrollView, View, Image, TouchableOpacity, Text } from 'react-native'
 import { connect } from 'react-redux'
 import { Colors } from '../Themes'
@@ -11,17 +11,33 @@ import AccountActions from '../Redux/AccountRedux'
 import EpisodeActions from '../Redux/EpisodeRedux'
 
 class UserEpisodeList extends Component {
+
+  static propTypes = {
+    // 내려온 프롭스
+    id: PropTypes.number,
+
+    // store 프롭스
+    token: PropTypes.string,
+    following: PropTypes.bool,
+
+    profileImagePath: PropTypes.string,
+    nickname: PropTypes.string,
+    followerCount: PropTypes.number,
+    followingCount: PropTypes.number,
+
+    items: PropTypes.array,
+
+    requestOtherInfo: PropTypes.func,
+    requestOtherEpisodes: PropTypes.func,
+    deleteFollow: PropTypes.func,
+    postFollow: PropTypes.func
+  }
+
   constructor (props) {
     super(props)
     this.state = {
-      episodes: [],
       follow: this.props.following
     }
-  }
-
-  componentWillReceiveProps (nextProps) {
-    console.log('fetch성공')
-    console.log(this.props)
   }
 
   componentWillMount () {
@@ -38,10 +54,7 @@ class UserEpisodeList extends Component {
   onFollowPress () {
     const { token } = this.props
     const id = this.props.id
-    // const accountId = this.props.id
 
-    // 팔로우 스테이트 체킹 API발생
-    // follow스테이트가 api리스펀스로 안오면 새로운 리퀘스트가 날라가야 되는 구조
     if (this.state.follow) {
       this.props.deleteFollow(token, id)
       this.setState({ follow: false })
@@ -120,12 +133,12 @@ class UserEpisodeList extends Component {
 const mapStateToProps = (state) => {
   return {
     token: state.token.token,
+    following: state.account.otherFollowing,
 
-    nickname: state.account.otherNickname,
     profileImagePath: state.account.otherProfileImagePath,
+    nickname: state.account.otherNickname,
     followerCount: state.account.otherFollowerCount,
     followingCount: state.account.otherFollowingCount,
-    following: state.account.otherFollowing,
 
     items: state.episode.otherEpisodes
   }

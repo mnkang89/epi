@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import { View, RefreshControl, ScrollView } from 'react-native'
 import { connect } from 'react-redux'
 import _ from 'lodash'
@@ -7,6 +7,17 @@ import EpisodeDetail from './common/EpisodeDetail'
 import EpisodeActions from '../Redux/EpisodeRedux'
 
 class SingleEpisodeList extends Component {
+
+  static propTypes = {
+    token: PropTypes.string,
+    episodeId: PropTypes.number,
+
+    items: PropTypes.array,
+    account: PropTypes.object,
+
+    requestSingleEpisode: PropTypes.func
+  }
+
   constructor (props) {
     super(props)
     this.state = {
@@ -16,14 +27,10 @@ class SingleEpisodeList extends Component {
 
   componentWillMount () {
     console.log('싱글 에피소드 리스트')
-    console.log(this.props)
     this.isAttempting = true
     const { token, episodeId } = this.props
 
     this.props.requestSingleEpisode(token, episodeId)
-    console.log('하이')
-    console.log(this.props)
-    console.log('하이')
   }
 
   componentWillReceiveProps (nextProps) {
@@ -42,17 +49,15 @@ class SingleEpisodeList extends Component {
   }
 
   onRefresh () {
-    console.log('onRefresh에서 리프레슁 상태')
-    console.log(this.state.refreshing)
     const { token, episodeId } = this.props
+
     this.setState({refreshing: true})
     this.props.requestSingleEpisode(token, episodeId)
   }
 
   renderEpisodes () {
     const account = this.props.account
-    console.log('보자보자')
-    console.log(account)
+
     return this.props.items.map(item =>
       <EpisodeDetail key={item.id} episode={item} account={account} />)
   }
@@ -79,7 +84,6 @@ class SingleEpisodeList extends Component {
 const mapStateToProps = (state) => {
   return {
     token: state.token.token,
-    accountId: state.token.id,
 
     items: state.episode.singleEpisode
   }

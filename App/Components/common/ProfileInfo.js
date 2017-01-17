@@ -1,0 +1,215 @@
+// TODO: *프로필 컴포넌트 따로 만들기
+
+import React, { Component, PropTypes } from 'react'
+import { View, Image, ImagePickerIOS, TouchableOpacity, Text } from 'react-native'
+import Permissions from 'react-native-permissions'
+
+import ConfirmError from './common/ConfirmError'
+import { Colors, Images } from '../Themes'
+import styles from '../Containers/Styles/FeedScreenStyle'
+
+class ProfileInfo extends Component {
+
+  static propTypes = {
+    token: PropTypes.string,
+    id: PropTypes.number,
+
+    accountId: PropTypes.number,
+    following: PropTypes.bool,
+    account: PropTypes.object,
+
+    type: PropTypes.string,
+
+    profileImagePath: PropTypes.string,
+    nickname: PropTypes.string,
+    followerCount: PropTypes.number,
+    followingCount: PropTypes.number,
+
+    requestProfileImage: PropTypes.func,
+    deleteFollow: PropTypes.func,
+    postFollow: PropTypes.func
+  }
+
+  constructor (props) {
+    super(props)
+    this.state = {
+      alertVisible: false,
+      alertTextArray: [],
+      confirmStyle: 'confirm',
+
+      photoSource: this.props.account.profileImagePath,
+      follow: this.props.following
+    }
+  }
+
+  componentDidMount () {
+
+  }
+
+  onProfileImagePress () {
+    const { token, accountId } = this.props
+
+    Permissions.getPermissionStatus('photo')
+      .then(response => {
+        // response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
+        if (response === 'undetermined') {
+          Permissions.requestPermission('photo').then(response => {
+            Permissions.openSettings()
+          })
+        } else if (response === 'denied') {
+          this.setState({
+            alertVisible: true,
+            alertTextArray: ['설정에서 ‘사진’ 접근권한을', '허용해주세요.'],
+            confirmStyle: 'setting'
+          })
+        } else if (response === 'authorized') {
+          ImagePickerIOS.openSelectDialog(
+            { },
+            (data) => {
+              console.log('사진선택')
+              this.setState({
+                photoSource: data
+              })
+              this.props.requestProfileImage(data, token, accountId)
+            },
+            () => {
+              console.log('에러')
+            }
+          )
+        }
+      })
+  }
+
+  onSetting () {
+    console.log('온세팅')
+    this.setState({
+      alertVisible: false,
+      alertTextArray: [],
+      confirmStyle: 'confirm'
+    })
+    Permissions.openSettings()
+  }
+
+  onDecline () {
+    this.setState({
+      alertVisible: false,
+      alertTextArray: [],
+      confirmStyle: 'confirm'
+    })
+  }
+
+  onFollowPress () {
+    const { token } = this.props
+    const id = this.props.id
+
+    if (this.state.follow) {
+      this.props.deleteFollow(token, id)
+      this.setState({ follow: false })
+    } else {
+      this.props.postFollow(token, id)
+      this.setState({ follow: true })
+    }
+  }
+
+  renderProfileImage () {
+    if (this.state.photoSource) {
+      return (
+        <Image
+          style={[styles.image, {borderWidth: 1, borderColor: 'white', marginBottom: 14.5, marginTop: 39.5}]}
+          source={{uri: this.state.photoSource}} />)
+    } else {
+      return (<Image source={Images.profileIcon} style={{alignSelf: 'center'}} />)
+    }
+  }
+
+  renderFollowButton () {
+    if (this.state.follow) {
+      return (
+        <TouchableOpacity
+          onPress={this.onFollowPress.bind(this)}>
+          <View style={{borderWidth: 0.5, borderColor: 'rgb(217, 217, 217)', borderRadius: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 8, paddingLeft: 8, backgroundColor: 'white'}}>
+            <Text style={{color: 'black'}}>팔로잉</Text>
+          </View>
+        </TouchableOpacity>
+      )
+    } else {
+      return (
+        <TouchableOpacity
+          onPress={this.onFollowPress.bind(this)}>
+          <View style={{borderWidth: 0.5, borderColor: 'rgb(217, 217, 217)', borderRadius: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 8, paddingLeft: 8}}>
+            <Text style={{color: 'rgb(217, 217, 217)'}}>팔로우</Text>
+          </View>
+        </TouchableOpacity>
+      )
+    }
+  }
+
+  renderProfileInfo () {
+    if (this.props.type === 'me') {
+      return (
+        <View style={{alignItems: 'center', backgroundColor: '#000000'}}>
+          <View style={{flex: 2}}>
+            <TouchableOpacity onPress={this.onProfileImagePress.bind(this)}>
+              {this.renderProfileImage()}
+            </TouchableOpacity>
+          </View>
+          <View style={{flex: 1, alignItems: 'center'}}>
+            <Text style={{color: Colors.snow, fontSize: 25, fontWeight: 'bold'}}>{this.props.nickname}</Text>
+            <View style={{flexDirection: 'row', marginTop: 10.5, marginBottom: 25.5}}>
+              <TouchableOpacity>
+                <Text style={{color: Colors.snow, fontSize: 12}}>팔로워 {this.props.followerCount}</Text>
+              </TouchableOpacity>
+              <Text style={{color: Colors.snow, fontSize: 12}}> | </Text>
+              <TouchableOpacity>
+                <Text style={{color: Colors.snow, fontSize: 12}}>팔로잉 {this.props.followingCount} </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      )
+    } else {
+      return (
+        <View style={{alignItems: 'center', backgroundColor: '#000000'}}>
+          <View style={{flex: 2}}>
+            <Image
+              style={[styles.image, {borderWidth: 1, borderColor: 'white', marginBottom: 14.5, marginTop: 39.5}]}
+              source={{uri: this.props.profileImagePath}}
+            />
+          </View>
+          <View style={{flex: 1, alignItems: 'center'}}>
+            <Text style={{color: Colors.snow, fontSize: 25, fontWeight: 'bold'}}>{this.props.nickname}</Text>
+            <View style={{flexDirection: 'row', marginTop: 10.5, marginBottom: 25.5}}>
+              <TouchableOpacity>
+                <Text style={{color: Colors.snow, fontSize: 12}}>팔로워 {this.props.followerCount}</Text>
+              </TouchableOpacity>
+              <Text style={{color: Colors.snow, fontSize: 12}}> | </Text>
+              <TouchableOpacity>
+                <Text style={{color: Colors.snow, fontSize: 12}}>팔로잉 {this.props.followingCount} </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={{marginTop: 10}}>
+            {this.renderFollowButton()}
+          </View>
+        </View>
+      )
+    }
+  }
+
+  render () {
+    return (
+      <View>
+        <ConfirmError
+          confirmStyle={this.state.confirmStyle}
+          visible={this.state.alertVisible}
+          TextArray={this.state.alertTextArray}
+          onAccept={this.onDecline.bind(this)}
+          onSetting={this.onSetting.bind(this)} />
+        {this.renderProfileInfo()}
+      </View>
+    )
+  }
+
+}
+
+export default ProfileInfo

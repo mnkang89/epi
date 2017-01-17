@@ -1,13 +1,18 @@
-import React, { Component } from 'react'
+// TODO: 헤애함
+import React, { Component, PropTypes } from 'react'
 import { Text, View, Image, TouchableOpacity } from 'react-native'
 
 import { Colors, Metrics } from '../Themes/'
 
 class FollowDetail extends Component {
+
+  static propTypes = {
+    album: PropTypes.object
+  }
+
   constructor (props) {
     super(props)
     this.state = {
-      albums: [],
       follow: false
     }
   }

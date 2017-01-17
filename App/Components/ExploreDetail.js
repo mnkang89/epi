@@ -1,10 +1,11 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import { ScrollView, Dimensions, Text, View, Image, TouchableOpacity } from 'react-native'
 import Video from 'react-native-video'
 import { connect } from 'react-redux'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 
 import { Colors, Images, Metrics } from '../Themes/'
+
 import AccountActions from '../Redux/AccountRedux'
 
 const screenWidth = Dimensions.get('window').width
@@ -13,6 +14,18 @@ const cardWidth = scrollViewWidth * 0.80
 const paddingCard = scrollViewWidth * 0.02
 
 class ExploreDetail extends Component {
+
+  static propTypes = {
+    token: PropTypes.string,
+    following: PropTypes.bool.isRequired,
+
+    account: PropTypes.object.isRequired,
+    episode: PropTypes.object.isRequired,
+
+    deleteFollow: PropTypes.func,
+    postFollow: PropTypes.func
+  }
+
   constructor (props) {
     super(props)
     this.state = {
@@ -23,11 +36,7 @@ class ExploreDetail extends Component {
   onFollowPress () {
     const { token } = this.props
     const id = this.props.episode.accountId
-    // TODO: follow API 수정하기
-    // const accountId = this.props.id
 
-    // 팔로우 스테이트 체킹 API발생
-    // follow스테이트가 api리스펀스로 안오면 새로운 리퀘스트가 날라가야 되는 구조
     if (this.state.follow) {
       this.props.deleteFollow(token, id)
       this.setState({follow: false})
@@ -158,7 +167,7 @@ class ExploreDetail extends Component {
         <TouchableOpacity onPress={this.onEpisodePress.bind(this)}>
           <View style={{height: 162, marginLeft: 15, marginRight: 15}}>
             <ScrollView
-              snapToAlignment={'start'}
+              snapToAlignment={'center'}
               scrollEventThrottle={299}
               directionalLockEnabled
               decelerationRate={'fast'}
@@ -223,8 +232,7 @@ const styles = {
 
 const mapStateToProps = (state) => {
   return {
-    token: state.token.token,
-    id: state.token.id
+    token: state.token.token
   }
 }
 

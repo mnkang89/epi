@@ -1,6 +1,6 @@
 // TODO: *프로필 컴포넌트 따로 만들고 에피소드 리스트 리팩토링해서 재활용성 높이기
 
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import { ScrollView, View, Image, ImagePickerIOS, TouchableOpacity, Text } from 'react-native'
 import { connect } from 'react-redux'
 import Permissions from 'react-native-permissions'
@@ -11,10 +11,25 @@ import styles from '../Containers/Styles/FeedScreenStyle'
 import ConfirmError from './common/ConfirmError'
 import EpisodeDetail from './common/EpisodeDetail'
 
-import EpisodeActions from '../Redux/EpisodeRedux'
 import SignupActions from '../Redux/SignupRedux'
 
 class MyEpisodeList extends Component {
+
+  static propTypes = {
+    token: PropTypes.string,
+    accountId: PropTypes.number,
+
+    profileImagePath: PropTypes.string,
+    nickname: PropTypes.string,
+    followerCount: PropTypes.number,
+    followingCount: PropTypes.number,
+
+    items: PropTypes.array,
+    account: PropTypes.object,
+
+    requestProfileImage: PropTypes.func
+  }
+
   constructor (props) {
     super(props)
     this.state = {
@@ -27,15 +42,6 @@ class MyEpisodeList extends Component {
   }
 
   componentDidMount () {
-    /*
-      const { token, accountId } = this.props
-      const active = false
-
-      this.isAttempting = true
-      // attempt to check email - a saga is listening to pick it up from here.
-      this.props.requestInfo(token, accountId)
-      this.props.requestUserEpisodes(token, accountId, active)
-    */
   }
 
   onProfileImagePress () {
@@ -92,11 +98,6 @@ class MyEpisodeList extends Component {
     Permissions.openSettings()
   }
 
-  renderEpisodes () {
-    return this.props.items.map(item =>
-      <EpisodeDetail key={item.episode.id} episode={item.episode} account={this.props.account} />)
-  }
-
   renderProfileImage () {
     if (this.state.photoSource) {
       return (
@@ -130,6 +131,11 @@ class MyEpisodeList extends Component {
         </View>
       </View>
     )
+  }
+
+  renderEpisodes () {
+    return this.props.items.map(item =>
+      <EpisodeDetail key={item.episode.id} episode={item.episode} account={this.props.account} />)
   }
 
   render () {
@@ -166,7 +172,6 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    requestUserEpisodes: (token, accountId, active) => dispatch(EpisodeActions.userEpisodesRequest(token, accountId, active)),
     requestProfileImage: (photoSource, token, accountId) => dispatch(SignupActions.profileRequest(photoSource, token, accountId))
   }
 }

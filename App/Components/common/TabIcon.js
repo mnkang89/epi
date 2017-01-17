@@ -3,6 +3,12 @@ import { StyleSheet, View } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 export default class TabIcon extends Component {
+
+  static propTypes = {
+    selectedTabIcon: PropTypes.string.isRequired,
+    tabIcon: PropTypes.string.isRequired
+  }
+
   render () {
     return (
       <View style={styles.container}>
@@ -23,8 +29,3 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   }
 })
-
-TabIcon.propTypes = {
-  selectedTabIcon: PropTypes.string.isRequired,
-  tabIcon: PropTypes.string.isRequired
-}

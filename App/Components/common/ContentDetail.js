@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import {
   Text,
   View,
@@ -11,8 +11,27 @@ import * as Animatable from 'react-native-animatable'
 
 import CommentActions from '../../Redux/CommentRedux'
 import ContentActions from '../../Redux/ContentRedux'
-// textList: ['좋아', '😀', '짜릿해', '맛있어', '최고야', '개좋아', '좋아', '짜릿해', '맛있어', '최고야', '개좋아'],
+
 class ContentDetailClass extends Component {
+
+  static propTypes = {
+    // 내려온 props
+    length: PropTypes.number,
+    number: PropTypes.number,
+    episodeId: PropTypes.number,
+    content: PropTypes.object,
+
+    like: PropTypes.func,
+    dislike: PropTypes.func,
+
+    // 스토어 props
+    token: PropTypes.string,
+
+    getComment: PropTypes.func,
+    postLike: PropTypes.func,
+    deleteLike: PropTypes.func
+  }
+
   constructor (props) {
     super(props)
     this.state = {
@@ -235,7 +254,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     getComment: (token, episodeId, contentId) => dispatch(CommentActions.commentGet(token, episodeId, contentId)),
-    openCommentModal: (episodeId, contentId, visible) => dispatch(CommentActions.openComment(episodeId, contentId, visible)),
+    // openCommentModal: (episodeId, contentId, visible) => dispatch(CommentActions.openComment(episodeId, contentId, visible)),
     postLike: (token, contentId) => dispatch(ContentActions.likePost(token, contentId)),
     deleteLike: (token, contentId) => dispatch(ContentActions.likeDelete(token, contentId))
   }

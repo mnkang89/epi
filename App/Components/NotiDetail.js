@@ -1,9 +1,14 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import { Text, View, Image, TouchableOpacity } from 'react-native'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import { Colors, Images, Metrics } from '../Themes/'
 
 class NotiDetail extends Component {
+
+  static propTypes = {
+    noti: PropTypes.object
+  }
+
   constructor (props) {
     super(props)
     this.state = {

@@ -1,9 +1,14 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import { Text, View, Image, TouchableOpacity, Modal } from 'react-native'
 
 import { Colors, Metrics } from '../Themes/'
 
 class CommentDetail extends Component {
+
+  static propTypes = {
+    comment: PropTypes.object.isRequired
+  }
+
   constructor (props) {
     super(props)
     this.state = {

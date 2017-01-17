@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import {
   Text,
   View,
@@ -13,6 +13,12 @@ import { convert2TimeDiffString } from '../../Lib/Utilities'
 import ContentDetail from './ContentDetail'
 
 class EpisodeDetail extends Component {
+
+  static propTypes = {
+    account: PropTypes.object,
+    episode: PropTypes.object
+  }
+
   constructor (props) {
     super(props)
     this.state = {

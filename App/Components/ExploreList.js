@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import { RefreshControl, ScrollView } from 'react-native'
 import { connect } from 'react-redux'
 import _ from 'lodash'
@@ -7,13 +7,20 @@ import ExploreDetail from './ExploreDetail'
 import AccountActions from '../Redux/AccountRedux'
 import FeedActions from '../Redux/FeedRedux'
 
+// TODO: explorelist의 경우 스크롤뷰로 리프레쉬 컨트롤을 해야하므로 requestBestFeeds가 필요함
 class ExploreList extends Component {
+
+  static propTypes = {
+    token: PropTypes.string,
+    items: PropTypes.array.isRequired,
+
+    requestBestFeeds: PropTypes.func
+  }
 
   constructor (props) {
     super(props)
     this.state = {
-      refreshing: false,
-      follow: 'gray'
+      refreshing: false
     }
   }
 
@@ -23,16 +30,9 @@ class ExploreList extends Component {
       this.setState({refreshing: false})
     } else {
       console.log('아이템다름')
-      console.log(nextProps.items)
-      console.log(this.props.items)
-      console.log('윌리시브에서 리프레슁 상태 1')
-      console.log(this.state.refreshing)
       if (this.state.refreshing) {
         this.setState({refreshing: false})
-        console.log('윌리시브에서 리프레슁 상태 2')
-        setTimeout(() => {
-          console.log(this.state.refreshing)
-        }, 100)
+        console.log('윌리시브에서 리프레슁 상태')
       }
     }
   }

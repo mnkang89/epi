@@ -8,7 +8,7 @@ import TabIcon from '../Components/common/TabIcon'
 import { connect } from 'react-redux'
 
 // episode
-import GreetingScreen from '../Containers/Auth/GreetingScreen'
+// import GreetingScreen from '../Containers/Auth/GreetingScreen'
 
 import FeedScreen from '../Containers/FeedScreen'
 import NotiScreen from '../Containers/NotiScreen'
@@ -19,18 +19,20 @@ import UserProfileScreen from '../Containers/UserProfileScreen'
 import SingleEpisodeScreen from '../Containers/SingleEpisodeScreen'
 
 import ScreenActions from '../Redux/ScreenRedux'
+/*
+<Scene
+  initial
+  key='Greeting'
+  hideNavBar
+  hideTabBar
+  component={GreetingScreen} />
+*/
 
 class NavigationRouter extends Component {
   render () {
     return (
       <Router
         sceneStyle={{ backgroundColor: 'black' }}>
-        <Scene
-          initial
-          key='Greeting'
-          hideNavBar
-          hideTabBar
-          component={GreetingScreen} />
         <Scene
           key='root'
           navigationBarStyle={Styles.navBar}

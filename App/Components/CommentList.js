@@ -1,22 +1,13 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import { ScrollView } from 'react-native'
-// import axios from 'axios'
+
 import CommentDetail from './CommentDetail'
 
 export default class CommentList extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      comments: []
-    }
-  }
 
-  /*
-    componentWillMount () {
-      axios.get('https://rallycoding.herokuapp.com/api/music_albums')
-        .then(response => this.setState({ comments: response.data }))
-    }
-  */
+  static propTypes = {
+    comments: PropTypes.array.isRequired
+  }
 
   renderComments () {
     return this.props.comments.map(comment =>

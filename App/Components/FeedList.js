@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import { View, Text, TouchableOpacity, RefreshControl, ScrollView } from 'react-native'
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
@@ -9,11 +9,20 @@ import AccountActions from '../Redux/AccountRedux'
 import EpisodeActions from '../Redux/EpisodeRedux'
 
 class FeedList extends Component {
+
+  static propTypes = {
+    token: PropTypes.string,
+    accountId: PropTypes.number,
+    items: PropTypes.array.isRequired,
+
+    requestInfo: PropTypes.func,
+    requestUserEpisodes: PropTypes.func
+  }
+
   constructor (props) {
     super(props)
     this.state = {
-      refreshing: false,
-      follow: 'gray'
+      refreshing: false
     }
   }
 
