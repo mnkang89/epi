@@ -18,7 +18,8 @@ export default () => {
     content: require('./ContentRedux').reducer,
     comment: require('./CommentRedux').reducer,
     feed: require('./FeedRedux').reducer,
-    noti: require('./NotiRedux').reducer
+    noti: require('./NotiRedux').reducer,
+    cameraScreen: require('./CameraScreenRedux').reducer
   })
 
   return configureStore(rootReducer, rootSaga)

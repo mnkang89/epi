@@ -12,7 +12,7 @@ export default StyleSheet.create({
     flex: 1,
     backgroundColor: 'white'
   },
-  preview: {
+  camera: {
     justifyContent: 'center',
     alignItems: 'center',
     height: Dimensions.get('window').width,

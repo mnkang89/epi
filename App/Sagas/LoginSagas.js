@@ -2,6 +2,7 @@ import { put, call } from 'redux-saga/effects'
 import { path } from 'ramda'
 import LoginActions from '../Redux/LoginRedux'
 import TokenActions from '../Redux/TokenRedux'
+import { setToken } from '../Auth/Auth'
 
 let validateEmail = (email) => {
   // const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -38,6 +39,7 @@ export function * login (api, action) {
       const accountId = path(['data', 'id'], response)
       const token = path(['data', 'token'], response)
 
+      yield setToken(token)
       yield put(LoginActions.loginSuccess(email))
       yield put(TokenActions.tokenRequest(token, accountId))
       // idRequest는 deprecated

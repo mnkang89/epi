@@ -14,6 +14,7 @@ export default class RootContainer extends Component {
   }
 
   render () {
+    console.tron.log('root container')
     console.disableYellowBox = !DebugSettings.yellowBox
     return (
       <View style={styles.applicationView}>

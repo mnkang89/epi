@@ -21,7 +21,9 @@ class ExploreDetail extends Component {
     episode: PropTypes.object.isRequired,
 
     postFollow: PropTypes.func,
-    deleteFollow: PropTypes.func
+    deleteFollow: PropTypes.func,
+
+    cameraHandler: PropTypes.func
   }
 
   constructor (props) {

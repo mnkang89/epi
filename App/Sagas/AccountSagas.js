@@ -1,6 +1,8 @@
 import { put, call } from 'redux-saga/effects'
 import { path } from 'ramda'
 import AccountActions from '../Redux/AccountRedux'
+import { getToken } from '../Auth/Auth'
+import CameraScreenActions from '../Redux/CameraScreenRedux'
 
 // attempts to get account
 export function * account (api, action) {
@@ -65,7 +67,6 @@ export function * checkUserEpisode (api, action) {
   const { token, active } = action
   const response = yield call(api.checkUserEpisode, token, active)
 
-  // dispatch successful email checking
   if (response.ok) {
     console.log('ok')
     console.log(response)
@@ -167,5 +168,21 @@ export function * getFollower (api, action) {
 
     // TODO: 에러케이스 구분
     yield put(AccountActions.getFollowerFailure('WRONG'))
+  }
+}
+
+export function * getActiveUserEpisode (api, action) {
+  const token = yield getToken()
+  const response = yield call(api.checkUserEpisode, token, true)
+
+  // dispatch successful email checking
+  if (response.ok) {
+    const episodes = path(['data', 'episodes'], response)
+    if (episodes.length === 1) {
+      const activeEpisodeId = episodes[0].id
+      yield put(CameraScreenActions.setActiveEpisode(activeEpisodeId))
+    }
+  } else {
+    console.log('fail to get active user episode')
   }
 }

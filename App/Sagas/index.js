@@ -12,13 +12,14 @@ import { ContentTypes } from '../Redux/ContentRedux'
 import { CommentTypes } from '../Redux/CommentRedux'
 import { FeedTypes } from '../Redux/FeedRedux'
 import { NotiTypes } from '../Redux/NotiRedux'
+import { CameraScreenTypes } from '../Redux/CameraScreenRedux'
 
 /* ------------- Sagas ------------- */
 // episode
 import { login } from './LoginSagas'
 import { email, password, nickname, profile, signup } from './SignupSagas'
-import { account, otherInfo, checkUserEpisode, postFollow, deleteFollow, getFollowing, getFollower } from './AccountSagas'
-import { userEpisodes, userEpisodesWithFalse, otherEpisodes, postEpisode, putEpisode, singleEpisode } from './EpisodeSagas'
+import { account, otherInfo, getActiveUserEpisode, postFollow, deleteFollow, getFollowing, getFollower } from './AccountSagas'
+import { userEpisodes, userEpisodesWithFalse, otherEpisodes, postEpisode, putEpisode, singleEpisode, deactivateEpisode } from './EpisodeSagas'
 import { postContent, postLike, deleteLike } from './ContentSagas'
 import { postComment, getComment } from './CommentSagas'
 import { getBestFeeds } from './FeedSagas'
@@ -59,8 +60,6 @@ export default function * root () {
     takeLatest(AccountTypes.INFO_REQUEST, account, api),
     // other info
     takeLatest(AccountTypes.OTHER_INFO_REQUEST, otherInfo, api),
-    // check user episode
-    takeLatest(AccountTypes.USER_EPISODE_CHECK, checkUserEpisode, api),
     // post follow
     takeLatest(AccountTypes.FOLLOW_POST, postFollow, api),
     // delete follow
@@ -70,6 +69,13 @@ export default function * root () {
     // get follower
     takeLatest(AccountTypes.GET_FOLLOWER, getFollower, api),
 
+    /* --- CameraScreen --- */
+    // check user episode
+    takeLatest(CameraScreenTypes.GET_ACTIVE_EPISODE, getActiveUserEpisode, api),
+    // post content
+    takeLatest(CameraScreenTypes.POST_CONTENT, postContent, api),
+    // deactive episode
+    takeLatest(CameraScreenTypes.DEACTIVE_EPISODE, deactivateEpisode, api),
     /* --- Episode --- */
     // post episode
     takeLatest(EpisodeTypes.USER_EPISODE_POST, postEpisode, api),

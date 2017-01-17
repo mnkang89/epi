@@ -2,6 +2,8 @@ import { put, call } from 'redux-saga/effects'
 import { path } from 'ramda'
 import EpisodeActions from '../Redux/EpisodeRedux'
 import ContentActions from '../Redux/ContentRedux'
+import CameraScreenActions from '../Redux/CameraScreenRedux'
+import { getToken } from '../Auth/Auth'
 
 // attempts to get episodes
 export function * userEpisodes (api, action) {
@@ -111,6 +113,18 @@ export function * putEpisode (api, action) {
     console.log(response)
     // TODO: 에러케이스 구분
     yield put(EpisodeActions.userEpisodePutFailure('WRONG'))
+  }
+}
+
+export function * deactivateEpisode (api, action) {
+  const token = yield getToken()
+  const { activeEpisodeId } = action
+  const response = yield call(api.putEpisode, token, activeEpisodeId, false)
+
+  if (response.ok) {
+    yield put(CameraScreenActions.setActiveEpisode(null))
+  } else {
+    console.log('fail to deactivate episode')
   }
 }
 
