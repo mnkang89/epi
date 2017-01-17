@@ -37,7 +37,7 @@ class MyEpisodeList extends Component {
       alertTextArray: [],
       confirmStyle: 'confirm',
 
-      photoSource: this.props.account.profileImagePath
+      photoSource: this.props.profileImagePath
     }
   }
 

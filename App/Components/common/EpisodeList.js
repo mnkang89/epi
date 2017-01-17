@@ -4,15 +4,13 @@ import React, { Component, PropTypes } from 'react'
 import { ScrollView, RefreshControl } from 'react-native'
 import _ from 'lodash'
 
-import EpisodeDetail from './common/EpisodeDetail'
+import EpisodeDetail from './EpisodeDetail'
 
 class EpisodeList extends Component {
 
   static propTypes = {
     token: PropTypes.string,
-
     items: PropTypes.array,
-    account: PropTypes.object,
 
     refreshCallback: PropTypes.func
   }
@@ -43,12 +41,12 @@ class EpisodeList extends Component {
     // const { token, episodeId } = this.props
 
     this.setState({refreshing: true})
-    this.props.refreshCallback()
+    this.props.refreshCallback(this.props.token, this.props.acountId, true)
   }
 
   renderEpisodes () {
     return this.props.items.map(item =>
-      <EpisodeDetail key={item.episode.id} episode={item.episode} account={this.props.account} />)
+      <EpisodeDetail key={item.episode.id} episode={item.episode} account={item.account} />)
   }
 
   render () {
@@ -61,6 +59,7 @@ class EpisodeList extends Component {
           />
         }
       >
+        {this.props.children}
         {this.renderEpisodes()}
       </ScrollView>
     )

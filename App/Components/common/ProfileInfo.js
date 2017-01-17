@@ -4,24 +4,23 @@ import React, { Component, PropTypes } from 'react'
 import { View, Image, ImagePickerIOS, TouchableOpacity, Text } from 'react-native'
 import Permissions from 'react-native-permissions'
 
-import ConfirmError from './common/ConfirmError'
-import { Colors, Images } from '../Themes'
-import styles from '../Containers/Styles/FeedScreenStyle'
+import ConfirmError from './ConfirmError'
+import { Colors, Images } from '../../Themes'
+import styles from '../../Containers/Styles/FeedScreenStyle'
 
 class ProfileInfo extends Component {
 
   static propTypes = {
-    token: PropTypes.string,
-    id: PropTypes.number,
+    token: PropTypes.string,        // Token
+    accountId: PropTypes.number,    // My Id
 
-    accountId: PropTypes.number,
-    following: PropTypes.bool,
-    account: PropTypes.object,
+    id: PropTypes.number,           // Other Id
 
-    type: PropTypes.string,
+    type: PropTypes.string,         // Type of profileScreen
 
     profileImagePath: PropTypes.string,
     nickname: PropTypes.string,
+    following: PropTypes.bool,
     followerCount: PropTypes.number,
     followingCount: PropTypes.number,
 
@@ -37,13 +36,13 @@ class ProfileInfo extends Component {
       alertTextArray: [],
       confirmStyle: 'confirm',
 
-      photoSource: this.props.account.profileImagePath,
+      photoSource: this.props.profileImagePath,
       follow: this.props.following
     }
   }
 
   componentDidMount () {
-
+    console.log(this.props)
   }
 
   onProfileImagePress () {
@@ -146,14 +145,18 @@ class ProfileInfo extends Component {
 
   renderProfileInfo () {
     if (this.props.type === 'me') {
+      console.log('미야미')
+      console.log(this.props.nickname)
+      console.log(this.props.followerCount)
+      console.log(this.props.followingCount)
       return (
         <View style={{alignItems: 'center', backgroundColor: '#000000'}}>
-          <View style={{flex: 2}}>
+          <View>
             <TouchableOpacity onPress={this.onProfileImagePress.bind(this)}>
               {this.renderProfileImage()}
             </TouchableOpacity>
           </View>
-          <View style={{flex: 1, alignItems: 'center'}}>
+          <View style={{alignItems: 'center'}}>
             <Text style={{color: Colors.snow, fontSize: 25, fontWeight: 'bold'}}>{this.props.nickname}</Text>
             <View style={{flexDirection: 'row', marginTop: 10.5, marginBottom: 25.5}}>
               <TouchableOpacity>

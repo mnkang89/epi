@@ -4,6 +4,7 @@ import React, { Component, PropTypes } from 'react'
 import { ScrollView, View, Image, TouchableOpacity, Text } from 'react-native'
 import { connect } from 'react-redux'
 import { Colors } from '../Themes'
+
 import EpisodeDetail from './common/EpisodeDetail'
 import styles from '../Containers/Styles/FeedScreenStyle'
 
