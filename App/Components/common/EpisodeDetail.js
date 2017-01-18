@@ -10,7 +10,7 @@ import { Actions as NavigationActions } from 'react-native-router-flux'
 import { Colors, Images, Metrics } from '../../Themes/'
 import { convert2TimeDiffString } from '../../Lib/Utilities'
 
-import ContentDetail from './ContentDetail'
+import ContentContainer from '../../Containers/common/ContentContainer'
 
 class EpisodeDetail extends Component {
 
@@ -43,7 +43,7 @@ class EpisodeDetail extends Component {
     const episodeId = this.props.episode.id
 
     return contents.map(content =>
-      <ContentDetail
+      <ContentContainer
         key={contents.indexOf(content)}
         length={contents.length}
         number={contents.indexOf(content)}

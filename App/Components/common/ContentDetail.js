@@ -6,14 +6,9 @@ import {
   TouchableWithoutFeedback
  } from 'react-native'
 import Video from 'react-native-video'
-import { connect } from 'react-redux'
 import * as Animatable from 'react-native-animatable'
 
-import CommentActions from '../../Redux/CommentRedux'
-import ContentActions from '../../Redux/ContentRedux'
-
 class ContentDetailClass extends Component {
-  // TODO: common 컨테이너로 리팩하기.
 
   static propTypes = {
     // 내려온 props
@@ -25,7 +20,6 @@ class ContentDetailClass extends Component {
     like: PropTypes.func,
     dislike: PropTypes.func,
 
-    // 스토어 props
     token: PropTypes.string,
 
     getComment: PropTypes.func,
@@ -246,21 +240,6 @@ const styles = {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    token: state.token.token
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    getComment: (token, episodeId, contentId) => dispatch(CommentActions.commentGet(token, episodeId, contentId)),
-    // openCommentModal: (episodeId, contentId, visible) => dispatch(CommentActions.openComment(episodeId, contentId, visible)),
-    postLike: (token, contentId) => dispatch(ContentActions.likePost(token, contentId)),
-    deleteLike: (token, contentId) => dispatch(ContentActions.likeDelete(token, contentId))
-  }
-}
-
 const ContentDetail = Animatable.createAnimatableComponent(ContentDetailClass)
 
-export default connect(mapStateToProps, mapDispatchToProps)(ContentDetail)
+export default ContentDetail

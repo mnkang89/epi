@@ -1,203 +1,104 @@
-import React, { Component } from 'react'
-import {
-  Modal,
-  Text,
-  TouchableOpacity,
-  View,
-  Dimensions
-} from 'react-native'
+// TODO: 싱글에피소드 api 리스펀스 오브젝트의 경우 피드와는 다른 형태를 가진다. 때문에, EpisdoeList(현재는 피드에 맞추어 설계되어 있음) 말고 EpisodeDetail을 직접 사용한다.
+
+import React, { Component, PropTypes } from 'react'
+import { View, ScrollView, RefreshControl } from 'react-native'
 import { connect } from 'react-redux'
-import KeyboardSpacer from 'react-native-keyboard-spacer'
-import {AutoGrowingTextInput} from 'react-native-autogrow-textinput'
-import Icon from 'react-native-vector-icons/FontAwesome'
 import _ from 'lodash'
 
-import SingleEpisodeList from '../Components/SingleEpisodeList'
-import CommentList from '../Components/CommentList'
+import EpisodeDetail from '../Components/common/EpisodeDetail'
+import CommentModal from '../Components/common/CommentModal'
+// import EpisodeList from '../Components/common/EpisodeList'
 import styles from './Styles/FeedScreenStyle'
 
+import EpisodeActions from '../Redux/EpisodeRedux'
 import CommentActions from '../Redux/CommentRedux'
 
-const windowSize = Dimensions.get('window')
-
 class SingleEpisodeScreen extends Component {
+
+  static propTypes = {
+    token: PropTypes.string,
+    items: PropTypes.array,
+
+    account: PropTypes.object,
+    episodeId: PropTypes.number,
+    contentId: PropTypes.number,
+
+    requestSingleEpisode: PropTypes.func
+  }
+
   constructor (props) {
     super(props)
     this.state = {
-      text: '',
-      height: 5,
-      inputBottom: 40,
-      modalVisible: this.props.modal,
-      message: ''
+      refreshing: false
     }
   }
 
   componentDidMount () {
-    console.log(this.props)
-    this.props.resetCommentModal()
+    const { token, episodeId } = this.props
 
-    if (this.state.modalVisible) {
-      const { token, episodeId } = this.props
-      this.props.getComment(token, episodeId)
-    }
+    this.props.requestSingleEpisode(token, episodeId)
   }
 
   componentWillReceiveProps (nextProps) {
-    console.log('* --- componentWillReceiveProps --- *')
-    console.log(this.props)
-    console.log(nextProps)
-
-    if (nextProps.visible) {
-      // TODO: comment쪽에 두어도 좋지 않을지? 고민해보기.
-      // const { token } = this.props
-      // const { episodeId } = nextProps
-      if (nextProps.commentPosting) {
-        console.log('아직 코멘트 포스팅중')
-        return
-      } else if (
-        this.props.commentPosting === true &&
-        nextProps.commentPosting === false) {
-        console.log('코멘트 포스팅 끝')
-      } else if (!_.isEqual(this.props.comments, nextProps.comments)) {
-        console.log('코멘트 포스팅 후 새로고침')
-      } else {
-        console.log('코멘트 첫 진입')
-        const modalVisible = nextProps.visible
-
-        this.setState({
-          modalVisible
-        })
+    if (_.isEqual(this.props.items, nextProps.items)) {
+      console.log('아이템같음')
+      this.setState({refreshing: false})
+    } else {
+      console.log('아이템다름')
+      if (this.state.refreshing) {
+        this.setState({refreshing: false})
       }
     }
   }
 
-  shouldComponentUpdate (nextProps, nextState) {
-    if (nextState.message !== this.state.message) {
-      console.log('메세지값 변경')
-      return false
-    }
-    return true
+  onRefresh () {
+    const { token, episodeId } = this.props
+    this.setState({refreshing: true})
+
+    this.props.requestSingleEpisode(token, episodeId)
   }
 
-  resetCommentModal () {
-    console.log('modalVisible리프레쉬')
-    this.setState({modalVisible: false})
-    setTimeout(() => {
-      this.props.resetCommentModal()
-    }, 500)
-  }
+  renderEpisodes () {
+    const account = this.props.account
 
-  handleChangeMessage = (text) => {
-    this.setState({ message: text })
-  }
-
-  onCommentButtonPress () {
-    const { token, episodeId, contentId } = this.props
-    const message = this.state.message
-    this.setState({message: ''})
-    this.refs.commentInput.clear()
-
-    this.props.postComment(token, episodeId, contentId, message)
+    return this.props.items.map(item =>
+      <EpisodeDetail key={item.id} episode={item} account={account} />)
   }
 
   render () {
     return (
       <View style={styles.mainContainer}>
-        <SingleEpisodeList episodeId={this.props.episodeId} contentId={this.props.contentId} account={this.props.account} />
-        <View style={{height: 50}} />
-        <Modal
-          animationType={'slide'}
-          transparent
-          visible={this.state.modalVisible}>
-          <View style={styles2.containerStyle}>
-            <View style={{backgroundColor: 'white', flex: 1, marginTop: 151, borderTopLeftRadius: 8, borderTopRightRadius: 8}}>
-              <View style={{flexDirection: 'row', height: 42.5, marginRight: 4.5, marginLeft: 4.5, borderBottomWidth: 0.5, borderBottomColor: 'rgb(204, 204, 204)'}}>
-                <TouchableOpacity
-                  onPress={() => {
-                    this.resetCommentModal()
-                  }}
-                  style={{paddingTop: 10, paddingLeft: 16}}>
-                  <Icon
-                    name='chevron-down'
-                    size={16}
-                    style={{width: 16, height: 16, alignSelf: 'center', fontWeight: '300'}}
-                  />
-                </TouchableOpacity>
-                <Text style={{left: 140, marginTop: 10, fontSize: 17, fontWeight: 'bold'}}>댓글</Text>
-              </View>
-              <CommentList comments={this.props.comments} />
-              <View style={{flexDirection: 'row', backgroundColor: 'rgb(236, 236, 236)'}}>
-                <View style={styles2.textContainer}>
-                  <AutoGrowingTextInput
-                    ref='commentInput'
-                    style={styles2.input}
-                    placeholder={'댓글을 입력하세요...'}
-                    autoCapitalize='none'
-                    autoCorrect={false}
-                    onChangeText={this.handleChangeMessage}
-                    maxHeight={70} />
-                </View>
-                <View>
-                  <TouchableOpacity
-                    style={styles2.sendContainer}
-                    onPress={this.onCommentButtonPress.bind(this)}>
-                    <Text style={styles2.sendButton}>게시</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-              <KeyboardSpacer style={{backgroundColor: 'black'}} />
-            </View>
-          </View>
-        </Modal>
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this.onRefresh.bind(this)}
+            />
+          }
+        >
+          {this.renderEpisodes()}
+          <View style={{height: 50}} />
+        </ScrollView>
+        <CommentModal
+          token={this.props.token}
+          contentId={this.props.contentId}
+          episodeId={this.props.episodeId}
+          visible={this.props.visible}
+          comments={this.props.comments}
+          commentPosting={this.props.commentPosting}
+          resetCommentModal={this.props.resetCommentModal}
+          postComment={this.props.postComment} />
       </View>
     )
-  }
-}
-
-const styles2 = {
-  containerStyle: {
-    backgroundColor: 'rgba(0, 0, 0, 0.70)',
-    position: 'relative',
-    flex: 1,
-    justifyContent: 'center'
-  },
-  textContainer: {
-    marginLeft: 6,
-    marginRight: 6,
-    marginTop: 5,
-    marginBottom: 5,
-    justifyContent: 'center'
-  },
-  sendContainer: {
-    height: 35,
-    width: 43,
-    marginTop: 4,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'black'
-  },
-  sendButton: {
-    fontSize: 13,
-    color: 'white'
-  },
-  input: {
-    width: windowSize.width - 60,
-    paddingTop: 4,
-    height: 20,
-    color: '#555555',
-    fontSize: 15,
-    paddingLeft: 5,
-    alignSelf: 'center',
-    backgroundColor: '#ffffff'
   }
 }
 
 const mapStateToProps = (state) => {
   return {
     token: state.token.token,
+    items: state.episode.singleEpisode,
 
     visible: state.comment.visible,
-
     comments: state.comment.comments,
     commentPosting: state.comment.commentPosting
   }
@@ -205,9 +106,10 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    requestSingleEpisode: (token, episodeId) => dispatch(EpisodeActions.singleEpisodeRequest(token, episodeId)),
+
     resetCommentModal: () => dispatch(CommentActions.resetComment()),
-    postComment: (token, episodeId, contentId, message) => dispatch(CommentActions.commentPost(token, episodeId, contentId, message)),
-    getComment: (token, episodeId) => dispatch(CommentActions.commentGet(token, episodeId))
+    postComment: (token, episodeId, contentId, message) => dispatch(CommentActions.commentPost(token, episodeId, contentId, message))
   }
 }
 

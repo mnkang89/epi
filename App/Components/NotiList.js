@@ -7,7 +7,8 @@ class NotiList extends Component {
 
   static propTypes = {
     token: PropTypes.string,
-    noties: PropTypes.array
+    noties: PropTypes.array,
+    myAccount: PropTypes.object
   }
 
   constructor (props) {
@@ -18,7 +19,7 @@ class NotiList extends Component {
 
   renderNoties () {
     return this.props.noties.map(noti =>
-      <NotiDetail key={noti.id} noti={noti} />)
+      <NotiDetail key={noti.id} noti={noti} myAccount={this.props.myAccount} />)
   }
 
   render () {

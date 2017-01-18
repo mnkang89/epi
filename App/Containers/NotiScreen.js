@@ -16,6 +16,7 @@ class NotiScreen extends Component {
   static propTypes = {
     token: PropTypes.string,
     noties: PropTypes.array,
+    myAccount: PropTypes.object,
 
     requestNoties: PropTypes.func
   }
@@ -40,6 +41,7 @@ class NotiScreen extends Component {
           <NotiList
             token={this.props.token}
             noties={this.props.noties}
+            myAccount={this.props.myAccount}
           />
         </View>
       </View>
@@ -50,6 +52,7 @@ class NotiScreen extends Component {
 const mapStateToProps = (state) => {
   return {
     token: state.token.token,
+    myAccount: state.account,
     noties: state.noti.noties
   }
 }

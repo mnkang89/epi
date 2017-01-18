@@ -6,7 +6,8 @@ import { Colors, Images, Metrics } from '../Themes/'
 class NotiDetail extends Component {
 
   static propTypes = {
-    noti: PropTypes.object
+    noti: PropTypes.object,
+    myAccount: PropTypes.object
   }
 
   constructor (props) {
@@ -18,7 +19,8 @@ class NotiDetail extends Component {
 
   onNotiPress () {
     const { episodeId, contentId } = this.props.noti.notiRelateEntityMeta
-    const account = this.props.noti.notiCreateAccount
+    // const account = this.props.noti.notiCreateAccount
+    const account = this.props.myAccount
 
     if (this.state.type === 'comment') {
       NavigationActions.singleEpisodeScreen({

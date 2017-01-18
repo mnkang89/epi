@@ -11,12 +11,11 @@ import styles from '../../Containers/Styles/FeedScreenStyle'
 class ProfileInfo extends Component {
 
   static propTypes = {
+    type: PropTypes.string,         // Type of profileScreen
+
     token: PropTypes.string,        // Token
     accountId: PropTypes.number,    // My Id
-
     id: PropTypes.number,           // Other Id
-
-    type: PropTypes.string,         // Type of profileScreen
 
     profileImagePath: PropTypes.string,
     nickname: PropTypes.string,
@@ -195,7 +194,7 @@ class ProfileInfo extends Component {
               </TouchableOpacity>
             </View>
           </View>
-          <View style={{marginTop: 10}}>
+          <View style={{marginBottom: 10}}>
             {this.renderFollowButton()}
           </View>
         </View>

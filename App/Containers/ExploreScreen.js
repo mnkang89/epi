@@ -1,8 +1,11 @@
 import React, { Component, PropTypes } from 'react'
 import {
-  View
+  View,
+  ScrollView,
+  RefreshControl
 } from 'react-native'
 import { connect } from 'react-redux'
+import _ from 'lodash'
 
 import ExploreList from '../Components/ExploreList'
 import styles from './Styles/FeedScreenStyle'
@@ -24,6 +27,7 @@ class ExploreScreen extends Component {
   constructor (props) {
     super(props)
     this.state = {
+      refreshing: false
     }
   }
 
@@ -34,17 +38,44 @@ class ExploreScreen extends Component {
     this.props.requestBestFeeds(token)
   }
 
+  componentWillReceiveProps (nextProps) {
+    // TODO: 결국엔 스테이트를 false로 바꾸는 것이므로 통일하기.
+    if (_.isEqual(this.props.items, nextProps.items)) {
+      console.log('아이템같음')
+      this.setState({refreshing: false})
+    } else {
+      console.log('아이템다름')
+      if (this.state.refreshing) {
+        this.setState({refreshing: false})
+      }
+    }
+  }
+
+  onRefresh () {
+    const { token } = this.props
+
+    this.setState({refreshing: true})
+    this.props.requestBestFeeds(token)
+  }
+
   render () {
     return (
       <View style={styles.mainContainer}>
         <View style={{backgroundColor: 'black', flex: 1}}>
-          <ExploreList
-            token={this.props.token}
-            items={this.props.items}
-            requestBestFeeds={this.props.requestBestFeeds}
-            postFollow={this.props.postFollow}
-            deleteFollow={this.props.deleteFollow}
-          />
+          <ScrollView
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this.onRefresh.bind(this)}
+              />}
+          >
+            <ExploreList
+              token={this.props.token}
+              items={this.props.items}
+              requestBestFeeds={this.props.requestBestFeeds}
+              postFollow={this.props.postFollow}
+              deleteFollow={this.props.deleteFollow} />
+          </ScrollView>
         </View>
       </View>
     )
