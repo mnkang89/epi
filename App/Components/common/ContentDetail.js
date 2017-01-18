@@ -13,6 +13,7 @@ import CommentActions from '../../Redux/CommentRedux'
 import ContentActions from '../../Redux/ContentRedux'
 
 class ContentDetailClass extends Component {
+  // TODO: common 컨테이너로 리팩하기.
 
   static propTypes = {
     // 내려온 props
@@ -261,4 +262,5 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 const ContentDetail = Animatable.createAnimatableComponent(ContentDetailClass)
+
 export default connect(mapStateToProps, mapDispatchToProps)(ContentDetail)

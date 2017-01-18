@@ -1,13 +1,11 @@
 import React, { Component, PropTypes } from 'react'
 import { View, Text, TouchableOpacity, RefreshControl, ScrollView } from 'react-native'
-import { connect } from 'react-redux'
-import { Actions } from 'react-native-router-flux'
+import { Actions as NavigationActions } from 'react-native-router-flux'
 import _ from 'lodash'
 
 import EpisodeDetail from './common/EpisodeDetail'
-import AccountActions from '../Redux/AccountRedux'
-import EpisodeActions from '../Redux/EpisodeRedux'
 
+// refreshControl을 윗단으로 옮기기엔 피드스크린도 willReceive를 사용하는 상황 -> 커멘트를 컴포넌트화하기
 class FeedList extends Component {
 
   static propTypes = {
@@ -15,7 +13,6 @@ class FeedList extends Component {
     accountId: PropTypes.number,
     items: PropTypes.array.isRequired,
 
-    requestInfo: PropTypes.func,
     requestUserEpisodes: PropTypes.func
   }
 
@@ -29,40 +26,18 @@ class FeedList extends Component {
   componentWillReceiveProps (nextProps) {
     if (_.isEqual(this.props.items, nextProps.items)) {
       console.log('아이템같음')
-      console.log(nextProps.items)
-      console.log(this.props.items)
-      return
     } else {
       console.log('아이템다름')
-      console.log(nextProps.items)
-      console.log(this.props.items)
-      console.log('윌리시브에서 리프레슁 상태 1')
-      console.log(this.state.refreshing)
       if (this.state.refreshing) {
         this.setState({refreshing: false})
-        console.log('윌리시브에서 리프레슁 상태 2')
         setTimeout(() => {
           console.log(this.state.refreshing)
         }, 100)
       }
-      // const { token, accountId } = nextProps
-      // const active = false
-      // this.props.requestUserEpisodes(token, accountId, active)
     }
   }
 
-  componentDidMount () {
-    const { token, accountId } = this.props
-    // const active = false
-
-    this.isAttempting = true
-    this.props.requestInfo(token, accountId)
-    // this.props.requestUserEpisodes(token, accountId, active)
-  }
-
   onRefresh () {
-    console.log('onRefresh에서 리프레슁 상태')
-    console.log(this.state.refreshing)
     const { token, accountId } = this.props
     const withFollowing = true
 
@@ -71,30 +46,41 @@ class FeedList extends Component {
   }
 
   renderEpisodes () {
-    console.log(this.props)
     return this.props.items.map(item =>
-      <EpisodeDetail key={item.episode.id} episode={item.episode} account={item.account} />)
+      <EpisodeDetail
+        key={item.episode.id}
+        episode={item.episode}
+        account={item.account} />
+    )
   }
 
   renderFeeds () {
     if (this.props.items.length === 0) {
       return (
-        <View>
-          <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 100}}>
-            <Text style={{fontSize: 60, fontWeight: 'bold', color: 'white'}}>안녕하세요!</Text>
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this.onRefresh.bind(this)}
+            />}
+          >
+          <View>
+            <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 100}}>
+              <Text style={{fontSize: 60, fontWeight: 'bold', color: 'white'}}>안녕하세요!</Text>
+            </View>
+            <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 80}}>
+              <Text style={{fontSize: 16, color: 'white'}}>다른 사람들의 에피소드를 구경하고</Text>
+              <Text style={{fontSize: 16, color: 'white'}}>팔로우 해보세요!</Text>
+            </View>
+            <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 18}}>
+              <TouchableOpacity onPress={NavigationActions.searchTab}>
+                <View style={{paddingTop: 5, paddingBottom: 5, paddingLeft: 7, paddingRight: 7, borderRadius: 4, borderWidth: 1, borderColor: 'white'}}>
+                  <Text style={{fontSize: 16, color: 'white'}}>에피소드 탐색</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
           </View>
-          <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 80}}>
-            <Text style={{fontSize: 16, color: 'white'}}>다른 사람들의 에피소드를 구경하고</Text>
-            <Text style={{fontSize: 16, color: 'white'}}>팔로우 해보세요!</Text>
-          </View>
-          <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 18}}>
-            <TouchableOpacity onPress={Actions.searchTab}>
-              <View style={{paddingTop: 5, paddingBottom: 5, paddingLeft: 7, paddingRight: 7, borderRadius: 4, borderWidth: 1, borderColor: 'white'}}>
-                <Text style={{fontSize: 16, color: 'white'}}>에피소드 탐색</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        </View>
+        </ScrollView>
       )
     } else {
       return (
@@ -121,20 +107,4 @@ class FeedList extends Component {
 
 }
 
-const mapStateToProps = (state) => {
-  return {
-    token: state.token.token,
-    accountId: state.token.id,
-    // items: state.feed.bestFeeds
-    items: state.episode.episodes
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    requestInfo: (token, accountId) => dispatch(AccountActions.infoRequest(token, accountId)),
-    requestUserEpisodes: (token, accountId, withFollowing) => dispatch(EpisodeActions.userEpisodesRequest(token, accountId, withFollowing))
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(FeedList)
+export default FeedList

@@ -117,7 +117,11 @@ class ProfileInfo extends Component {
           style={[styles.image, {borderWidth: 1, borderColor: 'white', marginBottom: 14.5, marginTop: 39.5}]}
           source={{uri: this.state.photoSource}} />)
     } else {
-      return (<Image source={Images.profileIcon} style={{alignSelf: 'center'}} />)
+      return (
+        <Image
+          style={[styles.image, {borderWidth: 1, borderColor: 'white', marginBottom: 14.5, marginTop: 39.5}]}
+          source={Images.profileIcon} />
+      )
     }
   }
 

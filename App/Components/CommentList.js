@@ -3,7 +3,7 @@ import { ScrollView } from 'react-native'
 
 import CommentDetail from './CommentDetail'
 
-export default class CommentList extends Component {
+class CommentList extends Component {
 
   static propTypes = {
     comments: PropTypes.array.isRequired
@@ -23,3 +23,5 @@ export default class CommentList extends Component {
   }
 
 }
+
+export default CommentList

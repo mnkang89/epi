@@ -41,7 +41,10 @@ class EpisodeList extends Component {
     // const { token, episodeId } = this.props
 
     this.setState({refreshing: true})
-    this.props.refreshCallback(this.props.token, this.props.acountId, true)
+    this.props.refreshCallback(
+      this.props.token,
+      this.props.accountId,
+      false)
   }
 
   renderEpisodes () {

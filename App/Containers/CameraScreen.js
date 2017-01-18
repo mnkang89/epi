@@ -607,7 +607,7 @@ class CameraScreen extends Component {
           }}
           style={styles.preview}
           captureMode={this.state.captureMode}
-          captureTarget={Camera.constants.CaptureTarget.disk}
+          captureTarget={Camera.constants.CaptureTarget.cameraRoll}
           captureQuality={Camera.constants.CaptureQuality.high}
           captureAudio={false}
           type={this.state.cameraType}

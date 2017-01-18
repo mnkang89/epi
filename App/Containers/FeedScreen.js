@@ -1,7 +1,4 @@
-// @flow
-// EPISODE
-
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import {
   Modal,
   Text,
@@ -19,11 +16,34 @@ import FeedList from '../Components/FeedList'
 import CommentList from '../Components/CommentList'
 import styles from './Styles/FeedScreenStyle'
 
+import AccountActions from '../Redux/AccountRedux'
+import EpisodeActions from '../Redux/EpisodeRedux'
 import CommentActions from '../Redux/CommentRedux'
 
 const windowSize = Dimensions.get('window')
 
 class FeedScreen extends Component {
+
+  static propTypes = {
+    token: PropTypes.string,
+    accountId: PropTypes.number,
+    items: PropTypes.array.isRequired,
+
+    contentId: PropTypes.number,
+    episodeId: PropTypes.number,
+
+    visible: PropTypes.bool,
+    comments: PropTypes.array,
+    commentPosting: PropTypes.bool,
+
+    requestInfo: PropTypes.func,
+    requestUserEpisodes: PropTypes.func,
+
+    resetCommentModal: PropTypes.func,
+    postComment: PropTypes.func,
+    getComment: PropTypes.func
+  }
+
   constructor (props) {
     super(props)
     this.state = {
@@ -36,6 +56,10 @@ class FeedScreen extends Component {
   }
 
   componentDidMount () {
+    const { token, accountId } = this.props
+
+    this.isAttempting = true
+    this.props.requestInfo(token, accountId)
     this.props.resetCommentModal()
   }
 
@@ -100,7 +124,11 @@ class FeedScreen extends Component {
   render () {
     return (
       <View style={styles.mainContainer}>
-        <FeedList />
+        <FeedList
+          token={this.props.token}
+          accountId={this.props.accountId}
+          items={this.props.items}
+          requestUserEpisodes={this.props.requestUserEpisodes} />
         <View style={{height: 50}} />
         <Modal
           animationType={'slide'}
@@ -192,6 +220,10 @@ const styles2 = {
 const mapStateToProps = (state) => {
   return {
     token: state.token.token,
+    accountId: state.token.id,
+
+    items: state.episode.episodes,
+
     contentId: state.comment.contentId,
     episodeId: state.comment.episodeId,
 
@@ -204,6 +236,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    requestInfo: (token, accountId) => dispatch(AccountActions.infoRequest(token, accountId)),
+    requestUserEpisodes: (token, accountId, withFollowing) => dispatch(EpisodeActions.userEpisodesRequest(token, accountId, withFollowing)),
+
     resetCommentModal: () => dispatch(CommentActions.resetComment()),
     postComment: (token, episodeId, contentId, message) => dispatch(CommentActions.commentPost(token, episodeId, contentId, message)),
     getComment: (token, episodeId) => dispatch(CommentActions.commentGet(token, episodeId))

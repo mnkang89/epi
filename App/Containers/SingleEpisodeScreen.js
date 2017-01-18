@@ -1,6 +1,3 @@
-// @flow
-// EPISODE
-
 import React, { Component } from 'react'
 import {
   Modal,

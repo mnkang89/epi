@@ -218,5 +218,4 @@ const styles = {
   }
 }
 
-// const EpisodeDetail = Animatable.createAnimatableComponent(EpisodeDetailClass)
 export default EpisodeDetail

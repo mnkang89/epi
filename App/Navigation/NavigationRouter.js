@@ -45,6 +45,7 @@ class NavigationRouter extends Component {
             tabs
             tabBarStyle={{backgroundColor: '#000000', justifyContent: 'center', alignItems: 'center', alignSelf: 'center', height: 48.5}}>
             <Scene
+              initial
               key='homeTab'
               icon={TabIcon}
               selectedTabIcon='home'
@@ -57,7 +58,6 @@ class NavigationRouter extends Component {
               leftButtonIconStyle={Styles.leftButton}
               titleStyle={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>
               <Scene
-                initial
                 key='feedScreen'
                 panHandlers={null}
                 component={FeedScreen}

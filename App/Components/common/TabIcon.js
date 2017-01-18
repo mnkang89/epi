@@ -2,7 +2,7 @@ import React, { PropTypes, Component } from 'react'
 import { StyleSheet, View } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
-export default class TabIcon extends Component {
+class TabIcon extends Component {
 
   static propTypes = {
     selectedTabIcon: PropTypes.string.isRequired,
@@ -29,3 +29,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   }
 })
+
+export default TabIcon

@@ -1,12 +1,9 @@
 import React, { Component, PropTypes } from 'react'
 import { ScrollView, Dimensions, Text, View, Image, TouchableOpacity } from 'react-native'
-import Video from 'react-native-video'
-import { connect } from 'react-redux'
 import { Actions as NavigationActions } from 'react-native-router-flux'
+import Video from 'react-native-video'
 
 import { Colors, Images, Metrics } from '../Themes/'
-
-import AccountActions from '../Redux/AccountRedux'
 
 const screenWidth = Dimensions.get('window').width
 const scrollViewWidth = Math.round(screenWidth * 0.90)
@@ -22,8 +19,8 @@ class ExploreDetail extends Component {
     account: PropTypes.object.isRequired,
     episode: PropTypes.object.isRequired,
 
-    deleteFollow: PropTypes.func,
-    postFollow: PropTypes.func
+    postFollow: PropTypes.func,
+    deleteFollow: PropTypes.func
   }
 
   constructor (props) {
@@ -230,17 +227,4 @@ const styles = {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    token: state.token.token
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    postFollow: (token, id) => dispatch(AccountActions.followPost(token, id)),
-    deleteFollow: (token, id) => dispatch(AccountActions.followDelete(token, id))
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(ExploreDetail)
+export default ExploreDetail
