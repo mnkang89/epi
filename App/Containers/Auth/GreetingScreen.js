@@ -174,7 +174,7 @@ class GreetingScreen extends Component {
           }}                             // Store reference
           paused={false}                 // Pauses playback entirely.
           resizeMode='cover'             // Fill the whole screen at aspect ratio.
-          repeat={false}                 // Repeat forever.
+          repeat                         // Repeat forever.
           playInBackground={false}       // Audio continues to play when app entering background.
           playWhenInactive               // [iOS] Video continues to play when control or notification center are shown.
           progressUpdateInterval={250.0} // [iOS] Interval to fire onProgress (default to ~250ms)

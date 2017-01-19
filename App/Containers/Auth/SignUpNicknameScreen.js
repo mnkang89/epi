@@ -91,7 +91,28 @@ class SignUpNicknameScreen extends Component {
       alertTextArray: [],
       confirmStyle: 'confirm'
     })
-    Permissions.openSettings()
+
+    Permissions.requestPermission('photo', 'always')
+      .then(response => {
+        // 사진 라이브러리 가서 사진 가저오는 로직
+        ImagePickerIOS.openSelectDialog(
+          {},
+          (data) => {
+            console.log('사진선택')
+            this.setState({
+              photoFlag: true,
+              photoSource: data
+            })
+          },
+          () => {
+            console.log('에러')
+            this.setState({
+              photoFlag: false
+            })
+            console.log('User canceled the action')
+          }
+        )
+      })
   }
 
   getProfileImage () {
@@ -113,10 +134,8 @@ class SignUpNicknameScreen extends Component {
             alertTextArray: ['설정에서 ‘사진’ 접근권한을', '허용해주세요.'],
             confirmStyle: 'setting'
           })
-          // Permissions.openSettings()
         } else if (response === 'authorized') {
           // 사진 라이브러리 가서 사진 가저오는 로직
-          // openSelectDialog
           ImagePickerIOS.openSelectDialog(
             { },
             (data) => {

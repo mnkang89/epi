@@ -13,6 +13,8 @@ import styles from './Styles/FeedScreenStyle'
 import EpisodeActions from '../Redux/EpisodeRedux'
 import CommentActions from '../Redux/CommentRedux'
 
+// contentId받아서 어떻게 할 것인지 정하기
+
 class SingleEpisodeScreen extends Component {
 
   static propTypes = {

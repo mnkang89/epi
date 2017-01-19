@@ -92,35 +92,39 @@ class ExploreDetail extends Component {
     return contents.map(content => {
       if (content.type === 'Image') {
         return (
-          <View key={contents.indexOf(content)} style={{marginRight: 8.1}}>
-            <Image style={{height: 146.6, width: 146.6}} source={{ uri: content.path }} />
-          </View>
+          <TouchableOpacity key={contents.indexOf(content)} onPress={this.onEpisodePress.bind(this)}>
+            <View style={{marginRight: 8.1}}>
+              <Image style={{height: 146.6, width: 146.6}} source={{ uri: content.path }} />
+            </View>
+          </TouchableOpacity>
         )
       } else {
         return (
-          <View key={contents.indexOf(content)} style={{marginRight: 8.1}}>
-            <View style={{height: 146.6, width: 146.6}}>
-              <Video
-                source={{uri: content.path}}   // Can be a URL or a local file.
-                muted
-                ref={(ref) => {
-                  this.player = ref
-                }}                             // Store reference
-                paused={false}                 // Pauses playback entirely.
-                resizeMode='cover'             // Fill the whole screen at aspect ratio.
-                repeat={false}                         // Repeat forever.
-                playInBackground={false}       // Audio continues to play when app entering background.
-                playWhenInactive              // [iOS] Video continues to play when control or notification center are shown.
-                progressUpdateInterval={250.0} // [iOS] Interval to fire onProgress (default to ~250ms)
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0
-                }} />
+          <TouchableOpacity key={contents.indexOf(content)} onPress={this.onEpisodePress.bind(this)}>
+            <View style={{marginRight: 8.1}}>
+              <View style={{height: 146.6, width: 146.6}}>
+                <Video
+                  source={{uri: content.path}}   // Can be a URL or a local file.
+                  muted
+                  ref={(ref) => {
+                    this.player = ref
+                  }}                             // Store reference
+                  paused={false}                 // Pauses playback entirely.
+                  resizeMode='cover'             // Fill the whole screen at aspect ratio.
+                  repeat={false}                         // Repeat forever.
+                  playInBackground={false}       // Audio continues to play when app entering background.
+                  playWhenInactive              // [iOS] Video continues to play when control or notification center are shown.
+                  progressUpdateInterval={250.0} // [iOS] Interval to fire onProgress (default to ~250ms)
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0
+                  }} />
+              </View>
             </View>
-          </View>
+          </TouchableOpacity>
         )
       }
     }
@@ -161,20 +165,18 @@ class ExploreDetail extends Component {
             {this.renderFollowButton()}
           </View>
         </View>
-        <TouchableOpacity onPress={this.onEpisodePress.bind(this)}>
-          <View style={{height: 162, marginLeft: 15, marginRight: 15}}>
-            <ScrollView
-              snapToAlignment={'center'}
-              scrollEventThrottle={299}
-              directionalLockEnabled
-              decelerationRate={'fast'}
-              snapToInterval={cardWidth + paddingCard + paddingCard + 1}
-              showsHorizontalScrollIndicator
-              horizontal >
-              {this.renderContents()}
-            </ScrollView>
-          </View>
-        </TouchableOpacity>
+        <View style={{height: 162, marginLeft: 15, marginRight: 15}}>
+          <ScrollView
+            snapToAlignment={'center'}
+            scrollEventThrottle={299}
+            directionalLockEnabled
+            decelerationRate={'fast'}
+            snapToInterval={cardWidth + paddingCard + paddingCard + 1}
+            showsHorizontalScrollIndicator
+            horizontal >
+            {this.renderContents()}
+          </ScrollView>
+        </View>
       </View>
     )
   }
