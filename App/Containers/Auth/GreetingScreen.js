@@ -4,16 +4,16 @@
 import React, { Component } from 'react'
 import {
   View,
+  ScrollView,
   TouchableOpacity,
-  Text
+  Text,
+  Dimensions
 } from 'react-native'
 import { connect } from 'react-redux'
 import Video from 'react-native-video'
 
 // import { Actions as NavigationActions } from 'react-native-router-flux'
 
-// Styles
-// import styles from './Styles/FeedScreenStyle'
 import { Videos } from '../../Themes'
 
 import SignInScreen from './SignInScreen'
@@ -22,145 +22,136 @@ import SignUpEmailScreen from './SignUpEmailScreen'
 import SignUpPasswordScreen from './SignUpPasswordScreen'
 import SignUpNicknameScreen from './SignUpNicknameScreen'
 
+import GreetingActions from '../../Redux/GreetingRedux'
+
+const windowSize = Dimensions.get('window')
+
 class GreetingScreen extends Component {
 
   constructor (props) {
     super(props)
     this.state = {
       firstScreen: true,
-      signUpScreen: false,
       signInScreen: false,
-      emailScreen: false,
+      lostPasswordScreen: false,
+      signUpScreen: false,
       passwordScreen: false,
       nicknameScreen: false,
-      emailPasswordScreen: false,
-      lostPasswordScreen: false
+
+      scrollViewXposition: 0,
+      scrollEnabled: false,
+      direction: null
     }
   }
 
-  lostPassword () {
-    this.setState({
-      firstScreen: false,
-      signUpScreen: false,
-      signInScreen: true,
-      emailScreen: false,
-      passwordScreen: false,
-      emailPasswordScreen: false,
-      lostPasswordScreen: true
-    })
+  componentDidMount () {
+    this.props.passwordScreenDispatcher(false)
+    this.props.nicknameScreenDispatcher(false)
   }
 
-  sendPassword () {
-    this.setState({
-      firstScreen: true,
-      signUpScreen: false,
-      signInScreen: false,
-      emailScreen: false,
-      passwordScreen: false,
-      nicknameScreen: false,
-      emailPasswordScreen: false,
-      lostPasswordScreen: false
-    })
+  handleScroll (event) {
   }
 
-  signUpEmail () {
-    this.setState({
-      firstScreen: false,
-      signUpScreen: true,
-      emailScreen: false,
-      passwordScreen: true
-    })
+  handleBeginDrag (event) {
+    this.setState({scrollViewXposition: event.nativeEvent.contentOffset.x})
   }
 
-  signUpPassword () {
-    this.setState({
-      firstScreen: false,
-      signUpScreen: true,
-      emailScreen: false,
-      passwordScreen: false,
-      nicknameScreen: true
-    })
+  handleEndDrag (event) {
+    const xPoint = event.nativeEvent.contentOffset.x
+    const direction = (xPoint - this.state.scrollViewXposition > 0) ? 'right' : 'left'
+    console.log(this.props)
+
+    if (this.state.signInScreen &&
+        this.props.emailPasswordScreen &&
+        !this.props.lostPasswordScreen &&
+        direction === 'left') {
+      console.log('사인인에서 첫화면으로')
+      this.setState({ scrollEnabled: false })
+      this.props.emailPasswordScreenDispatcher(false)
+      this.refs.scrollview.scrollTo({x: 0})
+    } else if (this.state.signInScreen &&
+        this.props.emailPasswordScreen &&
+        !this.props.lostPasswordScreen &&
+        direction === 'right') {
+      console.log('사인인에서 로스트패스워드로')
+      this.refs.scrollview.scrollTo({x: windowSize.width})
+    } else if (this.props.lostPasswordScreen &&
+      !this.props.emailPasswordScreen &&
+      direction === 'left') {
+      console.log('로스트패스워드에서 사인인으로')
+      this.props.emailPasswordScreenDispatcher(true)
+      this.props.lostPasswordScreenDispatcher(false)
+      this.refs.scrollview.scrollTo({x: windowSize.width})
+    } else if (this.state.signUpScreen &&
+        !this.props.passwordScreen &&
+        !this.props.nicknameScreen &&
+        direction === 'left') {
+      console.log(this.props)
+      console.log('사인업에서 첫화면으로')
+      this.setState({ scrollEnabled: false })
+      this.refs.scrollview.scrollTo({x: 0})
+    } else if (this.state.signUpScreen &&
+        !this.props.passwordScreen &&
+        !this.props.nicknameScreen &&
+        direction === 'right') {
+      console.log('사인업에서 패스워드로')
+      this.refs.scrollview.scrollTo({x: windowSize.width})
+    } else if (this.props.passwordScreen &&
+        !this.props.nicknameScreen &&
+        direction === 'left') {
+      console.log('패스워드에서 사인업으로')
+      this.props.passwordScreenDispatcher(false)
+      this.refs.scrollview.scrollTo({x: windowSize.width})
+    } else if (this.props.passwordScreen &&
+        !this.props.nicknameScreen &&
+        direction === 'right') {
+      console.log('패스워드에서 닉네임으로')
+      this.refs.scrollview.scrollTo({x: 2 * windowSize.width})
+    } else if (!this.props.passwordScreen &&
+        this.props.nicknameScreen &&
+        direction === 'left') {
+      console.log('닉네임에서 패스워드로')
+      this.refs.scrollview.scrollTo({x: 2 * windowSize.width})
+      this.props.passwordScreenDispatcher(true)
+      this.props.nicknameScreenDispatcher(false)
+    } else if (!this.props.passwordScreen &&
+        this.props.nicknameScreen &&
+        direction === 'right') {
+      console.log('닉네임에서 오른쪽으로')
+      this.refs.scrollview.scrollTo({x: 3 * windowSize.width})
+    }
   }
 
-  signUpNickname () {
-    this.setState({
-      firstScreen: true,
-      signUpScreen: false,
-      emailScreen: false,
-      passwordScreen: false,
-      nicknameScreen: false
-    })
+  handleMomentumScrollEnd (event) {
   }
 
-  conditionalRender () {
-    if (this.state.firstScreen) {
+  renderSubGreetingScreen () {
+    if (this.state.signInScreen &&
+        !this.state.signUpScreen) {
       return (
-        <View style={{marginTop: 433}}>
-          <View style={{marginLeft: 22.5, marginRight: 72, backgroundColor: 'rgba(0,0,0,0)'}}>
-            <Text style={{color: 'white', opacity: 0.9, fontWeight: 'bold', fontSize: 72}}>episode</Text>
+        [
+          <View key='1' style={{width: windowSize.width, alignItems: 'center'}}>
+            <SignInScreen scrollViewHandler={this.refs.scrollview} />
+          </View>,
+          <View key='2' style={{width: windowSize.width, alignItems: 'center'}}>
+            <LostPasswordScreen scrollViewHandler={this.refs.scrollview} />
           </View>
-          <TouchableOpacity
-            style={{backgroundColor: 'rgba(255,255,255,0.9)', paddingTop: 10, paddingBottom: 10, marginTop: 32, marginLeft: 22.5, marginRight: 22.5}}
-            onPress={
-              () => {
-                this.setState({
-                  firstScreen: false,
-                  signUpScreen: true,
-                  signInScreen: false,
-                  emailScreen: true,
-                  passwordScreen: false,
-                  lostPasswordScreen: false,
-                  emailPasswordScreen: false,
-                  nicknameScreen: false
-                })
-              }
-            } >
-            <Text style={{color: 'black', fontWeight: 'bold', fontSize: 18, alignSelf: 'center'}}>회원가입</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{marginTop: 20, marginLeft: 162.7, marginRight: 162.5}}
-            onPress={
-              () => {
-                this.setState({
-                  firstScreen: false,
-                  signUpScreen: false,
-                  signInScreen: true,
-                  emailScreen: false,
-                  passwordScreen: false,
-                  lostPasswordScreen: false,
-                  emailPasswordScreen: true,
-                  nicknameScreen: false
-                })
-              }
-            } >
-            <Text style={{textDecorationLine: 'underline', backgroundColor: 'rgba(0,0,0,0)', color: 'white', fontSize: 15, alignSelf: 'center'}}>로그인</Text>
-          </TouchableOpacity>
-        </View>
+        ]
       )
-    } else if (this.state.signInScreen) {
-      if (this.state.emailPasswordScreen) {
-        return (
-          <SignInScreen lostPassword={this.lostPassword.bind(this)} />
-        )
-      } else if (this.state.lostPasswordScreen) {
-        return (
-          <LostPasswordScreen sendPassword={this.sendPassword.bind(this)} />
-        )
-      }
-    } else if (this.state.signUpScreen) {
-      if (this.state.emailScreen) {
-        return (
-          <SignUpEmailScreen signUpEmail={this.signUpEmail.bind(this)} />
-        )
-      } else if (this.state.passwordScreen) {
-        return (
-          <SignUpPasswordScreen signUpPassword={this.signUpPassword.bind(this)} />
-        )
-      } else if (this.state.nicknameScreen) {
-        return (
-          <SignUpNicknameScreen signUpNickname={this.signUpNickname.bind(this)} />
-        )
-      }
+    } else {
+      return (
+        [
+          <View key='3' style={{width: windowSize.width, alignItems: 'center'}}>
+            <SignUpEmailScreen scrollViewHandler={this.refs.scrollview} />
+          </View>,
+          <View key='4' style={{width: windowSize.width, alignItems: 'center'}}>
+            <SignUpPasswordScreen scrollViewHandler={this.refs.scrollview} />
+          </View>,
+          <View key='5' style={{width: windowSize.width, alignItems: 'center'}}>
+            <SignUpNicknameScreen scrollViewHandler={this.refs.scrollview} />
+          </View>
+        ]
+      )
     }
   }
 
@@ -184,10 +175,59 @@ class GreetingScreen extends Component {
             left: 0,
             right: 0,
             bottom: 0
-          }}
-        />
+          }} />
         <View style={{backgroundColor: 'rgba(0,0,0,0.5)', height: 667}}>
-          {this.conditionalRender()}
+          <ScrollView
+            ref='scrollview'
+            horizontal
+            pagingEnabled
+            scrollEnabled={this.state.scrollEnabled}
+            onScroll={this.handleScroll.bind(this)}
+            onScrollBeginDrag={this.handleBeginDrag.bind(this)}
+            onScrollEndDrag={this.handleEndDrag.bind(this)}
+            onMomentumScrollBegin={() => console.log('onMomentumScrollBegin')}
+            onMomentumScrollEnd={this.handleMomentumScrollEnd.bind(this)}
+            scrollEventThrottle={10}
+            snapToAlignment={'center'} >
+            <View style={{width: windowSize.width, marginTop: 433}}>
+              <View style={{marginLeft: 22.5, marginRight: 72, backgroundColor: 'rgba(0,0,0,0)'}}>
+                <Text style={{color: 'white', opacity: 0.9, fontWeight: 'bold', fontSize: 72}}>episode</Text>
+              </View>
+              <TouchableOpacity
+                style={{backgroundColor: 'rgba(255,255,255,0.9)', paddingTop: 10, paddingBottom: 10, marginTop: 32, marginLeft: 22.5, marginRight: 22.5}}
+                onPress={
+                  () => {
+                    this.setState({
+                      signUpScreen: true,
+                      signInScreen: false,
+                      scrollEnabled: true
+                    })
+                    this.props.passwordScreenDispatcher(false)
+                    this.props.nicknameScreenDispatcher(false)
+                    this.refs.scrollview.scrollTo({x: windowSize.width})
+                  }
+                } >
+                <Text style={{color: 'black', fontWeight: 'bold', fontSize: 18, alignSelf: 'center'}}>회원가입</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{marginTop: 20, marginLeft: 162.7, marginRight: 162.5}}
+                onPress={
+                  () => {
+                    this.setState({
+                      signUpScreen: false,
+                      signInScreen: true,
+                      scrollEnabled: true
+                    })
+                    this.props.emailPasswordScreenDispatcher(true)
+                    this.props.lostPasswordScreenDispatcher(false)
+                    this.refs.scrollview.scrollTo({x: windowSize.width})
+                  }
+                } >
+                <Text style={{textDecorationLine: 'underline', backgroundColor: 'rgba(0,0,0,0)', color: 'white', fontSize: 15, alignSelf: 'center'}}>로그인</Text>
+              </TouchableOpacity>
+            </View>
+            {this.renderSubGreetingScreen()}
+          </ScrollView>
         </View>
       </View>
     )
@@ -195,12 +235,22 @@ class GreetingScreen extends Component {
 }
 
 const mapStateToProps = (state) => {
-  return { }
+  return {
+    emailPasswordScreen: state.greeting.emailPasswordScreen,
+    lostPasswordScreen: state.greeting.lostPasswordScreen,
+
+    passwordScreen: state.greeting.passwordScreen,
+    nicknameScreen: state.greeting.nicknameScreen
+  }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    // attemptLogin: (username, password) => dispatch(LoginActions.loginRequest(username, password))
+    emailPasswordScreenDispatcher: (emailPasswordScreen) => dispatch(GreetingActions.emailPasswordScreenDispatcher(emailPasswordScreen)),
+    lostPasswordScreenDispatcher: (lostPasswordScreen) => dispatch(GreetingActions.lostPasswordScreenDispatcher(lostPasswordScreen)),
+
+    passwordScreenDispatcher: (passwordScreen) => dispatch(GreetingActions.passwordScreenDispatcher(passwordScreen)),
+    nicknameScreenDispatcher: (nicknameScreen) => dispatch(GreetingActions.nicknameScreenDispatcher(nicknameScreen))
   }
 }
 

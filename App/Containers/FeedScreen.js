@@ -1,14 +1,15 @@
 import React, { Component, PropTypes } from 'react'
 import {
   View,
-  ScrollView,
+  ListView,
   RefreshControl
 } from 'react-native'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 
+import EpisodeDetail from '../Components/common/EpisodeDetail'
 import CommentModal from '../Components/common/CommentModal'
-import FeedList from '../Components/FeedList'
+// import FeedList from '../Components/FeedList'
 import styles from './Styles/FeedScreenStyle'
 
 import AccountActions from '../Redux/AccountRedux'
@@ -49,6 +50,9 @@ class FeedScreen extends Component {
 
     this.props.requestInfo(token, accountId)
     this.props.resetCommentModal()
+
+    console.log('디드마운트')
+    console.log(this.props.items)
   }
 
   componentWillReceiveProps (nextProps) {
@@ -71,18 +75,27 @@ class FeedScreen extends Component {
   }
 
   render () {
+    console.log(this.props.items)
+    console.log(this.state.dataSource)
+    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
+    this.dataSource = ds.cloneWithRows(this.props.items.slice())
     return (
       <View style={styles.mainContainer}>
-        <ScrollView
+        <ListView
+          enableEmptySections
+          dataSource={this.dataSource}
+          renderRow={(item) =>
+            <EpisodeDetail
+              key={item.episode.id}
+              episode={item.episode}
+              account={item.account} />
+          }
           refreshControl={
             <RefreshControl
               refreshing={this.state.refreshing}
               onRefresh={this.onRefresh.bind(this)} />}
-        >
-          <FeedList
-            items={this.props.items} />
-          <View style={{height: 50}} />
-        </ScrollView>
+        />
+        <View style={{height: 50}} />
         <CommentModal
           token={this.props.token}
           contentId={this.props.contentId}
@@ -95,6 +108,33 @@ class FeedScreen extends Component {
       </View>
     )
   }
+/*
+render () {
+  return (
+    <View style={styles.mainContainer}>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={this.onRefresh.bind(this)} />}
+      >
+        <FeedList
+          items={this.props.items} />
+        <View style={{height: 50}} />
+      </ScrollView>
+      <CommentModal
+        token={this.props.token}
+        contentId={this.props.contentId}
+        episodeId={this.props.episodeId}
+        visible={this.props.visible}
+        comments={this.props.comments}
+        commentPosting={this.props.commentPosting}
+        resetCommentModal={this.props.resetCommentModal}
+        postComment={this.props.postComment} />
+    </View>
+  )
+}
+*/
 }
 
 const mapStateToProps = (state) => {
