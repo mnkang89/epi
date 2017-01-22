@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import {
   View,
+  Dimensions,
   TouchableOpacity,
   Text,
   TextInput
@@ -9,6 +10,9 @@ import { connect } from 'react-redux'
 import ConfirmError from '../../Components/common/ConfirmError'
 // import LoginActions from '../Redux/LoginRedux'
 import SignupActions from '../../Redux/SignupRedux'
+import GreetingActions from '../../Redux/GreetingRedux'
+
+const windowSize = Dimensions.get('window')
 
 class SignUpEmailScreen extends Component {
   constructor (props) {
@@ -23,12 +27,13 @@ class SignUpEmailScreen extends Component {
   }
 
   componentWillReceiveProps (newProps) {
+    console.log(newProps)
     this.forceUpdate()
-    // Did the checking attempt complete?
-    console.log('이메일 중복검사')
+    // console.log('이메일 중복검사')
     if (this.isAttempting && !newProps.checking && newProps.error === null) {
       console.log('유효한 이메일')
-      this.props.signUpEmail()
+      this.props.passwordScreenDispatcher(true)
+      this.props.scrollViewHandler.scrollTo({x: 2 * windowSize.width})
     } else if (this.isAttempting && !newProps.checking && newProps.error === 'VACANT') {
       console.log('유효하지 않은 이메일(공백)')
       this.setState({
@@ -106,8 +111,7 @@ class SignUpEmailScreen extends Component {
         </View>
         <TouchableOpacity
           style={{backgroundColor: 'rgba(255,255,255,0.9)', paddingTop: 10, paddingBottom: 10, marginTop: 22, marginLeft: 22.5, marginRight: 22.5}}
-          onPress={this.handlePressEmail.bind(this)}
-        >
+          onPress={this.handlePressEmail.bind(this)} >
           <Text style={{color: 'black', fontWeight: 'bold', fontSize: 18, alignSelf: 'center'}}>다음</Text>
         </TouchableOpacity>
       </View>
@@ -126,7 +130,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     // attemptLogin: (username, password) => dispatch(LoginActions.loginRequest(username, password))
-    checkEmail: (email) => dispatch(SignupActions.emailCheck(email))
+    checkEmail: (email) => dispatch(SignupActions.emailCheck(email)),
+    passwordScreenDispatcher: (passwordScreen) => dispatch(GreetingActions.passwordScreenDispatcher(passwordScreen))
   }
 }
 

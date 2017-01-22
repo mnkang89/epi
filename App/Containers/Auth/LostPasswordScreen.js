@@ -56,7 +56,7 @@ class LostPasswordScreen extends Component {
         <View style={{marginTop: 17, marginLeft: 23, marginRight: 45, backgroundColor: 'rgba(0,0,0,0)'}}>
           <Text style={{color: 'white', opacity: 0.9, fontSize: 16}}>회원가입시 입력한 이메일을 알려주시면 비밀번호 변경 링크를 보내드려요 😉</Text>
         </View>
-        <View style={{marginTop: 100, marginLeft: 23, marginRight: 23, paddingBottom: 7.5, borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.5)', backgroundColor: 'rgba(0,0,0,0)'}}>
+        <View style={{marginTop: 100, width: 330, alignSelf: 'center', paddingBottom: 7.5, borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.5)', backgroundColor: 'rgba(0,0,0,0)'}}>
           <TextInput
             placeholder='이메일'
             placeholderTextColor='rgba(255,255,255,0.5)'
@@ -64,10 +64,10 @@ class LostPasswordScreen extends Component {
           />
         </View>
         <TouchableOpacity
-          style={{backgroundColor: 'rgba(255,255,255,0.9)', paddingTop: 10, paddingBottom: 10, marginTop: 22, marginLeft: 22.5, marginRight: 22.5}}
+          style={{backgroundColor: 'rgba(255,255,255,0.9)', alignSelf: 'center', width: 330, paddingTop: 10, paddingBottom: 10, marginTop: 22}}
           onPress={
             () => {
-              this.props.sendPassword()
+              this.props.scrollViewHandler.scrollTo({x: 0})
             }
           } >
           <Text style={{color: 'black', fontWeight: 'bold', fontSize: 18, alignSelf: 'center'}}>임시비밀번호 전송</Text>

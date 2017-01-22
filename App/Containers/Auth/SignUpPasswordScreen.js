@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import {
   View,
+  Dimensions,
   TouchableOpacity,
   Text,
   TextInput
@@ -10,6 +11,9 @@ import { connect } from 'react-redux'
 import ConfirmError from '../../Components/common/ConfirmError'
 
 import SignupActions from '../../Redux/SignupRedux'
+import GreetingActions from '../../Redux/GreetingRedux'
+
+const windowSize = Dimensions.get('window')
 
 class SignUpPasswordScreen extends Component {
   constructor (props) {
@@ -29,14 +33,12 @@ class SignUpPasswordScreen extends Component {
     // const { email, password } = newProps
     this.forceUpdate()
 
-    // TODO
-    console.log(newProps)
-
-    // Did the checking attempt complete?
-    // TODO: this.isAttempting 존재유무 결정
     console.log('패스워드 중복검사')
     if (this.isAttempting && !newProps.checking && newProps.error === null && newProps.attempting) {
       console.log('유효한 비밀번호')
+      this.props.passwordScreenDispatcher(false)
+      this.props.nicknameScreenDispatcher(true)
+      this.props.scrollViewHandler.scrollTo({x: 3 * windowSize.width})
     } else if (this.isAttempting && !newProps.checking && newProps.error === 'VACANT') {
       console.log('유효하지 않은 비밀번호(공백)')
       this.setState({
@@ -60,7 +62,7 @@ class SignUpPasswordScreen extends Component {
       })
     } else if (!newProps.attempting && newProps.attemptingerror === null) {
       console.log('유효한 회원가입')
-      this.props.signUpPassword()
+      // this.props.signUpPassword()
     } else if (!newProps.attempting && newProps.attemptingerror === 'WRONG') {
       console.log('유효하지 않은 회원가입')
     }
@@ -170,8 +172,9 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     // attemptLogin: (username, password) => dispatch(LoginActions.loginRequest(username, password))
-    checkPassword: (email, password, passwordCheck) => dispatch(SignupActions.passwordRequest(email, password, passwordCheck))
-    // requestSignup: (email, password) => dispatch(SignupActions.signupRequest(email, password))
+    checkPassword: (email, password, passwordCheck) => dispatch(SignupActions.passwordRequest(email, password, passwordCheck)),
+    nicknameScreenDispatcher: (nicknameScreen) => dispatch(GreetingActions.nicknameScreenDispatcher(nicknameScreen)),
+    passwordScreenDispatcher: (passwordScreen) => dispatch(GreetingActions.passwordScreenDispatcher(passwordScreen))
   }
 }
 

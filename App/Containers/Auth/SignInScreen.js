@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import {
   View,
+  Dimensions,
   TouchableOpacity,
   Text,
   TextInput
@@ -13,6 +14,9 @@ import ConfirmError from '../../Components/common/ConfirmError'
 import LoginActions from '../../Redux/LoginRedux'
 import EpisodeActions from '../../Redux/EpisodeRedux'
 import FeedActions from '../../Redux/FeedRedux'
+import GreetingActions from '../../Redux/GreetingRedux'
+
+const windowSize = Dimensions.get('window')
 
 class SignInScreen extends Component {
   constructor (props) {
@@ -162,13 +166,21 @@ class SignInScreen extends Component {
         </View>
         <TouchableOpacity
           style={{backgroundColor: 'rgba(255,255,255,0.9)', paddingTop: 10, paddingBottom: 10, marginTop: 22, marginLeft: 22.5, marginRight: 22.5}}
-          onPress={this.handlePressLogin} >
+          onPress={
+            () => {
+              this.handlePressLogin()
+            }
+          } >
           <Text style={{color: 'black', fontWeight: 'bold', fontSize: 18, alignSelf: 'center'}}>로그인</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={{marginTop: 20, marginLeft: 60, marginRight: 62, backgroundColor: 'rgba(0,0,0,0)'}}
-          onPress={() => { this.props.lostPassword() }
+          onPress={() => {
+            this.props.lostPasswordScreenDispatcher(true)
+            this.props.emailPasswordScreenDispatcher(false)
+            this.props.scrollViewHandler.scrollTo({x: 2 * windowSize.width})
+          }
         } >
           <Text style={{textDecorationLine: 'underline', color: 'white', fontSize: 15, alignSelf: 'center'}}>비밀번호를 잊어버렸어요</Text>
         </TouchableOpacity>
@@ -191,7 +203,10 @@ const mapDispatchToProps = (dispatch) => {
   return {
     attemptLogin: (email, password) => dispatch(LoginActions.loginRequest(email, password)),
     requestUserEpisodes: (token, accountId, active) => dispatch(EpisodeActions.userEpisodesRequest(token, accountId, active)),
-    requestBestFeeds: (token) => dispatch(FeedActions.bestFeedsRequest(token))
+    requestBestFeeds: (token) => dispatch(FeedActions.bestFeedsRequest(token)),
+
+    emailPasswordScreenDispatcher: (emailPasswordScreen) => dispatch(GreetingActions.emailPasswordScreenDispatcher(emailPasswordScreen)),
+    lostPasswordScreenDispatcher: (lostPasswordScreen) => dispatch(GreetingActions.lostPasswordScreenDispatcher(lostPasswordScreen))
   }
 }
 

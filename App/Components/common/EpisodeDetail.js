@@ -145,7 +145,11 @@ class EpisodeDetail extends Component {
           style={{paddingLeft: 7.5, paddingRight: 7.5}}
           contentOffset={{x: xPosition, y: 0}}
           onScroll={this.handleScroll.bind(this)}
-          scrollEventThrottle={5000}
+          onScrollBeginDrag={() => console.log('onScrollBeginDrag')}
+          onScrollEndDrag={() => console.log('onScrollEndDrag')}
+          onMomentumScrollBegin={() => console.log('onMomentumScrollBegin')}
+          onMomentumScrollEnd={() => console.log('onMomentumScrollEnd')}
+          scrollEventThrottle={10}
           horizontal
           snapToAlignment={'start'}
           snapToInterval={353}
