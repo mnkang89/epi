@@ -8,7 +8,7 @@ import TabIcon from '../Components/common/TabIcon'
 import { connect } from 'react-redux'
 
 // episode
-import GreetingScreen from '../Containers/Auth/GreetingScreen2'
+import GreetingScreen from '../Containers/Auth/GreetingScreen'
 
 import FeedScreen from '../Containers/FeedScreen'
 import NotiScreen from '../Containers/NotiScreen'

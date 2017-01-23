@@ -6,7 +6,7 @@ const renderTexts = (TextArray) => {
 }
 
 const renderConfirm = (confirmStyle = 'confirm', onAccept, onSetting = null, AcceptText = '확인해', SettingText = '설정') => {
-  console.log(AcceptText)
+  // console.log(AcceptText)
 
   if (confirmStyle === 'confirm') {
     return (

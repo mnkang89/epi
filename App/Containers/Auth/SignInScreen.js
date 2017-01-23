@@ -177,9 +177,9 @@ class SignInScreen extends Component {
         <TouchableOpacity
           style={{marginTop: 20, marginLeft: 60, marginRight: 62, backgroundColor: 'rgba(0,0,0,0)'}}
           onPress={() => {
+            this.props.scrollViewHandler.scrollTo({x: 2 * windowSize.width})
             this.props.lostPasswordScreenDispatcher(true)
             this.props.emailPasswordScreenDispatcher(false)
-            this.props.scrollViewHandler.scrollTo({x: 2 * windowSize.width})
           }
         } >
           <Text style={{textDecorationLine: 'underline', color: 'white', fontSize: 15, alignSelf: 'center'}}>비밀번호를 잊어버렸어요</Text>

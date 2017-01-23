@@ -36,9 +36,9 @@ class SignUpPasswordScreen extends Component {
     console.log('패스워드 중복검사')
     if (this.isAttempting && !newProps.checking && newProps.error === null && newProps.attempting) {
       console.log('유효한 비밀번호')
+      this.props.scrollViewHandler.scrollTo({x: 3 * windowSize.width})
       this.props.passwordScreenDispatcher(false)
       this.props.nicknameScreenDispatcher(true)
-      this.props.scrollViewHandler.scrollTo({x: 3 * windowSize.width})
     } else if (this.isAttempting && !newProps.checking && newProps.error === 'VACANT') {
       console.log('유효하지 않은 비밀번호(공백)')
       this.setState({
