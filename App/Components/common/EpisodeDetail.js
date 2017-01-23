@@ -148,6 +148,8 @@ class EpisodeDetail extends Component {
         </View>
 
         <ListView
+          removeClippedSubviews
+          pageSize={2}
           style={{paddingLeft: 7.5, paddingRight: 7.5}}
           contentOffset={{x: xPosition, y: 0}}
           onScroll={this.handleScroll.bind(this)}

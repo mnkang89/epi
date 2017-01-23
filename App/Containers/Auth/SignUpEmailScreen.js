@@ -32,8 +32,8 @@ class SignUpEmailScreen extends Component {
     // console.log('이메일 중복검사')
     if (this.isAttempting && !newProps.checking && newProps.error === null) {
       console.log('유효한 이메일')
-      this.props.passwordScreenDispatcher(true)
       this.props.scrollViewHandler.scrollTo({x: 2 * windowSize.width})
+      this.props.passwordScreenDispatcher(true)
     } else if (this.isAttempting && !newProps.checking && newProps.error === 'VACANT') {
       console.log('유효하지 않은 이메일(공백)')
       this.setState({

@@ -82,6 +82,8 @@ class FeedScreen extends Component {
     return (
       <View style={styles.mainContainer}>
         <ListView
+          removeClippedSubviews
+          pageSize={2}
           enableEmptySections
           dataSource={this.dataSource}
           renderRow={(item) =>

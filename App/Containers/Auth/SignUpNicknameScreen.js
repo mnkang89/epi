@@ -92,42 +92,48 @@ class SignUpNicknameScreen extends Component {
       confirmStyle: 'confirm'
     })
 
-    Permissions.requestPermission('photo', 'always')
-      .then(response => {
-        // 사진 라이브러리 가서 사진 가저오는 로직
-        ImagePickerIOS.openSelectDialog(
-          {},
-          (data) => {
-            console.log('사진선택')
-            this.setState({
-              photoFlag: true,
-              photoSource: data
-            })
-          },
-          () => {
-            console.log('에러')
-            this.setState({
-              photoFlag: false
-            })
-            console.log('User canceled the action')
-          }
-        )
-      })
+    Permissions.openSettings()
   }
 
   getProfileImage () {
     Permissions.getPermissionStatus('photo')
       .then(response => {
-        // response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
-        // this.setState({ photoPermission: response })
         console.log(response)
         if (response === 'undetermined') {
-          Permissions.requestPermission('photo').then(response => {
-            // returns once the user has chosen to 'allow' or to 'not allow' access
-            // response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
-            console.log(response)
-            Permissions.openSettings()
-          })
+          ImagePickerIOS.openSelectDialog(
+            { },
+            (data) => {
+              console.log('사진선택')
+              this.setState({
+                photoFlag: true,
+                photoSource: data
+              })
+            },
+            () => {
+              console.log('에러')
+              this.setState({
+                photoFlag: false
+              })
+              Permissions.getPermissionStatus('photo')
+                .then(response => {
+                  if (response === 'denied') {
+                    console.log(response)
+                    this.setState({
+                      alertVisible: true,
+                      alertTextArray: ['설정에서 ‘사진’ 접근권한을', '허용해주세요.'],
+                      confirmStyle: 'setting'
+                    })
+                  } else if (response === 'undetermined') {
+                    console.log(response)
+                    this.setState({
+                      alertVisible: true,
+                      alertTextArray: ['설정에서 ‘사진’ 접근권한을', '허용해주세요.'],
+                      confirmStyle: 'setting'
+                    })
+                  }
+                })
+            }
+          )
         } else if (response === 'denied') {
           this.setState({
             alertVisible: true,
@@ -159,7 +165,6 @@ class SignUpNicknameScreen extends Component {
 
   renderProfileImage () {
     if (this.state.photoFlag) {
-      console.log('가저온사진')
       return (
         <Image source={{uri: this.state.photoSource}} style={{
           height: 99,
@@ -168,9 +173,19 @@ class SignUpNicknameScreen extends Component {
           alignSelf: 'center'}} />
       )
     } else {
-      return (
-        <Image source={Images.profileIcon} style={{alignSelf: 'center'}} />
-      )
+      if (this.state.photoSource === '') {
+        return (
+          <Image source={Images.profileIcon} style={{alignSelf: 'center'}} />
+        )
+      } else {
+        return (
+          <Image source={{uri: this.state.photoSource}} style={{
+            height: 99,
+            width: 99,
+            borderRadius: 49.5,
+            alignSelf: 'center'}} />
+        )
+      }
     }
   }
 
@@ -185,6 +200,8 @@ class SignUpNicknameScreen extends Component {
           confirmStyle={this.state.confirmStyle}
           visible={this.state.alertVisible}
           TextArray={this.state.alertTextArray}
+          AcceptText={'확인'}
+          SettingText={'설정'}
           onAccept={this.onDecline.bind(this)}
           onSetting={this.onSetting.bind(this)} />
         <View style={{marginLeft: 21, marginRight: 70.5, marginBottom: 0, backgroundColor: 'rgba(0,0,0,0)'}}>

@@ -180,7 +180,7 @@ class ContentDetailClass extends Component {
             delayLongPress={800}
             onPress={this.onDoublePress.bind(this)}
             onLongPress={this.onLongPress.bind(this)} >
-            <View style={{height: 345, width: 345}}>
+            <View style={{height: 345, width: 345, overflow: 'hidden'}}>
               <Video
                 source={{uri: content.path}}   // Can be a URL or a local file.
                 muted
@@ -226,7 +226,7 @@ class ContentDetailClass extends Component {
     const content = this.props.content
 
     return (
-      <View>
+      <View style={{overflow: 'hidden'}} >
         {this.renderContent(content)}
       </View>
     )
@@ -235,6 +235,7 @@ class ContentDetailClass extends Component {
 
 const styles = {
   imageStyle: {
+    overflow: 'hidden',
     height: 345,
     width: 345
   }

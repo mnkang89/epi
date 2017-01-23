@@ -66,9 +66,9 @@ class GreetingScreen extends Component {
         !this.props.lostPasswordScreen &&
         direction === 'left') {
       console.log('사인인에서 첫화면으로')
+      this.refs.scrollview.scrollTo({x: 0})
       this.setState({ scrollEnabled: false })
       this.props.emailPasswordScreenDispatcher(false)
-      this.refs.scrollview.scrollTo({x: 0})
     } else if (this.state.signInScreen &&
         this.props.emailPasswordScreen &&
         !this.props.lostPasswordScreen &&
@@ -79,17 +79,16 @@ class GreetingScreen extends Component {
       !this.props.emailPasswordScreen &&
       direction === 'left') {
       console.log('로스트패스워드에서 사인인으로')
+      this.refs.scrollview.scrollTo({x: windowSize.width})
       this.props.emailPasswordScreenDispatcher(true)
       this.props.lostPasswordScreenDispatcher(false)
-      this.refs.scrollview.scrollTo({x: windowSize.width})
     } else if (this.state.signUpScreen &&
         !this.props.passwordScreen &&
         !this.props.nicknameScreen &&
         direction === 'left') {
-      console.log(this.props)
       console.log('사인업에서 첫화면으로')
-      this.setState({ scrollEnabled: false })
       this.refs.scrollview.scrollTo({x: 0})
+      this.setState({ scrollEnabled: false })
     } else if (this.state.signUpScreen &&
         !this.props.passwordScreen &&
         !this.props.nicknameScreen &&
@@ -100,8 +99,8 @@ class GreetingScreen extends Component {
         !this.props.nicknameScreen &&
         direction === 'left') {
       console.log('패스워드에서 사인업으로')
-      this.props.passwordScreenDispatcher(false)
       this.refs.scrollview.scrollTo({x: windowSize.width})
+      this.props.passwordScreenDispatcher(false)
     } else if (this.props.passwordScreen &&
         !this.props.nicknameScreen &&
         direction === 'right') {
@@ -165,7 +164,7 @@ class GreetingScreen extends Component {
           }}                             // Store reference
           paused={false}                 // Pauses playback entirely.
           resizeMode='cover'             // Fill the whole screen at aspect ratio.
-          repeat={false}                 // Repeat forever.
+          repeat                         // Repeat forever.
           playInBackground={false}       // Audio continues to play when app entering background.
           playWhenInactive               // [iOS] Video continues to play when control or notification center are shown.
           progressUpdateInterval={250.0} // [iOS] Interval to fire onProgress (default to ~250ms)
