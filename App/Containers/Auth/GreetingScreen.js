@@ -10,11 +10,11 @@ import {
   Dimensions
 } from 'react-native'
 import { connect } from 'react-redux'
+import { Actions as NavigationActions } from 'react-native-router-flux'
 import Video from 'react-native-video'
 
-// import { Actions as NavigationActions } from 'react-native-router-flux'
-
 import { Videos } from '../../Themes'
+import ConfirmError from '../../Components/common/ConfirmError'
 
 import SignInScreen from './SignInScreen'
 import LostPasswordScreen from './LostPasswordScreen'
@@ -23,6 +23,10 @@ import SignUpPasswordScreen from './SignUpPasswordScreen'
 import SignUpNicknameScreen from './SignUpNicknameScreen'
 
 import GreetingActions from '../../Redux/GreetingRedux'
+import SignupActions from '../../Redux/SignupRedux'
+
+import EpisodeActions from '../../Redux/EpisodeRedux'
+import LoginActions from '../../Redux/LoginRedux'
 
 const windowSize = Dimensions.get('window')
 
@@ -32,21 +36,214 @@ class GreetingScreen extends Component {
     super(props)
     this.state = {
       firstScreen: true,
+      signUpScreen: true,
       signInScreen: false,
       lostPasswordScreen: false,
-      signUpScreen: false,
       passwordScreen: false,
       nicknameScreen: false,
 
       scrollViewXposition: 0,
       scrollEnabled: false,
-      direction: null
+      direction: null,
+
+      // confirm
+      alertVisible: false,
+      alertTextArray: []
+    }
+
+    this.isSignUpEmailChecking = false
+    this.isSignUpPasswordChecking = false
+    this.isSignUpNicknameChecking = false
+    this.isSignInAttempting = false
+  }
+
+  shouldComponentUpdate (nextProps, nextState) {
+    if (nextState.scrollViewXposition !== this.state.scrollViewXposition) {
+      return false
+    }
+    return true
+  }
+
+  componentWillReceiveProps (newProps) {
+    // this.forceUpdate()
+    if (this.isSignUpEmailChecking) {
+      console.log('email Receive')
+      console.log(newProps)
+      if (!newProps.signUpChecking && newProps.signUpError === null) {
+        console.log('유효한 이메일')
+        this.handleSignUpEmailChecking()
+
+        this.props.passwordScreenDispatcher(true)
+        this.refs.scrollview.scrollTo({x: 2 * windowSize.width})
+      } else if (!newProps.signUpChecking && newProps.signUpError === 'VACANT') {
+        console.log('유효하지 않은 이메일(공백)')
+        this.handleSignUpEmailChecking()
+
+        this.setState({
+          error: newProps.signUpError,
+          alertVisible: true,
+          alertTextArray: ['이메일을 입력해주세요.']
+        })
+      } else if (!newProps.signUpChecking && newProps.signUpError === 'DUPLICATED') {
+        console.log('유효하지 않은 이메일(중복)')
+        this.handleSignUpEmailChecking()
+
+        this.setState({
+          error: newProps.signUpError,
+          alertVisible: true,
+          alertTextArray: ['이미 사용 중인 이메일입니다.', '다시 한 번 확인해주세요.']
+        })
+      } else if (!newProps.signUpChecking && newProps.signUpError === 'INVALID_FORMAT') {
+        console.log('유효하지 않은 이메일(이메일 형식)')
+        this.handleSignUpEmailChecking()
+
+        this.setState({
+          error: newProps.signUpError,
+          alertVisible: true,
+          alertTextArray: ['이메일 형식이 맞지 않습니다.', '다시 한 번 확인해주세요.']
+        })
+      }
+    } else if (this.isSignUpPasswordChecking) {
+      if (!newProps.signUpChecking && newProps.signUpError === null && newProps.attempting) {
+        console.log('유효한 비밀번호')
+      } else if (!newProps.signUpChecking && newProps.signUpError === 'VACANT') {
+        console.log('유효하지 않은 비밀번호(공백)')
+        this.handleSignUpPasswordChecking()
+
+        this.setState({
+          error: newProps.signUpError,
+          alertVisible: true,
+          alertTextArray: ['비밀번호를 입력해주세요.']
+        })
+        this.handleSignUpPasswordChecking()
+      } else if (!newProps.signUpChecking && newProps.signUpError === 'NOT_MATCH') {
+        console.log('유효하지 않은 비밀번호(불일치)')
+        this.handleSignUpPasswordChecking()
+
+        this.setState({
+          error: newProps.signUpError,
+          alertVisible: true,
+          alertTextArray: ['비밀번호가 일치하지 않습니다.']
+        })
+      } else if (!newProps.signUpChecking && newProps.signUpError === 'INVALID_FORMAT') {
+        console.log('유효하지 않은 비밀번호(비밀번호 형식)')
+        this.handleSignUpPasswordChecking()
+
+        this.setState({
+          error: newProps.signUpError,
+          alertVisible: true,
+          alertTextArray: ['비밀번호를 다시 한 번', '확인해주세요.']
+        })
+      } else if (!newProps.attempting && newProps.attemptingerror === null) {
+        console.log('유효한 회원가입')
+        this.handleSignUpPasswordChecking()
+        this.props.passwordScreenDispatcher(false)
+        this.props.nicknameScreenDispatcher(true)
+
+        this.refs.scrollview.scrollTo({x: 3 * windowSize.width})
+      } else if (!newProps.attempting && newProps.attemptingerror === 'WRONG') {
+        console.log('유효하지 않은 회원가입')
+        this.handleSignUpPasswordChecking()
+      }
+    } else if (this.isSignUpNicknameChecking) {
+      console.log('닉네임 중복검사')
+      if (!newProps.signUpChecking && newProps.signUpError === null) {
+        console.log('유효한 닉네임')
+        this.handleSignUpNicknameChecking()
+        NavigationActions.root()
+      } else if (!newProps.signUpChecking && newProps.signUpError === 'VACANT') {
+        console.log('유효하지 않은 닉네임(공백)')
+        this.handleSignUpNicknameChecking()
+        this.setState({
+          error: newProps.signUpError,
+          alertVisible: true,
+          alertTextArray: ['이름을 입력해주세요.']
+        })
+      } else if (!newProps.signUpChecking && newProps.signUpError === 'DUPLICATED') {
+        console.log('유효하지 않은 닉네임(중복)')
+        this.handleSignUpNicknameChecking()
+        this.setState({
+          error: newProps.signUpError,
+          alertVisible: true,
+          alertTextArray: ['이미 사용 중인 이름입니다.', '다른 이름을 사용해주세요.']
+        })
+      } else if (!newProps.signUpChecking && newProps.signUpError === 'INVALID_FORMAT') {
+        console.log('유효하지 않은 닉네임(닉네임 형식)')
+        this.handleSignUpNicknameChecking()
+        this.setState({
+          error: newProps.signUpError,
+          alertVisible: true,
+          alertTextArray: ['한글과 영문대소문자 숫자만', '사용 가능합니다.', '다시 한번 확인해주세요.']
+        })
+      }
+    } else if (this.isSignInAttempting) {
+      console.log('로그인 시도')
+      if (!newProps.fetching && newProps.signInError === null) {
+        console.log('로그인 성공')
+        const { token, accountId } = this.props
+        const withFollowing = true
+
+        this.props.requestUserEpisodes(token, accountId, withFollowing)
+        NavigationActions.root()
+      } else if (!newProps.fetching && newProps.signInError === 'INVALID_FORMAT') {
+        console.log('유효하지 않은 형식')
+        this.setState({
+          error: newProps.signInError,
+          alertVisible: true,
+          alertTextArray: ['이메일 혹은 비밀번호가', '바르지 않습니다.', '다시 한 번 확인해주세요.']
+        })
+      } else if (!newProps.fetching && newProps.signInError === 'VACANT_EMAIL') {
+        console.log('이메일을 입력해주세요')
+        this.setState({
+          error: newProps.signInError,
+          alertVisible: true,
+          alertTextArray: ['이메일을 입력해주세요.']
+        })
+      } else if (!newProps.fetching && newProps.signInError === 'VACANT_PASSWORD') {
+        console.log('비밀번호를 입력해주세요')
+        this.setState({
+          error: newProps.signInError,
+          alertVisible: true,
+          alertTextArray: ['비밀번호를 입력해주세요.']
+        })
+      } else if (!newProps.fetching && newProps.signInError === 'INVALID_EMAIL') {
+        console.log('유효하지 않은 이메일')
+        this.setState({
+          error: newProps.signInError,
+          alertVisible: true,
+          alertTextArray: ['이메일 혹은 비밀번호가', '바르지 않습니다.', '다시 한 번 확인해주세요.']
+        })
+      } else if (!newProps.fetching && newProps.signInError === 'INVALID_PASSWORD') {
+        console.log('유효하지 않은 비밀번호')
+        this.setState({
+          error: newProps.signInError,
+          alertVisible: true,
+          alertTextArray: ['이메일 혹은 비밀번호가', '바르지 않습니다.', '다시 한 번 확인해주세요.']
+        })
+      }
     }
   }
 
-  componentDidMount () {
-    this.props.passwordScreenDispatcher(false)
-    this.props.nicknameScreenDispatcher(false)
+  handleSignUpEmailChecking () {
+    this.isSignUpEmailChecking = !this.isSignUpEmailChecking
+  }
+
+  handleSignUpPasswordChecking () {
+    this.isSignUpPasswordChecking = !this.isSignUpPasswordChecking
+  }
+
+  handleSignUpNicknameChecking () {
+    this.isSignUpNicknameChecking = !this.isSignUpNicknameChecking
+  }
+  handleSignInAttempting () {
+    this.isSignInAttempting = !this.isSignInAttempting
+  }
+
+  onDecline () {
+    this.setState({
+      alertVisible: false,
+      alertTextArray: []
+    })
   }
 
   handleScroll (event) {
@@ -130,7 +327,13 @@ class GreetingScreen extends Component {
       return (
         [
           <View key='1' style={{width: windowSize.width, alignItems: 'center'}}>
-            <SignInScreen scrollViewHandler={this.refs.scrollview} />
+            <SignInScreen
+              handler={this.handleSignInAttempting.bind(this)}
+              fetching={this.props.fetching}
+              scrollViewHandler={this.refs.scrollview}
+              lostPasswordScreenDispatcher={this.props.lostPasswordScreenDispatcher}
+              emailPasswordScreenDispatcher={this.props.emailPasswordScreenDispatcher}
+              attemptLogin={this.props.attemptLogin} />
           </View>,
           <View key='2' style={{width: windowSize.width, alignItems: 'center'}}>
             <LostPasswordScreen scrollViewHandler={this.refs.scrollview} />
@@ -141,13 +344,26 @@ class GreetingScreen extends Component {
       return (
         [
           <View key='3' style={{width: windowSize.width, alignItems: 'center'}}>
-            <SignUpEmailScreen scrollViewHandler={this.refs.scrollview} />
+            <SignUpEmailScreen
+              handler={this.handleSignUpEmailChecking.bind(this)}
+              checking={this.props.signUpChecking}
+              checkEmail={this.props.checkEmail} />
           </View>,
           <View key='4' style={{width: windowSize.width, alignItems: 'center'}}>
-            <SignUpPasswordScreen scrollViewHandler={this.refs.scrollview} />
+            <SignUpPasswordScreen
+              handler={this.handleSignUpPasswordChecking.bind(this)}
+              email={this.props.email}
+              checking={this.props.signUpChecking}
+              checkPassword={this.props.checkPassword} />
           </View>,
           <View key='5' style={{width: windowSize.width, alignItems: 'center'}}>
-            <SignUpNicknameScreen scrollViewHandler={this.refs.scrollview} />
+            <SignUpNicknameScreen
+              handler={this.handleSignUpNicknameChecking.bind(this)}
+              checking={this.props.signUpChecking}
+              token={this.props.token}
+              accountId={this.props.accountId}
+              checkNickname={this.props.checkNickname}
+              requestProfileImage={this.props.requestProfileImage} />
           </View>
         ]
       )
@@ -157,6 +373,10 @@ class GreetingScreen extends Component {
   render () {
     return (
       <View style={{flex: 1}}>
+        <ConfirmError
+          visible={this.state.alertVisible}
+          TextArray={this.state.alertTextArray}
+          onAccept={this.onDecline.bind(this)} />
         <Video source={Videos.backgroundVideo2}   // Can be a URL or a local file.
           muted
           ref={(ref) => {
@@ -232,14 +452,27 @@ class GreetingScreen extends Component {
     )
   }
 }
-
+// {this.renderSubGreetingScreen()}
 const mapStateToProps = (state) => {
   return {
     emailPasswordScreen: state.greeting.emailPasswordScreen,
     lostPasswordScreen: state.greeting.lostPasswordScreen,
 
     passwordScreen: state.greeting.passwordScreen,
-    nicknameScreen: state.greeting.nicknameScreen
+    nicknameScreen: state.greeting.nicknameScreen,
+
+    token: state.token.token,
+    accountId: state.token.id,
+
+    email: state.signup.email,
+    signUpChecking: state.signup.checking,
+    signUpError: state.signup.error,
+
+    attempting: state.signup.attempting,
+    attemptingerror: state.signup.attemptingerror,
+
+    fetching: state.login.fetching,
+    signInError: state.login.error
   }
 }
 
@@ -249,7 +482,16 @@ const mapDispatchToProps = (dispatch) => {
     lostPasswordScreenDispatcher: (lostPasswordScreen) => dispatch(GreetingActions.lostPasswordScreenDispatcher(lostPasswordScreen)),
 
     passwordScreenDispatcher: (passwordScreen) => dispatch(GreetingActions.passwordScreenDispatcher(passwordScreen)),
-    nicknameScreenDispatcher: (nicknameScreen) => dispatch(GreetingActions.nicknameScreenDispatcher(nicknameScreen))
+    nicknameScreenDispatcher: (nicknameScreen) => dispatch(GreetingActions.nicknameScreenDispatcher(nicknameScreen)),
+
+    checkEmail: (email) => dispatch(SignupActions.emailCheck(email)),
+    checkPassword: (email, password, passwordCheck) => dispatch(SignupActions.passwordRequest(email, password, passwordCheck)),
+    checkNickname: (nickname, token, accountId) => dispatch(SignupActions.nicknameCheck(nickname, token, accountId)),
+
+    requestProfileImage: (photoSource, token, accountId) => dispatch(SignupActions.profileRequest(photoSource, token, accountId)),
+
+    requestUserEpisodes: (token, accountId, active) => dispatch(EpisodeActions.userEpisodesRequest(token, accountId, active)),
+    attemptLogin: (email, password) => dispatch(LoginActions.loginRequest(email, password))
   }
 }
 

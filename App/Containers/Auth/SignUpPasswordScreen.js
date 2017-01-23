@@ -1,36 +1,50 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import {
   View,
-  Dimensions,
+  // Dimensions,
   TouchableOpacity,
   Text,
   TextInput
 } from 'react-native'
-import { connect } from 'react-redux'
+// import { connect } from 'react-redux'
 
-import ConfirmError from '../../Components/common/ConfirmError'
+// import ConfirmError from '../../Components/common/ConfirmError'
 
-import SignupActions from '../../Redux/SignupRedux'
-import GreetingActions from '../../Redux/GreetingRedux'
+// import SignupActions from '../../Redux/SignupRedux'
+// import GreetingActions from '../../Redux/GreetingRedux'
 
-const windowSize = Dimensions.get('window')
+// const windowSize = Dimensions.get('window')
 
 class SignUpPasswordScreen extends Component {
+  static propTypes = {
+    email: PropTypes.string,
+    checking: PropTypes.bool,
+
+    checkPassword: PropTypes.func,
+    handler: PropTypes.func
+  }
+
   constructor (props) {
     super(props)
     this.state = {
       password: '',
-      passwordCheck: '',
-      passwordEdit: false,
-      error: '',
-      alertVisible: false,
-      alertTextArray: []
+      passwordCheck: ''
+      // alertVisible: false,
+      // alertTextArray: []
     }
     this.isAttempting = false
   }
 
+  shouldComponentUpdate (nextProps, nextState) {
+    if (nextState.password !== this.state.password ||
+      nextState.passwordCheck !== this.state.passwordCheck) {
+      return false
+    }
+    return true
+  }
+/*
   componentWillReceiveProps (newProps) {
-    // const { email, password } = newProps
+    // const { email } = newProps
     this.forceUpdate()
 
     console.log('패스워드 중복검사')
@@ -67,14 +81,9 @@ class SignUpPasswordScreen extends Component {
       console.log('유효하지 않은 회원가입')
     }
   }
-
+*/
   handleChangePassword = (text) => {
     this.setState({ password: text })
-    if (this.state.password === '') {
-      this.setState({passwordEdit: false})
-    } else {
-      this.setState({passwordEdit: true})
-    }
   }
 
   handleChangePasswordCheck = (text) => {
@@ -84,29 +93,28 @@ class SignUpPasswordScreen extends Component {
   handlePressPassword () {
     const { email } = this.props
     const { password, passwordCheck } = this.state
-    this.isAttempting = true
-    // attempt to check email - a saga is listening to pick it up from here.
+    // this.isAttempting = true
+    // REFAC 여기서 핸들러콜
+    this.props.handler()
+
     this.props.checkPassword(email, password, passwordCheck)
   }
 
+/* REFAC
   onDecline () {
     this.setState({
       alertVisible: false,
       alertTextArray: []
     })
   }
+REFAC */
 
   render () {
-    const { password, passwordCheck } = this.state
     const { checking } = this.props
     const editable = !checking
 
     return (
       <View style={{marginTop: 44, backgroundColor: 'rgba(0,0,0,0)'}}>
-        <ConfirmError
-          visible={this.state.alertVisible}
-          TextArray={this.state.alertTextArray}
-          onAccept={this.onDecline.bind(this)} />
         <View style={{marginLeft: 21, marginRight: 70.5, marginBottom: 0, backgroundColor: 'rgba(0,0,0,0)'}}>
           <Text style={{color: 'white', opacity: 0.9, fontWeight: 'bold', fontSize: 60, marginBottom: 0}}>반가워요!</Text>
         </View>
@@ -116,7 +124,6 @@ class SignUpPasswordScreen extends Component {
         <View style={{marginTop: 57, marginLeft: 23, marginRight: 23, paddingBottom: 7.5, borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.9)', backgroundColor: 'rgba(0,0,0,0)'}}>
           <TextInput
             ref='password'
-            value={password}
             editable={editable}
             secureTextEntry
             keyboardType='default'
@@ -133,7 +140,6 @@ class SignUpPasswordScreen extends Component {
         <View style={{marginTop: 23, marginLeft: 23, marginRight: 23, paddingBottom: 7.5, borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.9)', backgroundColor: 'rgba(0,0,0,0)'}}>
           <TextInput
             ref='passwordCheck'
-            value={passwordCheck}
             editable={editable}
             secureTextEntry
             keyboardType='default'
@@ -158,24 +164,25 @@ class SignUpPasswordScreen extends Component {
   }
 }
 
+/*
 const mapStateToProps = (state) => {
   return {
     email: state.signup.email,
-    password: state.signup.password,
     checking: state.signup.checking,
+
     attempting: state.signup.attempting,
-    error: state.signup.error,
-    attemptingerror: state.signup.attemptingerror
+    attemptingerror: state.signup.attemptingerror,
+    error: state.signup.error
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    // attemptLogin: (username, password) => dispatch(LoginActions.loginRequest(username, password))
     checkPassword: (email, password, passwordCheck) => dispatch(SignupActions.passwordRequest(email, password, passwordCheck)),
     nicknameScreenDispatcher: (nicknameScreen) => dispatch(GreetingActions.nicknameScreenDispatcher(nicknameScreen)),
     passwordScreenDispatcher: (passwordScreen) => dispatch(GreetingActions.passwordScreenDispatcher(passwordScreen))
   }
 }
+*/
 
-export default connect(mapStateToProps, mapDispatchToProps)(SignUpPasswordScreen)
+export default SignUpPasswordScreen

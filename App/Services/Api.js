@@ -105,7 +105,7 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     formData.append('withFollowing', withFollowing)
     api.setHeader('x-auth', token)
 
-    return api.get(`/api/feeds?withFollowing=${withFollowing}&size=20`)
+    return api.get(`/api/feeds?withFollowing=${withFollowing}&size=7`)
   }
 
   const requestOtherFeeds = (token, accountId, active) => {

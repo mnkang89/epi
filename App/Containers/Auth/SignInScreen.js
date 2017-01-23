@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import {
   View,
   Dimensions,
@@ -6,30 +6,40 @@ import {
   Text,
   TextInput
 } from 'react-native'
-import { connect } from 'react-redux'
-import { Actions as NavigationActions } from 'react-native-router-flux'
+// import { connect } from 'react-redux'
+// import { Actions as NavigationActions } from 'react-native-router-flux'
 
-import ConfirmError from '../../Components/common/ConfirmError'
+// import ConfirmError from '../../Components/common/ConfirmError'
 
-import LoginActions from '../../Redux/LoginRedux'
-import EpisodeActions from '../../Redux/EpisodeRedux'
-import FeedActions from '../../Redux/FeedRedux'
-import GreetingActions from '../../Redux/GreetingRedux'
+// import LoginActions from '../../Redux/LoginRedux'
+// import EpisodeActions from '../../Redux/EpisodeRedux'
+// import GreetingActions from '../../Redux/GreetingRedux'
 
 const windowSize = Dimensions.get('window')
 
 class SignInScreen extends Component {
+  static propTypes = {
+    fetching: PropTypes.bool,
+
+    scrollViewHandler: PropTypes.object,
+    lostPasswordScreenDispatcher: PropTypes.func,
+    emailPasswordScreenDispatcher: PropTypes.func,
+    attemptLogin: PropTypes.func,
+    handler: PropTypes.func
+  }
+
   constructor (props) {
     super(props)
     this.state = {
       email: '',
-      password: '',
-      alertVisible: false,
-      alertTextArray: []
+      password: ''
+      // alertVisible: false,
+      // alertTextArray: []
     }
-    this.isAttempting = false
+    // this.isAttempting = false
   }
 
+/*
   componentWillReceiveProps (newProps) {
     this.forceUpdate()
     console.log(newProps)
@@ -84,12 +94,11 @@ class SignInScreen extends Component {
       })
     }
   }
-
+*/
   shouldComponentUpdate (nextProps, nextState) {
     if (
       nextState.email !== this.state.email ||
       nextState.password !== this.state.password) {
-      console.log('이메일, 패스워드 변경')
       return false
     }
     return true
@@ -97,7 +106,8 @@ class SignInScreen extends Component {
 
   handlePressLogin = () => {
     const { email, password } = this.state
-    this.isAttempting = true
+    // this.isAttempting = true
+    this.props.handler()
     // attempt a login - a saga is listening to pick it up from here.
     this.props.attemptLogin(email, password)
   }
@@ -110,23 +120,12 @@ class SignInScreen extends Component {
     this.setState({ password: text })
   }
 
-  onDecline () {
-    this.setState({
-      alertVisible: false,
-      alertTextArray: []
-    })
-  }
-
   render () {
     const { fetching } = this.props
     const editable = !fetching
 
     return (
       <View style={{marginTop: 44}}>
-        <ConfirmError
-          visible={this.state.alertVisible}
-          TextArray={this.state.alertTextArray}
-          onAccept={this.onDecline.bind(this)} />
         <View style={{marginLeft: 21, marginRight: 70.5, marginBottom: 0, backgroundColor: 'rgba(0,0,0,0)'}}>
           <Text style={{color: 'white', opacity: 0.9, fontWeight: 'bold', fontSize: 60, marginBottom: 0}}>안녕하세요!</Text>
         </View>
@@ -190,10 +189,9 @@ class SignInScreen extends Component {
 
 }
 
+/*
 const mapStateToProps = (state) => {
   return {
-    token: state.token.token,
-    accountId: state.token.id,
     fetching: state.login.fetching,
     error: state.login.error
   }
@@ -201,13 +199,13 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    attemptLogin: (email, password) => dispatch(LoginActions.loginRequest(email, password)),
-    requestUserEpisodes: (token, accountId, active) => dispatch(EpisodeActions.userEpisodesRequest(token, accountId, active)),
-    requestBestFeeds: (token) => dispatch(FeedActions.bestFeedsRequest(token)),
+    //attemptLogin: (email, password) => dispatch(LoginActions.loginRequest(email, password)),
+    //requestUserEpisodes: (token, accountId, active) => dispatch(EpisodeActions.userEpisodesRequest(token, accountId, active)),
 
-    emailPasswordScreenDispatcher: (emailPasswordScreen) => dispatch(GreetingActions.emailPasswordScreenDispatcher(emailPasswordScreen)),
-    lostPasswordScreenDispatcher: (lostPasswordScreen) => dispatch(GreetingActions.lostPasswordScreenDispatcher(lostPasswordScreen))
+    //emailPasswordScreenDispatcher: (emailPasswordScreen) => dispatch(GreetingActions.emailPasswordScreenDispatcher(emailPasswordScreen)),
+    //lostPasswordScreenDispatcher: (lostPasswordScreen) => dispatch(GreetingActions.lostPasswordScreenDispatcher(lostPasswordScreen))
   }
 }
+*/
 
-export default connect(mapStateToProps, mapDispatchToProps)(SignInScreen)
+export default SignInScreen

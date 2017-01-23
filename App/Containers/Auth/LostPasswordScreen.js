@@ -6,7 +6,7 @@ import {
   TextInput
 } from 'react-native'
 import { connect } from 'react-redux'
-import { Actions as NavigationActions } from 'react-native-router-flux'
+// import { Actions as NavigationActions } from 'react-native-router-flux'
 
 import LoginActions from '../../Redux/LoginRedux'
 
@@ -19,18 +19,20 @@ class LostPasswordScreen extends Component {
     }
     this.isAttempting = false
   }
-
-  componentWillReceiveProps (newProps) {
-    this.forceUpdate()
-    // Did the login attempt complete?
-    console.log('로그인?')
-    if (this.isAttempting && !newProps.fetching && newProps.error === null) {
-      console.log('로그인 성공')
-      NavigationActions.root()
-    } else if (this.isAttempting && !newProps.fetching && newProps.error === 'WRONG') {
-      console.log('아이디, 비밀번호를 입력해주세요')
-    }
+/*
+componentWillReceiveProps (newProps) {
+  console.log('lospassword의 윌리시브')
+  this.forceUpdate()
+  // Did the login attempt complete?
+  console.log('로그인?')
+  if (this.isAttempting && !newProps.fetching && newProps.error === null) {
+    console.log('로그인 성공')
+    NavigationActions.root()
+  } else if (this.isAttempting && !newProps.fetching && newProps.error === 'WRONG') {
+    console.log('아이디, 비밀번호를 입력해주세요')
   }
+}
+*/
 
   handlePressLogin = () => {
     const { email, password } = this.state

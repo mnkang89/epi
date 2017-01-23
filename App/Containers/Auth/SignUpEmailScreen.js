@@ -1,31 +1,45 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import {
   View,
-  Dimensions,
+  // Dimensions,
   TouchableOpacity,
   Text,
   TextInput
 } from 'react-native'
-import { connect } from 'react-redux'
-import ConfirmError from '../../Components/common/ConfirmError'
-// import LoginActions from '../Redux/LoginRedux'
-import SignupActions from '../../Redux/SignupRedux'
-import GreetingActions from '../../Redux/GreetingRedux'
+// import { connect } from 'react-redux'
+// import ConfirmError from '../../Components/common/ConfirmError'
+// import SignupActions from '../../Redux/SignupRedux'
+// import GreetingActions from '../../Redux/GreetingRedux'
 
-const windowSize = Dimensions.get('window')
+// const windowSize = Dimensions.get('window')
 
 class SignUpEmailScreen extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      email: '',
-      error: '',
-      alertVisible: false,
-      alertTextArray: []
-    }
-    this.isAttempting = false
+
+  static propTypes = {
+    checking: PropTypes.bool,
+
+    checkEmail: PropTypes.func,
+    handler: PropTypes.func
   }
 
+  constructor (props) {
+    super(props)
+// REFAC --DONE--
+    this.state = {
+      email: ''
+    }
+//  this.isAttempting = false
+  }
+
+  shouldComponentUpdate (nextProps, nextState) {
+    if (nextState.message !== this.state.message) {
+      return false
+    }
+    return true
+  }
+
+/* REFAC
+  1) 위로 올리기 -> inprogress
   componentWillReceiveProps (newProps) {
     console.log(newProps)
     this.forceUpdate()
@@ -33,7 +47,7 @@ class SignUpEmailScreen extends Component {
     if (this.isAttempting && !newProps.checking && newProps.error === null) {
       console.log('유효한 이메일')
       this.props.scrollViewHandler.scrollTo({x: 2 * windowSize.width})
-      this.props.passwordScreenDispatcher(true)
+      // this.props.passwordScreenDispatcher(true)
     } else if (this.isAttempting && !newProps.checking && newProps.error === 'VACANT') {
       console.log('유효하지 않은 이메일(공백)')
       this.setState({
@@ -57,6 +71,7 @@ class SignUpEmailScreen extends Component {
       })
     }
   }
+REFAC  */
 
   handleChangeEmail = (text) => {
     this.setState({ email: text })
@@ -64,29 +79,29 @@ class SignUpEmailScreen extends Component {
 
   handlePressEmail () {
     const { email } = this.state
-    this.isAttempting = true
-    // attempt to check email - a saga is listening to pick it up from here.
+    this.props.handler()
+
     this.props.checkEmail(email)
   }
 
-  onDecline () {
-    this.setState({
-      alertVisible: false,
-      alertTextArray: []
-    })
-  }
+/* REFAC
+onDecline () {
+  this.setState({
+    alertVisible: false,
+    alertTextArray: []
+  })
+}
+1) 위로올리기 -> DONE
+REFAC */
 
   render () {
-    const { email } = this.state
     const { checking } = this.props
     const editable = !checking
-
+/* REFAC
+1) 컨펌에러 올리기 --> DONE
+REFAC */
     return (
       <View style={{marginTop: 44, backgroundColor: 'rgba(0,0,0,0)'}}>
-        <ConfirmError
-          visible={this.state.alertVisible}
-          TextArray={this.state.alertTextArray}
-          onAccept={this.onDecline.bind(this)} />
         <View style={{marginLeft: 21, marginRight: 70.5, marginBottom: 0, backgroundColor: 'rgba(0,0,0,0)'}}>
           <Text style={{color: 'white', opacity: 0.9, fontWeight: 'bold', fontSize: 60, marginBottom: 0}}>반가워요!</Text>
         </View>
@@ -98,7 +113,6 @@ class SignUpEmailScreen extends Component {
             ref='emailCheck'
             style={{fontWeight: 'bold', height: 20, color: 'white'}}
             editable={editable}
-            value={email}
             keyboardType='default'
             returnKeyType='done'
             autoCapitalize='none'
@@ -120,6 +134,7 @@ class SignUpEmailScreen extends Component {
 
 }
 
+/* REFAC
 const mapStateToProps = (state) => {
   return {
     checking: state.signup.checking,
@@ -129,10 +144,12 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    // attemptLogin: (username, password) => dispatch(LoginActions.loginRequest(username, password))
     checkEmail: (email) => dispatch(SignupActions.emailCheck(email)),
     passwordScreenDispatcher: (passwordScreen) => dispatch(GreetingActions.passwordScreenDispatcher(passwordScreen))
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SignUpEmailScreen)
+1) 통째로 날리기 --> DONE
+REFAC */
+
+export default SignUpEmailScreen
