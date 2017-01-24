@@ -1,12 +1,7 @@
-// @flow
-// EPISODE
-
 import React, { Component } from 'react'
 import {
   View,
   ScrollView,
-  TouchableOpacity,
-  Text,
   Dimensions
 } from 'react-native'
 import { connect } from 'react-redux'
@@ -16,15 +11,15 @@ import Video from 'react-native-video'
 import { Videos } from '../../Themes'
 import ConfirmError from '../../Components/common/ConfirmError'
 
-import SignInScreen from './SignInScreen'
-import LostPasswordScreen from './LostPasswordScreen'
-import SignUpEmailScreen from './SignUpEmailScreen'
-import SignUpPasswordScreen from './SignUpPasswordScreen'
-import SignUpNicknameScreen from './SignUpNicknameScreen'
+import FirstScreen from '../../Components/Auth/FirstScreen'
+import SignInScreen from '../../Components/Auth/SignInScreen'
+import LostPasswordScreen from '../../Components/Auth/LostPasswordScreen'
+import SignUpEmailScreen from '../../Components/Auth/SignUpEmailScreen'
+import SignUpPasswordScreen from '../../Components/Auth/SignUpPasswordScreen'
+import SignUpNicknameScreen from '../../Components/Auth/SignUpNicknameScreen'
 
 import GreetingActions from '../../Redux/GreetingRedux'
 import SignupActions from '../../Redux/SignupRedux'
-
 import EpisodeActions from '../../Redux/EpisodeRedux'
 import LoginActions from '../../Redux/LoginRedux'
 
@@ -35,16 +30,12 @@ class GreetingScreen extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      firstScreen: true,
       signUpScreen: true,
       signInScreen: false,
-      lostPasswordScreen: false,
-      passwordScreen: false,
-      nicknameScreen: false,
 
+      // scroll
       scrollViewXposition: 0,
       scrollEnabled: false,
-      direction: null,
 
       // confirm
       alertVisible: false,
@@ -65,7 +56,6 @@ class GreetingScreen extends Component {
   }
 
   componentWillReceiveProps (newProps) {
-    // this.forceUpdate()
     if (this.isSignUpEmailChecking) {
       console.log('email Receive')
       console.log(newProps)
@@ -224,6 +214,13 @@ class GreetingScreen extends Component {
     }
   }
 
+  onDecline () {
+    this.setState({
+      alertVisible: false,
+      alertTextArray: []
+    })
+  }
+
   handleSignUpEmailChecking () {
     this.isSignUpEmailChecking = !this.isSignUpEmailChecking
   }
@@ -239,10 +236,19 @@ class GreetingScreen extends Component {
     this.isSignInAttempting = !this.isSignInAttempting
   }
 
-  onDecline () {
+  handleSignUpPress () {
     this.setState({
-      alertVisible: false,
-      alertTextArray: []
+      signUpScreen: true,
+      signInScreen: false,
+      scrollEnabled: true
+    })
+  }
+
+  handleSignInPress () {
+    this.setState({
+      signUpScreen: false,
+      signInScreen: true,
+      scrollEnabled: true
     })
   }
 
@@ -264,8 +270,8 @@ class GreetingScreen extends Component {
         direction === 'left') {
       console.log('사인인에서 첫화면으로')
       this.refs.scrollview.scrollTo({x: 0})
-      this.setState({ scrollEnabled: false })
       this.props.emailPasswordScreenDispatcher(false)
+      this.setState({ scrollEnabled: false })
     } else if (this.state.signInScreen &&
         this.props.emailPasswordScreen &&
         !this.props.lostPasswordScreen &&
@@ -336,7 +342,8 @@ class GreetingScreen extends Component {
               attemptLogin={this.props.attemptLogin} />
           </View>,
           <View key='2' style={{width: windowSize.width, alignItems: 'center'}}>
-            <LostPasswordScreen scrollViewHandler={this.refs.scrollview} />
+            <LostPasswordScreen
+              scrollViewHandler={this.refs.scrollview} />
           </View>
         ]
       )
@@ -395,7 +402,7 @@ class GreetingScreen extends Component {
             right: 0,
             bottom: 0
           }} />
-        <View style={{backgroundColor: 'rgba(0,0,0,0.5)', height: 667}}>
+        <View style={{backgroundColor: 'rgba(0,0,0,0.5)', height: 667}} >
           <ScrollView
             ref='scrollview'
             horizontal
@@ -404,47 +411,18 @@ class GreetingScreen extends Component {
             onScroll={this.handleScroll.bind(this)}
             onScrollBeginDrag={this.handleBeginDrag.bind(this)}
             onScrollEndDrag={this.handleEndDrag.bind(this)}
-            onMomentumScrollBegin={() => console.log('onMomentumScrollBegin')}
+            onMomentumScrollBegin={() => {}}
             onMomentumScrollEnd={this.handleMomentumScrollEnd.bind(this)}
             scrollEventThrottle={10}
             snapToAlignment={'center'} >
-            <View style={{width: windowSize.width, marginTop: 433}}>
-              <View style={{marginLeft: 22.5, marginRight: 72, backgroundColor: 'rgba(0,0,0,0)'}}>
-                <Text style={{color: 'white', opacity: 0.9, fontWeight: 'bold', fontSize: 72}}>episode</Text>
-              </View>
-              <TouchableOpacity
-                style={{backgroundColor: 'rgba(255,255,255,0.9)', paddingTop: 10, paddingBottom: 10, marginTop: 32, marginLeft: 22.5, marginRight: 22.5}}
-                onPress={
-                  () => {
-                    this.setState({
-                      signUpScreen: true,
-                      signInScreen: false,
-                      scrollEnabled: true
-                    })
-                    this.props.passwordScreenDispatcher(false)
-                    this.props.nicknameScreenDispatcher(false)
-                    this.refs.scrollview.scrollTo({x: windowSize.width})
-                  }
-                } >
-                <Text style={{color: 'black', fontWeight: 'bold', fontSize: 18, alignSelf: 'center'}}>회원가입</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{marginTop: 20, marginLeft: 162.7, marginRight: 162.5}}
-                onPress={
-                  () => {
-                    this.setState({
-                      signUpScreen: false,
-                      signInScreen: true,
-                      scrollEnabled: true
-                    })
-                    this.props.emailPasswordScreenDispatcher(true)
-                    this.props.lostPasswordScreenDispatcher(false)
-                    this.refs.scrollview.scrollTo({x: windowSize.width})
-                  }
-                } >
-                <Text style={{textDecorationLine: 'underline', backgroundColor: 'rgba(0,0,0,0)', color: 'white', fontSize: 15, alignSelf: 'center'}}>로그인</Text>
-              </TouchableOpacity>
-            </View>
+            <FirstScreen
+              scrollViewHandler={this.refs.scrollview}
+              signInHandler={this.handleSignInPress.bind(this)}
+              signUpHandler={this.handleSignUpPress.bind(this)}
+              emailPasswordScreenDispatcher={this.props.emailPasswordScreenDispatcher}
+              nicknameScreenDispatcher={this.props.nicknameScreenDispatcher}
+              lostPasswordScreenDispatcher={this.props.lostPasswordScreenDispatcher}
+              passwordScreenDispatcher={this.props.passwordScreenDispatcher} />
             {this.renderSubGreetingScreen()}
           </ScrollView>
         </View>
@@ -452,7 +430,7 @@ class GreetingScreen extends Component {
     )
   }
 }
-// {this.renderSubGreetingScreen()}
+
 const mapStateToProps = (state) => {
   return {
     emailPasswordScreen: state.greeting.emailPasswordScreen,

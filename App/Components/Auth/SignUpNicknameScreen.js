@@ -7,14 +7,10 @@ import {
   Image,
   ImagePickerIOS
 } from 'react-native'
-// import { connect } from 'react-redux'
-// import { Actions as NavigationActions } from 'react-native-router-flux'
 import Permissions from 'react-native-permissions'
 
 import { Images } from '../../Themes'
-import ConfirmError from '../../Components/common/ConfirmError'
-
-// import SignupActions from '../../Redux/SignupRedux'
+import ConfirmError from '../common/ConfirmError'
 
 class SignUpNicknameScreen extends Component {
 
@@ -47,39 +43,8 @@ class SignUpNicknameScreen extends Component {
     }
     return true
   }
-/*
-componentWillReceiveProps (newProps) {
-  // Did the checking attempt complete?
-  console.log('닉네임 중복검사')
-  if (this.isAttempting && !newProps.checking && newProps.error === null) {
-    console.log('유효한 닉네임')
-    NavigationActions.root()
-  } else if (this.isAttempting && !newProps.checking && newProps.error === 'VACANT') {
-    console.log('유효하지 않은 닉네임(공백)')
-    this.setState({
-      error: newProps.error,
-      alertVisible: true,
-      alertTextArray: ['이름을 입력해주세요.']
-    })
-  } else if (this.isAttempting && !newProps.checking && newProps.error === 'DUPLICATED') {
-    console.log('유효하지 않은 닉네임(중복)')
-    this.setState({
-      error: newProps.error,
-      alertVisible: true,
-      alertTextArray: ['이미 사용 중인 이름입니다.', '다른 이름을 사용해주세요.']
-    })
-  } else if (this.isAttempting && !newProps.checking && newProps.error === 'INVALID_FORMAT') {
-    console.log('유효하지 않은 닉네임(닉네임 형식)')
-    this.setState({
-      error: newProps.error,
-      alertVisible: true,
-      alertTextArray: ['한글과 영문대소문자 숫자만', '사용 가능합니다.', '다시 한번 확인해주세요.']
-    })
-  }
-}
-*/
 
-  handleChangeNickname = (text) => {
+  handleChangeNickname (text) {
     this.setState({ nickname: text })
   }
 
@@ -238,11 +203,10 @@ componentWillReceiveProps (newProps) {
             returnKeyType='done'
             autoCapitalize='none'
             autoCorrect={false}
-            onChangeText={this.handleChangeNickname}
+            onChangeText={this.handleChangeNickname.bind(this)}
             onSubmitEditing={this.handlePressNickname.bind(this)}
             placeholder='이름 (한글과 영문대소문자, 숫자만가능)'
-            placeholderTextColor='rgba(255,255,255,0.5)'
-          />
+            placeholderTextColor='rgba(255,255,255,0.5)' />
         </View>
         <TouchableOpacity
           style={{backgroundColor: 'rgba(255,255,255,0.9)', paddingTop: 10, paddingBottom: 10, marginTop: 22, marginLeft: 22.5, marginRight: 22.5}}
@@ -253,23 +217,5 @@ componentWillReceiveProps (newProps) {
     )
   }
 }
-
-/*
-const mapStateToProps = (state) => {
-  return {
-    checking: state.signup.checking,
-    error: state.signup.error,
-    token: state.token.token,
-    accountId: state.token.id
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    checkNickname: (nickname, token, accountId) => dispatch(SignupActions.nicknameCheck(nickname, token, accountId)),
-    requestProfileImage: (photoSource, token, accountId) => dispatch(SignupActions.profileRequest(photoSource, token, accountId))
-  }
-}
-*/
 
 export default SignUpNicknameScreen
