@@ -24,6 +24,27 @@ export function * userEpisodes (api, action) {
   }
 }
 
+// attempts to get episodes with false
+export function * userEpisodesWithFalse (api, action) {
+  console.log('유저 에피소드 위드 폴스 사가 진입')
+  const { token, accountId, active } = action
+  const response = yield call(api.requestUserFeeds, token, accountId, active)
+  console.log(response)
+
+  if (response.ok) {
+    console.log('ok')
+    console.log(response)
+    const episodesWithFalse = path(['data', 'items'], response)
+
+    yield put(EpisodeActions.userEpisodesWithFalseSuccess(episodesWithFalse))
+  } else {
+    console.log('error')
+    console.log(response)
+
+    yield put(EpisodeActions.userEpisodesWithFalseFailure('WRONG'))
+  }
+}
+
 // attempts to get episodes
 export function * otherEpisodes (api, action) {
   console.log('other 에피소드 사가 진입')

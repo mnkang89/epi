@@ -71,6 +71,33 @@ const { Types, Creators } = createActions({
   ],
   followDeleteFailure: [
     'error'
+  ],
+
+  getFollowing: [
+    'token',
+    'id'
+  ],
+  getFollowingSuccess: [
+    'follows'
+  ],
+  getFollowingFailure: [
+    'followError'
+  ],
+
+  getFollower: [
+    'token',
+    'id'
+  ],
+  getFollowerSuccess: [
+    'follows'
+  ],
+  getFollowerFailure: [
+    'followError'
+  ],
+
+  openFollow: [
+    'followVisible',
+    'showType'
   ]
 })
 
@@ -102,7 +129,13 @@ export const INITIAL_STATE = Immutable({
   activeEpisodeId: null,
 
   followPosting: false,
-  followDeleting: false
+  followDeleting: false,
+
+  followVisible: false,
+  showType: null,
+  followGetting: false,
+  follows: [],
+  followError: null
 })
 
 /* ------------- Reducers ------------- */
@@ -156,6 +189,30 @@ export const deleteFollowSuccess = (state: Object, { response }: Object) =>
 
 export const deleteFollowFailure = (state: Object, { error }: Object) =>
   state.merge({ followDeleting: false })
+
+// get following
+export const getFollowing = (state: Object, { token, id }: Object) =>
+  state.merge({ followGetting: true })
+
+export const getFollowingSuccess = (state: Object, { follows }: Object) =>
+  state.merge({ follows })
+
+export const getFollowingFailure = (state: Object, { followError }: Object) =>
+  state.merge({ followError })
+
+// get follower
+export const getFollower = (state: Object, { token, id }: Object) =>
+  state.merge({ followGetting: true })
+
+export const getFollowerSuccess = (state: Object, { follows }: Object) =>
+  state.merge({ follows })
+
+export const getFollowerFailure = (state: Object, { followError }: Object) =>
+  state.merge({ followError })
+
+export const openFollow = (state: Object, { followVisible, showType }: Object) =>
+  state.merge({ followVisible, showType })
+
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
@@ -177,5 +234,15 @@ export const reducer = createReducer(INITIAL_STATE, {
 
   [Types.FOLLOW_DELETE]: deleteFollow,
   [Types.FOLLOW_DELETE_SUCCESS]: deleteFollowSuccess,
-  [Types.FOLLOW_DELETE_FAILURE]: deleteFollowFailure
+  [Types.FOLLOW_DELETE_FAILURE]: deleteFollowFailure,
+
+  [Types.GET_FOLLOWING]: getFollowing,
+  [Types.GET_FOLLOWING_SUCCESS]: getFollowingSuccess,
+  [Types.GET_FOLLOWING_FAILURE]: getFollowingFailure,
+
+  [Types.GET_FOLLOWER]: getFollower,
+  [Types.GET_FOLLOWER_SUCCESS]: getFollowerSuccess,
+  [Types.GET_FOLLOWER_FAILURE]: getFollowerFailure,
+
+  [Types.OPEN_FOLLOW]: openFollow
 })

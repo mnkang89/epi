@@ -3,10 +3,13 @@ import {
   Text,
   View,
   Image,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  Dimensions
  } from 'react-native'
 import Video from 'react-native-video'
 import * as Animatable from 'react-native-animatable'
+
+const windowSize = Dimensions.get('window')
 
 class ContentDetailClass extends Component {
 
@@ -152,11 +155,11 @@ class ContentDetailClass extends Component {
             delayLongPress={800}
             onPress={this.onDoublePress.bind(this)}
             onLongPress={() => this.onLongPress()} >
-            <Image style={imageStyle} source={{ uri: content.path }}>
-              <View style={{height: 295, paddingTop: 80}}>
+            <Image style={[imageStyle, {flex: 1, alignItems: 'center'}]} source={{ uri: content.path }} >
+              <View style={{flex: 1, marginTop: 90}}>
                 {this.renderAnimation()}
               </View>
-              <View style={{alignItems: 'center', backgroundColor: 'rgba(0,0,0,0)'}}>
+              <View style={{flex: 1, justifyContent: 'flex-end', marginBottom: 10, backgroundColor: 'rgba(0,0,0,0)'}}>
                 <Text
                   style={{
                     textShadowOffset: {width: 1, height: 2},
@@ -164,7 +167,7 @@ class ContentDetailClass extends Component {
                     textShadowRadius: 1,
                     color: 'white',
                     fontSize: 20,
-                    fontWeight: 'bold' }}>
+                    fontWeight: 'bold' }} >
                   {message}
                 </Text>
               </View>
@@ -180,7 +183,7 @@ class ContentDetailClass extends Component {
             delayLongPress={800}
             onPress={this.onDoublePress.bind(this)}
             onLongPress={this.onLongPress.bind(this)} >
-            <View style={{height: 345, width: 345, overflow: 'hidden'}}>
+            <View style={{height: windowSize.width - 30, width: windowSize.width - 30, overflow: 'hidden'}}>
               <Video
                 source={{uri: content.path}}   // Can be a URL or a local file.
                 muted
@@ -200,20 +203,22 @@ class ContentDetailClass extends Component {
                   right: 0,
                   bottom: 0
                 }} />
-              <View style={{height: 295, paddingTop: 80}}>
-                {this.renderAnimation()}
-              </View>
-              <View style={{alignItems: 'center', backgroundColor: 'rgba(0,0,0,0)'}}>
-                <Text
-                  style={{
-                    textShadowOffset: {width: 1, height: 2},
-                    textShadowColor: 'rgba(0, 0, 0, 0.5)',
-                    textShadowRadius: 1,
-                    color: 'white',
-                    fontSize: 20,
-                    fontWeight: 'bold' }}>
-                  {message}
-                </Text>
+              <View style={{flex: 1, alignItems: 'center'}} >
+                <View style={{flex: 1, marginTop: 90}}>
+                  {this.renderAnimation()}
+                </View>
+                <View style={{flex: 1, justifyContent: 'flex-end', marginBottom: 10, backgroundColor: 'rgba(0,0,0,0)'}}>
+                  <Text
+                    style={{
+                      textShadowOffset: {width: 1, height: 2},
+                      textShadowColor: 'rgba(0, 0, 0, 0.5)',
+                      textShadowRadius: 1,
+                      color: 'white',
+                      fontSize: 20,
+                      fontWeight: 'bold' }}>
+                    {message}
+                  </Text>
+                </View>
               </View>
             </View>
           </TouchableWithoutFeedback>
@@ -236,8 +241,8 @@ class ContentDetailClass extends Component {
 const styles = {
   imageStyle: {
     overflow: 'hidden',
-    height: 345,
-    width: 345
+    height: windowSize.width - 30,
+    width: windowSize.width - 30
   }
 }
 

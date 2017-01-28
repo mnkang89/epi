@@ -88,20 +88,19 @@ class CameraScreen extends Component {
         console.log(response)
         if (response === 'undetermined') {
           Permissions.requestPermission('camera').then(response => {
-            console.log('auth')
+            console.log(response)
             this.setState({
               cameraAuthorized: false
             })
             Permissions.openSettings()
           })
         } else if (response === 'denied') {
-          console.log('auth')
+          console.log(response)
           this.setState({
             cameraAuthorized: false
           })
           Permissions.openSettings()
         } else if (response === 'authorized') {
-          console.log('auth')
           this.setState({
             cameraAuthorized: true
           })
@@ -433,8 +432,7 @@ class CameraScreen extends Component {
                     this.takeVideo()
                   }
                 }
-                onPressOut={this.handleLongPressOut.bind(this)}
-              >
+                onPressOut={this.handleLongPressOut.bind(this)} >
                 <Image style={{width: 85, height: 85}} source={Images.captureButton} />
               </TouchableWithoutFeedback>
             </View>
@@ -607,7 +605,7 @@ class CameraScreen extends Component {
           }}
           style={styles.preview}
           captureMode={this.state.captureMode}
-          captureTarget={Camera.constants.CaptureTarget.cameraRoll}
+          captureTarget={Camera.constants.CaptureTarget.disk}
           captureQuality={Camera.constants.CaptureQuality.high}
           captureAudio={false}
           type={this.state.cameraType}

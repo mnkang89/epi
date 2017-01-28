@@ -22,10 +22,14 @@ class SingleEpisodeScreen extends Component {
     items: PropTypes.array,
 
     account: PropTypes.object,
+    screen: PropTypes.string,
     episodeId: PropTypes.number,
     contentId: PropTypes.number,
+    detailType: PropTypes.string,
+    singleType: PropTypes.string,
 
-    requestSingleEpisode: PropTypes.func
+    requestSingleEpisode: PropTypes.func,
+    getComment: PropTypes.func
   }
 
   constructor (props) {
@@ -64,7 +68,13 @@ class SingleEpisodeScreen extends Component {
     const account = this.props.account
 
     return this.props.items.map(item =>
-      <EpisodeDetail key={item.id} episode={item} account={account} />)
+      <EpisodeDetail
+        key={item.id}
+        episode={item}
+        account={account}
+        type={this.props.detailType}
+        singleType={this.props.singleType} />
+    )
   }
 
   render () {
@@ -79,9 +89,9 @@ class SingleEpisodeScreen extends Component {
           }
         >
           {this.renderEpisodes()}
-          <View style={{height: 50}} />
         </ScrollView>
         <CommentModal
+          screen={this.props.screen}
           token={this.props.token}
           contentId={this.props.contentId}
           episodeId={this.props.episodeId}
@@ -89,6 +99,7 @@ class SingleEpisodeScreen extends Component {
           comments={this.props.comments}
           commentPosting={this.props.commentPosting}
           resetCommentModal={this.props.resetCommentModal}
+          getComment={this.props.getComment}
           postComment={this.props.postComment} />
       </View>
     )
@@ -111,6 +122,7 @@ const mapDispatchToProps = (dispatch) => {
     requestSingleEpisode: (token, episodeId) => dispatch(EpisodeActions.singleEpisodeRequest(token, episodeId)),
 
     resetCommentModal: () => dispatch(CommentActions.resetComment()),
+    getComment: (token, episodeId, contentId) => dispatch(CommentActions.commentGet(token, episodeId, contentId)),
     postComment: (token, episodeId, contentId, message) => dispatch(CommentActions.commentPost(token, episodeId, contentId, message))
   }
 }

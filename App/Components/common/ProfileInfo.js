@@ -25,7 +25,11 @@ class ProfileInfo extends Component {
 
     requestProfileImage: PropTypes.func,
     deleteFollow: PropTypes.func,
-    postFollow: PropTypes.func
+    postFollow: PropTypes.func,
+
+    openFollow: PropTypes.func,
+    getFollowing: PropTypes.func,
+    getFollower: PropTypes.func
   }
 
   constructor (props) {
@@ -41,7 +45,7 @@ class ProfileInfo extends Component {
   }
 
   componentDidMount () {
-    console.log(this.props)
+    // console.log(this.props)
   }
 
   onProfileImagePress () {
@@ -109,18 +113,47 @@ class ProfileInfo extends Component {
     }
   }
 
+  onFollowingPress () {
+    const { token, id } = this.props
+
+    this.props.openFollow(true, '팔로잉')
+    this.props.getFollowing(token, id)
+  }
+
+  onFollowerPress () {
+    const { token, id } = this.props
+
+    this.props.openFollow(true, '팔로워')
+    this.props.getFollower(token, id)
+  }
+
   renderProfileImage () {
-    if (this.state.photoSource) {
-      return (
-        <Image
-          style={[styles.image, {borderWidth: 1, borderColor: 'white', marginBottom: 14.5, marginTop: 39.5}]}
-          source={{uri: this.state.photoSource}} />)
+    if (this.props.type === 'me') {
+      if (this.state.photoSource) {
+        return (
+          <Image
+            style={[styles.image, {borderWidth: 1, borderColor: 'white', marginBottom: 14.5, marginTop: 39.5}]}
+            source={{uri: this.state.photoSource}} />)
+      } else {
+        return (
+          <Image
+            style={[styles.image, {borderWidth: 1, borderColor: 'white', marginBottom: 14.5, marginTop: 39.5}]}
+            source={Images.profileIcon} />
+        )
+      }
     } else {
-      return (
-        <Image
-          style={[styles.image, {borderWidth: 1, borderColor: 'white', marginBottom: 14.5, marginTop: 39.5}]}
-          source={Images.profileIcon} />
-      )
+      if (this.props.profileImagePath) {
+        return (
+          <Image
+            style={[styles.image, {borderWidth: 1, borderColor: 'white', marginBottom: 14.5, marginTop: 39.5}]}
+            source={{uri: this.props.profileImagePath}} />)
+      } else {
+        return (
+          <Image
+            style={[styles.image, {borderWidth: 1, borderColor: 'white', marginBottom: 14.5, marginTop: 39.5}]}
+            source={Images.profileIcon} />
+        )
+      }
     }
   }
 
@@ -145,6 +178,11 @@ class ProfileInfo extends Component {
       )
     }
   }
+  /*
+  <TouchableOpacity onPress={this.onProfileImagePress.bind(this)}>
+    {this.renderProfileImage()}
+  </TouchableOpacity>
+  */
 
   renderProfileInfo () {
     if (this.props.type === 'me') {
@@ -177,24 +215,21 @@ class ProfileInfo extends Component {
       return (
         <View style={{alignItems: 'center', backgroundColor: '#000000'}}>
           <View style={{flex: 2}}>
-            <Image
-              style={[styles.image, {borderWidth: 1, borderColor: 'white', marginBottom: 14.5, marginTop: 39.5}]}
-              source={{uri: this.props.profileImagePath}}
-            />
+            {this.renderProfileImage()}
           </View>
-          <View style={{flex: 1, alignItems: 'center'}}>
+          <View style={{flex: 1, alignItems: 'center'}} >
             <Text style={{color: Colors.snow, fontSize: 25, fontWeight: 'bold'}}>{this.props.nickname}</Text>
             <View style={{flexDirection: 'row', marginTop: 10.5, marginBottom: 25.5}}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={this.onFollowerPress.bind(this)} >
                 <Text style={{color: Colors.snow, fontSize: 12}}>팔로워 {this.props.followerCount}</Text>
               </TouchableOpacity>
               <Text style={{color: Colors.snow, fontSize: 12}}> | </Text>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={this.onFollowingPress.bind(this)} >
                 <Text style={{color: Colors.snow, fontSize: 12}}>팔로잉 {this.props.followingCount} </Text>
               </TouchableOpacity>
             </View>
           </View>
-          <View style={{marginBottom: 10}}>
+          <View style={{marginBottom: 10}} >
             {this.renderFollowButton()}
           </View>
         </View>

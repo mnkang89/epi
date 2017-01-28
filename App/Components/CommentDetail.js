@@ -1,12 +1,16 @@
 import React, { Component, PropTypes } from 'react'
 import { Text, View, Image, TouchableOpacity, Modal } from 'react-native'
 
-import { Colors, Metrics } from '../Themes/'
+import { Actions as NavigationActions } from 'react-native-router-flux'
+import { Colors, Images, Metrics } from '../Themes/'
 
 class CommentDetail extends Component {
 
   static propTypes = {
-    comment: PropTypes.object.isRequired
+    comment: PropTypes.object.isRequired,
+    screen: PropTypes.string,
+
+    resetCommentModal: PropTypes.func
   }
 
   constructor (props) {
@@ -34,7 +38,54 @@ class CommentDetail extends Component {
     })
   }
 
+  onProfilePress () {
+    const accountId = this.props.comment.account.id
+    this.props.resetCommentModal()
+
+    if (this.props.screen === 'FeedScreen') {
+      NavigationActions.feedTouserProfileScreen({
+        type: 'push',
+        id: accountId
+      })
+    } else if (this.props.screen === 'NotiScreen') {
+      NavigationActions.notiTouserProfileScreen({
+        type: 'push',
+        id: accountId
+      })
+    } else if (this.props.screen === 'SearchScreen') {
+      NavigationActions.searchTouserProfileScreen({
+        type: 'push',
+        id: accountId
+      })
+    } else if (this.props.screen === 'ProfileScreen') {
+      NavigationActions.profileTouserProfileScreen({
+        type: 'push',
+        id: accountId
+      })
+    }
+  }
+
+  renderProfileImage () {
+    const { profileImagePath } = this.props.comment.account
+    if (profileImagePath) {
+      return (
+        <Image
+          style={styles.imageStyle}
+          source={{uri: profileImagePath}} />
+      )
+    } else {
+      return (
+        <Image
+          style={styles.imageStyle}
+          source={Images.profileImage} />
+      )
+    }
+  }
+
   render () {
+    console.log('여기야')
+    console.log(this.props.comment.account)
+    console.log('여기야')
     const { message } = this.props.comment
     const { nickname } = this.props.comment.account
     const {
@@ -46,12 +97,11 @@ class CommentDetail extends Component {
     return (
       <View style={{marginLeft: 14.25, marginRight: 14.25}}>
         <View style={headerContentStyle}>
-          <View style={{alignItems: 'center', justifyContent: 'center'}}>
-            <Image
-              style={styles.imageStyle}
-              source={{uri: 'https://facebook.github.io/react/img/logo_og.png'}}
-            />
-          </View>
+          <TouchableOpacity
+            style={{alignItems: 'center', justifyContent: 'center'}}
+            onPress={this.onProfilePress.bind(this)} >
+            {this.renderProfileImage()}
+          </TouchableOpacity>
           <View style={{width: 250, marginLeft: 5, marginRight: 11}}>
             <View style={{flex: 1, flexDirection: 'row'}}>
               <Text style={userTextStyle}>{nickname}</Text>

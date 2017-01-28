@@ -125,3 +125,47 @@ export function * deleteFollow (api, action) {
     yield put(AccountActions.followDeleteFailure('WRONG'))
   }
 }
+
+export function * getFollowing (api, action) {
+  console.log('getFollowing사가워커 진입!!')
+  const { token, id } = action
+  const response = yield call(api.getFollowing, token, id)
+  const follows = path(['data', 'accounts'], response)
+
+  // dispatch successful email checking
+  if (response.ok) {
+    console.log('ok')
+    console.log(response)
+
+    yield put(AccountActions.getFollowingSuccess(follows))
+    // yield put(AccountActions.openFollow(true, '팔로잉'))
+  } else {
+    console.log('error')
+    console.log(response)
+
+    // TODO: 에러케이스 구분
+    yield put(AccountActions.getFollowingFailure('WRONG'))
+  }
+}
+
+export function * getFollower (api, action) {
+  console.log('getFollower사가워커 진입!!')
+  const { token, id } = action
+  const response = yield call(api.getFollower, token, id)
+  const follows = path(['data', 'accounts'], response)
+
+  // dispatch successful email checking
+  if (response.ok) {
+    console.log('ok')
+    console.log(response)
+
+    yield put(AccountActions.getFollowerSuccess(follows))
+    // yield put(AccountActions.openFollow(true, '팔로워'))
+  } else {
+    console.log('error')
+    console.log(response)
+
+    // TODO: 에러케이스 구분
+    yield put(AccountActions.getFollowerFailure('WRONG'))
+  }
+}

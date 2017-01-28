@@ -93,7 +93,6 @@ class NavigationRouter extends Component {
               <Scene
                 key='singleEpisodeScreen'
                 component={SingleEpisodeScreen}
-                direction='vertical'
                 title='에피소드' />
               <Scene
                 key='notiTouserProfileScreen'
@@ -160,6 +159,10 @@ class NavigationRouter extends Component {
                 panHandlers={null}
                 component={ProfileScreen}
                 title='내 프로필' />
+              <Scene
+                key='profileTouserProfileScreen'
+                component={UserProfileScreen}
+                title='프로필' />
             </Scene>
           </Scene>
         </Scene>

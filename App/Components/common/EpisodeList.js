@@ -8,7 +8,9 @@ import EpisodeDetail from './EpisodeDetail'
 class EpisodeList extends Component {
 
   static propTypes = {
-    items: PropTypes.array
+    items: PropTypes.array,
+    detailType: PropTypes.string,
+    singleType: PropTypes.string
   }
 
   constructor (props) {
@@ -19,7 +21,13 @@ class EpisodeList extends Component {
 
   renderEpisodes () {
     return this.props.items.map(item =>
-      <EpisodeDetail key={item.episode.id} episode={item.episode} account={item.account} />)
+      <EpisodeDetail
+        key={item.episode.id}
+        episode={item.episode}
+        account={item.account}
+        type={this.props.detailType}
+        singleType={this.props.singleType} />
+      )
   }
 
   render () {

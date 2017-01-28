@@ -10,8 +10,7 @@ const windowSize = Dimensions.get('window')
 
 class FirstScreen extends Component {
   static propTypes = {
-    scrollViewHandler: PropTypes.object,
-
+    scrollViewHandler: PropTypes.func,
     signInHandler: PropTypes.func,
     signUpHandler: PropTypes.func,
 
@@ -31,33 +30,42 @@ class FirstScreen extends Component {
     this.props.signInHandler()
     this.props.emailPasswordScreenDispatcher(true)
     this.props.lostPasswordScreenDispatcher(false)
-    this.props.scrollViewHandler.scrollTo({x: windowSize.width})
+
+    this.props.scrollViewHandler()
+    // this.scrollview.scrollTo({x: windowSize.width})
   }
 
   onSignUpPress () {
     this.props.signUpHandler()
     this.props.passwordScreenDispatcher(false)
     this.props.nicknameScreenDispatcher(false)
-    this.props.scrollViewHandler.scrollTo({x: windowSize.width})
+
+    this.props.scrollViewHandler()
+    // this.scrollview.scrollTo({x: windowSize.width})
   }
 
   render () {
+    console.log('퍼스트 스크린')
     return (
-      <View>
-        <View style={{width: windowSize.width, marginTop: 433}}>
-          <View style={{marginLeft: 22.5, marginRight: 72, backgroundColor: 'rgba(0,0,0,0)'}}>
-            <Text style={{color: 'white', opacity: 0.9, fontWeight: 'bold', fontSize: 72}}>episode</Text>
+      <View style={{flex: 1, width: windowSize.width}} >
+        <View style={{flex: 1}} >
+          <View style={{flex: 1, flexDirection: 'column', justifyContent: 'flex-end', marginBottom: 30}}>
+            <View style={{marginLeft: 20, backgroundColor: 'rgba(0,0,0,0)'}}>
+              <Text style={{color: 'white', opacity: 0.9, fontWeight: 'bold', fontSize: 72}}>episode</Text>
+            </View>
+            <View style={{alignItems: 'center'}}>
+              <TouchableOpacity
+                style={{width: windowSize.width - 40, alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.9)', paddingTop: 10, paddingBottom: 10, marginTop: 32}}
+                onPress={this.onSignUpPress.bind(this)} >
+                <Text style={{color: 'black', fontWeight: 'bold', fontSize: 18}}>회원가입</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{marginTop: 20, alignItems: 'center'}}
+                onPress={this.onSignInPress.bind(this)} >
+                <Text style={{textDecorationLine: 'underline', backgroundColor: 'rgba(0,0,0,0)', color: 'white', fontSize: 15}}>로그인</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-          <TouchableOpacity
-            style={{backgroundColor: 'rgba(255,255,255,0.9)', paddingTop: 10, paddingBottom: 10, marginTop: 32, marginLeft: 22.5, marginRight: 22.5}}
-            onPress={this.onSignUpPress.bind(this)} >
-            <Text style={{color: 'black', fontWeight: 'bold', fontSize: 18, alignSelf: 'center'}}>회원가입</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{marginTop: 20, marginLeft: 162.7, marginRight: 162.5}}
-            onPress={this.onSignInPress.bind(this)} >
-            <Text style={{textDecorationLine: 'underline', backgroundColor: 'rgba(0,0,0,0)', color: 'white', fontSize: 15, alignSelf: 'center'}}>로그인</Text>
-          </TouchableOpacity>
         </View>
       </View>
     )

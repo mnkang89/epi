@@ -34,7 +34,6 @@ class ExploreScreen extends Component {
   componentDidMount () {
     const { token } = this.props
 
-    this.isAttempting = true
     this.props.requestBestFeeds(token)
   }
 
@@ -42,12 +41,11 @@ class ExploreScreen extends Component {
     // TODO: 결국엔 스테이트를 false로 바꾸는 것이므로 통일하기.
     if (_.isEqual(this.props.items, nextProps.items)) {
       console.log('아이템같음')
-      this.setState({refreshing: false})
     } else {
       console.log('아이템다름')
-      if (this.state.refreshing) {
-        this.setState({refreshing: false})
-      }
+    }
+    if (this.state.refreshing) {
+      this.setState({refreshing: false})
     }
   }
 
@@ -76,6 +74,7 @@ class ExploreScreen extends Component {
               postFollow={this.props.postFollow}
               deleteFollow={this.props.deleteFollow} />
           </ScrollView>
+          <View style={{height: 48.5}} />
         </View>
       </View>
     )
@@ -85,8 +84,8 @@ class ExploreScreen extends Component {
 const mapStateToProps = (state) => {
   return {
     token: state.token.token,
-    // items: state.feed.bestFeeds,
-    items: state.episode.episodes
+    items: state.feed.bestFeeds
+    // items: state.episode.episodes
   }
 }
 

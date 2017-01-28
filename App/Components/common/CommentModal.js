@@ -19,6 +19,7 @@ class CommentModal extends Component {
 
   static propTypes = {
     token: PropTypes.string,
+    screen: PropTypes.string,
     contentId: PropTypes.number,
     episodeId: PropTypes.number,
 
@@ -27,6 +28,7 @@ class CommentModal extends Component {
     commentPosting: PropTypes.bool,
 
     resetCommentModal: PropTypes.func,
+    getComment: PropTypes.func,
     postComment: PropTypes.func
   }
 
@@ -46,8 +48,6 @@ class CommentModal extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    console.log('* --- componentWillReceiveProps --- *')
-
     if (nextProps.visible) {
       if (nextProps.commentPosting) {
         console.log('아직 코멘트 포스팅중')
@@ -121,7 +121,14 @@ class CommentModal extends Component {
               </TouchableOpacity>
               <Text style={{left: 140, marginTop: 10, fontSize: 17, fontWeight: 'bold'}}>댓글</Text>
             </View>
-            <CommentList comments={this.props.comments} />
+            <CommentList
+              screen={this.props.screen}
+              token={this.props.token}
+              comments={this.props.comments}
+              episodeId={this.props.episodeId}
+              contentId={this.props.contentId}
+              resetCommentModal={this.resetCommentModal.bind(this)}
+              getComment={this.props.getComment} />
             <View style={{flexDirection: 'row', backgroundColor: 'rgb(236, 236, 236)'}}>
               <View style={styles2.textContainer}>
                 <AutoGrowingTextInput

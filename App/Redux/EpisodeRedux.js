@@ -18,6 +18,18 @@ const { Types, Creators } = createActions({
     'episodesError'
   ],
 
+  userEpisodesWithFalseRequest: [
+    'token',
+    'accountId',
+    'active'
+  ],
+  userEpisodesWithFalseSuccess: [
+    'episodesWithFalse'
+  ],
+  userEpisodesWithFalseFailure: [
+    'episodesError'
+  ],
+
   otherEpisodesRequest: [
     'token',
     'accountId',
@@ -74,6 +86,7 @@ export default Creators
 
 export const INITIAL_STATE = Immutable({
   episodes: [],
+  episodesWithFalse: [],
   episodesRequesting: true,
   episodesError: null,
 
@@ -100,6 +113,15 @@ export const userEpisodesSuccess = (state: Object, { episodes }: Object) =>
   state.merge({ episodesRequesting: false, episodesError: null, episodes })
 
 export const userEpisodesFailure = (state: Object, { episodesError }: Object) =>
+  state.merge({ episodesRequesting: false, episodesError })
+
+// only my episodes
+export const userEpisodesWithFalseRequest = (state: Object, { token, accountId, active }: Object) => INITIAL_STATE
+
+export const userEpisodesWithFalseSuccess = (state: Object, { episodesWithFalse }: Object) =>
+  state.merge({ episodesRequesting: false, episodesError: null, episodesWithFalse })
+
+export const userEpisodesWithFalseFailure = (state: Object, { episodesError }: Object) =>
   state.merge({ episodesRequesting: false, episodesError })
 
 // other user episodes
@@ -148,6 +170,10 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.USER_EPISODES_REQUEST]: userEpisodesRequest,
   [Types.USER_EPISODES_SUCCESS]: userEpisodesSuccess,
   [Types.USER_EPISODES_FAILURE]: userEpisodesFailure,
+
+  [Types.USER_EPISODES_WITH_FALSE_REQUEST]: userEpisodesWithFalseRequest,
+  [Types.USER_EPISODES_WITH_FALSE_SUCCESS]: userEpisodesWithFalseSuccess,
+  [Types.USER_EPISODES_WITH_FALSE_FAILURE]: userEpisodesWithFalseFailure,
 
   [Types.OTHER_EPISODES_REQUEST]: otherEpisodesRequest,
   [Types.OTHER_EPISODES_SUCCESS]: otherEpisodesSuccess,

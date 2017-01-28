@@ -1,3 +1,4 @@
+
 import React, { Component } from 'react'
 import {
   View,
@@ -9,6 +10,7 @@ import { Actions as NavigationActions } from 'react-native-router-flux'
 import Video from 'react-native-video'
 
 import { Videos } from '../../Themes'
+import { getObjectDiff } from '../../Lib/Utilities'
 import ConfirmError from '../../Components/common/ConfirmError'
 
 import FirstScreen from '../../Components/Auth/FirstScreen'
@@ -26,7 +28,6 @@ import LoginActions from '../../Redux/LoginRedux'
 const windowSize = Dimensions.get('window')
 
 class GreetingScreen extends Component {
-
   constructor (props) {
     super(props)
     this.state = {
@@ -56,6 +57,7 @@ class GreetingScreen extends Component {
   }
 
   componentWillReceiveProps (newProps) {
+    console.log(getObjectDiff(this.props, newProps))
     if (this.isSignUpEmailChecking) {
       console.log('email Receive')
       console.log(newProps)
@@ -64,7 +66,7 @@ class GreetingScreen extends Component {
         this.handleSignUpEmailChecking()
 
         this.props.passwordScreenDispatcher(true)
-        this.refs.scrollview.scrollTo({x: 2 * windowSize.width})
+        this.scrollview.scrollTo({x: 2 * windowSize.width})
       } else if (!newProps.signUpChecking && newProps.signUpError === 'VACANT') {
         console.log('유효하지 않은 이메일(공백)')
         this.handleSignUpEmailChecking()
@@ -130,7 +132,7 @@ class GreetingScreen extends Component {
         this.props.passwordScreenDispatcher(false)
         this.props.nicknameScreenDispatcher(true)
 
-        this.refs.scrollview.scrollTo({x: 3 * windowSize.width})
+        this.scrollview.scrollTo({x: 3 * windowSize.width})
       } else if (!newProps.attempting && newProps.attemptingerror === 'WRONG') {
         console.log('유효하지 않은 회원가입')
         this.handleSignUpPasswordChecking()
@@ -168,12 +170,13 @@ class GreetingScreen extends Component {
       }
     } else if (this.isSignInAttempting) {
       console.log('로그인 시도')
-      if (!newProps.fetching && newProps.signInError === null) {
+      if (!newProps.fetching && newProps.signInError === null && newProps.token !== null) {
         console.log('로그인 성공')
-        const { token, accountId } = this.props
-        const withFollowing = true
+        const { token, accountId } = newProps
 
-        this.props.requestUserEpisodes(token, accountId, withFollowing)
+        this.props.requestUserEpisodes(token, accountId, true)
+        this.props.requestUserEpisodesWithFalse(token, accountId, false)
+
         NavigationActions.root()
       } else if (!newProps.fetching && newProps.signInError === 'INVALID_FORMAT') {
         console.log('유효하지 않은 형식')
@@ -219,6 +222,10 @@ class GreetingScreen extends Component {
       alertVisible: false,
       alertTextArray: []
     })
+  }
+
+  handleScrollview (x = 1) {
+    this.scrollview.scrollTo({x: x * windowSize.width})
   }
 
   handleSignUpEmailChecking () {
@@ -269,7 +276,7 @@ class GreetingScreen extends Component {
         !this.props.lostPasswordScreen &&
         direction === 'left') {
       console.log('사인인에서 첫화면으로')
-      this.refs.scrollview.scrollTo({x: 0})
+      this.scrollview.scrollTo({x: 0})
       this.props.emailPasswordScreenDispatcher(false)
       this.setState({ scrollEnabled: false })
     } else if (this.state.signInScreen &&
@@ -277,12 +284,12 @@ class GreetingScreen extends Component {
         !this.props.lostPasswordScreen &&
         direction === 'right') {
       console.log('사인인에서 로스트패스워드로')
-      this.refs.scrollview.scrollTo({x: windowSize.width})
+      this.scrollview.scrollTo({x: windowSize.width})
     } else if (this.props.lostPasswordScreen &&
       !this.props.emailPasswordScreen &&
       direction === 'left') {
       console.log('로스트패스워드에서 사인인으로')
-      this.refs.scrollview.scrollTo({x: windowSize.width})
+      this.scrollview.scrollTo({x: windowSize.width})
       this.props.emailPasswordScreenDispatcher(true)
       this.props.lostPasswordScreenDispatcher(false)
     } else if (this.state.signUpScreen &&
@@ -290,37 +297,37 @@ class GreetingScreen extends Component {
         !this.props.nicknameScreen &&
         direction === 'left') {
       console.log('사인업에서 첫화면으로')
-      this.refs.scrollview.scrollTo({x: 0})
+      this.scrollview.scrollTo({x: 0})
       this.setState({ scrollEnabled: false })
     } else if (this.state.signUpScreen &&
         !this.props.passwordScreen &&
         !this.props.nicknameScreen &&
         direction === 'right') {
       console.log('사인업에서 패스워드로')
-      this.refs.scrollview.scrollTo({x: windowSize.width})
+      this.scrollview.scrollTo({x: windowSize.width})
     } else if (this.props.passwordScreen &&
         !this.props.nicknameScreen &&
         direction === 'left') {
       console.log('패스워드에서 사인업으로')
-      this.refs.scrollview.scrollTo({x: windowSize.width})
+      this.scrollview.scrollTo({x: windowSize.width})
       this.props.passwordScreenDispatcher(false)
     } else if (this.props.passwordScreen &&
         !this.props.nicknameScreen &&
         direction === 'right') {
       console.log('패스워드에서 닉네임으로')
-      this.refs.scrollview.scrollTo({x: 2 * windowSize.width})
+      this.scrollview.scrollTo({x: 2 * windowSize.width})
     } else if (!this.props.passwordScreen &&
         this.props.nicknameScreen &&
         direction === 'left') {
       console.log('닉네임에서 패스워드로')
-      this.refs.scrollview.scrollTo({x: 2 * windowSize.width})
+      this.scrollview.scrollTo({x: 2 * windowSize.width})
       this.props.passwordScreenDispatcher(true)
       this.props.nicknameScreenDispatcher(false)
     } else if (!this.props.passwordScreen &&
         this.props.nicknameScreen &&
         direction === 'right') {
       console.log('닉네임에서 오른쪽으로')
-      this.refs.scrollview.scrollTo({x: 3 * windowSize.width})
+      this.scrollview.scrollTo({x: 3 * windowSize.width})
     }
   }
 
@@ -332,38 +339,38 @@ class GreetingScreen extends Component {
         !this.state.signUpScreen) {
       return (
         [
-          <View key='1' style={{width: windowSize.width, alignItems: 'center'}}>
+          <View key='1' style={{width: windowSize.width}}>
             <SignInScreen
               handler={this.handleSignInAttempting.bind(this)}
               fetching={this.props.fetching}
-              scrollViewHandler={this.refs.scrollview}
+              scrollViewHandler={this.handleScrollview.bind(this)}
               lostPasswordScreenDispatcher={this.props.lostPasswordScreenDispatcher}
               emailPasswordScreenDispatcher={this.props.emailPasswordScreenDispatcher}
               attemptLogin={this.props.attemptLogin} />
           </View>,
-          <View key='2' style={{width: windowSize.width, alignItems: 'center'}}>
+          <View key='2' style={{width: windowSize.width}}>
             <LostPasswordScreen
-              scrollViewHandler={this.refs.scrollview} />
+              scrollViewHandler={this.handleScrollview.bind(this)} />
           </View>
         ]
       )
     } else {
       return (
         [
-          <View key='3' style={{width: windowSize.width, alignItems: 'center'}}>
+          <View key='3' style={{width: windowSize.width}}>
             <SignUpEmailScreen
               handler={this.handleSignUpEmailChecking.bind(this)}
               checking={this.props.signUpChecking}
               checkEmail={this.props.checkEmail} />
           </View>,
-          <View key='4' style={{width: windowSize.width, alignItems: 'center'}}>
+          <View key='4' style={{width: windowSize.width}}>
             <SignUpPasswordScreen
               handler={this.handleSignUpPasswordChecking.bind(this)}
               email={this.props.email}
               checking={this.props.signUpChecking}
               checkPassword={this.props.checkPassword} />
           </View>,
-          <View key='5' style={{width: windowSize.width, alignItems: 'center'}}>
+          <View key='5' style={{width: windowSize.width}}>
             <SignUpNicknameScreen
               handler={this.handleSignUpNicknameChecking.bind(this)}
               checking={this.props.signUpChecking}
@@ -402,9 +409,9 @@ class GreetingScreen extends Component {
             right: 0,
             bottom: 0
           }} />
-        <View style={{backgroundColor: 'rgba(0,0,0,0.5)', height: 667}} >
+        <View style={{backgroundColor: 'rgba(0,0,0,0.5)', height: windowSize.height}} >
           <ScrollView
-            ref='scrollview'
+            ref={(component) => { this.scrollview = component }}
             horizontal
             pagingEnabled
             scrollEnabled={this.state.scrollEnabled}
@@ -416,7 +423,7 @@ class GreetingScreen extends Component {
             scrollEventThrottle={10}
             snapToAlignment={'center'} >
             <FirstScreen
-              scrollViewHandler={this.refs.scrollview}
+              scrollViewHandler={this.handleScrollview.bind(this)}
               signInHandler={this.handleSignInPress.bind(this)}
               signUpHandler={this.handleSignUpPress.bind(this)}
               emailPasswordScreenDispatcher={this.props.emailPasswordScreenDispatcher}
@@ -469,6 +476,7 @@ const mapDispatchToProps = (dispatch) => {
     requestProfileImage: (photoSource, token, accountId) => dispatch(SignupActions.profileRequest(photoSource, token, accountId)),
 
     requestUserEpisodes: (token, accountId, active) => dispatch(EpisodeActions.userEpisodesRequest(token, accountId, active)),
+    requestUserEpisodesWithFalse: (token, accountId, withFollowing) => dispatch(EpisodeActions.userEpisodesWithFalseRequest(token, accountId, withFollowing)),
     attemptLogin: (email, password) => dispatch(LoginActions.loginRequest(email, password))
   }
 }

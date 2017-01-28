@@ -3,6 +3,7 @@
 // Utility functions
 import { Platform } from 'react-native'
 import R from 'ramda'
+import _ from 'lodash'
 
 // useful cleaning functions
 const nullToEmpty = R.defaultTo('')
@@ -45,4 +46,18 @@ export const convert2TimeDiffString = (datetimeStr : string) => {
   } else {
     return Math.floor(timeDiffInSeconds / secondInMillis) + '초전'
   }
+}
+
+export const getObjectDiff = (obj1, obj2) => {
+  const diff = Object.keys(obj1).reduce((result, key) => {
+    if (!obj2.hasOwnProperty(key)) {
+      result.push(key)
+    } else if (_.isEqual(obj1[key], obj2[key])) {
+      const resultKeyIndex = result.indexOf(key)
+      result.splice(resultKeyIndex, 1)
+    }
+    return result
+  }, Object.keys(obj2))
+
+  return diff
 }

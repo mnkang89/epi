@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import {
   View,
+  Dimensions,
   TouchableOpacity,
   Text,
   TextInput,
@@ -11,6 +12,8 @@ import Permissions from 'react-native-permissions'
 
 import { Images } from '../../Themes'
 import ConfirmError from '../common/ConfirmError'
+
+const windowSize = Dimensions.get('window')
 
 class SignUpNicknameScreen extends Component {
 
@@ -170,6 +173,7 @@ class SignUpNicknameScreen extends Component {
   }
 
   render () {
+    console.log('사인업 닉네임 스크린')
     const { checking } = this.props
     const editable = !checking
 
@@ -183,36 +187,39 @@ class SignUpNicknameScreen extends Component {
           SettingText={'설정'}
           onAccept={this.onDecline.bind(this)}
           onSetting={this.onSetting.bind(this)} />
-        <View style={{marginLeft: 21, marginRight: 70.5, marginBottom: 0, backgroundColor: 'rgba(0,0,0,0)'}}>
-          <Text style={{color: 'white', opacity: 0.9, fontWeight: 'bold', fontSize: 60, marginBottom: 0}}>고마워요!</Text>
+        <View style={{marginLeft: 21, backgroundColor: 'rgba(0,0,0,0)'}}>
+          <Text style={{color: 'white', opacity: 0.9, fontWeight: 'bold', fontSize: 60}}>고마워요!</Text>
         </View>
-        <View style={{marginTop: 8, marginLeft: 23, marginRight: 86, backgroundColor: 'rgba(0,0,0,0)'}}>
-          <Text style={{color: 'white', opacity: 0.9, fontSize: 16}}>에피소드에서 사용할 프로필사진과 이름을 설정해주세요 😀</Text>
+        <View style={{marginTop: 8, marginLeft: 23, backgroundColor: 'rgba(0,0,0,0)'}}>
+          <Text style={{color: 'white', opacity: 0.9, fontSize: 16}}>에피소드에서 사용할 프로필사진과 이름을</Text>
+          <Text style={{color: 'white', opacity: 0.9, fontSize: 16}}>설정해주세요 😀</Text>
         </View>
-        <TouchableOpacity
-          style={{marginTop: 18, marginBottom: 28}}
-          onPress={this.getProfileImage.bind(this)}>
-          {this.renderProfileImage()}
-        </TouchableOpacity>
-        <View style={{marginTop: 0, marginLeft: 23, marginRight: 23, paddingBottom: 7.5, borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.5)', backgroundColor: 'rgba(0,0,0,0)'}}>
-          <TextInput
-            ref='emailCheck'
-            style={{fontWeight: 'bold', height: 20, color: 'white'}}
-            editable={editable}
-            keyboardType='default'
-            returnKeyType='done'
-            autoCapitalize='none'
-            autoCorrect={false}
-            onChangeText={this.handleChangeNickname.bind(this)}
-            onSubmitEditing={this.handlePressNickname.bind(this)}
-            placeholder='이름 (한글과 영문대소문자, 숫자만가능)'
-            placeholderTextColor='rgba(255,255,255,0.5)' />
+        <View style={{alignItems: 'center'}}>
+          <TouchableOpacity
+            style={{marginTop: 18}}
+            onPress={this.getProfileImage.bind(this)}>
+            {this.renderProfileImage()}
+          </TouchableOpacity>
+          <View style={{width: windowSize.width - 40, marginTop: 28, paddingBottom: 7.5, borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.5)', backgroundColor: 'rgba(0,0,0,0)'}}>
+            <TextInput
+              ref='emailCheck'
+              style={{fontWeight: 'bold', height: 20, color: 'white'}}
+              editable={editable}
+              keyboardType='default'
+              returnKeyType='done'
+              autoCapitalize='none'
+              autoCorrect={false}
+              onChangeText={this.handleChangeNickname.bind(this)}
+              onSubmitEditing={this.handlePressNickname.bind(this)}
+              placeholder='이름 (한글과 영문대소문자, 숫자만가능)'
+              placeholderTextColor='rgba(255,255,255,0.5)' />
+          </View>
+          <TouchableOpacity
+            style={{width: windowSize.width - 40, alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.9)', paddingTop: 10, paddingBottom: 10, marginTop: 22}}
+            onPress={this.handlePressNickname.bind(this)} >
+            <Text style={{color: 'black', fontWeight: 'bold', fontSize: 18}}>가입</Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={{backgroundColor: 'rgba(255,255,255,0.9)', paddingTop: 10, paddingBottom: 10, marginTop: 22, marginLeft: 22.5, marginRight: 22.5}}
-          onPress={this.handlePressNickname.bind(this)} >
-          <Text style={{color: 'black', fontWeight: 'bold', fontSize: 18, alignSelf: 'center'}}>가입</Text>
-        </TouchableOpacity>
       </View>
     )
   }

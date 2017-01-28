@@ -1,15 +1,18 @@
 import React, { Component, PropTypes } from 'react'
 import {
   View,
+  TouchableOpacity,
+  Text,
+  ScrollView,
   ListView,
   RefreshControl
 } from 'react-native'
 import { connect } from 'react-redux'
 import _ from 'lodash'
+import { Actions as NavigationActions } from 'react-native-router-flux'
 
 import EpisodeDetail from '../Components/common/EpisodeDetail'
 import CommentModal from '../Components/common/CommentModal'
-// import FeedList from '../Components/FeedList'
 import styles from './Styles/FeedScreenStyle'
 
 import AccountActions from '../Redux/AccountRedux'
@@ -34,6 +37,7 @@ class FeedScreen extends Component {
     requestUserEpisodes: PropTypes.func,
 
     resetCommentModal: PropTypes.func,
+    getComment: PropTypes.func,
     postComment: PropTypes.func
   }
 
@@ -46,13 +50,9 @@ class FeedScreen extends Component {
 
   componentDidMount () {
     const { token, accountId } = this.props
-    this.isAttempting = true
 
     this.props.requestInfo(token, accountId)
     this.props.resetCommentModal()
-
-    console.log('디드마운트')
-    console.log(this.props.items)
   }
 
   componentWillReceiveProps (nextProps) {
@@ -60,9 +60,9 @@ class FeedScreen extends Component {
       console.log('아이템같음')
     } else {
       console.log('아이템다름')
-      if (this.state.refreshing) {
-        this.setState({refreshing: false})
-      }
+    }
+    if (this.state.refreshing) {
+      this.setState({refreshing: false})
     }
   }
 
@@ -74,31 +74,65 @@ class FeedScreen extends Component {
     this.props.requestUserEpisodes(token, accountId, withFollowing)
   }
 
-  render () {
-    console.log(this.props.items)
-    console.log(this.state.dataSource)
-    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
-    this.dataSource = ds.cloneWithRows(this.props.items.slice())
-    return (
-      <View style={styles.mainContainer}>
+  renderListView (dataSource) {
+    if (dataSource._cachedRowCount === 0) {
+      return (
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this.onRefresh.bind(this)} />
+            } >
+          <View>
+            <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 100}}>
+              <Text style={{fontSize: 60, fontWeight: 'bold', color: 'white'}}>안녕하세요!</Text>
+            </View>
+            <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 80}}>
+              <Text style={{fontSize: 16, color: 'white'}}>다른 사람들의 에피소드를 구경하고</Text>
+              <Text style={{fontSize: 16, color: 'white'}}>팔로우 해보세요!</Text>
+            </View>
+            <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 18}}>
+              <TouchableOpacity onPress={NavigationActions.searchTab}>
+                <View style={{paddingTop: 5, paddingBottom: 5, paddingLeft: 7, paddingRight: 7, borderRadius: 4, borderWidth: 1, borderColor: 'white'}}>
+                  <Text style={{fontSize: 16, color: 'white'}}>에피소드 탐색</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </ScrollView>
+      )
+    } else {
+      return (
         <ListView
           removeClippedSubviews
-          pageSize={2}
+          pageSize={1}
           enableEmptySections
-          dataSource={this.dataSource}
+          dataSource={dataSource}
           renderRow={(item) =>
             <EpisodeDetail
               key={item.episode.id}
               episode={item.episode}
               account={item.account} />
-          }
+            }
           refreshControl={
             <RefreshControl
               refreshing={this.state.refreshing}
-              onRefresh={this.onRefresh.bind(this)} />}
-        />
-        <View style={{height: 50}} />
+              onRefresh={this.onRefresh.bind(this)} />
+            } />
+      )
+    }
+  }
+
+  render () {
+    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
+    const dataSource = ds.cloneWithRows(this.props.items.slice())
+
+    return (
+      <View style={styles.mainContainer}>
+        {this.renderListView(dataSource)}
+        <View style={{height: 48.5}} />
         <CommentModal
+          screen={'FeedScreen'}
           token={this.props.token}
           contentId={this.props.contentId}
           episodeId={this.props.episodeId}
@@ -106,37 +140,11 @@ class FeedScreen extends Component {
           comments={this.props.comments}
           commentPosting={this.props.commentPosting}
           resetCommentModal={this.props.resetCommentModal}
+          getComment={this.props.getComment}
           postComment={this.props.postComment} />
       </View>
     )
   }
-/*
-render () {
-  return (
-    <View style={styles.mainContainer}>
-      <ScrollView
-        refreshControl={
-          <RefreshControl
-            refreshing={this.state.refreshing}
-            onRefresh={this.onRefresh.bind(this)} />}
-      >
-        <FeedList
-          items={this.props.items} />
-        <View style={{height: 50}} />
-      </ScrollView>
-      <CommentModal
-        token={this.props.token}
-        contentId={this.props.contentId}
-        episodeId={this.props.episodeId}
-        visible={this.props.visible}
-        comments={this.props.comments}
-        commentPosting={this.props.commentPosting}
-        resetCommentModal={this.props.resetCommentModal}
-        postComment={this.props.postComment} />
-    </View>
-  )
-}
-*/
 }
 
 const mapStateToProps = (state) => {
@@ -162,6 +170,7 @@ const mapDispatchToProps = (dispatch) => {
     requestUserEpisodes: (token, accountId, withFollowing) => dispatch(EpisodeActions.userEpisodesRequest(token, accountId, withFollowing)),
 
     resetCommentModal: () => dispatch(CommentActions.resetComment()),
+    getComment: (token, episodeId, contentId) => dispatch(CommentActions.commentGet(token, episodeId, contentId)),
     postComment: (token, episodeId, contentId, message) => dispatch(CommentActions.commentPost(token, episodeId, contentId, message))
   }
 }

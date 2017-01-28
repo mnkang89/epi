@@ -112,10 +112,10 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     console.log('GET otherEpisode api콜 발생')
     console.log(accountId)
     console.log(active)
-    const formData = new FormData()
+    // const formData = new FormData()
 
-    formData.append('accountId', accountId)
-    formData.append('withFollowing', active)
+    // formData.append('accountId', accountId)
+    // formData.append('withFollowing', active)
     api.setHeader('x-auth', token)
 
     return api.get(`/api/feeds?accountId=${accountId}&withFollowing=${active}&size=7`)
@@ -137,7 +137,22 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     api.setHeader('x-auth', token)
 
     return api.delete(`/api/accounts/follow?id=${id}`)
-    // return api.delete(`/api/accounts/${accountId}/follow`, formData)
+  }
+
+  const getFollowing = (token, id) => {
+    console.log('GET account/following api콜 발생')
+
+    api.setHeader('x-auth', token)
+
+    return api.get(`/api/accounts/${id}/following`)
+  }
+
+  const getFollower = (token, id) => {
+    console.log('GET account/follower api콜 발생')
+
+    api.setHeader('x-auth', token)
+
+    return api.get(`/api/accounts/${id}/follower`)
   }
 
   // episode
@@ -272,6 +287,8 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
 
     postFollow,
     deleteFollow,
+    getFollowing,
+    getFollower,
 
     postEpisode,
     putEpisode,

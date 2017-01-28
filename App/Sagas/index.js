@@ -17,8 +17,8 @@ import { NotiTypes } from '../Redux/NotiRedux'
 // episode
 import { login } from './LoginSagas'
 import { email, password, nickname, profile, signup } from './SignupSagas'
-import { account, otherInfo, checkUserEpisode, postFollow, deleteFollow } from './AccountSagas'
-import { userEpisodes, otherEpisodes, postEpisode, putEpisode, singleEpisode } from './EpisodeSagas'
+import { account, otherInfo, checkUserEpisode, postFollow, deleteFollow, getFollowing, getFollower } from './AccountSagas'
+import { userEpisodes, userEpisodesWithFalse, otherEpisodes, postEpisode, putEpisode, singleEpisode } from './EpisodeSagas'
 import { postContent, postLike, deleteLike } from './ContentSagas'
 import { postComment, getComment } from './CommentSagas'
 import { getBestFeeds } from './FeedSagas'
@@ -65,6 +65,10 @@ export default function * root () {
     takeLatest(AccountTypes.FOLLOW_POST, postFollow, api),
     // delete follow
     takeLatest(AccountTypes.FOLLOW_DELETE, deleteFollow, api),
+    // get following
+    takeLatest(AccountTypes.GET_FOLLOWING, getFollowing, api),
+    // get follower
+    takeLatest(AccountTypes.GET_FOLLOWER, getFollower, api),
 
     /* --- Episode --- */
     // post episode
@@ -73,6 +77,8 @@ export default function * root () {
     takeLatest(EpisodeTypes.USER_EPISODE_PUT, putEpisode, api),
     // get user episode
     takeLatest(EpisodeTypes.USER_EPISODES_REQUEST, userEpisodes, api),
+    // get user episode with falses
+    takeLatest(EpisodeTypes.USER_EPISODES_WITH_FALSE_REQUEST, userEpisodesWithFalse, api),
     // get other episode
     takeLatest(EpisodeTypes.OTHER_EPISODES_REQUEST, otherEpisodes, api),
     // get single episode

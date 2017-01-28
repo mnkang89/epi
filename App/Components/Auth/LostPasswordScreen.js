@@ -1,14 +1,17 @@
 import React, { Component, PropTypes } from 'react'
 import {
   View,
+  Dimensions,
   TouchableOpacity,
   Text,
   TextInput
 } from 'react-native'
 
+const windowSize = Dimensions.get('window')
+
 class LostPasswordScreen extends Component {
   static propTypes = {
-    scrollViewHandler: PropTypes.object
+    scrollViewHandler: PropTypes.func
   }
 
   constructor (props) {
@@ -30,29 +33,33 @@ class LostPasswordScreen extends Component {
   }
 
   onPressSend () {
-    this.props.scrollViewHandler.scrollTo({x: 0})
+    this.props.scrollViewHandler(0)
   }
 
   render () {
+    console.log('로스트 패스워드 스크린')
     return (
       <View style={{marginTop: 44, backgroundColor: 'rgba(0,0,0,0)'}}>
-        <View style={{marginLeft: 21, marginRight: 70.5, marginBottom: 0, backgroundColor: 'rgba(0,0,0,0)'}}>
-          <Text style={{color: 'white', opacity: 0.9, fontWeight: 'bold', fontSize: 60, marginBottom: 0}}>ㅠ.ㅠ</Text>
+        <View style={{marginLeft: 21, backgroundColor: 'rgba(0,0,0,0)'}}>
+          <Text style={{color: 'white', opacity: 0.9, fontWeight: 'bold', fontSize: 60}}>ㅠ.ㅠ</Text>
         </View>
-        <View style={{marginTop: 17, marginLeft: 23, marginRight: 45, backgroundColor: 'rgba(0,0,0,0)'}}>
-          <Text style={{color: 'white', opacity: 0.9, fontSize: 16}}>회원가입시 입력한 이메일을 알려주시면 비밀번호 변경 링크를 보내드려요 😉</Text>
+        <View style={{marginTop: 17, marginLeft: 23, backgroundColor: 'rgba(0,0,0,0)'}}>
+          <Text style={{color: 'white', opacity: 0.9, fontSize: 16}}>회원가입시 입력한 이메일을 알려주시면</Text>
+          <Text style={{color: 'white', opacity: 0.9, fontSize: 16}}>비밀번호 변경 링크를 보내드려요 😉</Text>
         </View>
-        <View style={{marginTop: 100, width: 330, alignSelf: 'center', paddingBottom: 7.5, borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.5)', backgroundColor: 'rgba(0,0,0,0)'}}>
-          <TextInput
-            placeholder='이메일'
-            placeholderTextColor='rgba(255,255,255,0.5)'
-            style={{fontWeight: 'bold', color: 'white', height: 20}} />
+        <View style={{alignItems: 'center', marginTop: 100}}>
+          <View style={{width: windowSize.width - 40, paddingBottom: 7.5, borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.5)', backgroundColor: 'rgba(0,0,0,0)'}}>
+            <TextInput
+              placeholder='이메일'
+              placeholderTextColor='rgba(255,255,255,0.5)'
+              style={{fontWeight: 'bold', color: 'white', height: 20}} />
+          </View>
+          <TouchableOpacity
+            style={{alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.9)', width: windowSize.width - 40, paddingTop: 10, paddingBottom: 10, marginTop: 22}}
+            onPress={this.onPressSend.bind(this)} >
+            <Text style={{color: 'black', fontWeight: 'bold', fontSize: 18}}>임시비밀번호 전송</Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={{backgroundColor: 'rgba(255,255,255,0.9)', alignSelf: 'center', width: 330, paddingTop: 10, paddingBottom: 10, marginTop: 22}}
-          onPress={this.onPressSend.bind(this)} >
-          <Text style={{color: 'black', fontWeight: 'bold', fontSize: 18, alignSelf: 'center'}}>임시비밀번호 전송</Text>
-        </TouchableOpacity>
       </View>
     )
   }

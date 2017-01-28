@@ -6,8 +6,9 @@ import Immutable from 'seamless-immutable'
 /* ------------- Types and Action Creators ------------- */
 
 const { Types, Creators } = createActions({
-  tokenRequest: ['token'],
-  idRequest: ['id']
+  tokenRequest: ['token', 'id']
+  // TODO: idRequest는 deprecated
+  // idRequest: ['id']
 })
 
 export const TokenTypes = Types
@@ -23,12 +24,12 @@ export const INITIAL_STATE = Immutable({
 /* ------------- Reducers ------------- */
 
 // we're attempting to login
-export const request = (state: Object, { token }: Object) => state.merge({ token })
-export const idrequest = (state: Object, { id }: Object) => state.merge({ id })
+export const request = (state: Object, { token, id }: Object) => state.merge({ token, id })
+// export const idrequest = (state: Object, { id }: Object) => state.merge({ id })
 
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
-  [Types.TOKEN_REQUEST]: request,
-  [Types.ID_REQUEST]: idrequest
+  [Types.TOKEN_REQUEST]: request
+  // [Types.ID_REQUEST]: idrequest
 })

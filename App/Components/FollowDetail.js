@@ -7,7 +7,10 @@ import { Colors, Metrics } from '../Themes/'
 class FollowDetail extends Component {
 
   static propTypes = {
-    album: PropTypes.object
+    follow: PropTypes.object,
+
+    postFollow: PropTypes.func,
+    deleteFollow: PropTypes.func
   }
 
   constructor (props) {
@@ -24,7 +27,7 @@ class FollowDetail extends Component {
           onPress={() => {
             this.setState({follow: false})
           }}>
-          <View style={{borderWidth: 1, borderColor: 'rgb(53, 53, 53)', borderRadius: 5, padding: 5, backgroundColor: 'black'}}>
+          <View style={{borderWidth: 1, borderColor: 'rgb(53, 53, 53)', borderRadius: 5, paddingBottom: 5, paddingTop: 5, paddingLeft: 7, paddingRight: 7, backgroundColor: 'black'}}>
             <Text style={{color: 'white'}}>팔로잉</Text>
           </View>
         </TouchableOpacity>
@@ -32,10 +35,11 @@ class FollowDetail extends Component {
     } else {
       return (
         <TouchableOpacity
+          style={{alignItems: 'center'}}
           onPress={() => {
             this.setState({follow: true})
           }}>
-          <View style={{borderWidth: 1, borderColor: 'rgb(53, 53, 53)', borderRadius: 5, padding: 5, backgroundColor: 'white'}}>
+          <View style={{borderWidth: 1, borderColor: 'rgb(53, 53, 53)', borderRadius: 5, paddingBottom: 5, paddingTop: 5, paddingLeft: 7, paddingRight: 7, backgroundColor: 'white'}}>
             <Text>팔로우</Text>
           </View>
         </TouchableOpacity>
@@ -44,23 +48,23 @@ class FollowDetail extends Component {
   }
 
   render () {
-    const { artist } = this.props.album
     const {
             userTextStyle
           } = styles
+    const { nickname, profileImagePath } = this.props.follow
 
     return (
-      <View style={{height: 55, marginLeft: 15, marginRight: 14.45, borderBottomWidth: 0.5, borderColor: 'rgb(231, 231, 231)', flexDirection: 'row', backgroundColor: 'white'}}>
-        <View style={{alignItems: 'center', justifyContent: 'center'}}>
+      <View style={{alignItems: 'center', justifyContent: 'center', height: 55, marginLeft: 15, borderBottomWidth: 0.5, borderColor: 'rgb(231, 231, 231)', flexDirection: 'row', backgroundColor: 'white'}}>
+        <View style={{flex: 1}}>
           <Image
             style={styles.imageStyle}
-            source={{uri: 'https://facebook.github.io/react/img/logo_og.png'}}
+            source={{uri: profileImagePath}}
           />
         </View>
-        <View style={{marginLeft: 8.9, marginTop: 20}}>
-          <Text style={userTextStyle}>{artist}</Text>
+        <View style={{flex: 3}}>
+          <Text style={userTextStyle}>{nickname}</Text>
         </View>
-        <View style={{marginLeft: 170.5, marginTop: 14.5}}>
+        <View style={{flex: 1}}>
           {this.renderFollowButton()}
         </View>
       </View>

@@ -5,6 +5,7 @@ import Video from 'react-native-video'
 
 import { Colors, Images, Metrics } from '../Themes/'
 
+const windowSize = Dimensions.get('window')
 const screenWidth = Dimensions.get('window').width
 const scrollViewWidth = Math.round(screenWidth * 0.90)
 const cardWidth = scrollViewWidth * 0.80
@@ -30,6 +31,12 @@ class ExploreDetail extends Component {
     }
   }
 
+  componentWillReceiveProps (nextProps) {
+    this.setState({
+      follow: nextProps.following
+    })
+  }
+
   onFollowPress () {
     const { token } = this.props
     const id = this.props.episode.accountId
@@ -48,6 +55,7 @@ class ExploreDetail extends Component {
     console.log(accountId)
     NavigationActions.searchTouserProfileScreen({
       type: 'push',
+      screen: 'SearchScreen',
       id: accountId
     })
   }
@@ -57,6 +65,9 @@ class ExploreDetail extends Component {
     const account = this.props.account
     NavigationActions.searchTosingleEpisodeScreen({
       type: 'push',
+      screen: 'SearchScreen',
+      detailType: 'single',
+      singleType: 'search',
       modal: false,
       episodeId,
       account,
@@ -94,7 +105,7 @@ class ExploreDetail extends Component {
         return (
           <TouchableOpacity key={contents.indexOf(content)} onPress={this.onEpisodePress.bind(this)}>
             <View style={{marginRight: 8.1}}>
-              <Image style={{height: 146.6, width: 146.6}} source={{ uri: content.path }} />
+              <Image style={{width: windowSize.width - 228.4, height: windowSize.width - 228.4}} source={{ uri: content.path }} />
             </View>
           </TouchableOpacity>
         )
@@ -102,7 +113,7 @@ class ExploreDetail extends Component {
         return (
           <TouchableOpacity key={contents.indexOf(content)} onPress={this.onEpisodePress.bind(this)}>
             <View style={{marginRight: 8.1}}>
-              <View style={{height: 146.6, width: 146.6}}>
+              <View style={{width: windowSize.width - 228.4, height: windowSize.width - 228.4}}>
                 <Video
                   source={{uri: content.path}}   // Can be a URL or a local file.
                   muted
@@ -165,7 +176,7 @@ class ExploreDetail extends Component {
             {this.renderFollowButton()}
           </View>
         </View>
-        <View style={{height: 162, marginLeft: 15, marginRight: 15}}>
+        <View style={{height: windowSize.width - 213, marginLeft: 15, marginRight: 15}}>
           <ScrollView
             snapToAlignment={'center'}
             scrollEventThrottle={299}

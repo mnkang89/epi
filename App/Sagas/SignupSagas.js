@@ -134,8 +134,9 @@ export function * signup (api, action) {
     const accountId = path(['data', 'id'], response)
 
     yield put(SignupActions.signupSuccess(email, password))
-    yield put(TokenActions.tokenRequest(token))
-    yield put(TokenActions.idRequest(accountId))
+    yield put(TokenActions.tokenRequest(token, accountId))
+    // idRequest는 deprecated
+    // yield put(TokenActions.idRequest(accountId))
 
     /*
     if (responseStatus === 'ok') {
