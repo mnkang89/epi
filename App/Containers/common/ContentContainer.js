@@ -12,6 +12,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    openComment: (visible) => dispatch(CommentActions.openComment(visible)),
     getComment: (token, episodeId, contentId) => dispatch(CommentActions.commentGet(token, episodeId, contentId)),
 
     postLike: (token, contentId) => dispatch(ContentActions.likePost(token, contentId)),

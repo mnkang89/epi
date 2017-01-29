@@ -69,8 +69,7 @@ class ProfileScreen extends Component {
           refreshControl={
             <RefreshControl
               refreshing={this.state.refreshing}
-              onRefresh={this.onRefresh.bind(this)}
-            />
+              onRefresh={this.onRefresh.bind(this)} />
           }
         >
           <EpisodeList

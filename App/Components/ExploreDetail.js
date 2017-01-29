@@ -60,7 +60,7 @@ class ExploreDetail extends Component {
     })
   }
 
-  onEpisodePress () {
+  onEpisodePress (contentId) {
     const episodeId = this.props.episode.id
     const account = this.props.account
     NavigationActions.searchTosingleEpisodeScreen({
@@ -70,8 +70,8 @@ class ExploreDetail extends Component {
       singleType: 'search',
       modal: false,
       episodeId,
-      account,
-      contentId: null
+      contentId,
+      account
     })
   }
 
@@ -103,7 +103,7 @@ class ExploreDetail extends Component {
     return contents.map(content => {
       if (content.type === 'Image') {
         return (
-          <TouchableOpacity key={contents.indexOf(content)} onPress={this.onEpisodePress.bind(this)}>
+          <TouchableOpacity key={contents.indexOf(content)} onPress={this.onEpisodePress.bind(this, content.id)} >
             <View style={{marginRight: 8.1}}>
               <Image style={{width: windowSize.width - 228.4, height: windowSize.width - 228.4}} source={{ uri: content.path }} />
             </View>
@@ -111,7 +111,7 @@ class ExploreDetail extends Component {
         )
       } else {
         return (
-          <TouchableOpacity key={contents.indexOf(content)} onPress={this.onEpisodePress.bind(this)}>
+          <TouchableOpacity key={contents.indexOf(content)} onPress={this.onEpisodePress.bind(this, content.id)} >
             <View style={{marginRight: 8.1}}>
               <View style={{width: windowSize.width - 228.4, height: windowSize.width - 228.4}}>
                 <Video

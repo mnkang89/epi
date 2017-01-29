@@ -1,10 +1,11 @@
 // TODO: 싱글에피소드 api 리스펀스 오브젝트의 경우 피드와는 다른 형태를 가진다. 때문에, EpisdoeList(현재는 피드에 맞추어 설계되어 있음) 말고 EpisodeDetail을 직접 사용한다.
 
 import React, { Component, PropTypes } from 'react'
-import { View, ScrollView, RefreshControl } from 'react-native'
+import { View, ScrollView, RefreshControl, Dimensions } from 'react-native'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 
+import { getObjectDiff } from '../Lib/Utilities'
 import EpisodeDetail from '../Components/common/EpisodeDetail'
 import CommentModal from '../Components/common/CommentModal'
 // import EpisodeList from '../Components/common/EpisodeList'
@@ -13,6 +14,7 @@ import styles from './Styles/FeedScreenStyle'
 import EpisodeActions from '../Redux/EpisodeRedux'
 import CommentActions from '../Redux/CommentRedux'
 
+const windowSize = Dimensions.get('window')
 // contentId받아서 어떻게 할 것인지 정하기
 
 class SingleEpisodeScreen extends Component {
@@ -46,6 +48,7 @@ class SingleEpisodeScreen extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
+    console.log(getObjectDiff(this.props, nextProps))
     if (_.isEqual(this.props.items, nextProps.items)) {
       console.log('아이템같음')
       this.setState({refreshing: false})
@@ -57,6 +60,14 @@ class SingleEpisodeScreen extends Component {
     }
   }
 
+  shouldComponentUpdate (nextProps, nextState) {
+    // 상관없는 하위 컴포넌트들이 리 렌더링되는 문제를 막기위함
+    if (nextProps.items === this.props.items) {
+      return false
+    }
+    return true
+  }
+
   onRefresh () {
     const { token, episodeId } = this.props
     this.setState({refreshing: true})
@@ -66,15 +77,25 @@ class SingleEpisodeScreen extends Component {
 
   renderEpisodes () {
     const account = this.props.account
+    const { contentId } = this.props
+    let xPosition = 0
 
-    return this.props.items.map(item =>
-      <EpisodeDetail
-        key={item.id}
-        episode={item}
-        account={account}
-        type={this.props.detailType}
-        singleType={this.props.singleType} />
-    )
+    return this.props.items.map(item => {
+      let contents = item.contents
+      if (contentId) {
+        xPosition = contents.map((content) => { return content.id }).indexOf(contentId) * (windowSize.width - 22)
+      }
+
+      return (
+        <EpisodeDetail
+          key={item.id}
+          episode={item}
+          account={account}
+          type={this.props.detailType}
+          singleType={this.props.singleType}
+          xPosition={xPosition} />
+      )
+    })
   }
 
   render () {
@@ -84,10 +105,8 @@ class SingleEpisodeScreen extends Component {
           refreshControl={
             <RefreshControl
               refreshing={this.state.refreshing}
-              onRefresh={this.onRefresh.bind(this)}
-            />
-          }
-        >
+              onRefresh={this.onRefresh.bind(this)} />
+          } >
           {this.renderEpisodes()}
         </ScrollView>
         <CommentModal

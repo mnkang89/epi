@@ -25,6 +25,7 @@ class ContentDetailClass extends Component {
 
     token: PropTypes.string,
 
+    openComment: PropTypes.func,
     getComment: PropTypes.func,
     postLike: PropTypes.func,
     deleteLike: PropTypes.func
@@ -89,6 +90,7 @@ class ContentDetailClass extends Component {
     const {token, episodeId} = this.props
     const contentId = this.props.content.id
 
+    this.props.openComment(true)
     this.props.getComment(token, episodeId, contentId)
     console.log('onlongpress 끝남')
   }
@@ -152,9 +154,9 @@ class ContentDetailClass extends Component {
       return (
         <View style={{backgroundColor: 'black', paddingLeft: 8, paddingRight: paddingRight}}>
           <TouchableWithoutFeedback
-            delayLongPress={800}
+            delayLongPress={350}
             onPress={this.onDoublePress.bind(this)}
-            onLongPress={() => this.onLongPress()} >
+            onLongPress={this.onLongPress.bind(this)} >
             <Image style={[imageStyle, {flex: 1, alignItems: 'center'}]} source={{ uri: content.path }} >
               <View style={{flex: 1, marginTop: 90}}>
                 {this.renderAnimation()}

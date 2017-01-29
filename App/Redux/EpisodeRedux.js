@@ -1,5 +1,3 @@
-// @flow
-
 import { createReducer, createActions } from 'reduxsauce'
 import Immutable from 'seamless-immutable'
 
@@ -87,11 +85,12 @@ export default Creators
 export const INITIAL_STATE = Immutable({
   episodes: [],
   episodesWithFalse: [],
-  episodesRequesting: true,
+  episodesRequesting: false,
+  episodesWithFalseRequesting: false,
   episodesError: null,
 
   otherEpisodes: [],
-  otherEpisodesRequesting: true,
+  otherEpisodesRequesting: false,
   otherEpisodesError: null,
 
   episodeId: null,
@@ -107,7 +106,8 @@ export const INITIAL_STATE = Immutable({
 
 /* ------------- Reducers ------------- */
 // we're attempting to get Episodes
-export const userEpisodesRequest = (state: Object, { token, accountId, active }: Object) => INITIAL_STATE
+export const userEpisodesRequest = (state: Object, { token, accountId, active }: Object) =>
+  state.merge({ episodesRequesting: true })
 
 export const userEpisodesSuccess = (state: Object, { episodes }: Object) =>
   state.merge({ episodesRequesting: false, episodesError: null, episodes })
@@ -116,13 +116,14 @@ export const userEpisodesFailure = (state: Object, { episodesError }: Object) =>
   state.merge({ episodesRequesting: false, episodesError })
 
 // only my episodes
-export const userEpisodesWithFalseRequest = (state: Object, { token, accountId, active }: Object) => INITIAL_STATE
+export const userEpisodesWithFalseRequest = (state: Object, { token, accountId, active }: Object) =>
+  state.merge({ episodesWithFalseRequesting: true })
 
 export const userEpisodesWithFalseSuccess = (state: Object, { episodesWithFalse }: Object) =>
-  state.merge({ episodesRequesting: false, episodesError: null, episodesWithFalse })
+  state.merge({ episodesWithFalseRequesting: false, episodesError: null, episodesWithFalse })
 
 export const userEpisodesWithFalseFailure = (state: Object, { episodesError }: Object) =>
-  state.merge({ episodesRequesting: false, episodesError })
+  state.merge({ episodesWithFalseRequesting: false, episodesError })
 
 // other user episodes
 export const otherEpisodesRequest = (state: Object, { token, accountId, active }: Object) =>

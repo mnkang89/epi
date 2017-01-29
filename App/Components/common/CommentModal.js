@@ -44,7 +44,7 @@ class CommentModal extends Component {
   }
 
   componentDidMount () {
-    this.props.resetCommentModal()
+    // this.props.resetCommentModal()
   }
 
   componentWillReceiveProps (nextProps) {

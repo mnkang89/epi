@@ -22,8 +22,9 @@ const windowSize = Dimensions.get('window')
 class NotiScreen extends Component {
   static propTypes = {
     token: PropTypes.string,
-    noties: PropTypes.array,
     myAccount: PropTypes.object,
+    notiesRequesting: PropTypes.bool,
+    noties: PropTypes.array,
 
     requestNoties: PropTypes.func,
     openComment: PropTypes.func,
@@ -62,46 +63,52 @@ class NotiScreen extends Component {
   }
 
   renderScrollview (noties) {
-    if (noties.length === 0) {
-      return (
-        <ScrollView
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.refreshing}
-              onRefresh={this.onRefresh.bind(this)} />
-            } >
-          <View>
-            <View style={{justifyContent: 'center', alignItems: 'center', marginTop: windowSize.height - 410}}>
-              <Text style={{fontSize: 16, color: 'white'}} >아직은 전해드릴 소식이 없네요.</Text>
-              <Text style={{fontSize: 16, color: 'white'}} >에피소드를 공유하고 소식을 받아보세요:)</Text>
-            </View>
-            <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 18}}>
-              <TouchableOpacity onPress={NavigationActions.cameraTab}>
-                <View style={{paddingTop: 5, paddingBottom: 5, paddingLeft: 7, paddingRight: 7, borderRadius: 4, borderWidth: 1, borderColor: 'white'}}>
-                  <Text style={{fontSize: 16, color: 'white'}}>에피소드 공유</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </ScrollView>
-      )
+    if (this.props.notiesRequesting) {
+      console.log('노티 리퀘스팅중')
+      return
     } else {
-      return (
-        <ScrollView
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.refreshing}
-              onRefresh={this.onRefresh.bind(this)}
-            />}
-        >
-          <NotiList
-            token={this.props.token}
-            noties={this.props.noties}
-            myAccount={this.props.myAccount}
-            openComment={this.props.openComment}
-            getComment={this.props.getComment} />
-        </ScrollView>
-      )
+      if (noties.length === 0) {
+        console.log('노티 없음')
+        return (
+          <ScrollView
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this.onRefresh.bind(this)} />
+              } >
+            <View>
+              <View style={{justifyContent: 'center', alignItems: 'center', marginTop: windowSize.height - 410}}>
+                <Text style={{fontSize: 16, color: 'white'}} >아직은 전해드릴 소식이 없네요.</Text>
+                <Text style={{fontSize: 16, color: 'white'}} >에피소드를 공유하고 소식을 받아보세요:)</Text>
+              </View>
+              <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 18}}>
+                <TouchableOpacity onPress={NavigationActions.cameraTab}>
+                  <View style={{paddingTop: 5, paddingBottom: 5, paddingLeft: 7, paddingRight: 7, borderRadius: 4, borderWidth: 1, borderColor: 'white'}}>
+                    <Text style={{fontSize: 16, color: 'white'}}>에피소드 공유</Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </ScrollView>
+        )
+      } else {
+        return (
+          <ScrollView
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this.onRefresh.bind(this)} />
+            }
+          >
+            <NotiList
+              token={this.props.token}
+              noties={this.props.noties}
+              myAccount={this.props.myAccount}
+              openComment={this.props.openComment}
+              getComment={this.props.getComment} />
+          </ScrollView>
+        )
+      }
     }
   }
 
@@ -124,6 +131,7 @@ const mapStateToProps = (state) => {
     token: state.token.token,
     myAccount: state.account,
 
+    notiesRequesting: state.noti.notiesRequesting,
     noties: state.noti.noties
   }
 }

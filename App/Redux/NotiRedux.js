@@ -23,7 +23,7 @@ export default Creators
 /* ------------- Initial State ------------- */
 
 export const INITIAL_STATE = Immutable({
-  notiesRequesting: true,
+  notiesRequesting: false,
   noties: [],
   error: null
 })

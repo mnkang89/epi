@@ -31,8 +31,8 @@ class NotiDetail extends Component {
     console.log(this.state.type)
 
     if (this.state.type === 'comment') {
-      this.props.getComment(token, episodeId, contentId)
       this.props.openComment(true)
+      this.props.getComment(token, episodeId, contentId)
 
       NavigationActions.singleEpisodeScreen({
         type: 'push',
@@ -57,7 +57,7 @@ class NotiDetail extends Component {
         contentId
       })
     } else if (this.state.type === 'follow') {
-      const accountId = this.props.noti.notiRelateEntityMeta
+      const accountId = this.props.noti.notiCreateAccount.id
 
       NavigationActions.notiTouserProfileScreen({
         type: 'push',
@@ -79,14 +79,16 @@ class NotiDetail extends Component {
 
   renderProfileImage () {
     if (this.props.noti.notiCreateAccount.profileImagePath) {
-      return (<Image
-        style={styles.imageStyle}
-        source={{uri: this.props.noti.notiCreateAccount.profileImagePath}} />
+      return (
+        <Image
+          style={styles.imageStyle}
+          source={{uri: this.props.noti.notiCreateAccount.profileImagePath}} />
       )
     } else {
-      return (<Image
-        style={styles.imageStyle}
-        source={Images.profileImage} />
+      return (
+        <Image
+          style={styles.imageStyle}
+          source={Images.profileImage} />
       )
     }
   }

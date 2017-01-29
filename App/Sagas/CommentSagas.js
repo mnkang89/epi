@@ -35,10 +35,8 @@ export function * getComment (api, action) {
     console.log('ok')
     console.log(response)
     const comments = path(['data', 'comments'], response)
-    const visible = true
 
     yield put(CommentActions.commentGetSuccess(comments))
-    yield put(CommentActions.openComment(visible))
   } else {
     console.log('error')
     console.log(response)

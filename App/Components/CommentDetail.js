@@ -3,6 +3,7 @@ import { Text, View, Image, TouchableOpacity, Modal } from 'react-native'
 
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import { Colors, Images, Metrics } from '../Themes/'
+import { getObjectDiff } from '../Lib/Utilities'
 
 class CommentDetail extends Component {
 
@@ -18,6 +19,17 @@ class CommentDetail extends Component {
     this.state = {
       settingModal: false
     }
+  }
+
+  componentWillReceiveProps (nextProps) {
+    console.log(getObjectDiff(this.props, nextProps))
+  }
+
+  shouldComponentUpdate (nextProps, nextState) {
+    if (nextProps.resetCommentModal !== this.props.resetCommentModal) {
+      return false
+    }
+    return true
   }
 
   commentSetting () {

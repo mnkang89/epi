@@ -21,6 +21,7 @@ class EpisodeDetail extends Component {
     account: PropTypes.object,
     episode: PropTypes.object,
 
+    xPosition: PropTypes.number,
     type: PropTypes.string,
     singleType: PropTypes.string
   }
@@ -122,32 +123,28 @@ class EpisodeDetail extends Component {
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
     const contents = this.props.episode.contents
     const episodeId = this.props.episode.id
-
     this.dataSource = ds.cloneWithRows(contents.slice())
 
+    const active = this.props.episode.active
+    const activeEpisodeLength = this.props.episode.contents.length
+    const commentCount = this.props.episode.contents.map(content => content.commentCount).reduce((a, b) => a + b, 0)
+    const timeDiffString = convert2TimeDiffString(
+      this.props.episode.updatedDateTime || this.props.episode.createDateTime)
     const {
       headerContentStyle,
       textStyle
     } = styles
 
-    const active = this.props.episode.active
-    const activeEpisodeLength = this.props.episode.contents.length
-    const commentCount = this.props.episode.contents.map(content => content.commentCount).reduce((a, b) => a + b, 0)
-
-    //  const likeCount = this.props.episode.contents
-    //    .map(content => content.likeCount).reduce((a, b) => a + b, 0)
-
-    const timeDiffString = convert2TimeDiffString(
-      this.props.episode.updatedDateTime || this.props.episode.createDateTime)
-
-    // var는 es6에서 deprecated.. 어떻게 대체할지 고민해보자. state으로 처리할시 발생하는 성능문제
-    // 2017/01/01 let으로 바꿧음
     let xPosition = 0
 
-    if (active) {
-      xPosition = (activeEpisodeLength - 1) * (windowSize.width - 22)
+    if (!this.props.xPosition) {
+      if (active) {
+        xPosition = (activeEpisodeLength - 1) * (windowSize.width - 22)
+      } else {
+        xPosition = 0
+      }
     } else {
-      xPosition = 0
+      xPosition = this.props.xPosition
     }
     return (
       <View>
