@@ -157,7 +157,13 @@ class ContentDetailClass extends Component {
             delayLongPress={350}
             onPress={this.onDoublePress.bind(this)}
             onLongPress={this.onLongPress.bind(this)} >
-            <Image style={[imageStyle, {flex: 1, alignItems: 'center'}]} source={{ uri: content.path }} >
+            <Image
+              style={{
+                alignItems: 'center',
+                height: windowSize.width - 30,
+                width: windowSize.width - 30
+              }}
+              source={{ uri: content.path }} >
               <View style={{flex: 1, marginTop: 90}}>
                 {this.renderAnimation()}
               </View>
@@ -185,7 +191,7 @@ class ContentDetailClass extends Component {
             delayLongPress={800}
             onPress={this.onDoublePress.bind(this)}
             onLongPress={this.onLongPress.bind(this)} >
-            <View style={{height: windowSize.width - 30, width: windowSize.width - 30, overflow: 'hidden'}}>
+            <View style={{height: windowSize.width - 30, width: windowSize.width - 30}}>
               <Video
                 source={{uri: content.path}}   // Can be a URL or a local file.
                 muted
@@ -205,11 +211,11 @@ class ContentDetailClass extends Component {
                   right: 0,
                   bottom: 0
                 }} />
-              <View style={{flex: 1, alignItems: 'center'}} >
-                <View style={{flex: 1, marginTop: 90}}>
+              <View style={{alignItems: 'center'}} >
+                <View style={{marginTop: 90}}>
                   {this.renderAnimation()}
                 </View>
-                <View style={{flex: 1, justifyContent: 'flex-end', marginBottom: 10, backgroundColor: 'rgba(0,0,0,0)'}}>
+                <View style={{justifyContent: 'flex-end', marginBottom: 10, backgroundColor: 'rgba(0,0,0,0)'}}>
                   <Text
                     style={{
                       textShadowOffset: {width: 1, height: 2},
@@ -233,7 +239,7 @@ class ContentDetailClass extends Component {
     const content = this.props.content
 
     return (
-      <View style={{overflow: 'hidden'}} >
+      <View style={{overflow: 'hidden'}}>
         {this.renderContent(content)}
       </View>
     )
@@ -242,7 +248,7 @@ class ContentDetailClass extends Component {
 
 const styles = {
   imageStyle: {
-    overflow: 'hidden',
+    alignItems: 'center',
     height: windowSize.width - 30,
     width: windowSize.width - 30
   }

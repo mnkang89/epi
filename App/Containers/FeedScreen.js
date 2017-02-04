@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import {
   View,
+  // Dimensions,
   TouchableOpacity,
   Text,
   ScrollView,
@@ -11,14 +12,19 @@ import { connect } from 'react-redux'
 import _ from 'lodash'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 
+import styles from './Styles/FeedScreenStyle'
 import { getObjectDiff } from '../Lib/Utilities'
 import EpisodeDetail from '../Components/common/EpisodeDetail'
-import CommentModal from '../Components/common/CommentModal'
-import styles from './Styles/FeedScreenStyle'
+import CommentModalContainer from './common/CommentModalContainer'
 
 import AccountActions from '../Redux/AccountRedux'
 import EpisodeActions from '../Redux/EpisodeRedux'
 import CommentActions from '../Redux/CommentRedux'
+
+// const windowSize = Dimensions.get('window')
+const ITEM_SIZE = 440
+const BUFFER_ITEMS = 0
+const DISPLAY_ITEMS = 8
 
 class FeedScreen extends Component {
 
@@ -46,8 +52,27 @@ class FeedScreen extends Component {
 
   constructor (props) {
     super(props)
+    let listItemHeight = ITEM_SIZE
+    // Use contentOffset to calculate first visible dataItem as y-position / height of item
+    // firstVisibleItem: 뷰포트에 비저블한 첫 아이템의 인덱스?
+    let firstVisibleItem = 0
+    let renderModelSize = BUFFER_ITEMS * 2 + DISPLAY_ITEMS
+    // Calculate first y-position
+    let nextPosition = (firstVisibleItem - BUFFER_ITEMS) * listItemHeight
+    // Subset of dataModel to be rendered.
+    let dataItems = this.props.items.slice(firstVisibleItem, firstVisibleItem + renderModelSize)
+    let newRenderModel = dataItems.map((item, index) => {
+      return {
+        key: item.episode.id,
+        item: item,
+        position: nextPosition + index * listItemHeight
+      }
+    })
     this.state = {
-      refreshing: false
+      refreshing: false,
+      dataModel: this.props.items,
+      renderModel: newRenderModel,
+      bodyHeight: 6 * 444
     }
   }
 
@@ -77,6 +102,36 @@ class FeedScreen extends Component {
 
     this.setState({refreshing: true})
     this.props.requestUserEpisodes(token, accountId, withFollowing)
+  }
+
+  onScroll (e) {
+    this.updateRenderModel(e.nativeEvent.contentOffset)
+  }
+
+  updateRenderModel (contentOffset) {
+    let listItemHeight = ITEM_SIZE
+    // Use contentOffset to calculate first visible dataItem as y-position / height of item
+    // firstVisibleItem: 뷰포트에 비저블한 첫 아이템의 인덱스?
+    let firstVisibleItem = Math.max(0, Math.floor(contentOffset.y / listItemHeight))
+    let renderModelSize = BUFFER_ITEMS * 2 + DISPLAY_ITEMS
+    // Calculate first y-position
+    let nextPosition = (firstVisibleItem - BUFFER_ITEMS) * listItemHeight
+    // Subset of dataModel to be rendered.
+    let dataItems = this.state.dataModel.slice(firstVisibleItem, firstVisibleItem + renderModelSize)
+    let newRenderModel = dataItems.map((item, index) => {
+      return {
+        key: item.episode.id,
+        item: item,
+        position: nextPosition + index * listItemHeight
+      }
+    })
+    // update renderModel, as well as bodyHeight of scroll area to encompass the largest y value
+    let state = {
+      renderModel: newRenderModel,
+      // dataModel: this.state.dataModel,
+      bodyHeight: nextPosition + renderModelSize * listItemHeight
+    }
+    this.setState(state)
   }
 
   renderListView (dataSource) {
@@ -142,20 +197,46 @@ class FeedScreen extends Component {
       <View style={styles.mainContainer}>
         {this.renderListView(dataSource)}
         <View style={{height: 48.5}} />
-        <CommentModal
-          screen={'FeedScreen'}
-          token={this.props.token}
-          contentId={this.props.contentId}
-          episodeId={this.props.episodeId}
-          visible={this.props.visible}
-          comments={this.props.comments}
-          commentPosting={this.props.commentPosting}
-          resetCommentModal={this.props.resetCommentModal}
-          getComment={this.props.getComment}
-          postComment={this.props.postComment} />
+        <CommentModalContainer screen={'FeedScreen'} token={this.props.token} />
       </View>
     )
   }
+
+/*
+render () {
+  var items = this.state.renderModel.map(renderItem => {
+    const itemStyle = {
+      position: 'absolute',
+      width: windowSize.width,
+      height: ITEM_SIZE,
+      left: 0,
+      top: renderItem.position,
+      alignItems: 'center'
+    }
+
+    return (
+      <View key={renderItem.key} style={itemStyle}>
+        <EpisodeDetail
+          key={renderItem.item.episode.id}
+          episode={renderItem.item.episode}
+          account={renderItem.item.account} />
+      </View>
+    )
+  })
+  return (
+    <View style={styles.mainContainer}>
+      <ScrollView ref='scrollView' style={{flex: 1}} scrollEventThrottle={1} onScroll={this.onScroll.bind(this)}>
+        <View style={{height: this.state.bodyHeight, width: windowSize.width}}>
+          {items}
+        </View>
+      </ScrollView>
+      <View style={{height: 48.5}} />
+      <CommentModalContainer screen={'FeedScreen'} token={this.props.token} />
+    </View>
+  )
+}
+*/
+
 }
 
 const mapStateToProps = (state) => {
@@ -164,15 +245,7 @@ const mapStateToProps = (state) => {
     accountId: state.token.id,
 
     episodesRequesting: state.episode.episodesRequesting,
-    items: state.episode.episodes,
-
-    contentId: state.comment.contentId,
-    episodeId: state.comment.episodeId,
-
-    visible: state.comment.visible,
-
-    comments: state.comment.comments,
-    commentPosting: state.comment.commentPosting
+    items: state.episode.episodes
   }
 }
 
@@ -181,9 +254,7 @@ const mapDispatchToProps = (dispatch) => {
     requestInfo: (token, accountId) => dispatch(AccountActions.infoRequest(token, accountId)),
     requestUserEpisodes: (token, accountId, withFollowing) => dispatch(EpisodeActions.userEpisodesRequest(token, accountId, withFollowing)),
 
-    resetCommentModal: () => dispatch(CommentActions.resetComment()),
-    getComment: (token, episodeId, contentId) => dispatch(CommentActions.commentGet(token, episodeId, contentId)),
-    postComment: (token, episodeId, contentId, message) => dispatch(CommentActions.commentPost(token, episodeId, contentId, message))
+    resetCommentModal: () => dispatch(CommentActions.resetComment())
   }
 }
 

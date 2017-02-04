@@ -5,14 +5,14 @@ import _ from 'lodash'
 
 import ProfileInfo from '../Components/common/ProfileInfo'
 import EpisodeList from '../Components/common/EpisodeList'
-import CommentModal from '../Components/common/CommentModal'
+
+import CommentModalContainer from './common/CommentModalContainer'
 
 // Styles
 import styles from './Styles/FeedScreenStyle'
 
 import SignupActions from '../Redux/SignupRedux'
 import EpisodeActions from '../Redux/EpisodeRedux'
-import CommentActions from '../Redux/CommentRedux'
 
 class ProfileScreen extends Component {
   static propTypes = {
@@ -27,10 +27,7 @@ class ProfileScreen extends Component {
     items: PropTypes.array,
 
     requestProfileImage: PropTypes.func,
-    requestUserEpisodes: PropTypes.func,
-
-    getComment: PropTypes.func,
-    postComment: PropTypes.func
+    requestUserEpisodes: PropTypes.func
   }
 
   constructor (props) {
@@ -87,17 +84,7 @@ class ProfileScreen extends Component {
           </EpisodeList>
         </ScrollView>
         <View style={{height: 48.5}} />
-        <CommentModal
-          screen={'ProfileScreen'}
-          token={this.props.token}
-          contentId={this.props.contentId}
-          episodeId={this.props.episodeId}
-          visible={this.props.visible}
-          comments={this.props.comments}
-          commentPosting={this.props.commentPosting}
-          resetCommentModal={this.props.resetCommentModal}
-          getComment={this.props.getComment}
-          postComment={this.props.postComment} />
+        <CommentModalContainer screen={'ProfileScreen'} token={this.props.token} />
       </View>
     )
   }
@@ -113,26 +100,14 @@ const mapStateToProps = (state) => {
     followerCount: state.account.followerCount,
     followingCount: state.account.followingCount,
 
-    items: state.episode.episodesWithFalse,
-
-    contentId: state.comment.contentId,
-    episodeId: state.comment.episodeId,
-
-    visible: state.comment.visible,
-
-    comments: state.comment.comments,
-    commentPosting: state.comment.commentPosting
+    items: state.episode.episodesWithFalse
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     requestProfileImage: (photoSource, token, accountId) => dispatch(SignupActions.profileRequest(photoSource, token, accountId)),
-    requestUserEpisodesWithFalse: (token, accountId, withFollowing) => dispatch(EpisodeActions.userEpisodesWithFalseRequest(token, accountId, withFollowing)),
-
-    resetCommentModal: () => dispatch(CommentActions.resetComment()),
-    getComment: (token, episodeId, contentId) => dispatch(CommentActions.commentGet(token, episodeId, contentId)),
-    postComment: (token, episodeId, contentId, message) => dispatch(CommentActions.commentPost(token, episodeId, contentId, message))
+    requestUserEpisodesWithFalse: (token, accountId, withFollowing) => dispatch(EpisodeActions.userEpisodesWithFalseRequest(token, accountId, withFollowing))
   }
 }
 

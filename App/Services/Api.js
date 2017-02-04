@@ -256,7 +256,7 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     console.log('GET bestFeeds api콜 발생')
     api.setHeader('x-auth', token)
 
-    return api.get(`/api/feeds/best?size=5`)
+    return api.get(`/api/feeds/best?size=7`)
   }
 
   // noties

@@ -48,7 +48,7 @@ class CommentList extends Component {
         key={comment.id}
         comment={comment}
         screen={this.props.screen}
-        resetCommentModal={this.props.resetCommentModal} />
+        resetCommentModal={this.props.resetCommentModal}/>
     )
   }
 

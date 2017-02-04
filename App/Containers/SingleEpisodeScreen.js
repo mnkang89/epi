@@ -5,14 +5,13 @@ import { View, ScrollView, RefreshControl, Dimensions } from 'react-native'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 
-import { getObjectDiff } from '../Lib/Utilities'
-import EpisodeDetail from '../Components/common/EpisodeDetail'
-import CommentModal from '../Components/common/CommentModal'
-// import EpisodeList from '../Components/common/EpisodeList'
 import styles from './Styles/FeedScreenStyle'
+import { getObjectDiff } from '../Lib/Utilities'
+
+import EpisodeDetail from '../Components/common/EpisodeDetail'
+import CommentModalContainer from './common/CommentModalContainer'
 
 import EpisodeActions from '../Redux/EpisodeRedux'
-import CommentActions from '../Redux/CommentRedux'
 
 const windowSize = Dimensions.get('window')
 // contentId받아서 어떻게 할 것인지 정하기
@@ -30,8 +29,7 @@ class SingleEpisodeScreen extends Component {
     detailType: PropTypes.string,
     singleType: PropTypes.string,
 
-    requestSingleEpisode: PropTypes.func,
-    getComment: PropTypes.func
+    requestSingleEpisode: PropTypes.func
   }
 
   constructor (props) {
@@ -109,17 +107,11 @@ class SingleEpisodeScreen extends Component {
           } >
           {this.renderEpisodes()}
         </ScrollView>
-        <CommentModal
+        <CommentModalContainer
           screen={this.props.screen}
           token={this.props.token}
           contentId={this.props.contentId}
-          episodeId={this.props.episodeId}
-          visible={this.props.visible}
-          comments={this.props.comments}
-          commentPosting={this.props.commentPosting}
-          resetCommentModal={this.props.resetCommentModal}
-          getComment={this.props.getComment}
-          postComment={this.props.postComment} />
+          episodeId={this.props.episodeId} />
       </View>
     )
   }
@@ -128,21 +120,13 @@ class SingleEpisodeScreen extends Component {
 const mapStateToProps = (state) => {
   return {
     token: state.token.token,
-    items: state.episode.singleEpisode,
-
-    visible: state.comment.visible,
-    comments: state.comment.comments,
-    commentPosting: state.comment.commentPosting
+    items: state.episode.singleEpisode
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    requestSingleEpisode: (token, episodeId) => dispatch(EpisodeActions.singleEpisodeRequest(token, episodeId)),
-
-    resetCommentModal: () => dispatch(CommentActions.resetComment()),
-    getComment: (token, episodeId, contentId) => dispatch(CommentActions.commentGet(token, episodeId, contentId)),
-    postComment: (token, episodeId, contentId, message) => dispatch(CommentActions.commentPost(token, episodeId, contentId, message))
+    requestSingleEpisode: (token, episodeId) => dispatch(EpisodeActions.singleEpisodeRequest(token, episodeId))
   }
 }
 

@@ -147,7 +147,7 @@ class EpisodeDetail extends Component {
       xPosition = this.props.xPosition
     }
     return (
-      <View>
+      <View style={{flex: 1, overflow: 'hidden'}}>
         <View style={headerContentStyle}>
           <View style={{width: windowSize.width - 30, marginTop: 10}}>
             <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
@@ -169,7 +169,6 @@ class EpisodeDetail extends Component {
             </View>
           </View>
         </View>
-
         <ListView
           removeClippedSubviews
           pageSize={2}
@@ -200,7 +199,7 @@ class EpisodeDetail extends Component {
                 dislike={this.dislike.bind(this)} />
             )
           }} />
-        <View style={[textStyle, {alignSelf: 'center', width: windowSize.width - 30, backgroundColor: 'black', paddingTop: 15}]}>
+        <View style={{width: windowSize.width - 30, backgroundColor: 'black', paddingTop: 15}}>
           <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
             <Text style={{fontSize: 13, paddingRight: 10, color: 'rgb(217,217,217)'}}>공감 {this.state.likeCount}</Text>
             <Text style={{fontSize: 13, color: 'rgb(217,217,217)'}}>댓글 {commentCount}</Text>
@@ -211,6 +210,38 @@ class EpisodeDetail extends Component {
   }
 
 }
+/*
+<ListView
+  removeClippedSubviews
+  pageSize={2}
+  style={{marginTop: 10, paddingLeft: 7.5, paddingRight: 7.5}}
+  contentOffset={{x: xPosition, y: 0}}
+  onScroll={this.handleScroll.bind(this)}
+  onScrollBeginDrag={() => console.log('onScrollBeginDrag')}
+  onScrollEndDrag={() => console.log('onScrollEndDrag')}
+  onMomentumScrollBegin={() => console.log('onMomentumScrollBegin')}
+  onMomentumScrollEnd={() => console.log('onMomentumScrollEnd')}
+  scrollEventThrottle={10}
+  horizontal
+  snapToAlignment={'start'}
+  snapToInterval={windowSize.width - 22}
+  showsHorizontalScrollIndicator
+  directionalLockEnabled={false}
+  decelerationRate={'fast'}
+  dataSource={this.dataSource}
+  renderRow={(content) => {
+    return (
+      <ContentContainer
+        key={contents.indexOf(content)}
+        length={contents.length}
+        number={contents.indexOf(content)}
+        episodeId={episodeId}
+        content={content}
+        like={this.like.bind(this)}
+        dislike={this.dislike.bind(this)} />
+    )
+  }} />
+*/
 
 EpisodeDetail.defaultProps = {
   type: null,

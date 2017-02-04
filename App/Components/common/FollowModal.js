@@ -9,6 +9,9 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 
 import FollowList from '../FollowList'
 
+// 부모 컴포넌트로부터 내려받는 props의 경우 간혹 undefined문제가 발생하고 있음. 데이터 fetching이 되기전에 컴포넌트가 마운트되서 생기는 문제로
+// 현재는 ? 연산을 통해 undefined일 경우, default값을 주는 방식으로 진행중
+
 class FollowModal extends Component {
 
   static propTypes = {
@@ -25,11 +28,13 @@ class FollowModal extends Component {
 
   constructor (props) {
     super(props)
+    // console.log(this.props.follows)
     this.state = {
       text: '',
       height: 5,
       inputBottom: 40,
-      followVisible: this.props.followVisible
+      followVisible: this.props.followVisible === undefined ? false : this.props.followVisible
+      // follows: this.props.follows === undefined ? [] : this.props.follows
     }
   }
 
@@ -72,10 +77,12 @@ class FollowModal extends Component {
                   size={16}
                   style={{width: 16, height: 16, alignSelf: 'center', fontWeight: '300'}} />
               </TouchableOpacity>
-              <Text style={{left: 140, marginTop: 10, fontSize: 17, fontWeight: 'bold'}} >{this.props.showType}</Text>
+              <Text style={{left: 140, marginTop: 10, fontSize: 17, fontWeight: 'bold'}} >
+                {this.props.showType === undefined ? '' : this.props.showType}
+              </Text>
             </View>
             <FollowList
-              follows={this.props.follows}
+              follows={this.props.follows === undefined ? [] : this.props.follows}
               postFollow={this.props.postFollow}
               deleteFollow={this.props.deleteFollow} />
           </View>

@@ -5,15 +5,17 @@ import _ from 'lodash'
 
 import ProfileInfo from '../Components/common/ProfileInfo'
 import EpisodeList from '../Components/common/EpisodeList'
-import CommentModal from '../Components/common/CommentModal'
-import FollowModal from '../Components/common/FollowModal'
+// import CommentModal from '../Components/common/CommentModal'
+
+import CommentModalContainer from './common/CommentModalContainer'
+import FollowModalContainer from './common/FollowModalContainer'
 
 // Styles
 import styles from './Styles/FeedScreenStyle'
 
 import AccountActions from '../Redux/AccountRedux'
 import EpisodeActions from '../Redux/EpisodeRedux'
-import CommentActions from '../Redux/CommentRedux'
+// import CommentActions from '../Redux/CommentRedux'
 
 class UserProfileScreen extends Component {
 
@@ -30,19 +32,11 @@ class UserProfileScreen extends Component {
     items: PropTypes.array,
 
     screen: PropTypes.string,
-    contentId: PropTypes.number,
-    episodeId: PropTypes.number,
-    visible: PropTypes.bool,
-    comments: PropTypes.array,
-    commentPosting: PropTypes.bool,
 
     requestOtherInfo: PropTypes.func,
     requestOtherEpisodes: PropTypes.func,
     postFollow: PropTypes.func,
-    deleteFollow: PropTypes.func,
-    resetCommentModal: PropTypes.func,
-    postComment: PropTypes.func,
-    getComment: PropTypes.func
+    deleteFollow: PropTypes.func
   }
 
   constructor (props) {
@@ -82,16 +76,15 @@ class UserProfileScreen extends Component {
   }
 
   render () {
+    console.log(this.props)
     return (
       <View style={styles.mainContainer}>
         <ScrollView
           refreshControl={
             <RefreshControl
               refreshing={this.state.refreshing}
-              onRefresh={this.onRefresh.bind(this)}
-            />
-          }
-        >
+              onRefresh={this.onRefresh.bind(this)} />
+          } >
           <EpisodeList
             detailType={'other'}
             items={this.props.items} >
@@ -115,51 +108,13 @@ class UserProfileScreen extends Component {
           </EpisodeList>
         </ScrollView>
         <View style={{height: 48.5}} />
-        <CommentModal
-          screen={this.props.screen}
-          token={this.props.token}
-          contentId={this.props.contentId}
-          episodeId={this.props.episodeId}
-          visible={this.props.visible}
-          comments={this.props.comments}
-          commentPosting={this.props.commentPosting}
-          resetCommentModal={this.props.resetCommentModal}
-          getComment={this.props.getComment}
-          postComment={this.props.postComment} />
-        <FollowModal
-          token={this.props.token}
-          showType={this.props.showType}
-          followVisible={this.props.followVisible}
-          follows={this.props.follows}
-          openFollow={this.props.openFollow}
-          postFollow={this.props.postFollow}
-          deleteFollow={this.props.deleteFollow} />
+        <CommentModalContainer screen={this.props.screen} token={this.props.token} />
+        <FollowModalContainer token={this.props.token} />
       </View>
     )
   }
 }
 
-/*
-<CommentModal
-  screen={this.props.screen}
-  token={this.props.token}
-  contentId={this.props.contentId}
-  episodeId={this.props.episodeId}
-  visible={this.props.visible}
-  comments={this.props.comments}
-  commentPosting={this.props.commentPosting}
-  resetCommentModal={this.props.resetCommentModal}
-  getComment={this.props.getComment}
-  postComment={this.props.postComment} />
-<FollowModal
-  token={this.props.token}
-  showType={this.props.showType}
-  followVisible={this.props.followVisible}
-  follows={this.props.follows}
-  openFollow={this.props.openFollow}
-  postFollow={this.props.postFollow}
-  deleteFollow={this.props.deleteFollow} />
-*/
 const mapStateToProps = (state) => {
   return {
     token: state.token.token,
@@ -170,19 +125,7 @@ const mapStateToProps = (state) => {
     followerCount: state.account.otherFollowerCount,
     followingCount: state.account.otherFollowingCount,
 
-    items: state.episode.otherEpisodes,
-
-    follows: state.account.follows,
-    followVisible: state.account.followVisible,
-    showType: state.account.showType,
-
-    contentId: state.comment.contentId,
-    episodeId: state.comment.episodeId,
-
-    visible: state.comment.visible,
-
-    comments: state.comment.comments,
-    commentPosting: state.comment.commentPosting
+    items: state.episode.otherEpisodes
   }
 }
 
@@ -196,11 +139,7 @@ const mapDispatchToProps = (dispatch) => {
 
     openFollow: (followVisible, showType) => dispatch(AccountActions.openFollow(followVisible, showType)),
     getFollowing: (token, id) => dispatch(AccountActions.getFollowing(token, id)),
-    getFollower: (token, id) => dispatch(AccountActions.getFollower(token, id)),
-
-    resetCommentModal: () => dispatch(CommentActions.resetComment()),
-    getComment: (token, episodeId, contentId) => dispatch(CommentActions.commentGet(token, episodeId, contentId)),
-    postComment: (token, episodeId, contentId, message) => dispatch(CommentActions.commentPost(token, episodeId, contentId, message))
+    getFollower: (token, id) => dispatch(AccountActions.getFollower(token, id))
   }
 }
 
