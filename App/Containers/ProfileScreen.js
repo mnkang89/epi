@@ -7,12 +7,14 @@ import ProfileInfo from '../Components/common/ProfileInfo'
 import EpisodeList from '../Components/common/EpisodeList'
 
 import CommentModalContainer from './common/CommentModalContainer'
+import FollowModalContainer from './common/FollowModalContainer'
 
 // Styles
 import styles from './Styles/FeedScreenStyle'
 
 import SignupActions from '../Redux/SignupRedux'
 import EpisodeActions from '../Redux/EpisodeRedux'
+import AccountActions from '../Redux/AccountRedux'
 
 class ProfileScreen extends Component {
   static propTypes = {
@@ -60,6 +62,7 @@ class ProfileScreen extends Component {
   }
 
   render () {
+    console.log(this.props.items)
     return (
       <View style={styles.mainContainer}>
         <ScrollView
@@ -76,15 +79,25 @@ class ProfileScreen extends Component {
               type={'me'}
               token={this.props.token}
               accountId={this.props.accountId}
+
               profileImagePath={this.props.profileImagePath}
               nickname={this.props.nickname}
               followerCount={this.props.followerCount}
               followingCount={this.props.followingCount}
-              requestProfileImage={this.props.requestProfileImage} />
+
+              requestProfileImage={this.props.requestProfileImage}
+
+              postFollow={this.props.postFollow}
+              deleteFollow={this.props.deleteFollow}
+
+              openFollow={this.props.openFollow}
+              getFollowing={this.props.getFollowing}
+              getFollower={this.props.getFollower} />
           </EpisodeList>
         </ScrollView>
         <View style={{height: 48.5}} />
         <CommentModalContainer screen={'ProfileScreen'} token={this.props.token} />
+        <FollowModalContainer token={this.props.token} />
       </View>
     )
   }
@@ -107,7 +120,14 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     requestProfileImage: (photoSource, token, accountId) => dispatch(SignupActions.profileRequest(photoSource, token, accountId)),
-    requestUserEpisodesWithFalse: (token, accountId, withFollowing) => dispatch(EpisodeActions.userEpisodesWithFalseRequest(token, accountId, withFollowing))
+    requestUserEpisodesWithFalse: (token, accountId, withFollowing) => dispatch(EpisodeActions.userEpisodesWithFalseRequest(token, accountId, withFollowing)),
+
+    postFollow: (token, id) => dispatch(AccountActions.followPost(token, id)),
+    deleteFollow: (token, id) => dispatch(AccountActions.followDelete(token, id)),
+
+    openFollow: (followVisible, showType) => dispatch(AccountActions.openFollow(followVisible, showType)),
+    getFollowing: (token, id) => dispatch(AccountActions.getFollowing(token, id)),
+    getFollower: (token, id) => dispatch(AccountActions.getFollower(token, id))
   }
 }
 

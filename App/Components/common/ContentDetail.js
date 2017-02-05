@@ -146,7 +146,7 @@ class ContentDetailClass extends Component {
   }
 
   renderContent (content) {
-    const { imageStyle } = styles
+    // const { imageStyle } = styles
     const paddingRight = this.state.paddingRight
     const message = content.message === 'undefined' ? '' : content.message
 
@@ -245,7 +245,7 @@ class ContentDetailClass extends Component {
     )
   }
 };
-
+/*
 const styles = {
   imageStyle: {
     alignItems: 'center',
@@ -253,6 +253,7 @@ const styles = {
     width: windowSize.width - 30
   }
 }
+*/
 
 const ContentDetail = Animatable.createAnimatableComponent(ContentDetailClass)
 

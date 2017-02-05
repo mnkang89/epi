@@ -114,26 +114,43 @@ class ProfileInfo extends Component {
   }
 
   onFollowingPress () {
-    const { token, id } = this.props
+    if (this.props.type === 'me') {
+      const { token, accountId } = this.props
 
-    this.props.openFollow(true, '팔로잉')
-    this.props.getFollowing(token, id)
+      this.props.openFollow(true, '팔로잉')
+      this.props.getFollowing(token, accountId)
+    } else {
+      const { token, id } = this.props
+
+      this.props.openFollow(true, '팔로잉')
+      this.props.getFollowing(token, id)
+    }
   }
 
   onFollowerPress () {
-    const { token, id } = this.props
+    if (this.props.type === 'me') {
+      const { token, accountId } = this.props
 
-    this.props.openFollow(true, '팔로워')
-    this.props.getFollower(token, id)
+      this.props.openFollow(true, '팔로워')
+      this.props.getFollower(token, accountId)
+    } else {
+      const { token, id } = this.props
+
+      this.props.openFollow(true, '팔로워')
+      this.props.getFollower(token, id)
+    }
   }
 
   renderProfileImage () {
     if (this.props.type === 'me') {
       if (this.state.photoSource) {
+        let uri = `${this.state.photoSource}?random_number=${new Date().getTime()}`
+
         return (
           <Image
             style={[styles.image, {borderWidth: 1, borderColor: 'white', marginBottom: 14.5, marginTop: 39.5}]}
-            source={{uri: this.state.photoSource}} />)
+            source={{uri}} />
+        )
       } else {
         return (
           <Image
@@ -200,11 +217,11 @@ class ProfileInfo extends Component {
           <View style={{alignItems: 'center'}}>
             <Text style={{color: Colors.snow, fontSize: 25, fontWeight: 'bold'}}>{this.props.nickname}</Text>
             <View style={{flexDirection: 'row', marginTop: 10.5, marginBottom: 25.5}}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={this.onFollowerPress.bind(this)} >
                 <Text style={{color: Colors.snow, fontSize: 12}}>팔로워 {this.props.followerCount}</Text>
               </TouchableOpacity>
               <Text style={{color: Colors.snow, fontSize: 12}}> | </Text>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={this.onFollowingPress.bind(this)} >
                 <Text style={{color: Colors.snow, fontSize: 12}}>팔로잉 {this.props.followingCount} </Text>
               </TouchableOpacity>
             </View>

@@ -94,11 +94,13 @@ class EpisodeDetail extends Component {
   }
 
   renderProfileImage () {
+    console.log(this.props.account.profileImagePath)
+    let uri = `${this.props.account.profileImagePath}?random_number=${new Date().getTime()}`
     if (this.props.account.profileImagePath) {
       return (
         <Image
           style={styles.profileStyle}
-          source={{uri: this.props.account.profileImagePath}} />
+          source={{uri}} />
       )
     } else {
       return (
@@ -131,8 +133,8 @@ class EpisodeDetail extends Component {
     const timeDiffString = convert2TimeDiffString(
       this.props.episode.updatedDateTime || this.props.episode.createDateTime)
     const {
-      headerContentStyle,
-      textStyle
+      headerContentStyle
+      // textStyle
     } = styles
 
     let xPosition = 0
