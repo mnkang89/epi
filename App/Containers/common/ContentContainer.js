@@ -22,7 +22,9 @@ const mapDispatchToProps = (dispatch) => {
 
 const ContentContainer = connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
+  null,
+  { withRef: true }
 )(ContentDetail)
 
 export default ContentContainer

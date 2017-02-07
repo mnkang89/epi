@@ -34,18 +34,18 @@ class NavigationRouter extends Component {
       <Router
         sceneStyle={{ backgroundColor: 'black' }}>
         <Scene
-          initial
-          key='Greeting'
-          hideNavBar
-          hideTabBar
-          component={GreetingScreen} />
-        <Scene
           key='root'
           navigationBarStyle={Styles.navBar}
           titleStyle={Styles.title}
           leftButtonIconStyle={Styles.leftButton}
           backButtonTextStyle={Styles.backButton}
           rightButtonTextStyle={Styles.rightButton}>
+          <Scene
+            initial
+            key='Greeting'
+            hideNavBar
+            hideTabBar
+            component={GreetingScreen} />
           <Scene
             key='tabBar'
             tabs

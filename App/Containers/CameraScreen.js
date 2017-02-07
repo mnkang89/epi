@@ -403,6 +403,9 @@ class CameraScreen extends Component {
                 <Image style={{width: 31, height: 31}} source={Images.write} />
               </TouchableOpacity>
             </View>
+            <TouchableOpacity onPress={() => { NavigationActions.pop() }} style={{marginTop: 27.5, marginLeft: 57}}>
+              <Image style={{width: 31, height: 31}} source={Images.write} />
+            </TouchableOpacity>
           </View>
         </View>
       )
@@ -436,6 +439,9 @@ class CameraScreen extends Component {
                 <Image style={{width: 85, height: 85}} source={Images.captureButton} />
               </TouchableWithoutFeedback>
             </View>
+            <TouchableOpacity onPress={() => { NavigationActions.statusModal({hide: true}) }} style={{marginTop: 27.5, marginLeft: 57}}>
+              <Image style={{width: 31, height: 31}} source={Images.write} />
+            </TouchableOpacity>
           </View>
         </View>
       )

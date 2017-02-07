@@ -42,7 +42,9 @@ class ContentDetailClass extends Component {
       modalVisible: false,
       liked: this.props.content.liked,
       IsAnimationTypeLike: this.props.content.liked,
-      disabled: false
+      disabled: false,
+
+      paused: true
     }
   }
 
@@ -93,6 +95,20 @@ class ContentDetailClass extends Component {
     this.props.openComment(true)
     this.props.getComment(token, episodeId, contentId)
     console.log('onlongpress 끝남')
+  }
+
+  playVideo () {
+    console.log('비디오 켜라')
+    this.setState({
+      paused: false
+    })
+  }
+
+  stopVideo () {
+    console.log('비디오 꺼라')
+    this.setState({
+      paused: true
+    })
   }
 
   renderAnimation () {
@@ -158,6 +174,7 @@ class ContentDetailClass extends Component {
             onPress={this.onDoublePress.bind(this)}
             onLongPress={this.onLongPress.bind(this)} >
             <Image
+              ref={this.props.playerRef}
               style={{
                 alignItems: 'center',
                 height: windowSize.width - 30,
@@ -195,10 +212,8 @@ class ContentDetailClass extends Component {
               <Video
                 source={{uri: content.path}}   // Can be a URL or a local file.
                 muted
-                ref={(ref) => {
-                  this.player = ref
-                }}                             // Store reference
-                paused={false}                 // Pauses playback entirely.
+                ref={this.props.playerRef}                             // Store reference
+                paused={this.state.paused}                 // Pauses playback entirely.
                 resizeMode='cover'             // Fill the whole screen at aspect ratio.
                 repeat={false}                         // Repeat forever.
                 playInBackground={false}       // Audio continues to play when app entering background.
@@ -244,16 +259,8 @@ class ContentDetailClass extends Component {
       </View>
     )
   }
-};
-/*
-const styles = {
-  imageStyle: {
-    alignItems: 'center',
-    height: windowSize.width - 30,
-    width: windowSize.width - 30
-  }
+
 }
-*/
 
 const ContentDetail = Animatable.createAnimatableComponent(ContentDetailClass)
 

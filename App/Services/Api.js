@@ -105,7 +105,7 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     formData.append('withFollowing', withFollowing)
     api.setHeader('x-auth', token)
 
-    return api.get(`/api/feeds?withFollowing=${withFollowing}&size=1`)
+    return api.get(`/api/feeds?withFollowing=${withFollowing}&size=7`)
   }
 
   const requestOtherFeeds = (token, accountId, active) => {
@@ -118,7 +118,7 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     // formData.append('withFollowing', active)
     api.setHeader('x-auth', token)
 
-    return api.get(`/api/feeds?accountId=${accountId}&withFollowing=${active}&size=1`)
+    return api.get(`/api/feeds?accountId=${accountId}&withFollowing=${active}&size=7`)
   }
 
   const postFollow = (token, id) => {
@@ -256,7 +256,7 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     console.log('GET bestFeeds api콜 발생')
     api.setHeader('x-auth', token)
 
-    return api.get(`/api/feeds/best?size=1`)
+    return api.get(`/api/feeds/best?size=7`)
   }
 
   // noties

@@ -29,8 +29,32 @@ class EpisodeDetail extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      likeCount: this.props.episode.contents.map(content => content.likeCount).reduce((a, b) => a + b, 0)
+      likeCount: this.props.episode.contents.map(content => content.likeCount).reduce((a, b) => a + b, 0),
+      contentTypeArray: []
     }
+    // 컨텐츠 컴포넌트 ref
+    this.contentRefs = []
+    // 비디오 컴포넌트 ref
+    // this.player는 deprecated될 수 있음.
+    this.player = []
+  }
+
+  componentWillMount () {
+    const contentTypeArray = []
+
+    for (let i = 0; i < this.props.episode.contents.length; i++) {
+      contentTypeArray.push(this.props.episode.contents[i].type)
+    }
+
+    console.log('컨텐츠 타입 어레이')
+    console.log(contentTypeArray)
+    this.setState({
+      contentTypeArray
+    })
+  }
+
+  componentDidMount () {
+    // console.log(this.contentRefs)
   }
 
   like () {
@@ -44,23 +68,26 @@ class EpisodeDetail extends Component {
       likeCount: this.state.likeCount - 1
     })
   }
+/*
+renderContents () {
+  const contents = this.props.episode.contents
+  const episodeId = this.props.episode.id
 
-  renderContents () {
-    const contents = this.props.episode.contents
-    const episodeId = this.props.episode.id
-
-    return contents.map(content =>
-      <ContentContainer
-        key={contents.indexOf(content)}
-        length={contents.length}
-        number={contents.indexOf(content)}
-        episodeId={episodeId}
-        content={content}
-        like={this.like.bind(this)}
-        dislike={this.dislike.bind(this)} />
-    )
-  }
-
+  return contents.map(content =>
+    <ContentContainer
+      ref={(component) => {
+        this.contentRefs = component
+      }}
+      key={contents.indexOf(content)}
+      length={contents.length}
+      number={contents.indexOf(content)}
+      episodeId={episodeId}
+      content={content}
+      like={this.like.bind(this)}
+      dislike={this.dislike.bind(this)} />
+  )
+}
+*/
   onPressProfile () {
     const accountId = this.props.episode.accountId
 
@@ -91,6 +118,25 @@ class EpisodeDetail extends Component {
 
   handleScroll (event) {
     // const xPoint = event.nativeEvent.contentOffset.x
+  }
+
+  handleMomentumScrollEnd (event) {
+    const xPoint = event.nativeEvent.contentOffset.x
+    const index = Math.floor(xPoint / (windowSize.width - 60))
+
+    // 위치가 가운데가 아니고 비디오인 컨텐츠들에 대해 for문으로 stopVideo메써드 호출
+    for (let i = 0; i < this.state.contentTypeArray.length; i++) {
+      if (this.state.contentTypeArray[i] === 'Video' && i !== index) {
+        console.log('일단 비디오면 껐다')
+        this.contentRefs[i].getWrappedInstance()._root._component.stopVideo()
+      }
+    }
+
+    // if 중간에온 컨텐츠가 video이면
+    if (this.state.contentTypeArray[index] === 'Video') {
+      this.contentRefs[index].getWrappedInstance()._root._component.playVideo()
+      this.player[index].seek(0)
+    }
   }
 
   renderProfileImage () {
@@ -180,8 +226,8 @@ class EpisodeDetail extends Component {
           onScrollBeginDrag={() => console.log('onScrollBeginDrag')}
           onScrollEndDrag={() => console.log('onScrollEndDrag')}
           onMomentumScrollBegin={() => console.log('onMomentumScrollBegin')}
-          onMomentumScrollEnd={() => console.log('onMomentumScrollEnd')}
-          scrollEventThrottle={10}
+          onMomentumScrollEnd={this.handleMomentumScrollEnd.bind(this)}
+          scrollEventThrottle={100}
           horizontal
           snapToAlignment={'start'}
           snapToInterval={windowSize.width - 22}
@@ -192,6 +238,10 @@ class EpisodeDetail extends Component {
           renderRow={(content) => {
             return (
               <ContentContainer
+                ref={(component) => {
+                  this.contentRefs[contents.indexOf(content)] = component
+                }}
+                playerRef={(player) => { this.player[contents.indexOf(content)] = player }}
                 key={contents.indexOf(content)}
                 length={contents.length}
                 number={contents.indexOf(content)}
@@ -212,38 +262,6 @@ class EpisodeDetail extends Component {
   }
 
 }
-/*
-<ListView
-  removeClippedSubviews
-  pageSize={2}
-  style={{marginTop: 10, paddingLeft: 7.5, paddingRight: 7.5}}
-  contentOffset={{x: xPosition, y: 0}}
-  onScroll={this.handleScroll.bind(this)}
-  onScrollBeginDrag={() => console.log('onScrollBeginDrag')}
-  onScrollEndDrag={() => console.log('onScrollEndDrag')}
-  onMomentumScrollBegin={() => console.log('onMomentumScrollBegin')}
-  onMomentumScrollEnd={() => console.log('onMomentumScrollEnd')}
-  scrollEventThrottle={10}
-  horizontal
-  snapToAlignment={'start'}
-  snapToInterval={windowSize.width - 22}
-  showsHorizontalScrollIndicator
-  directionalLockEnabled={false}
-  decelerationRate={'fast'}
-  dataSource={this.dataSource}
-  renderRow={(content) => {
-    return (
-      <ContentContainer
-        key={contents.indexOf(content)}
-        length={contents.length}
-        number={contents.indexOf(content)}
-        episodeId={episodeId}
-        content={content}
-        like={this.like.bind(this)}
-        dislike={this.dislike.bind(this)} />
-    )
-  }} />
-*/
 
 EpisodeDetail.defaultProps = {
   type: null,

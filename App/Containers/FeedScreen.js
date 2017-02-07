@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import {
   View,
-  // Dimensions,
+  Dimensions,
   TouchableOpacity,
   Text,
   ScrollView,
@@ -21,7 +21,7 @@ import AccountActions from '../Redux/AccountRedux'
 import EpisodeActions from '../Redux/EpisodeRedux'
 import CommentActions from '../Redux/CommentRedux'
 
-// const windowSize = Dimensions.get('window')
+const windowSize = Dimensions.get('window')
 const ITEM_SIZE = 440
 const BUFFER_ITEMS = 0
 const DISPLAY_ITEMS = 8
@@ -188,54 +188,52 @@ class FeedScreen extends Component {
       }
     }
   }
-
-  render () {
-    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
-    const dataSource = ds.cloneWithRows(this.props.items.slice())
-
-    return (
-      <View style={styles.mainContainer}>
-        {this.renderListView(dataSource)}
-        <View style={{height: 48.5}} />
-        <CommentModalContainer screen={'FeedScreen'} token={this.props.token} />
-      </View>
-    )
-  }
-
 /*
 render () {
-  var items = this.state.renderModel.map(renderItem => {
-    const itemStyle = {
-      position: 'absolute',
-      width: windowSize.width,
-      height: ITEM_SIZE,
-      left: 0,
-      top: renderItem.position,
-      alignItems: 'center'
-    }
+  const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
+  const dataSource = ds.cloneWithRows(this.props.items.slice())
 
-    return (
-      <View key={renderItem.key} style={itemStyle}>
-        <EpisodeDetail
-          key={renderItem.item.episode.id}
-          episode={renderItem.item.episode}
-          account={renderItem.item.account} />
-      </View>
-    )
-  })
   return (
     <View style={styles.mainContainer}>
-      <ScrollView ref='scrollView' style={{flex: 1}} scrollEventThrottle={1} onScroll={this.onScroll.bind(this)}>
-        <View style={{height: this.state.bodyHeight, width: windowSize.width}}>
-          {items}
-        </View>
-      </ScrollView>
+      {this.renderListView(dataSource)}
       <View style={{height: 48.5}} />
       <CommentModalContainer screen={'FeedScreen'} token={this.props.token} />
     </View>
   )
 }
 */
+  render () {
+    var items = this.state.renderModel.map(renderItem => {
+      const itemStyle = {
+        position: 'absolute',
+        width: windowSize.width,
+        height: ITEM_SIZE,
+        left: 0,
+        top: renderItem.position,
+        alignItems: 'center'
+      }
+
+      return (
+        <View key={renderItem.key} style={itemStyle}>
+          <EpisodeDetail
+            key={renderItem.item.episode.id}
+            episode={renderItem.item.episode}
+            account={renderItem.item.account} />
+        </View>
+      )
+    })
+    return (
+      <View style={styles.mainContainer}>
+        <ScrollView ref='scrollView' style={{flex: 1}} scrollEventThrottle={1} onScroll={this.onScroll.bind(this)}>
+          <View style={{height: this.state.bodyHeight, width: windowSize.width}}>
+            {items}
+          </View>
+        </ScrollView>
+        <View style={{height: 48.5}} />
+        <CommentModalContainer screen={'FeedScreen'} token={this.props.token} />
+      </View>
+    )
+  }
 
 }
 

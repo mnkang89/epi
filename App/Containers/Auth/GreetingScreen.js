@@ -6,7 +6,7 @@ import {
   Dimensions
 } from 'react-native'
 import { connect } from 'react-redux'
-import { Actions as NavigationActions } from 'react-native-router-flux'
+import { Actions as NavigationActions, ActionConst } from 'react-native-router-flux'
 import Video from 'react-native-video'
 
 import { Videos } from '../../Themes'
@@ -177,7 +177,7 @@ class GreetingScreen extends Component {
         this.props.requestUserEpisodes(token, accountId, true)
         this.props.requestUserEpisodesWithFalse(token, accountId, false)
 
-        NavigationActions.root()
+        NavigationActions.tabBar({type: ActionConst.RESET})
       } else if (!newProps.fetching && newProps.signInError === 'INVALID_FORMAT') {
         console.log('유효하지 않은 형식')
         this.setState({
