@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware, compose } from 'redux'
-import { autoRehydrate } from 'redux-persist'
+// import { autoRehydrate } from 'redux-persist'
 import createLogger from 'redux-logger'
 import Config from '../Config/DebugSettings'
 import createSagaMiddleware from 'redux-saga'
@@ -41,7 +41,7 @@ export default (rootReducer, rootSaga) => {
 
   // add the autoRehydrate enhancer
   if (ReduxPersist.active) {
-    enhancers.push(autoRehydrate())
+    // enhancers.push(autoRehydrate())
   }
 
   // in dev mode, we'll create the store through Reactotron
