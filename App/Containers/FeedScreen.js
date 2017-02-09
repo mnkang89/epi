@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import {
   View,
-  Dimensions,
+  // Dimensions,
   TouchableOpacity,
   Text,
   ScrollView,
@@ -21,7 +21,7 @@ import AccountActions from '../Redux/AccountRedux'
 import EpisodeActions from '../Redux/EpisodeRedux'
 import CommentActions from '../Redux/CommentRedux'
 
-const windowSize = Dimensions.get('window')
+// const windowSize = Dimensions.get('window')
 const ITEM_SIZE = 440
 const BUFFER_ITEMS = 0
 const DISPLAY_ITEMS = 8
@@ -171,7 +171,7 @@ class FeedScreen extends Component {
           <ListView
             removeClippedSubviews
             pageSize={1}
-            enableEmptySections
+            enableEmptySections={false}
             dataSource={dataSource}
             renderRow={(item) =>
               <EpisodeDetail
@@ -188,20 +188,21 @@ class FeedScreen extends Component {
       }
     }
   }
-/*
-render () {
-  const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
-  const dataSource = ds.cloneWithRows(this.props.items.slice())
 
-  return (
-    <View style={styles.mainContainer}>
-      {this.renderListView(dataSource)}
-      <View style={{height: 48.5}} />
-      <CommentModalContainer screen={'FeedScreen'} token={this.props.token} />
-    </View>
-  )
-}
-*/
+  render () {
+    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
+    const dataSource = ds.cloneWithRows(this.props.items.slice())
+
+    return (
+      <View style={styles.mainContainer}>
+        {this.renderListView(dataSource)}
+        <View style={{height: 48.5}} />
+        <CommentModalContainer screen={'FeedScreen'} token={this.props.token} />
+      </View>
+    )
+  }
+
+/*
   render () {
     var items = this.state.renderModel.map(renderItem => {
       const itemStyle = {
@@ -234,7 +235,7 @@ render () {
       </View>
     )
   }
-
+*/
 }
 
 const mapStateToProps = (state) => {
