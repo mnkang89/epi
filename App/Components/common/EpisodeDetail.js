@@ -8,6 +8,7 @@ import {
   Dimensions
  } from 'react-native'
 import { Actions as NavigationActions } from 'react-native-router-flux'
+
 import { Colors, Images, Metrics } from '../../Themes/'
 import { convert2TimeDiffString } from '../../Lib/Utilities'
 
@@ -54,7 +55,33 @@ class EpisodeDetail extends Component {
   }
 
   componentDidMount () {
+    // 보여지는 첫 컨텐츠가 비디오일 경우 playVideo()호출. 그 외 비디오 컨텐츠들에 대해선 stopVideo()호출
+    let xPosition = 0
+    const active = this.props.episode.active
+    const activeEpisodeLength = this.props.episode.contents.length
 
+    if (!this.props.xPosition) {
+      if (active) {
+        xPosition = (activeEpisodeLength - 1) * (windowSize.width - 22)
+      } else {
+        xPosition = 0
+      }
+    } else {
+      xPosition = this.props.xPosition
+    }
+
+    const xPoint = xPosition
+    const index = Math.floor(xPoint / (windowSize.width - 60))
+
+    for (let i = 0; i < this.state.contentTypeArray.length; i++) {
+      if (this.state.contentTypeArray[i] === 'Video' && i !== index) {
+        this.contentRefs[i].getWrappedInstance()._root._component.stopVideo()
+      }
+    }
+
+    if (this.state.contentTypeArray[index] === 'Video') {
+      this.contentRefs[index].getWrappedInstance()._root._component.playVideo()
+    }
   }
 
   like () {
@@ -176,8 +203,7 @@ class EpisodeDetail extends Component {
 
     return (
       <View
-        style={{flex: 1, overflow: 'hidden'}}
-        onLayout={this.onLayout} >
+        style={{flex: 1, overflow: 'hidden'}}>
         <View style={headerContentStyle}>
           <View style={{width: windowSize.width - 30, marginTop: 10}}>
             <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
@@ -200,6 +226,9 @@ class EpisodeDetail extends Component {
           </View>
         </View>
         <ListView
+          ref={(component) => {
+            this._listView = component
+          }}
           removeClippedSubviews
           pageSize={2}
           style={{marginTop: 10, paddingLeft: 7.5, paddingRight: 7.5}}
