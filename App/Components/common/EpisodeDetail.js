@@ -54,7 +54,7 @@ class EpisodeDetail extends Component {
   }
 
   componentDidMount () {
-    // console.log(this.contentRefs)
+
   }
 
   like () {
@@ -68,26 +68,7 @@ class EpisodeDetail extends Component {
       likeCount: this.state.likeCount - 1
     })
   }
-/*
-renderContents () {
-  const contents = this.props.episode.contents
-  const episodeId = this.props.episode.id
 
-  return contents.map(content =>
-    <ContentContainer
-      ref={(component) => {
-        this.contentRefs = component
-      }}
-      key={contents.indexOf(content)}
-      length={contents.length}
-      number={contents.indexOf(content)}
-      episodeId={episodeId}
-      content={content}
-      like={this.like.bind(this)}
-      dislike={this.dislike.bind(this)} />
-  )
-}
-*/
   onPressProfile () {
     const accountId = this.props.episode.accountId
 
@@ -127,15 +108,13 @@ renderContents () {
     // 위치가 가운데가 아니고 비디오인 컨텐츠들에 대해 for문으로 stopVideo메써드 호출
     for (let i = 0; i < this.state.contentTypeArray.length; i++) {
       if (this.state.contentTypeArray[i] === 'Video' && i !== index) {
-        console.log('일단 비디오면 껐다')
         this.contentRefs[i].getWrappedInstance()._root._component.stopVideo()
       }
     }
 
-    // if 중간에온 컨텐츠가 video이면
+    // if 중간에온 컨텐츠가 video면 playVideo()호출
     if (this.state.contentTypeArray[index] === 'Video') {
       this.contentRefs[index].getWrappedInstance()._root._component.playVideo()
-      this.player[index].seek(0)
     }
   }
 
@@ -194,8 +173,11 @@ renderContents () {
     } else {
       xPosition = this.props.xPosition
     }
+
     return (
-      <View style={{flex: 1, overflow: 'hidden'}}>
+      <View
+        style={{flex: 1, overflow: 'hidden'}}
+        onLayout={this.onLayout} >
         <View style={headerContentStyle}>
           <View style={{width: windowSize.width - 30, marginTop: 10}}>
             <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
