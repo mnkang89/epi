@@ -78,7 +78,8 @@ class SignInScreen extends Component {
               ref='email'
               style={{height: 20, fontWeight: 'bold', color: 'white'}}
               editable={editable}
-              keyboardType='default'
+              keyboardType='email-address'
+              clearButtonMode='while-editing'
               returnKeyType='next'
               autoCapitalize='none'
               autoCorrect={false}
@@ -97,6 +98,7 @@ class SignInScreen extends Component {
               autoCapitalize='none'
               autoCorrect={false}
               secureTextEntry
+              clearTextOnFocus
               onChangeText={this.handleChangePassword.bind(this)}
               onSubmitEditing={this.handlePressLogin.bind(this)}
               placeholder='비밀번호 (최소 8자, 최대 12자)'

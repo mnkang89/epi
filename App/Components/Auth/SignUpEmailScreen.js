@@ -63,7 +63,7 @@ class SignUpEmailScreen extends Component {
               ref='emailCheck'
               style={{fontWeight: 'bold', height: 20, color: 'white'}}
               editable={editable}
-              keyboardType='default'
+              keyboardType='email-address'
               returnKeyType='done'
               autoCapitalize='none'
               autoCorrect={false}
