@@ -133,7 +133,7 @@ type Props = RequiredProps & OptionalProps; // plus props from the underlying im
  *     ItemComponent={({item}) => <Text>{item.key}</Text>}
  *   />
  */
-class FlatList_e extends React.PureComponent {
+class FlatListE extends React.PureComponent {
   props: Props;
   /**
    * Scrolls to the end of the content. May be janky without getItemLayout prop.
@@ -188,4 +188,4 @@ class FlatList_e extends React.PureComponent {
   }
 }
 
-module.exports = FlatList_e
+module.exports = FlatListE
