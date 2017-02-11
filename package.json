@@ -94,6 +94,9 @@
       "XMLHttpRequest",
       "FormData",
       "React$Element"
+    ],
+    "ignore": [
+      "App/Experimental/"
     ]
   },
   "config": {

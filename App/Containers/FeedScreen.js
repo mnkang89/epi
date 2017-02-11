@@ -12,6 +12,13 @@ import { connect } from 'react-redux'
 import _ from 'lodash'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 
+/*
+import {
+  getItemLayout
+} from '../Experimental/ListExampleShared_e'
+import FlatList_e from '../Experimental/FlatList_e'
+*/
+
 import styles from './Styles/FeedScreenStyle'
 import { getObjectDiff } from '../Lib/Utilities'
 import EpisodeDetail from '../Components/common/EpisodeDetail'
@@ -74,6 +81,7 @@ class FeedScreen extends Component {
       renderModel: newRenderModel,
       bodyHeight: 6 * 444
     }
+    this.episodeRefs = []
   }
 
   componentDidMount () {
@@ -103,7 +111,7 @@ class FeedScreen extends Component {
     this.setState({refreshing: true})
     this.props.requestUserEpisodes(token, accountId, withFollowing)
   }
-
+/*
   onScroll (e) {
     this.updateRenderModel(e.nativeEvent.contentOffset)
   }
@@ -133,7 +141,7 @@ class FeedScreen extends Component {
     }
     this.setState(state)
   }
-
+*/
   renderListView (dataSource) {
     if (this.props.episodesRequesting) {
       console.log('리퀘스팅중')
@@ -201,6 +209,61 @@ class FeedScreen extends Component {
       </View>
     )
   }
+/*
+  render () {
+    return (
+      <View style={styles.mainContainer}>
+        <FlatList_e
+          ItemComponent={this._renderItemComponent}
+          disableVirtualization={false}
+          getItemLayout={this.state.fixedHeight ? this._getItemLayout : undefined}
+          horizontal={false}
+          data={this.props.items}
+          key={'vd'}
+          legacyImplementation={false}
+          onRefresh={this.onRefresh.bind(this)}
+          refreshing={this.state.refreshing}
+          onViewableItemsChanged={this._onViewableItemsChanged}
+          ref={this._captureRef}
+          shouldItemUpdate={this._shouldItemUpdate} />
+        <View style={{height: 48.5}} />
+        <CommentModalContainer screen={'FeedScreen'} token={this.props.token} />
+      </View>
+    )
+  }
+
+  _captureRef = (ref) => { this._listRef = ref }
+
+  _getItemLayout = (data: any, index: number) => {
+    return getItemLayout(data, index, this.state.horizontal)
+  }
+  ref={(component) => {
+    this.episodeRefs[contents.indexOf(content)] = component
+  }}
+
+  _renderItemComponent = ({item}) => {
+    return (
+      <EpisodeDetail
+        key={item.episode.id}
+        episode={item.episode}
+        account={item.account} />
+    )
+  }
+
+  _shouldItemUpdate (prev, next) {
+    return prev.item !== next.item
+  }
+
+  _onViewableItemsChanged = (info: {
+      changed: Array<{
+        key: string, isViewable: boolean, item: any, index: ?number, section?: any
+      }>
+    }
+  ) => {
+    console.log(info)
+    // stopEpisodeVideo()
+  }
+*/
 
 /*
   render () {

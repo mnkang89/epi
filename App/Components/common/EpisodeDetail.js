@@ -46,41 +46,19 @@ class EpisodeDetail extends Component {
     for (let i = 0; i < this.props.episode.contents.length; i++) {
       contentTypeArray.push(this.props.episode.contents[i].type)
     }
-
-    console.log('컨텐츠 타입 어레이')
-    console.log(contentTypeArray)
     this.setState({
       contentTypeArray
     })
   }
 
   componentDidMount () {
-    // 보여지는 첫 컨텐츠가 비디오일 경우 playVideo()호출. 그 외 비디오 컨텐츠들에 대해선 stopVideo()호출
-    let xPosition = 0
-    const active = this.props.episode.active
-    const activeEpisodeLength = this.props.episode.contents.length
+  }
 
-    if (!this.props.xPosition) {
-      if (active) {
-        xPosition = (activeEpisodeLength - 1) * (windowSize.width - 22)
-      } else {
-        xPosition = 0
-      }
-    } else {
-      xPosition = this.props.xPosition
-    }
-
-    const xPoint = xPosition
-    const index = Math.floor(xPoint / (windowSize.width - 60))
-
+  stopEpisodeVideo () {
     for (let i = 0; i < this.state.contentTypeArray.length; i++) {
-      if (this.state.contentTypeArray[i] === 'Video' && i !== index) {
+      if (this.state.contentTypeArray[i] === 'Video') {
         this.contentRefs[i].getWrappedInstance()._root._component.stopVideo()
       }
-    }
-
-    if (this.state.contentTypeArray[index] === 'Video') {
-      this.contentRefs[index].getWrappedInstance()._root._component.playVideo()
     }
   }
 
@@ -125,28 +103,41 @@ class EpisodeDetail extends Component {
   }
 
   handleScroll (event) {
-    // const xPoint = event.nativeEvent.contentOffset.x
   }
 
   handleMomentumScrollEnd (event) {
-    const xPoint = event.nativeEvent.contentOffset.x
-    const index = Math.floor(xPoint / (windowSize.width - 60))
+  }
 
-    // 위치가 가운데가 아니고 비디오인 컨텐츠들에 대해 for문으로 stopVideo메써드 호출
+  handleChangeVisibleRows (visibleRows, changedRows) {
+    let centerIndex = 0
+    // 인덱스 어레이는 스트링 어레이이므로 정수어레이로 변환
+    const indexArray = Object.keys(visibleRows.s1).map(Number)
+    const numberOfVisibleRows = Object.keys(visibleRows.s1).length
+
+    if (numberOfVisibleRows === 1) {
+      centerIndex = indexArray[0]
+    } else if (numberOfVisibleRows === 2) {
+      if (indexArray[0] === 0) {
+        centerIndex = indexArray[0]
+      } else {
+        centerIndex = indexArray[1]
+      }
+    } else if (numberOfVisibleRows === 3) {
+      centerIndex = indexArray[1]
+    }
+
     for (let i = 0; i < this.state.contentTypeArray.length; i++) {
-      if (this.state.contentTypeArray[i] === 'Video' && i !== index) {
+      if (this.state.contentTypeArray[i] === 'Video' && i !== centerIndex) {
         this.contentRefs[i].getWrappedInstance()._root._component.stopVideo()
       }
     }
 
-    // if 중간에온 컨텐츠가 video면 playVideo()호출
-    if (this.state.contentTypeArray[index] === 'Video') {
-      this.contentRefs[index].getWrappedInstance()._root._component.playVideo()
+    if (this.state.contentTypeArray[centerIndex] === 'Video') {
+      this.contentRefs[centerIndex].getWrappedInstance()._root._component.playVideo()
     }
   }
 
   renderProfileImage () {
-    console.log(this.props.account.profileImagePath)
     let uri = `${this.props.account.profileImagePath}?random_number=${new Date().getTime()}`
     if (this.props.account.profileImagePath) {
       return (
@@ -229,7 +220,6 @@ class EpisodeDetail extends Component {
           ref={(component) => {
             this._listView = component
           }}
-          removeClippedSubviews
           pageSize={2}
           style={{marginTop: 10, paddingLeft: 7.5, paddingRight: 7.5}}
           contentOffset={{x: xPosition, y: 0}}
@@ -238,6 +228,7 @@ class EpisodeDetail extends Component {
           onScrollEndDrag={() => console.log('onScrollEndDrag')}
           onMomentumScrollBegin={() => console.log('onMomentumScrollBegin')}
           onMomentumScrollEnd={this.handleMomentumScrollEnd.bind(this)}
+          onChangeVisibleRows={this.handleChangeVisibleRows.bind(this)}
           scrollEventThrottle={100}
           horizontal
           snapToAlignment={'start'}

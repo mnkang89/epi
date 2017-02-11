@@ -105,7 +105,6 @@ class ContentDetailClass extends Component {
   }
 
   stopVideo () {
-    console.log('비디오 꺼라')
     this.setState({
       paused: true
     })
