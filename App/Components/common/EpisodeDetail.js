@@ -165,6 +165,8 @@ class EpisodeDetail extends Component {
   }
 
   render () {
+    // initialListSize={50} 리스트뷰에 아직 렌더링 되지않아 발생하는 에러를 해결하기 위함.
+    // 50개의 내부 row를 렌더링하는 의미이며 다소 하드코딩 되어 있으므로 개선이 필요함.
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
     const contents = this.props.episode.contents
     const episodeId = this.props.episode.id
@@ -221,6 +223,7 @@ class EpisodeDetail extends Component {
             this._listView = component
           }}
           pageSize={2}
+          initialListSize={50}
           style={{marginTop: 10, paddingLeft: 7.5, paddingRight: 7.5}}
           contentOffset={{x: xPosition, y: 0}}
           onScroll={this.handleScroll.bind(this)}
