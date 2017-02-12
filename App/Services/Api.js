@@ -18,8 +18,6 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     api.addMonitor(console.tron.apisauce)
   }
 
-  const getCity = (city) => api.get('weather', {q: city})
-
   // SignUp
   const checkEmail = (email) => {
     const formData = new FormData()
@@ -274,8 +272,6 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
 
   return {
     // a list of the API functions from step 2
-    getCity,
-
     checkEmail,
     requestSignup,
     requestNickname,
