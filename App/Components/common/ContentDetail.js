@@ -6,7 +6,7 @@ import {
   TouchableWithoutFeedback,
   Dimensions
  } from 'react-native'
-import Video from 'react-native-video'
+// import Video from 'react-native-video'
 import * as Animatable from 'react-native-animatable'
 
 const windowSize = Dimensions.get('window')
@@ -160,6 +160,47 @@ class ContentDetailClass extends Component {
     }
   }
 
+// source={{ uri: content.path }} >
+  renderContent (content) {
+    // const { imageStyle } = styles
+    const paddingRight = this.state.paddingRight
+    const message = content.message === 'undefined' ? '' : content.message
+
+    return (
+      <View style={{backgroundColor: 'black', paddingLeft: 8, paddingRight: paddingRight}}>
+        <TouchableWithoutFeedback
+          delayLongPress={350}
+          onPress={this.onDoublePress.bind(this)}
+          onLongPress={this.onLongPress.bind(this)} >
+          <Image
+            ref={this.props.playerRef}
+            style={{
+              alignItems: 'center',
+              height: windowSize.width - 30,
+              width: windowSize.width - 30
+            }}
+            source={{ uri: 'https://facebook.github.io/react/img/logo_og.png' }} >
+            <View style={{flex: 1, marginTop: 90}}>
+              {this.renderAnimation()}
+            </View>
+            <View style={{flex: 1, justifyContent: 'flex-end', marginBottom: 10, backgroundColor: 'rgba(0,0,0,0)'}}>
+              <Text
+                style={{
+                  textShadowOffset: {width: 1, height: 2},
+                  textShadowColor: 'rgba(0, 0, 0, 0.5)',
+                  textShadowRadius: 1,
+                  color: 'white',
+                  fontSize: 20,
+                  fontWeight: 'bold' }} >
+                {message}
+              </Text>
+            </View>
+          </Image>
+        </TouchableWithoutFeedback>
+      </View>
+    )
+  }
+/*
   renderContent (content) {
     // const { imageStyle } = styles
     const paddingRight = this.state.paddingRight
@@ -212,7 +253,7 @@ class ContentDetailClass extends Component {
                 source={{uri: content.path}}   // Can be a URL or a local file.
                 muted
                 ref={this.props.playerRef}                             // Store reference
-                paused={this.state.paused}                 // Pauses playback entirely.
+                paused                 // Pauses playback entirely.
                 resizeMode='cover'             // Fill the whole screen at aspect ratio.
                 repeat                         // Repeat forever.
                 playInBackground={false}       // Audio continues to play when app entering background.
@@ -248,7 +289,7 @@ class ContentDetailClass extends Component {
       )
     }
   }
-
+*/
   render () {
     const content = this.props.content
 

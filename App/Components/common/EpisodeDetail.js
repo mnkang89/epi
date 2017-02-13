@@ -9,7 +9,8 @@ import {
  } from 'react-native'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 
-import { Colors, Images, Metrics } from '../../Themes/'
+import { Colors, Metrics } from '../../Themes/'
+// import { Colors, Images, Metrics } from '../../Themes/'
 import { convert2TimeDiffString } from '../../Lib/Utilities'
 
 import ContentContainer from '../../Containers/common/ContentContainer'
@@ -35,7 +36,9 @@ class EpisodeDetail extends Component {
     super(props)
     this.state = {
       likeCount: this.props.episode.contents.map(content => content.likeCount).reduce((a, b) => a + b, 0),
-      contentTypeArray: []
+      contentTypeArray: [],
+
+      currentCenterIndex: 0
     }
     // 컨텐츠 컴포넌트 ref
     this.contentRefs = {}
@@ -58,7 +61,7 @@ class EpisodeDetail extends Component {
   componentDidMount () {
   }
 
-  stopEpisodeVideo () {
+  stopEpisodeVideo = () => {
     for (let i = 0; i < this.state.contentTypeArray.length; i++) {
       if (this.state.contentTypeArray[i] === 'Video' &&
           // undefined일 경우, 아직 contentRefs오브젝트에 추가되지 않은, 즉 아직 렌더링 되지 않은 컨텐츠이다.
@@ -67,6 +70,14 @@ class EpisodeDetail extends Component {
           this.contentRefs[i] !== null) {
         this.contentRefs[i].getWrappedInstance()._root._component.stopVideo()
       }
+    }
+  }
+
+  playEpisodeVideo = () => {
+    const { currentCenterIndex } = this.state
+
+    if (this.state.contentTypeArray[currentCenterIndex] === 'Video') {
+      this.contentRefs[currentCenterIndex].getWrappedInstance()._root._component.playVideo()
     }
   }
 
@@ -146,7 +157,7 @@ class EpisodeDetail extends Component {
     }
   }
 */
-
+/*
   renderProfileImage () {
     let uri = `${this.props.account.profileImagePath}?random_number=${new Date().getTime()}`
     if (this.props.account.profileImagePath) {
@@ -162,6 +173,14 @@ class EpisodeDetail extends Component {
           source={Images.profileImage} />
       )
     }
+  }
+*/
+  renderProfileImage () {
+    return (
+      <Image
+        style={styles.profileStyle}
+        source={{uri: 'https://facebook.github.io/react/img/logo_og.png'}} />
+    )
   }
 
   renderActiveRed () {
@@ -254,7 +273,7 @@ class EpisodeDetail extends Component {
   _renderItemComponent = (content) => {
     const episodeId = this.props.episode.id
     const length = this.props.episode.contents.length
-    const index = parseInt(content.index)
+    const index = content.index
 
     return (
       <ContentContainer
@@ -263,7 +282,6 @@ class EpisodeDetail extends Component {
         }}
         playerRef={(player) => {
           this.player[index] = player
-          console.log(this.contentRefs)
         }}
         key={index}
         length={length}
@@ -304,7 +322,10 @@ class EpisodeDetail extends Component {
         }
       }
 
-      if (this.state.contentTypeArray[centerIndex] === 'Video') {
+      if (this.state.contentTypeArray[centerIndex] === 'Video' &&
+          this.contentRefs[centerIndex] !== null &&
+          this.contentRefs[centerIndex] !== undefined) {
+        this.setState({ currentCenterIndex: centerIndex })
         this.contentRefs[centerIndex].getWrappedInstance()._root._component.playVideo()
       }
     }

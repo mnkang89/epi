@@ -1,23 +1,17 @@
 import React, { Component, PropTypes } from 'react'
 import {
   View,
-  // Dimensions,
-  TouchableOpacity,
-  Text,
-  ScrollView,
-  ListView,
-  RefreshControl
+  ActivityIndicator
+  // Dimensions
 } from 'react-native'
 import { connect } from 'react-redux'
 import _ from 'lodash'
-import { Actions as NavigationActions } from 'react-native-router-flux'
+// import { Actions as NavigationActions } from 'react-native-router-flux'
 
-/*
 import {
   getItemLayout
 } from '../Experimental/ListExampleShared_e'
-import FlatList_e from '../Experimental/FlatList_e'
-*/
+import FlatListE from '../Experimental/FlatList_e'
 
 import styles from './Styles/FeedScreenStyle'
 import { getObjectDiff } from '../Lib/Utilities'
@@ -29,9 +23,6 @@ import EpisodeActions from '../Redux/EpisodeRedux'
 import CommentActions from '../Redux/CommentRedux'
 
 // const windowSize = Dimensions.get('window')
-const ITEM_SIZE = 440
-const BUFFER_ITEMS = 0
-const DISPLAY_ITEMS = 8
 
 class FeedScreen extends Component {
 
@@ -59,29 +50,22 @@ class FeedScreen extends Component {
 
   constructor (props) {
     super(props)
-    let listItemHeight = ITEM_SIZE
-    // Use contentOffset to calculate first visible dataItem as y-position / height of item
-    // firstVisibleItem: 뷰포트에 비저블한 첫 아이템의 인덱스?
-    let firstVisibleItem = 0
-    let renderModelSize = BUFFER_ITEMS * 2 + DISPLAY_ITEMS
-    // Calculate first y-position
-    let nextPosition = (firstVisibleItem - BUFFER_ITEMS) * listItemHeight
-    // Subset of dataModel to be rendered.
-    let dataItems = this.props.items.slice(firstVisibleItem, firstVisibleItem + renderModelSize)
-    let newRenderModel = dataItems.map((item, index) => {
-      return {
-        key: item.episode.id,
-        item: item,
-        position: nextPosition + index * listItemHeight
-      }
-    })
     this.state = {
       refreshing: false,
-      dataModel: this.props.items,
-      renderModel: newRenderModel,
-      bodyHeight: 6 * 444
+      footer: false,
+      before: null,
+
+      data: [],
+      init: true
     }
-    this.episodeRefs = []
+    this.episodeRefs = {}
+  }
+
+  componentWillMount () {
+    const { token, accountId } = { token: '$2a$10$RrUeAlbcR35gAWRcQFfQMejdRmcvMLtrE2y4BrCDSXuPv0IeRucDu', accountId: 1 }
+    const withFollowing = true
+
+    this.props.requestUserEpisodes(token, accountId, withFollowing)
   }
 
   componentDidMount () {
@@ -97,52 +81,174 @@ class FeedScreen extends Component {
 
     if (_.isEqual(this.props.items, nextProps.items)) {
       console.log('아이템같음')
+      if (this.state.init && this.props.items.length !== 0) {
+        this.setState({
+          data: this.props.items,
+          init: false
+        })
+      }
     } else {
       console.log('아이템다름')
     }
+
     if (this.state.refreshing) {
-      this.setState({refreshing: false})
+      this.setState({
+        data: this.props.items,
+        refreshing: false
+      })
+    }
+
+    if (this.state.footer) {
+      this.setState({
+        footer: false,
+        data: this.state.data.concat(nextProps.items)
+      })
     }
   }
 
-  onRefresh () {
+  _onRefresh () {
     const { token, accountId } = this.props
     const withFollowing = true
 
     this.setState({refreshing: true})
     this.props.requestUserEpisodes(token, accountId, withFollowing)
   }
-/*
-  onScroll (e) {
-    this.updateRenderModel(e.nativeEvent.contentOffset)
+
+  _onEndReached () {
+    console.log('onEndReached fired')
+    this.setState({footer: true})
+    const { token, accountId } = this.props
+    // const { before } = this.state
+    const withFollowing = true
+
+    this.props.requestUserEpisodes(token, accountId, withFollowing)
+  }
+// this.props.items
+  render () {
+    console.log('데이터길이: ' + this.state.data.length)
+    return (
+      <View style={styles.mainContainer}>
+        <FlatListE
+          ref={this._captureRef}
+          FooterComponent={this._renderFooter.bind(this)}
+          ItemComponent={this._renderItemComponent}
+          disableVirtualization={false}
+          getItemLayout={undefined}
+          horizontal={false}
+          data={this.state.data}
+          key={'vf'}
+          legacyImplementation={false}
+          onRefresh={this._onRefresh.bind(this)}
+          refreshing={this.state.refreshing}
+          onViewableItemsChanged={this._onViewableItemsChanged}
+          onEndReached={this._onEndReached.bind(this)}
+          onEndReachedThreshold={0}
+          shouldItemUpdate={this._shouldItemUpdate} />
+        <View style={{height: 48.5}} />
+        <CommentModalContainer screen={'FeedScreen'} token={this.props.token} />
+      </View>
+    )
   }
 
-  updateRenderModel (contentOffset) {
-    let listItemHeight = ITEM_SIZE
-    // Use contentOffset to calculate first visible dataItem as y-position / height of item
-    // firstVisibleItem: 뷰포트에 비저블한 첫 아이템의 인덱스?
-    let firstVisibleItem = Math.max(0, Math.floor(contentOffset.y / listItemHeight))
-    let renderModelSize = BUFFER_ITEMS * 2 + DISPLAY_ITEMS
-    // Calculate first y-position
-    let nextPosition = (firstVisibleItem - BUFFER_ITEMS) * listItemHeight
-    // Subset of dataModel to be rendered.
-    let dataItems = this.state.dataModel.slice(firstVisibleItem, firstVisibleItem + renderModelSize)
-    let newRenderModel = dataItems.map((item, index) => {
-      return {
-        key: item.episode.id,
-        item: item,
-        position: nextPosition + index * listItemHeight
-      }
-    })
-    // update renderModel, as well as bodyHeight of scroll area to encompass the largest y value
-    let state = {
-      renderModel: newRenderModel,
-      // dataModel: this.state.dataModel,
-      bodyHeight: nextPosition + renderModelSize * listItemHeight
-    }
-    this.setState(state)
+  _captureRef = (ref) => { this._listRef = ref }
+
+  _getItemLayout = (data: any, index: number) => {
+    return getItemLayout(data, index, this.state.horizontal)
   }
-*/
+
+  _renderItemComponent = (episode) => {
+    const index = episode.index
+
+    return (
+      <EpisodeDetail
+        ref={(component) => {
+          this.episodeRefs[index] = component
+        }}
+        key={index}
+        episode={episode.item.episode}
+        account={episode.item.account} />
+    )
+  }
+
+  _renderFooter () {
+    if (this.state.footer) {
+      return (
+        <View>
+          <ActivityIndicator
+            color='white'
+            style={{marginBottom: 50}}
+            size='large' />
+        </View>
+      )
+    } else {
+      return (
+        <View />
+      )
+    }
+  }
+
+  _shouldItemUpdate (prev, next) {
+    return prev.item !== next.item
+  }
+
+  _onViewableItemsChanged = (info: {
+      changed: Array<{
+        key: string, isViewable: boolean, item: any, index: ?number, section?: any
+      }>
+    }
+  ) => {
+    const changedItemsArray = []
+    let centerIndex = 0
+    // console.log(info)
+    if (info.viewableItems.length === 1) {
+      centerIndex = info.viewableItems[0].index
+    } else if (info.viewableItems.length === 2) {
+      if (info.viewableItems[0].index === 0) {
+        // 첫 2개 에피소드일 경우
+        // console.log('첫 2개')
+        centerIndex = info.viewableItems[0].index
+      } else if (info.viewableItems[1].index === Object.keys(this.episodeRefs).length) {
+        // 마지막 2개 에피소드일 경우
+        // console.log('마지막 2개')
+        centerIndex = info.viewableItems[1].index
+      } else {
+        // changedItemsArray 삽입
+        // console.log('체인지드 케이스')
+        for (let i = 0; i < info.changed.length; i++) {
+          changedItemsArray.push(info.changed[i].index)
+        }
+        // console.log(changedItemsArray)
+        // changedItemsArray에 없고 viewableItems에 있으면 centerIndex
+        for (let i = 0; i < info.viewableItems.length; i++) {
+          if (!changedItemsArray.includes(info.viewableItems[i].index)) {
+            centerIndex = info.viewableItems[i].index
+          }
+        }
+      }
+    } else if (info.viewableItems.length === 3) {
+      centerIndex = info.viewableItems[1].index
+    }
+    // console.log('centerIndex: ' + centerIndex)
+
+    for (let i = 0; i < Object.keys(this.episodeRefs).length; i++) {
+      if (
+          // i === centerIndex면 중간에 온 비디오 컨텐츠이므로 stop할 필요가 없음.
+          i !== centerIndex &&
+          // undefined일 경우, 아직 episodeRefs오브젝트에 추가되지 않은, 즉 아직 렌더링 되지 않은 컨텐츠이다.
+          // this.episodeRefs[i] !== undefined &&
+          // null일 경우, flatList최적화 기능에 의해 메모리에서 내려간 컨텐츠에 해당한다.
+          this.episodeRefs[i] !== null) {
+        // console.log('Index: ' + i)
+        this.episodeRefs[i].stopEpisodeVideo()
+      }
+    }
+    if (this.episodeRefs[centerIndex] !== null) {
+      // console.log('play')
+      this.episodeRefs[centerIndex].playEpisodeVideo()
+    }
+  }
+
+/*
   renderListView (dataSource) {
     if (this.props.episodesRequesting) {
       console.log('리퀘스팅중')
@@ -210,96 +316,8 @@ class FeedScreen extends Component {
       </View>
     )
   }
-/*
-  render () {
-    return (
-      <View style={styles.mainContainer}>
-        <FlatList_e
-          ItemComponent={this._renderItemComponent}
-          disableVirtualization={false}
-          getItemLayout={this.state.fixedHeight ? this._getItemLayout : undefined}
-          horizontal={false}
-          data={this.props.items}
-          key={'vd'}
-          legacyImplementation={false}
-          onRefresh={this.onRefresh.bind(this)}
-          refreshing={this.state.refreshing}
-          onViewableItemsChanged={this._onViewableItemsChanged}
-          ref={this._captureRef}
-          shouldItemUpdate={this._shouldItemUpdate} />
-        <View style={{height: 48.5}} />
-        <CommentModalContainer screen={'FeedScreen'} token={this.props.token} />
-      </View>
-    )
-  }
-
-  _captureRef = (ref) => { this._listRef = ref }
-
-  _getItemLayout = (data: any, index: number) => {
-    return getItemLayout(data, index, this.state.horizontal)
-  }
-  ref={(component) => {
-    this.episodeRefs[contents.indexOf(content)] = component
-  }}
-
-  _renderItemComponent = ({item}) => {
-    return (
-      <EpisodeDetail
-        key={item.episode.id}
-        episode={item.episode}
-        account={item.account} />
-    )
-  }
-
-  _shouldItemUpdate (prev, next) {
-    return prev.item !== next.item
-  }
-
-  _onViewableItemsChanged = (info: {
-      changed: Array<{
-        key: string, isViewable: boolean, item: any, index: ?number, section?: any
-      }>
-    }
-  ) => {
-    console.log(info)
-    // stopEpisodeVideo()
-  }
 */
 
-/*
-  render () {
-    var items = this.state.renderModel.map(renderItem => {
-      const itemStyle = {
-        position: 'absolute',
-        width: windowSize.width,
-        height: ITEM_SIZE,
-        left: 0,
-        top: renderItem.position,
-        alignItems: 'center'
-      }
-
-      return (
-        <View key={renderItem.key} style={itemStyle}>
-          <EpisodeDetail
-            key={renderItem.item.episode.id}
-            episode={renderItem.item.episode}
-            account={renderItem.item.account} />
-        </View>
-      )
-    })
-    return (
-      <View style={styles.mainContainer}>
-        <ScrollView ref='scrollView' style={{flex: 1}} scrollEventThrottle={1} onScroll={this.onScroll.bind(this)}>
-          <View style={{height: this.state.bodyHeight, width: windowSize.width}}>
-            {items}
-          </View>
-        </ScrollView>
-        <View style={{height: 48.5}} />
-        <CommentModalContainer screen={'FeedScreen'} token={this.props.token} />
-      </View>
-    )
-  }
-*/
 }
 
 const mapStateToProps = (state) => {
