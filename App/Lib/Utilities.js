@@ -61,3 +61,9 @@ export const getObjectDiff = (obj1, obj2) => {
 
   return diff
 }
+
+export const getArrayDiff = (arr1, arr2) => {
+  const result = _.differenceWith(arr1, arr2, _.isEqual)
+
+  return result
+}

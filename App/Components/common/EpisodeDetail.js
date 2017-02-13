@@ -322,7 +322,8 @@ class EpisodeDetail extends Component {
         }
       }
 
-      if (this.state.contentTypeArray[centerIndex] === 'Video' &&
+      if (this.props.viewability &&
+          this.state.contentTypeArray[centerIndex] === 'Video' &&
           this.contentRefs[centerIndex] !== null &&
           this.contentRefs[centerIndex] !== undefined) {
         this.setState({ currentCenterIndex: centerIndex })

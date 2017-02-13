@@ -14,7 +14,7 @@ import {
 import FlatListE from '../Experimental/FlatList_e'
 
 import styles from './Styles/FeedScreenStyle'
-import { getObjectDiff } from '../Lib/Utilities'
+import { getObjectDiff, getArrayDiff } from '../Lib/Utilities'
 import EpisodeDetail from '../Components/common/EpisodeDetail'
 import CommentModalContainer from './common/CommentModalContainer'
 
@@ -56,7 +56,9 @@ class FeedScreen extends Component {
       before: null,
 
       data: [],
-      init: true
+      init: true,
+
+      viewableItemsArray: []
     }
     this.episodeRefs = {}
   }
@@ -131,7 +133,7 @@ class FeedScreen extends Component {
         <FlatListE
           ref={this._captureRef}
           FooterComponent={this._renderFooter.bind(this)}
-          ItemComponent={this._renderItemComponent}
+          ItemComponent={this._renderItemComponent.bind(this)}
           disableVirtualization={false}
           getItemLayout={undefined}
           horizontal={false}
@@ -150,6 +152,29 @@ class FeedScreen extends Component {
     )
   }
 
+/*
+<View style={styles.mainContainer}>
+  <FlatListE
+    ref={this._captureRef}
+    FooterComponent={this._renderFooter.bind(this)}
+    ItemComponent={this._renderItemComponent}
+    disableVirtualization={false}
+    getItemLayout={undefined}
+    horizontal={false}
+    data={this.state.data}
+    key={'vf'}
+    legacyImplementation={false}
+    onRefresh={this._onRefresh.bind(this)}
+    refreshing={this.state.refreshing}
+    onViewableItemsChanged={this._onViewableItemsChanged}
+    onEndReached={this._onEndReached.bind(this)}
+    onEndReachedThreshold={0}
+    shouldItemUpdate={this._shouldItemUpdate} />
+  <View style={{height: 48.5}} />
+  <CommentModalContainer screen={'FeedScreen'} token={this.props.token} />
+</View>
+*/
+
   _captureRef = (ref) => { this._listRef = ref }
 
   _getItemLayout = (data: any, index: number) => {
@@ -158,12 +183,25 @@ class FeedScreen extends Component {
 
   _renderItemComponent = (episode) => {
     const index = episode.index
+    /*
+    let viewability = false
+    // console.log('뷰어브러에리'+this.state.viewableItemsArray)
+
+    if (this.state.viewableItemsArray.includes(index)) {
+      viewability = true
+    } else {
+      viewability = false
+    }
+    */
 
     return (
       <EpisodeDetail
         ref={(component) => {
-          this.episodeRefs[index] = component
+          if (component !== null) {
+            this.episodeRefs[index] = component
+          }
         }}
+        // viewability={viewability}
         key={index}
         episode={episode.item.episode}
         account={episode.item.account} />
@@ -197,54 +235,49 @@ class FeedScreen extends Component {
       }>
     }
   ) => {
-    const changedItemsArray = []
-    let centerIndex = 0
-    // console.log(info)
-    if (info.viewableItems.length === 1) {
-      centerIndex = info.viewableItems[0].index
-    } else if (info.viewableItems.length === 2) {
-      if (info.viewableItems[0].index === 0) {
-        // 첫 2개 에피소드일 경우
-        // console.log('첫 2개')
-        centerIndex = info.viewableItems[0].index
-      } else if (info.viewableItems[1].index === Object.keys(this.episodeRefs).length) {
-        // 마지막 2개 에피소드일 경우
-        // console.log('마지막 2개')
-        centerIndex = info.viewableItems[1].index
-      } else {
-        // changedItemsArray 삽입
-        // console.log('체인지드 케이스')
-        for (let i = 0; i < info.changed.length; i++) {
-          changedItemsArray.push(info.changed[i].index)
-        }
-        // console.log(changedItemsArray)
-        // changedItemsArray에 없고 viewableItems에 있으면 centerIndex
-        for (let i = 0; i < info.viewableItems.length; i++) {
-          if (!changedItemsArray.includes(info.viewableItems[i].index)) {
-            centerIndex = info.viewableItems[i].index
-          }
-        }
-      }
-    } else if (info.viewableItems.length === 3) {
-      centerIndex = info.viewableItems[1].index
-    }
-    // console.log('centerIndex: ' + centerIndex)
+    // info오브젝트에서 뷰어블인 에피소드의 인덱스 추출하고 해당 에피소드를 제외한 에피소드는 모두 stopEpisodeVideo()호출
 
-    for (let i = 0; i < Object.keys(this.episodeRefs).length; i++) {
-      if (
-          // i === centerIndex면 중간에 온 비디오 컨텐츠이므로 stop할 필요가 없음.
-          i !== centerIndex &&
-          // undefined일 경우, 아직 episodeRefs오브젝트에 추가되지 않은, 즉 아직 렌더링 되지 않은 컨텐츠이다.
-          // this.episodeRefs[i] !== undefined &&
-          // null일 경우, flatList최적화 기능에 의해 메모리에서 내려간 컨텐츠에 해당한다.
-          this.episodeRefs[i] !== null) {
-        // console.log('Index: ' + i)
-        this.episodeRefs[i].stopEpisodeVideo()
+    const viewableItemsArray = []
+    const episodeRefsArray = Object.keys(this.episodeRefs).map(Number)
+
+    for (let i = 0; i < info.viewableItems.length; i++) {
+      viewableItemsArray.push(info.viewableItems[i].index)
+    }
+
+    // console.log('보이는 아이템들: ')
+    // console.log(viewableItemsArray)
+
+    const inViewableItemsArray = getArrayDiff(episodeRefsArray, viewableItemsArray)
+    // console.log('안보이는 아이템들: ')
+    // console.log(inViewableItemsArray)
+
+    for (let i in inViewableItemsArray) {
+      const index = inViewableItemsArray[i]
+
+      if (this.episodeRefs[index] !== null) {
+        this.episodeRefs[index].stopEpisodeVideo()
+      } else {
+        // console.log('null인놈들')
+        // console.log(index)
       }
     }
-    if (this.episodeRefs[centerIndex] !== null) {
-      // console.log('play')
-      this.episodeRefs[centerIndex].playEpisodeVideo()
+    // 뷰어블한 아이템이 3개이면 중간 아이템만 play
+    if (viewableItemsArray.length === 3) {
+      if (this.episodeRefs[viewableItemsArray[0]] !== null) {
+        this.episodeRefs[viewableItemsArray[0]].stopEpisodeVideo()
+      }
+      if (this.episodeRefs[viewableItemsArray[2]] !== null) {
+        this.episodeRefs[viewableItemsArray[2]].stopEpisodeVideo()
+      }
+    } else {
+      for (let j in viewableItemsArray) {
+        const index = viewableItemsArray[j]
+        console.log('뷰어블index는 ' + index)
+
+        if (this.episodeRefs[index] !== null) {
+          this.episodeRefs[index].playEpisodeVideo()
+        }
+      }
     }
   }
 
