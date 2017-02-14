@@ -57,12 +57,12 @@ class NavigationRouter extends Component {
           tabs
           selector={() => this.initialScence}>
           <Scene
+            initial
             key='Greeting'
             hideNavBar
             hideTabBar
             component={GreetingScreen} />
           <Scene
-            initial
             key='tabBar'
             tabs
             tabBarStyle={{backgroundColor: '#000000', justifyContent: 'center', alignItems: 'center', alignSelf: 'center', height: 48.5}}>

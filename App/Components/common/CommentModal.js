@@ -38,8 +38,7 @@ class CommentModal extends Component {
       text: '',
       height: 5,
       inputBottom: 40,
-      modalVisible: false,
-      message: ''
+      modalVisible: false
     }
   }
 
@@ -68,14 +67,15 @@ class CommentModal extends Component {
       }
     }
   }
-
-  shouldComponentUpdate (nextProps, nextState) {
-    if (nextState.message !== this.state.message) {
-      console.log('메세지값 변경')
-      return false
-    }
-    return true
+/*
+shouldComponentUpdate (nextProps, nextState) {
+  if (nextState.message !== this.state.message) {
+    console.log('메세지값 변경')
+    return false
   }
+  return true
+}
+*/
 
   resetCommentModal () {
     this.setState({modalVisible: false})
@@ -86,20 +86,20 @@ class CommentModal extends Component {
   }
 
   handleChangeMessage = (text) => {
-    this.setState({ message: text })
+    this.message = text
   }
 
   onCommentButtonPress () {
     const { token, episodeId, contentId } = this.props
-    const message = this.state.message
+    const message = this.message
 
-    if (this.state.message !== '') {
-      this.setState({message: ''})
+    if (message !== '') {
+      this.message = ''
       this.refs.commentInput.clear()
 
       this.props.postComment(token, episodeId, contentId, message)
     } else {
-      this.setState({message: ''})
+      this.message = ''
       this.refs.commentInput.clear()
     }
   }
@@ -142,7 +142,7 @@ class CommentModal extends Component {
                   placeholder={'댓글을 입력하세요...'}
                   autoCapitalize='none'
                   autoCorrect={false}
-                  onChangeText={this.handleChangeMessage}
+                  onChangeText={this.handleChangeMessage.bind(this)}
                   maxHeight={70} />
               </View>
               <View>
