@@ -4,6 +4,7 @@ import {
   View,
   Image,
   TouchableOpacity,
+  ActivityIndicator,
   // ListView,
   Dimensions
  } from 'react-native'
@@ -127,6 +128,11 @@ class EpisodeDetail extends Component {
   _onMomentumScrollBegin () {
     console.log('모멘텀스크럴앤드')
     this.horizontalLock = false
+  }
+
+  _onEndReached () {
+    console.log('onEndReached fired')
+    this.setState({footer: true})
   }
 
 /*
@@ -253,6 +259,7 @@ class EpisodeDetail extends Component {
         <FlatListE
           data={this.props.episode.contents}
           ItemComponent={this._renderItemComponent}
+          FooterComponent={this._renderFooter.bind(this)}
           disableVirtualization={false}
           getItemLayout={undefined}
           horizontal
@@ -260,6 +267,8 @@ class EpisodeDetail extends Component {
           initialListSize={50}
           onMomentumScrollBegin={this._onMomentumScrollBegin.bind(this)}
           onViewableItemsChanged={this._onViewableItemsChanged}
+          onEndReached={this._onEndReached.bind(this)}
+          onEndReachedThreshold={0}
           shouldItemUpdate={this._shouldItemUpdate}
           style={{marginTop: 10, paddingLeft: 7.5, paddingRight: 7.5}}
           contentOffset={{x: xPosition, y: 0}}
@@ -300,6 +309,23 @@ class EpisodeDetail extends Component {
         like={this.like.bind(this)}
         dislike={this.dislike.bind(this)} />
     )
+  }
+
+  _renderFooter () {
+    if (this.state.footer) {
+      return (
+        <View>
+          <ActivityIndicator
+            color='white'
+            style={{marginBottom: 50}}
+            size='large' />
+        </View>
+      )
+    } else {
+      return (
+        <View />
+      )
+    }
   }
 
   _shouldItemUpdate (prev, next) {

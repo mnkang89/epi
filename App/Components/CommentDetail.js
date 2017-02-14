@@ -3,7 +3,7 @@ import { Text, View, Image, TouchableOpacity, Modal } from 'react-native'
 
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import { Colors, Images, Metrics } from '../Themes/'
-import { getObjectDiff } from '../Lib/Utilities'
+import { getObjectDiff, convert2TimeDiffString } from '../Lib/Utilities'
 
 class CommentDetail extends Component {
 
@@ -95,11 +95,9 @@ class CommentDetail extends Component {
   }
 
   render () {
-    console.log('여기야')
-    console.log(this.props.comment.account)
-    console.log('여기야')
     const { message } = this.props.comment
     const { nickname } = this.props.comment.account
+    const timeDiffString = convert2TimeDiffString(this.props.comment.createDateTime)
     const {
             headerContentStyle,
             userTextStyle,
@@ -120,7 +118,7 @@ class CommentDetail extends Component {
             </View>
             <View style={{flex: 2, marginTop: 3, marginBottom: 10}}>
               <Text style={{color: 'rgb(53, 53, 53)', fontSize: 15, lineHeight: 16}}>{message}</Text>
-              <Text style={dateTextStyle}>2016-11-12 11:00:00</Text>
+              <Text style={dateTextStyle}>{timeDiffString}</Text>
             </View>
           </View>
           <View style={{marginTop: 14, marginLeft: 11}}>
