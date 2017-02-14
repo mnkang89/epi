@@ -56,11 +56,10 @@ class FeedScreen extends Component {
       before: null,
 
       data: [],
-      init: true,
-
-      viewableItemsArray: []
+      init: true
     }
     this.episodeRefs = {}
+    this.viewableItemsArray = []
   }
 
   componentWillMount () {
@@ -152,29 +151,6 @@ class FeedScreen extends Component {
     )
   }
 
-/*
-<View style={styles.mainContainer}>
-  <FlatListE
-    ref={this._captureRef}
-    FooterComponent={this._renderFooter.bind(this)}
-    ItemComponent={this._renderItemComponent}
-    disableVirtualization={false}
-    getItemLayout={undefined}
-    horizontal={false}
-    data={this.state.data}
-    key={'vf'}
-    legacyImplementation={false}
-    onRefresh={this._onRefresh.bind(this)}
-    refreshing={this.state.refreshing}
-    onViewableItemsChanged={this._onViewableItemsChanged}
-    onEndReached={this._onEndReached.bind(this)}
-    onEndReachedThreshold={0}
-    shouldItemUpdate={this._shouldItemUpdate} />
-  <View style={{height: 48.5}} />
-  <CommentModalContainer screen={'FeedScreen'} token={this.props.token} />
-</View>
-*/
-
   _captureRef = (ref) => { this._listRef = ref }
 
   _getItemLayout = (data: any, index: number) => {
@@ -183,16 +159,6 @@ class FeedScreen extends Component {
 
   _renderItemComponent = (episode) => {
     const index = episode.index
-    /*
-    let viewability = false
-    // console.log('뷰어브러에리'+this.state.viewableItemsArray)
-
-    if (this.state.viewableItemsArray.includes(index)) {
-      viewability = true
-    } else {
-      viewability = false
-    }
-    */
 
     return (
       <EpisodeDetail
@@ -201,8 +167,9 @@ class FeedScreen extends Component {
             this.episodeRefs[index] = component
           }
         }}
-        // viewability={viewability}
         key={index}
+        index={index}
+        parentHandler={this}
         episode={episode.item.episode}
         account={episode.item.account} />
     )
@@ -235,7 +202,7 @@ class FeedScreen extends Component {
       }>
     }
   ) => {
-    // info오브젝트에서 뷰어블인 에피소드의 인덱스 추출하고 해당 에피소드를 제외한 에피소드는 모두 stopEpisodeVideo()호출
+    /* info오브젝트에서 뷰어블인 에피소드의 인덱스 추출하고 해당 에피소드를 제외한 에피소드는 모두 stopEpisodeVideo()호출 */
 
     const viewableItemsArray = []
     const episodeRefsArray = Object.keys(this.episodeRefs).map(Number)
@@ -244,12 +211,12 @@ class FeedScreen extends Component {
       viewableItemsArray.push(info.viewableItems[i].index)
     }
 
-    // console.log('보이는 아이템들: ')
-    // console.log(viewableItemsArray)
+    this.viewableItemsArray = viewableItemsArray
+
+    console.log('보이는 아이템들: ')
+    console.log(this.viewableItemsArray)
 
     const inViewableItemsArray = getArrayDiff(episodeRefsArray, viewableItemsArray)
-    // console.log('안보이는 아이템들: ')
-    // console.log(inViewableItemsArray)
 
     for (let i in inViewableItemsArray) {
       const index = inViewableItemsArray[i]
@@ -272,7 +239,6 @@ class FeedScreen extends Component {
     } else {
       for (let j in viewableItemsArray) {
         const index = viewableItemsArray[j]
-        console.log('뷰어블index는 ' + index)
 
         if (this.episodeRefs[index] !== null) {
           this.episodeRefs[index].playEpisodeVideo()
@@ -280,6 +246,29 @@ class FeedScreen extends Component {
       }
     }
   }
+
+}
+
+const mapStateToProps = (state) => {
+  return {
+    token: state.token.token,
+    accountId: state.token.id,
+
+    episodesRequesting: state.episode.episodesRequesting,
+    items: state.episode.episodes
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    requestInfo: (token, accountId) => dispatch(AccountActions.infoRequest(token, accountId)),
+    requestUserEpisodes: (token, accountId, withFollowing) => dispatch(EpisodeActions.userEpisodesRequest(token, accountId, withFollowing)),
+
+    resetCommentModal: () => dispatch(CommentActions.resetComment())
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(FeedScreen)
 
 /*
   renderListView (dataSource) {
@@ -350,26 +339,3 @@ class FeedScreen extends Component {
     )
   }
 */
-
-}
-
-const mapStateToProps = (state) => {
-  return {
-    token: state.token.token,
-    accountId: state.token.id,
-
-    episodesRequesting: state.episode.episodesRequesting,
-    items: state.episode.episodes
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    requestInfo: (token, accountId) => dispatch(AccountActions.infoRequest(token, accountId)),
-    requestUserEpisodes: (token, accountId, withFollowing) => dispatch(EpisodeActions.userEpisodesRequest(token, accountId, withFollowing)),
-
-    resetCommentModal: () => dispatch(CommentActions.resetComment())
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(FeedScreen)

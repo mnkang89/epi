@@ -29,22 +29,25 @@ class EpisodeDetail extends Component {
 
     xPosition: PropTypes.number,
     type: PropTypes.string,
-    singleType: PropTypes.string
+    singleType: PropTypes.string,
+
+    parentHandler: PropTypes.object
   }
 
   constructor (props) {
     super(props)
     this.state = {
       likeCount: this.props.episode.contents.map(content => content.likeCount).reduce((a, b) => a + b, 0),
-      contentTypeArray: [],
-
-      currentCenterIndex: 0
+      contentTypeArray: []
+      // horizontalLock: true
     }
     // 컨텐츠 컴포넌트 ref
     this.contentRefs = {}
     // 비디오 컴포넌트 ref
     // this.player는 deprecated될 수 있음.
     this.player = []
+    this.currentCenterIndex = 0
+    this.horizontalLock = true
   }
 
   componentWillMount () {
@@ -74,10 +77,10 @@ class EpisodeDetail extends Component {
   }
 
   playEpisodeVideo = () => {
-    const { currentCenterIndex } = this.state
+    // const { currentCenterIndex } = this.state
 
-    if (this.state.contentTypeArray[currentCenterIndex] === 'Video') {
-      this.contentRefs[currentCenterIndex].getWrappedInstance()._root._component.playVideo()
+    if (this.state.contentTypeArray[this.currentCenterIndex] === 'Video') {
+      this.contentRefs[this.currentCenterIndex].getWrappedInstance()._root._component.playVideo()
     }
   }
 
@@ -121,10 +124,12 @@ class EpisodeDetail extends Component {
     }
   }
 
-  handleScroll (event) {
+  _onScroll (event) {
   }
 
-  handleMomentumScrollEnd (event) {
+  _onMomentumScrollBegin () {
+    console.log('모멘텀스크럴앤드')
+    this.horizontalLock = false
   }
 
 /*
@@ -218,6 +223,13 @@ class EpisodeDetail extends Component {
       xPosition = this.props.xPosition
     }
 
+    // currentCenterIndex
+    if (xPosition === 0) {
+      this.currentCenterIndex = 0
+    } else {
+      this.currentCenterIndex = activeEpisodeLength - 1
+    }
+
     return (
       <View
         style={{flex: 1, overflow: 'hidden'}}>
@@ -250,6 +262,7 @@ class EpisodeDetail extends Component {
           horizontal
           key={'hf'}
           initialListSize={50}
+          onMomentumScrollBegin={this._onMomentumScrollBegin.bind(this)}
           onViewableItemsChanged={this._onViewableItemsChanged}
           shouldItemUpdate={this._shouldItemUpdate}
           style={{marginTop: 10, paddingLeft: 7.5, paddingRight: 7.5}}
@@ -307,7 +320,13 @@ class EpisodeDetail extends Component {
       }>
     }
   ) => {
-    if (info.viewableItems.length === 1) {
+    /*
+      this.horizontalLock은 해당 에피소드가 좌우 스크롤된적이 없을 경우 true이다.
+      onMomentumScrollEnd를 이용해 스크롤시 false로 변경한다.
+    */
+    if (info.viewableItems.length === 1 && !this.horizontalLock) {
+      const { parentHandler, index } = this.props
+      const episodeViewability = parentHandler.viewableItemsArray.includes(index)
       const centerIndex = info.viewableItems[0].index
 
       for (let i = 0; i < this.state.contentTypeArray.length; i++) {
@@ -322,12 +341,13 @@ class EpisodeDetail extends Component {
         }
       }
 
-      if (this.props.viewability &&
+      if (episodeViewability &&
           this.state.contentTypeArray[centerIndex] === 'Video' &&
           this.contentRefs[centerIndex] !== null &&
           this.contentRefs[centerIndex] !== undefined) {
-        this.setState({ currentCenterIndex: centerIndex })
-        this.contentRefs[centerIndex].getWrappedInstance()._root._component.playVideo()
+        this.currentCenterIndex = centerIndex
+        console.log('비디오 재생 에피소드id' + this.props.episode.id)
+        this.contentRefs[this.currentCenterIndex].getWrappedInstance()._root._component.playVideo()
       }
     }
   }
@@ -436,7 +456,9 @@ class EpisodeDetail extends Component {
 
 EpisodeDetail.defaultProps = {
   type: null,
-  singleType: null
+  singleType: null,
+
+  viewability: false
 }
 
 const styles = {

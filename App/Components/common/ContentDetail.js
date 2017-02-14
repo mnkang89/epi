@@ -215,7 +215,7 @@ class ContentDetailClass extends Component {
                 source={Videos.ragu_8}   // Can be a URL or a local file.
                 muted
                 progressUpdateInterval={10000}
-                onProgress={() => { console.log(this.props.episodeId) }}
+                // onProgress={() => { console.log(this.props.episodeId) }}
                 ref={this.props.playerRef}                             // Store reference
                 paused={this.state.paused}                 // Pauses playback entirely.
                 resizeMode='cover'             // Fill the whole screen at aspect ratio.
