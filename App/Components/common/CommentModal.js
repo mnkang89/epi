@@ -93,10 +93,15 @@ class CommentModal extends Component {
     const { token, episodeId, contentId } = this.props
     const message = this.state.message
 
-    this.setState({message: ''})
-    this.refs.commentInput.clear()
+    if (this.state.message !== '') {
+      this.setState({message: ''})
+      this.refs.commentInput.clear()
 
-    this.props.postComment(token, episodeId, contentId, message)
+      this.props.postComment(token, episodeId, contentId, message)
+    } else {
+      this.setState({message: ''})
+      this.refs.commentInput.clear()
+    }
   }
 
   render () {

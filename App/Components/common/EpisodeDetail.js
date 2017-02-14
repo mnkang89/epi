@@ -39,7 +39,6 @@ class EpisodeDetail extends Component {
     this.state = {
       likeCount: this.props.episode.contents.map(content => content.likeCount).reduce((a, b) => a + b, 0),
       contentTypeArray: []
-      // horizontalLock: true
     }
     // 컨텐츠 컴포넌트 ref
     this.contentRefs = {}
@@ -77,8 +76,6 @@ class EpisodeDetail extends Component {
   }
 
   playEpisodeVideo = () => {
-    // const { currentCenterIndex } = this.state
-
     if (this.state.contentTypeArray[this.currentCenterIndex] === 'Video') {
       this.contentRefs[this.currentCenterIndex].getWrappedInstance()._root._component.playVideo()
     }
@@ -208,7 +205,6 @@ class EpisodeDetail extends Component {
       this.props.episode.updatedDateTime || this.props.episode.createDateTime)
     const {
       headerContentStyle
-      // textStyle
     } = styles
 
     let xPosition = 0
@@ -223,7 +219,7 @@ class EpisodeDetail extends Component {
       xPosition = this.props.xPosition
     }
 
-    // currentCenterIndex
+    // this.currentCenterIndex
     if (xPosition === 0) {
       this.currentCenterIndex = 0
     } else {
@@ -345,9 +341,8 @@ class EpisodeDetail extends Component {
           this.state.contentTypeArray[centerIndex] === 'Video' &&
           this.contentRefs[centerIndex] !== null &&
           this.contentRefs[centerIndex] !== undefined) {
+        this.contentRefs[centerIndex].getWrappedInstance()._root._component.playVideo()
         this.currentCenterIndex = centerIndex
-        console.log('비디오 재생 에피소드id' + this.props.episode.id)
-        this.contentRefs[this.currentCenterIndex].getWrappedInstance()._root._component.playVideo()
       }
     }
   }
