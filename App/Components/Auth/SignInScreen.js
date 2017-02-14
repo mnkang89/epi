@@ -26,30 +26,37 @@ class SignInScreen extends Component {
       email: '',
       password: ''
     }
+    this.email = ''
+    this.password = ''
   }
-
-  shouldComponentUpdate (nextProps, nextState) {
-    if (
-      nextState.email !== this.state.email ||
-      nextState.password !== this.state.password) {
-      return false
-    }
-    return true
+/*
+shouldComponentUpdate (nextProps, nextState) {
+  if (
+    nextState.email !== this.state.email ||
+    nextState.password !== this.state.password) {
+    return false
   }
+  return true
+}
+*/
 
   handlePressLogin () {
-    const { email, password } = this.state
+    // const { email, password } = this.state
+    const email = this.email
+    const password = this.password
 
     this.props.handler()
     this.props.attemptLogin(email, password)
   }
 
   handleChangeEmail (text) {
-    this.setState({ email: text })
+    // this.setState({ email: text })
+    this.email = text
   }
 
   handleChangePassword (text) {
-    this.setState({ password: text })
+    // this.setState({ password: text })
+    this.password = text
   }
 
   onPressLostPassword () {
