@@ -3,7 +3,8 @@
 import React, { Component, PropTypes } from 'react'
 import {
   View,
-  Dimensions
+  Dimensions,
+  StatusBar
 } from 'react-native'
 
 import { Actions as NavigationActions } from 'react-native-router-flux'
@@ -36,6 +37,10 @@ class CameraScreen extends Component {
       this.props.initializeCameraScreenProps()
       this.goToHomeTab()
     }
+  }
+
+  componentWillMount () {
+    StatusBar.setHidden(true)
   }
 
   goToHomeTab () {
