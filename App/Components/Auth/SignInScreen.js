@@ -17,7 +17,9 @@ class SignInScreen extends Component {
     lostPasswordScreenDispatcher: PropTypes.func,
     emailPasswordScreenDispatcher: PropTypes.func,
     attemptLogin: PropTypes.func,
-    handler: PropTypes.func
+    handler: PropTypes.func,
+
+    parentHandler: PropTypes.object
   }
 
   constructor (props) {
@@ -60,7 +62,7 @@ shouldComponentUpdate (nextProps, nextState) {
   }
 
   onPressLostPassword () {
-    this.props.scrollViewHandler(2)
+    this.props.scrollViewHandler(3)
 
     this.props.lostPasswordScreenDispatcher(true)
     this.props.emailPasswordScreenDispatcher(false)
@@ -68,7 +70,7 @@ shouldComponentUpdate (nextProps, nextState) {
 
   render () {
     console.log('사인인 스크린')
-    const { fetching } = this.props
+    const { fetching, parentHandler } = this.props
     const editable = !fetching
 
     return (
@@ -82,7 +84,7 @@ shouldComponentUpdate (nextProps, nextState) {
         <View style={{alignItems: 'center'}}>
           <View style={{width: windowSize.width - 40, marginTop: 78, paddingBottom: 7.5, borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.5)', backgroundColor: 'rgba(0,0,0,0)'}} >
             <TextInput
-              ref='email'
+              ref={(ref) => { parentHandler.textRefs.push(ref) }}
               style={{height: 20, fontWeight: 'bold', color: 'white'}}
               editable={editable}
               keyboardType='email-address'
@@ -97,7 +99,7 @@ shouldComponentUpdate (nextProps, nextState) {
           </View>
           <View style={{width: windowSize.width - 40, marginTop: 23, paddingBottom: 7.5, borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.5)', backgroundColor: 'rgba(0,0,0,0)'}}>
             <TextInput
-              ref='password'
+              ref={(ref) => { parentHandler.textRefs.push(ref) }}
               style={{height: 20, fontWeight: 'bold', color: 'white'}}
               editable={editable}
               keyboardType='default'

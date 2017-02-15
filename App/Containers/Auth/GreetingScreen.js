@@ -3,7 +3,8 @@ import React, { Component } from 'react'
 import {
   View,
   ScrollView,
-  Dimensions
+  Dimensions,
+  findNodeHandle
 } from 'react-native'
 import { connect } from 'react-redux'
 import { Actions as NavigationActions, ActionConst } from 'react-native-router-flux'
@@ -47,6 +48,8 @@ class GreetingScreen extends Component {
     this.isSignUpPasswordChecking = false
     this.isSignUpNicknameChecking = false
     this.isSignInAttempting = false
+
+    this.textRefs = []
   }
 
   shouldComponentUpdate (nextProps, nextState) {
@@ -66,7 +69,7 @@ class GreetingScreen extends Component {
         this.handleSignUpEmailChecking()
 
         this.props.passwordScreenDispatcher(true)
-        this.scrollview.scrollTo({x: 2 * windowSize.width})
+        this.scrollview.scrollTo({x: 3 * windowSize.width})
       } else if (!newProps.signUpChecking && newProps.signUpError === 'VACANT') {
         console.log('유효하지 않은 이메일(공백)')
         this.handleSignUpEmailChecking()
@@ -132,7 +135,7 @@ class GreetingScreen extends Component {
         this.props.passwordScreenDispatcher(false)
         this.props.nicknameScreenDispatcher(true)
 
-        this.scrollview.scrollTo({x: 3 * windowSize.width})
+        this.scrollview.scrollTo({x: 5 * windowSize.width})
       } else if (!newProps.attempting && newProps.attemptingerror === 'WRONG') {
         console.log('유효하지 않은 회원가입')
         this.handleSignUpPasswordChecking()
@@ -315,23 +318,34 @@ class GreetingScreen extends Component {
         !this.props.nicknameScreen &&
         direction === 'right') {
       console.log('패스워드에서 닉네임으로')
-      this.scrollview.scrollTo({x: 2 * windowSize.width})
+      this.scrollview.scrollTo({x: 3 * windowSize.width})
     } else if (!this.props.passwordScreen &&
         this.props.nicknameScreen &&
         direction === 'left') {
       console.log('닉네임에서 패스워드로')
-      this.scrollview.scrollTo({x: 2 * windowSize.width})
+      this.scrollview.scrollTo({x: 3 * windowSize.width})
       this.props.passwordScreenDispatcher(true)
       this.props.nicknameScreenDispatcher(false)
     } else if (!this.props.passwordScreen &&
         this.props.nicknameScreen &&
         direction === 'right') {
       console.log('닉네임에서 오른쪽으로')
-      this.scrollview.scrollTo({x: 3 * windowSize.width})
+      this.scrollview.scrollTo({x: 5 * windowSize.width})
     }
   }
 
   handleMomentumScrollEnd (event) {
+  }
+
+  _onStartShouldSetResponderCapture (e) {
+    const target = e.nativeEvent.target
+    console.log(this.textRefs)
+
+    for (let i = 0; i < this.textRefs.length; i++) {
+      if (target !== findNodeHandle(this.textRefs[i])) {
+        this.textRefs[i].blur()
+      }
+    }
   }
 
   renderSubGreetingScreen () {
@@ -341,6 +355,7 @@ class GreetingScreen extends Component {
         [
           <View key='1' style={{width: windowSize.width}}>
             <SignInScreen
+              parentHandler={this}
               handler={this.handleSignInAttempting.bind(this)}
               fetching={this.props.fetching}
               scrollViewHandler={this.handleScrollview.bind(this)}
@@ -348,8 +363,10 @@ class GreetingScreen extends Component {
               emailPasswordScreenDispatcher={this.props.emailPasswordScreenDispatcher}
               attemptLogin={this.props.attemptLogin} />
           </View>,
+          <View style={{width: windowSize.width}} />,
           <View key='2' style={{width: windowSize.width}}>
             <LostPasswordScreen
+              parentHandler={this}
               scrollViewHandler={this.handleScrollview.bind(this)} />
           </View>
         ]
@@ -359,19 +376,24 @@ class GreetingScreen extends Component {
         [
           <View key='3' style={{width: windowSize.width}}>
             <SignUpEmailScreen
+              parentHandler={this}
               handler={this.handleSignUpEmailChecking.bind(this)}
               checking={this.props.signUpChecking}
               checkEmail={this.props.checkEmail} />
           </View>,
+          <View style={{width: windowSize.width}} />,
           <View key='4' style={{width: windowSize.width}}>
             <SignUpPasswordScreen
+              parentHandler={this}
               handler={this.handleSignUpPasswordChecking.bind(this)}
               email={this.props.email}
               checking={this.props.signUpChecking}
               checkPassword={this.props.checkPassword} />
           </View>,
+          <View style={{width: windowSize.width}} />,
           <View key='5' style={{width: windowSize.width}}>
             <SignUpNicknameScreen
+              parentHandler={this}
               handler={this.handleSignUpNicknameChecking.bind(this)}
               checking={this.props.signUpChecking}
               token={this.props.token}
@@ -386,7 +408,9 @@ class GreetingScreen extends Component {
 
   render () {
     return (
-      <View style={{flex: 1}}>
+      <View style={{flex: 1}}
+        // onStartShouldSetResponderCapture={this._onStartShouldSetResponderCapture.bind(this)}
+      >
         <ConfirmError
           visible={this.state.alertVisible}
           TextArray={this.state.alertTextArray}
@@ -409,7 +433,10 @@ class GreetingScreen extends Component {
             right: 0,
             bottom: 0
           }} />
-        <View style={{backgroundColor: 'rgba(0,0,0,0.5)', height: windowSize.height}} >
+        <View
+          style={{backgroundColor: 'rgba(0,0,0,0.5)', height: windowSize.height}}
+          // onStartShouldSetResponderCapture={this._onStartShouldSetResponderCapture.bind(this)}
+          >
           <ScrollView
             ref={(component) => { this.scrollview = component }}
             horizontal
