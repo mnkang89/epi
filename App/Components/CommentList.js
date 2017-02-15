@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { ScrollView, RefreshControl } from 'react-native'
 import _ from 'lodash'
+import Immutable from 'seamless-immutable'
 
 import CommentDetail from './CommentDetail'
 
@@ -43,7 +44,12 @@ class CommentList extends Component {
   }
 
   renderComments () {
-    return this.props.comments.map(comment =>
+    const unsortedComments = Immutable.asMutable(this.props.comments)
+    const sortedComments = unsortedComments.sort(function (a, b) {
+      return new Date(b.createDateTime) - new Date(a.createDateTime)
+    })
+
+    return sortedComments.map(comment =>
       <CommentDetail
         key={comment.id}
         comment={comment}
