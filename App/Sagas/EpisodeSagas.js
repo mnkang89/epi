@@ -146,3 +146,22 @@ export function * singleEpisode (api, action) {
     yield put(EpisodeActions.singleEpisodeFailure('WRONG'))
   }
 }
+
+// attempts to get new episode
+export function * newEpisode (api, action) {
+  console.log('뉴 에피소드 사가 진입')
+  const { token, episodeId } = action
+  const response = yield call(api.requestSingleEpisode, token, episodeId)
+
+  if (response.ok) {
+    console.log('ok')
+    console.log(response)
+    const newEpisode = path(['data', 'episodes'], response)
+
+    yield put(EpisodeActions.newEpisodeSuccess(newEpisode))
+  } else {
+    console.log('error')
+    console.log(response)
+    yield put(EpisodeActions.newEpisodeFailure('WRONG'))
+  }
+}

@@ -74,6 +74,17 @@ const { Types, Creators } = createActions({
   ],
   singleEpisodeFailure: [
     'singleError'
+  ],
+
+  newEpisodeRequest: [
+    'token',
+    'episodeId'
+  ],
+  newEpisodeSuccess: [
+    'newEpisode'
+  ],
+  newEpisodeFailure: [
+    'newEpisodeError'
   ]
 })
 
@@ -101,7 +112,11 @@ export const INITIAL_STATE = Immutable({
 
   singleEpisode: [],
   singleEpisodeRequesting: false,
-  singleError: null
+  singleError: null,
+
+  newEpisode: [],
+  newEpisodeRequesting: false,
+  newEpisodeError: null
 })
 
 /* ------------- Reducers ------------- */
@@ -165,6 +180,35 @@ export const singleEpisodeSuccess = (state: Object, { singleEpisode }: Object) =
 export const singleEpisodeFailure = (state: Object, { singleError }: Object) =>
   state.merge({ singleEpisodeRequesting: false, singleError })
 
+// we're attempting to get new Episode
+export const newEpisodeRequest = (state: Object, { token }: Object) =>
+  state.merge({ newEpisodeRequesting: true })
+
+export const newEpisodeSuccess = (state: Object, { newEpisode }: Object) => {
+  const episodes = state.episodes
+  let insertIndex
+  let nextIndex
+
+  for (let i = 0; i < episodes.length; i++) {
+    if (episodes[i].episode.id === newEpisode[0].id) {
+      insertIndex = i
+    }
+  }
+  nextIndex = insertIndex + 1
+
+  return state.merge({
+    newEpisodeRequesting: false,
+    newEpisodeError: null,
+    episodes: [
+      ...episodes.slice(0, insertIndex),
+      {...episodes[insertIndex], episode: newEpisode[0]},
+      ...episodes.slice(nextIndex)]
+  })
+}
+
+export const newEpisodeFailure = (state: Object, { newEpisodeError }: Object) =>
+  state.merge({ newEpisodeRequesting: false, newEpisodeError })
+
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
@@ -190,5 +234,9 @@ export const reducer = createReducer(INITIAL_STATE, {
 
   [Types.SINGLE_EPISODE_REQUEST]: singleEpisodeRequest,
   [Types.SINGLE_EPISODE_SUCCESS]: singleEpisodeSuccess,
-  [Types.SINGLE_EPISODE_FAILURE]: singleEpisodeFailure
+  [Types.SINGLE_EPISODE_FAILURE]: singleEpisodeFailure,
+
+  [Types.NEW_EPISODE_REQUEST]: newEpisodeRequest,
+  [Types.NEW_EPISODE_SUCCESS]: newEpisodeSuccess,
+  [Types.NEW_EPISODE_FAILURE]: newEpisodeFailure
 })

@@ -363,8 +363,8 @@ class GreetingScreen extends Component {
               emailPasswordScreenDispatcher={this.props.emailPasswordScreenDispatcher}
               attemptLogin={this.props.attemptLogin} />
           </View>,
-          <View style={{width: windowSize.width}} />,
-          <View key='2' style={{width: windowSize.width}}>
+          <View key='2' style={{width: windowSize.width}} />,
+          <View key='3' style={{width: windowSize.width}}>
             <LostPasswordScreen
               parentHandler={this}
               scrollViewHandler={this.handleScrollview.bind(this)} />
@@ -374,15 +374,15 @@ class GreetingScreen extends Component {
     } else {
       return (
         [
-          <View key='3' style={{width: windowSize.width}}>
+          <View key='4' style={{width: windowSize.width}}>
             <SignUpEmailScreen
               parentHandler={this}
               handler={this.handleSignUpEmailChecking.bind(this)}
               checking={this.props.signUpChecking}
               checkEmail={this.props.checkEmail} />
           </View>,
-          <View style={{width: windowSize.width}} />,
-          <View key='4' style={{width: windowSize.width}}>
+          <View key='5' style={{width: windowSize.width}} />,
+          <View key='6' style={{width: windowSize.width}}>
             <SignUpPasswordScreen
               parentHandler={this}
               handler={this.handleSignUpPasswordChecking.bind(this)}
@@ -390,8 +390,8 @@ class GreetingScreen extends Component {
               checking={this.props.signUpChecking}
               checkPassword={this.props.checkPassword} />
           </View>,
-          <View style={{width: windowSize.width}} />,
-          <View key='5' style={{width: windowSize.width}}>
+          <View key='7' style={{width: windowSize.width}} />,
+          <View key='8' style={{width: windowSize.width}}>
             <SignUpNicknameScreen
               parentHandler={this}
               handler={this.handleSignUpNicknameChecking.bind(this)}

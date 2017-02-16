@@ -25,6 +25,7 @@ const windowSize = Dimensions.get('window')
 class EpisodeDetail extends Component {
 
   static propTypes = {
+    token: PropTypes.string,
     account: PropTypes.object,
     episode: PropTypes.object,
 
@@ -32,14 +33,17 @@ class EpisodeDetail extends Component {
     type: PropTypes.string,
     singleType: PropTypes.string,
 
-    parentHandler: PropTypes.object
+    parentHandler: PropTypes.object,
+    requestNewEpisode: PropTypes.func
   }
 
   constructor (props) {
     super(props)
     this.state = {
       likeCount: this.props.episode.contents.map(content => content.likeCount).reduce((a, b) => a + b, 0),
-      contentTypeArray: []
+      contentTypeArray: [],
+
+      footer: false
     }
     // 컨텐츠 컴포넌트 ref
     this.contentRefs = {}
@@ -48,9 +52,14 @@ class EpisodeDetail extends Component {
     this.player = []
     this.currentCenterIndex = 0
     this.horizontalLock = true
+
+    this.lastContentOffset
+    this.dragStartingOffset
+    this.dragEndingOffset
   }
 
   componentWillMount () {
+    console.log('나 랜더링한다!!')
     const contentTypeArray = []
 
     for (let i = 0; i < this.props.episode.contents.length; i++) {
@@ -59,6 +68,9 @@ class EpisodeDetail extends Component {
     this.setState({
       contentTypeArray
     })
+  }
+
+  componentWillReceiveProps (nextProps) {
   }
 
   componentDidMount () {
@@ -125,14 +137,49 @@ class EpisodeDetail extends Component {
   _onScroll (event) {
   }
 
-  _onMomentumScrollBegin () {
-    console.log('모멘텀스크럴앤드')
-    this.horizontalLock = false
+  _onScrollBeginDrag (event) {
+    const active = this.props.episode.active
+
+    if (active) {
+      this.dragStartingOffset = event.nativeEvent.contentOffset.x
+      const dragStartingOffset = event.nativeEvent.contentOffset.x
+
+      if (dragStartingOffset >= this.lastContentOffset) {
+        console.log('푸터 실행')
+        this.setState({footer: true})
+      }
+    }
+  }
+
+  _onScrollEndDrag (event) {
+    const active = this.props.episode.active
+
+    if (active) {
+      const { token, episode } = this.props
+      this.dragEndingOffset = event.nativeEvent.contentOffset.x
+
+      console.log('오프셋들')
+      console.log(this.dragStartingOffset)
+      console.log(this.dragEndingOffset)
+
+      if (this.dragStartingOffset - this.dragEndingOffset > 0) {
+        console.log('푸터 취소')
+        this.setState({footer: false})
+      }
+      console.log('스타팅과 라스트가 같은가?')
+      console.log(this.dragStartingOffset === this.lastContentOffset)
+      if (active &&
+          this.dragStartingOffset >= this.lastContentOffset &&
+          this.dragStartingOffset - this.dragEndingOffset < 0) {
+        console.log('리퀘스팅!')
+        this.props.requestNewEpisode(token, episode.id)
+      }
+    }
   }
 
   _onEndReached () {
-    console.log('onEndReached fired')
-    this.setState({footer: true})
+    // console.log('onEndReached fired')
+    // this.setState({footer: true})
   }
 
 /*
@@ -214,16 +261,24 @@ class EpisodeDetail extends Component {
     } = styles
 
     let xPosition = 0
+    console.log('액티브:')
+    console.log(active)
 
     if (!this.props.xPosition) {
       if (active) {
         xPosition = (activeEpisodeLength - 1) * (windowSize.width - 22)
+        console.log('xPosition:')
+        console.log(xPosition)
       } else {
+        console.log('xPosition:')
+        console.log(xPosition)
         xPosition = 0
       }
     } else {
       xPosition = this.props.xPosition
     }
+
+    this.lastContentOffset = (activeEpisodeLength - 1) * (windowSize.width - 22)
 
     // this.currentCenterIndex
     if (xPosition === 0) {
@@ -234,7 +289,7 @@ class EpisodeDetail extends Component {
 
     return (
       <View
-        style={{flex: 1, overflow: 'hidden'}}>
+        style={{flex: 1}}>
         <View style={headerContentStyle}>
           <View style={{width: windowSize.width - 30, marginTop: 10}}>
             <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
@@ -265,7 +320,8 @@ class EpisodeDetail extends Component {
           horizontal
           key={'hf'}
           initialListSize={50}
-          onMomentumScrollBegin={this._onMomentumScrollBegin.bind(this)}
+          onScrollBeginDrag={this._onScrollBeginDrag.bind(this)}
+          onScrollEndDrag={this._onScrollEndDrag.bind(this)}
           onViewableItemsChanged={this._onViewableItemsChanged}
           onEndReached={this._onEndReached.bind(this)}
           onEndReachedThreshold={0}
@@ -314,10 +370,10 @@ class EpisodeDetail extends Component {
   _renderFooter () {
     if (this.state.footer) {
       return (
-        <View>
+        <View style={{flex: 1, justifyContent: 'center'}}>
           <ActivityIndicator
+            style={{paddingRight: 14.5}}
             color='white'
-            style={{marginBottom: 50}}
             size='large' />
         </View>
       )

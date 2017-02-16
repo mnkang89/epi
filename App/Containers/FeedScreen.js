@@ -63,8 +63,8 @@ class FeedScreen extends Component {
   }
 
   componentWillMount () {
-    // const { token, accountId } = { token: '$2a$10$RrUeAlbcR35gAWRcQFfQMejdRmcvMLtrE2y4BrCDSXuPv0IeRucDu', accountId: 1 }
-    const { token, accountId } = this.props
+    const { token, accountId } = { token: '$2a$10$ii4p8jv8XDsAT4i4/TbnlOoNLcXpXvmmQ8koDKSfy2PJVsCe1IgEu', accountId: 1 }
+    // const { token, accountId } = this.props
     const withFollowing = true
 
     this.props.requestUserEpisodes(token, accountId, withFollowing)
@@ -94,17 +94,23 @@ class FeedScreen extends Component {
 
     if (this.state.refreshing) {
       this.setState({
-        data: this.props.items,
+        // data: this.props.items,
         refreshing: false
       })
     }
 
     if (this.state.footer) {
+      // deprecated되어 redux스토어를 업데이트 하는 방식으로 변경할 예정
       this.setState({
-        footer: false,
-        data: this.state.data.concat(nextProps.items)
+        footer: false
+        // data: this.state.data.concat(nextProps.items)
       })
     }
+  }
+
+  shouldComponentUpdate (nextProps, nextState) {
+    console.log(this.props.items !== nextProps.items)
+    return this.props.items !== nextProps.items
   }
 
   _onRefresh () {
@@ -126,17 +132,18 @@ class FeedScreen extends Component {
   }
 // this.props.items
   render () {
-    console.log('데이터길이: ' + this.state.data.length)
+    console.log('데이터길이: ' + this.props.items.length)
     return (
       <View style={styles.mainContainer}>
         <FlatListE
+          style={{ flex: 1 }}
           ref={this._captureRef}
           FooterComponent={this._renderFooter.bind(this)}
           ItemComponent={this._renderItemComponent.bind(this)}
           disableVirtualization={false}
           getItemLayout={undefined}
           horizontal={false}
-          data={this.state.data}
+          data={this.props.items}
           key={'vf'}
           legacyImplementation={false}
           onRefresh={this._onRefresh.bind(this)}
@@ -167,11 +174,14 @@ class FeedScreen extends Component {
             this.episodeRefs[index] = component
           }
         }}
+        token={this.props.token}
         key={index}
         index={index}
         parentHandler={this}
         episode={episode.item.episode}
-        account={episode.item.account} />
+        account={episode.item.account}
+        // EpisodeDetailContainer만들고 그쪽에서 넘겨주는 로직으로 변경할 예정
+        requestNewEpisode={this.props.requestNewEpisode} />
     )
   }
 
@@ -193,6 +203,10 @@ class FeedScreen extends Component {
   }
 
   _shouldItemUpdate (prev, next) {
+    console.log(prev)
+    console.log(next)
+    console.log(prev.item !== next.item)
+    console.log(getObjectDiff(prev.item, next.item))
     return prev.item !== next.item
   }
 
@@ -262,6 +276,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     requestInfo: (token, accountId) => dispatch(AccountActions.infoRequest(token, accountId)),
+    // EpisodeDetailContainer만들고 그쪽에서 넘겨주는 로직으로 변경할 예정
+    requestNewEpisode: (token, episodeId) => dispatch(EpisodeActions.newEpisodeRequest(token, episodeId)),
     requestUserEpisodes: (token, accountId, withFollowing) => dispatch(EpisodeActions.userEpisodesRequest(token, accountId, withFollowing)),
 
     resetCommentModal: () => dispatch(CommentActions.resetComment())

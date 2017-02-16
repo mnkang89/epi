@@ -172,7 +172,7 @@ class ContentDetailClass extends Component {
       return (
         <View style={{backgroundColor: 'black', paddingLeft: 8, paddingRight: paddingRight}}>
           <TouchableWithoutFeedback
-            delayLongPress={350}
+            delayLongPress={800}
             onPress={this.onDoublePress.bind(this)}
             onLongPress={this.onLongPress.bind(this)} >
             <Image
@@ -204,7 +204,7 @@ class ContentDetailClass extends Component {
       )
     } else {
       return (
-        <View style={{backgroundColor: 'black', paddingLeft: 8}}>
+        <View style={{backgroundColor: 'black', paddingLeft: 8, paddingRight: paddingRight}}>
           <TouchableWithoutFeedback
             disabled={this.state.disabled}
             delayLongPress={800}
