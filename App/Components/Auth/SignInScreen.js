@@ -70,7 +70,8 @@ shouldComponentUpdate (nextProps, nextState) {
 
   render () {
     console.log('사인인 스크린')
-    const { fetching, parentHandler } = this.props
+    // const { fetching, parentHandler } = this.props
+    const { fetching } = this.props
     const editable = !fetching
 
     return (
@@ -84,7 +85,10 @@ shouldComponentUpdate (nextProps, nextState) {
         <View style={{alignItems: 'center'}}>
           <View style={{width: windowSize.width - 40, marginTop: 78, paddingBottom: 7.5, borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.5)', backgroundColor: 'rgba(0,0,0,0)'}} >
             <TextInput
-              ref={(ref) => { parentHandler.textRefs.push(ref) }}
+              ref={(ref) => {
+                // parentHandler.textRefs.push(ref)
+                this.email = ref
+              }}
               style={{height: 20, fontWeight: 'bold', color: 'white'}}
               editable={editable}
               keyboardType='email-address'
@@ -93,13 +97,16 @@ shouldComponentUpdate (nextProps, nextState) {
               autoCapitalize='none'
               autoCorrect={false}
               onChangeText={this.handleChangeEmail.bind(this)}
-              onSubmitEditing={() => this.refs.password.focus()}
+              onSubmitEditing={() => this.password.focus()}
               placeholder='이메일'
               placeholderTextColor='rgba(255,255,255,0.5)' />
           </View>
           <View style={{width: windowSize.width - 40, marginTop: 23, paddingBottom: 7.5, borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.5)', backgroundColor: 'rgba(0,0,0,0)'}}>
             <TextInput
-              ref={(ref) => { parentHandler.textRefs.push(ref) }}
+              ref={(ref) => {
+                // parentHandler.textRefs.push(ref)
+                this.password = ref
+              }}
               style={{height: 20, fontWeight: 'bold', color: 'white'}}
               editable={editable}
               keyboardType='default'

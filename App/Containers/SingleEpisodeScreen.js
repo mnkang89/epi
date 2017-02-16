@@ -60,9 +60,9 @@ class SingleEpisodeScreen extends Component {
 
   shouldComponentUpdate (nextProps, nextState) {
     // 상관없는 하위 컴포넌트들이 리 렌더링되는 문제를 막기위함
-    if (nextProps.items === this.props.items) {
-      return false
-    }
+    // if (nextProps.items === this.props.items) {
+    //   return false
+    // }
     return true
   }
 
@@ -87,11 +87,13 @@ class SingleEpisodeScreen extends Component {
       return (
         <EpisodeDetail
           key={item.id}
+          token={this.props.token}
           episode={item}
           account={account}
           type={this.props.detailType}
           singleType={this.props.singleType}
-          xPosition={xPosition} />
+          xPosition={xPosition}
+          requestNewEpisode={this.props.requestSingleEpisode} />
       )
     })
   }

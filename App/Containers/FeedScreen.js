@@ -63,8 +63,8 @@ class FeedScreen extends Component {
   }
 
   componentWillMount () {
-    const { token, accountId } = { token: '$2a$10$ii4p8jv8XDsAT4i4/TbnlOoNLcXpXvmmQ8koDKSfy2PJVsCe1IgEu', accountId: 1 }
-    // const { token, accountId } = this.props
+    // const { token, accountId } = { token: '$2a$10$ii4p8jv8XDsAT4i4/TbnlOoNLcXpXvmmQ8koDKSfy2PJVsCe1IgEu', accountId: 1 }
+    const { token, accountId } = this.props
     const withFollowing = true
 
     this.props.requestUserEpisodes(token, accountId, withFollowing)
