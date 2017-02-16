@@ -121,6 +121,7 @@ class ContentDetailClass extends Component {
         return (
           <Animatable.Text
             animation='zoomIn'
+            duration={500}
             style={{ textAlign: 'center', color: 'white', fontSize: 100, backgroundColor: 'rgba(0,0,0,0)' }}
             onAnimationEnd={() => {
               this.setState({
@@ -134,7 +135,7 @@ class ContentDetailClass extends Component {
         return (
           <Animatable.View
             animation='fadeIn'
-            duration={1000}
+            duration={750}
             style={{
               alignItems: 'center',
               justifyContent: 'center'
