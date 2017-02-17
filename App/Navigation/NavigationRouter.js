@@ -1,6 +1,6 @@
 // @flow
-
 import React, { Component } from 'react'
+import { StatusBar } from 'react-native'
 import { Scene, Router, ActionConst, Actions, Switch } from 'react-native-router-flux'
 import Styles from './Styles/NavigationContainerStyle'
 import NavItems from './NavItems'
@@ -123,6 +123,7 @@ class NavigationRouter extends Component {
               navigationBarStyle={Styles.navBar}
               onPress={() => {
                 Actions.cameraScreen({isOpen: true, type: ActionConst.REFRESH})
+                StatusBar.setHidden(true)
               }}
               titleStyle={{color: 'white', fontSize: 17}}>
               <Scene
