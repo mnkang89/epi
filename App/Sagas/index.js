@@ -76,6 +76,7 @@ export default function * root () {
     takeLatest(CameraScreenTypes.POST_CONTENT, postContent, api),
     // deactive episode
     takeLatest(CameraScreenTypes.DEACTIVE_EPISODE, deactivateEpisode, api),
+
     /* --- Episode --- */
     // post episode
     takeLatest(EpisodeTypes.USER_EPISODE_POST, postEpisode, api),

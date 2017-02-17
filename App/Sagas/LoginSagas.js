@@ -39,9 +39,14 @@ export function * login (api, action) {
       const accountId = path(['data', 'id'], response)
       const token = path(['data', 'token'], response)
 
+<<<<<<< d633873fc87efe970bddf5cd8dc6749d10fea996
       setToken(token)
       yield put(LoginActions.loginSuccess(email))
+=======
+      yield setToken(token)
+>>>>>>> chore: BugFix, fixed non-simulataneous following issues in ExploreScreen.js
       yield put(TokenActions.tokenRequest(token, accountId))
+      yield put(LoginActions.loginSuccess(email))
       // idRequest는 deprecated
       // yield put(TokenActions.idRequest(accountId))
     } else {

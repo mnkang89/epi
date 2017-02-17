@@ -59,7 +59,7 @@ class EpisodeDetail extends Component {
   }
 
   componentWillMount () {
-    console.log('나 랜더링한다!!')
+    // console.log('나 랜더링한다!!')
     const contentTypeArray = []
 
     for (let i = 0; i < this.props.episode.contents.length; i++) {
@@ -261,17 +261,17 @@ class EpisodeDetail extends Component {
     } = styles
 
     let xPosition = 0
-    console.log('액티브:')
-    console.log(active)
+    // console.log('액티브:')
+    // console.log(active)
 
     if (!this.props.xPosition) {
       if (active) {
         xPosition = (activeEpisodeLength - 1) * (windowSize.width - 22)
-        console.log('xPosition:')
-        console.log(xPosition)
+        // console.log('xPosition:')
+        // console.log(xPosition)
       } else {
-        console.log('xPosition:')
-        console.log(xPosition)
+        // console.log('xPosition:')
+        // console.log(xPosition)
         xPosition = 0
       }
     } else {

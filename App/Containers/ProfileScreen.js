@@ -51,6 +51,12 @@ class ProfileScreen extends Component {
     }
   }
 
+  // componentWillMount () {
+  //   const { token, accountId } = this.props
+
+  //   this.props.requestInfo(token, accountId)
+  // }
+
   onRefresh () {
     this.setState({refreshing: true})
 
@@ -119,6 +125,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    requestInfo: (token, accountId) => dispatch(AccountActions.infoRequest(token, accountId)),
     requestProfileImage: (photoSource, token, accountId) => dispatch(SignupActions.profileRequest(photoSource, token, accountId)),
     requestUserEpisodesWithFalse: (token, accountId, withFollowing) => dispatch(EpisodeActions.userEpisodesWithFalseRequest(token, accountId, withFollowing)),
 

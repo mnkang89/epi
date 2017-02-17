@@ -32,7 +32,7 @@ class GreetingScreen extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      signUpScreen: true,
+      signUpScreen: false,
       signInScreen: false,
 
       // scroll
@@ -371,7 +371,9 @@ class GreetingScreen extends Component {
           </View>
         ]
       )
-    } else {
+    } else if (
+      !this.state.signInScreen &&
+      this.state.signUpScreen) {
       return (
         [
           <View key='4' style={{width: windowSize.width}}>
@@ -403,6 +405,8 @@ class GreetingScreen extends Component {
           </View>
         ]
       )
+    } else {
+      return null
     }
   }
 

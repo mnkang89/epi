@@ -46,7 +46,7 @@ class UserProfileScreen extends Component {
     }
   }
 
-  componentDidMount () {
+  componentWillMount () {
     const { token, id } = this.props
     const active = false
 

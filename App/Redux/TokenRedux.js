@@ -7,8 +7,6 @@ import Immutable from 'seamless-immutable'
 
 const { Types, Creators } = createActions({
   tokenRequest: ['token', 'id']
-  // TODO: idRequest는 deprecated
-  // idRequest: ['id']
 })
 
 export const TokenTypes = Types
@@ -25,7 +23,6 @@ export const INITIAL_STATE = Immutable({
 
 // we're attempting to login
 export const request = (state: Object, { token, id }: Object) => state.merge({ token, id })
-// export const idrequest = (state: Object, { id }: Object) => state.merge({ id })
 
 /* ------------- Hookup Reducers To Types ------------- */
 

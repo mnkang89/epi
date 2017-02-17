@@ -64,17 +64,16 @@ class FeedScreen extends Component {
 
   componentWillMount () {
     // const { token, accountId } = { token: '$2a$10$ii4p8jv8XDsAT4i4/TbnlOoNLcXpXvmmQ8koDKSfy2PJVsCe1IgEu', accountId: 1 }
-    const { token, accountId } = this.props
-    const withFollowing = true
-
-    this.props.requestUserEpisodes(token, accountId, withFollowing)
+    // const { token, accountId } = this.props
+    // const withFollowing = true
+    this.props.resetCommentModal()
+    // this.props.requestUserEpisodes(token, accountId, withFollowing)
   }
 
   componentDidMount () {
-    // const { token, accountId } = this.props
+    const { token, accountId } = this.props
 
-    // this.props.requestInfo(token, accountId)
-    this.props.resetCommentModal()
+    this.props.requestInfo(token, accountId)
   }
 
   componentWillReceiveProps (nextProps) {
@@ -203,10 +202,10 @@ class FeedScreen extends Component {
   }
 
   _shouldItemUpdate (prev, next) {
-    console.log(prev)
-    console.log(next)
-    console.log(prev.item !== next.item)
-    console.log(getObjectDiff(prev.item, next.item))
+    // console.log(prev)
+    // console.log(next)
+    // console.log(prev.item !== next.item)
+    // console.log(getObjectDiff(prev.item, next.item))
     return prev.item !== next.item
   }
 

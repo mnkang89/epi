@@ -9,6 +9,7 @@ import _ from 'lodash'
 
 import ExploreList from '../Components/ExploreList'
 import styles from './Styles/FeedScreenStyle'
+import { getObjectDiff } from '../Lib/Utilities'
 
 import FeedActions from '../Redux/FeedRedux'
 import AccountActions from '../Redux/AccountRedux'
@@ -38,7 +39,10 @@ class ExploreScreen extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
+    console.log(getObjectDiff(this.props, nextProps))
     // TODO: 결국엔 스테이트를 false로 바꾸는 것이므로 통일하기.
+    const { token } = this.props
+
     if (_.isEqual(this.props.items, nextProps.items)) {
       console.log('아이템같음')
     } else {
@@ -46,6 +50,11 @@ class ExploreScreen extends Component {
     }
     if (this.state.refreshing) {
       this.setState({refreshing: false})
+    }
+
+    if ((this.props.followPosting === true && nextProps.followPosting === false) ||
+        (this.props.followDeleting === true && nextProps.followDeleting === false)) {
+      this.props.requestBestFeeds(token)
     }
   }
 
@@ -84,7 +93,10 @@ class ExploreScreen extends Component {
 const mapStateToProps = (state) => {
   return {
     token: state.token.token,
-    items: state.feed.bestFeeds
+    items: state.feed.bestFeeds,
+
+    followPosting: state.account.followPosting,
+    followDeleting: state.account.followDeleting
   }
 }
 

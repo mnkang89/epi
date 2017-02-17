@@ -43,6 +43,10 @@ class CameraScreen extends Component {
     StatusBar.setHidden(true)
   }
 
+  componentWillUnmount () {
+    StatusBar.setHidden(false)
+  }
+
   goToHomeTab () {
     NavigationActions.homeTab()
   }
