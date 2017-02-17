@@ -23,7 +23,6 @@ import EpisodeActions from '../Redux/EpisodeRedux'
 import CommentActions from '../Redux/CommentRedux'
 
 // const windowSize = Dimensions.get('window')
-
 class FeedScreen extends Component {
 
   static propTypes = {
@@ -225,9 +224,6 @@ class FeedScreen extends Component {
     }
 
     this.viewableItemsArray = viewableItemsArray
-
-    console.log('보이는 아이템들: ')
-    console.log(this.viewableItemsArray)
 
     const inViewableItemsArray = getArrayDiff(episodeRefsArray, viewableItemsArray)
 

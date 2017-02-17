@@ -15,6 +15,8 @@ import CameraHandler from '../Components/camera/CameraHandler'
 import { connect } from 'react-redux'
 import CameraScreenActions from '../Redux/CameraScreenRedux'
 
+import EpisodeActions from '../Redux/EpisodeRedux'
+
 const { height, width } = Dimensions.get('window')
 const cameraHeightAsFlex = Math.ceil(width / height * 100)
 const cameraControllerHeightAsFlex = Math.ceil((height - width) / height * 100)
@@ -40,6 +42,11 @@ class CameraScreen extends Component {
   }
 
   goToHomeTab () {
+    const { token, accountId } = this.props
+    const withFollowing = true
+
+    this.props.requestUserEpisodes(token, accountId, withFollowing)
+
     StatusBar.setHidden(false)
     NavigationActions.homeTab()
   }
@@ -71,13 +78,17 @@ class CameraScreen extends Component {
 const mapStateToProps = (state) => {
   console.tron.log(state.cameraScreen)
   return ({
+    token: state.token.token,
+    accountId: state.token.id,
+
     endScreen: state.cameraScreen.endScreen
   })
 }
 
-const mapStateToDispatch = (dispach) => {
+const mapStateToDispatch = (dispatch) => {
   return ({
-    initializeCameraScreenProps: () => dispach(CameraScreenActions.initialize())
+    initializeCameraScreenProps: () => dispatch(CameraScreenActions.initialize()),
+    requestUserEpisodes: (token, accountId, withFollowing) => dispatch(EpisodeActions.userEpisodesRequest(token, accountId, withFollowing))
   })
 }
 
