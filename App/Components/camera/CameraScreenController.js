@@ -128,8 +128,9 @@ class CameraScreenController extends Component {
             <View style={{ position: 'absolute', width: this.state.componentWidth, marginTop: this.margin }}>
               <TextInput
                 value={this.state.message}
-                style={{ height: 20, color: 'white', textAlign: 'center', fontSize: 20 }}
+                style={{ height: 45, color: 'white', textAlign: 'center', fontSize: 20, paddingLeft: 15, paddingRight: 15 }}
                 maxLength={38}
+                multiline
                 placeholder='코멘트 쓰기..'
                 returnKeyType='done'
                 autoCapitalize='none'

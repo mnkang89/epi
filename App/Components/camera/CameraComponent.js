@@ -60,9 +60,11 @@ class CameraSection extends Component {
     if (!this.props.messageWritable) {
       return (
         // let position of text by marginTop due to bug of video
-        <View style={{ position: 'absolute', marginTop: this.state.componentWidth - this.state.componentWidth / 10, width: this.state.componentWidth, backgroundColor: 'rgba(0,0,0,0)' }}>
+        <View style={{ position: 'absolute', marginBottom: 10, marginTop: this.state.componentWidth - this.state.componentWidth / 10, width: this.state.componentWidth, backgroundColor: 'rgba(0,0,0,0)' }}>
           <Text
             style={{
+              paddingLeft: 15,
+              paddingRight: 15,
               textShadowOffset: {width: 1, height: 2},
               textShadowColor: 'rgba(0, 0, 0, 0.5)',
               textShadowRadius: 1,
