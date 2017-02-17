@@ -32,7 +32,7 @@ class GreetingScreen extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      signUpScreen: false,
+      signUpScreen: true,
       signInScreen: false,
 
       // scroll
@@ -183,6 +183,7 @@ class GreetingScreen extends Component {
         NavigationActions.tabBar({type: ActionConst.RESET})
       } else if (!newProps.fetching && newProps.signInError === 'INVALID_FORMAT') {
         console.log('유효하지 않은 형식')
+        this.handleSignInAttempting()
         this.setState({
           error: newProps.signInError,
           alertVisible: true,
@@ -190,6 +191,7 @@ class GreetingScreen extends Component {
         })
       } else if (!newProps.fetching && newProps.signInError === 'VACANT_EMAIL') {
         console.log('이메일을 입력해주세요')
+        this.handleSignInAttempting()
         this.setState({
           error: newProps.signInError,
           alertVisible: true,
@@ -197,6 +199,7 @@ class GreetingScreen extends Component {
         })
       } else if (!newProps.fetching && newProps.signInError === 'VACANT_PASSWORD') {
         console.log('비밀번호를 입력해주세요')
+        this.handleSignInAttempting()
         this.setState({
           error: newProps.signInError,
           alertVisible: true,
@@ -204,6 +207,7 @@ class GreetingScreen extends Component {
         })
       } else if (!newProps.fetching && newProps.signInError === 'INVALID_EMAIL') {
         console.log('유효하지 않은 이메일')
+        this.handleSignInAttempting()
         this.setState({
           error: newProps.signInError,
           alertVisible: true,
@@ -211,6 +215,7 @@ class GreetingScreen extends Component {
         })
       } else if (!newProps.fetching && newProps.signInError === 'INVALID_PASSWORD') {
         console.log('유효하지 않은 비밀번호')
+        this.handleSignInAttempting()
         this.setState({
           error: newProps.signInError,
           alertVisible: true,
@@ -371,9 +376,7 @@ class GreetingScreen extends Component {
           </View>
         ]
       )
-    } else if (
-      !this.state.signInScreen &&
-      this.state.signUpScreen) {
+    } else {
       return (
         [
           <View key='4' style={{width: windowSize.width}}>
@@ -405,8 +408,6 @@ class GreetingScreen extends Component {
           </View>
         ]
       )
-    } else {
-      return null
     }
   }
 

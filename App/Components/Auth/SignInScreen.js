@@ -28,8 +28,11 @@ class SignInScreen extends Component {
       email: '',
       password: ''
     }
+
     this.email = ''
     this.password = ''
+    this.emailRef
+    this.passwordRef
   }
 /*
 shouldComponentUpdate (nextProps, nextState) {
@@ -87,7 +90,7 @@ shouldComponentUpdate (nextProps, nextState) {
             <TextInput
               ref={(ref) => {
                 // parentHandler.textRefs.push(ref)
-                this.email = ref
+                this.emailRef = ref
               }}
               style={{height: 20, fontWeight: 'bold', color: 'white'}}
               editable={editable}
@@ -97,7 +100,7 @@ shouldComponentUpdate (nextProps, nextState) {
               autoCapitalize='none'
               autoCorrect={false}
               onChangeText={this.handleChangeEmail.bind(this)}
-              onSubmitEditing={() => this.password.focus()}
+              onSubmitEditing={() => this.passwordRef.focus()}
               placeholder='이메일'
               placeholderTextColor='rgba(255,255,255,0.5)' />
           </View>
@@ -105,7 +108,7 @@ shouldComponentUpdate (nextProps, nextState) {
             <TextInput
               ref={(ref) => {
                 // parentHandler.textRefs.push(ref)
-                this.password = ref
+                this.passwordRef = ref
               }}
               style={{height: 20, fontWeight: 'bold', color: 'white'}}
               editable={editable}
