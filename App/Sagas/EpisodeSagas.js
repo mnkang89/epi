@@ -3,7 +3,7 @@ import { path } from 'ramda'
 import EpisodeActions from '../Redux/EpisodeRedux'
 import ContentActions from '../Redux/ContentRedux'
 import CameraScreenActions from '../Redux/CameraScreenRedux'
-import { getToken } from '../Auth/Auth'
+import { getToken } from '../Services/Auth'
 
 // attempts to get episodes
 export function * userEpisodes (api, action) {

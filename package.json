@@ -43,6 +43,7 @@
     "react-native-vector-icons": "^3.0.0",
     "react-native-video": "git+https://github.com/younseunghyun/react-native-video.git#0.38-nill",
     "react-redux": "^4.4.6",
+    "realm": "^1.0.2",
     "redux": "^3.6.0",
     "redux-logger": "^2.7.4",
     "redux-persist": "^3.5.0",

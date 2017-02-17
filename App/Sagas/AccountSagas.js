@@ -1,7 +1,7 @@
 import { put, call } from 'redux-saga/effects'
 import { path } from 'ramda'
 import AccountActions from '../Redux/AccountRedux'
-import { getToken } from '../Auth/Auth'
+import { getToken } from '../Services/Auth'
 import CameraScreenActions from '../Redux/CameraScreenRedux'
 
 // attempts to get account

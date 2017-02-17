@@ -1,5 +1,11 @@
 // a library to wrap and simplify api calls
 import apisauce from 'apisauce'
+import { getToken } from './Auth'
+
+const getTokenHeader = () => {
+  const token = getToken()
+  return {headers: {'x-auth': token}}
+}
 
 // our "constructor"
 const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstalk.com/') => {
@@ -41,9 +47,8 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
 
     formData.append('accountId', accountId)
     formData.append('nickname', nickname)
-    api.setHeader('x-auth', token)
 
-    return api.post(`/api/accounts/${accountId}/nickname`, formData)
+    return api.post(`/api/accounts/${accountId}/nickname`, formData, {}, getTokenHeader())
   }
 
   const requestPhoto = (photoSource, token, accountId) => {
@@ -56,9 +61,8 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     }
 
     formData.append('file', photo)
-    api.setHeader('x-auth', token)
 
-    return api.post(`/api/accounts/${accountId}/profile-image`, formData)
+    return api.post(`/api/accounts/${accountId}/profile-image`, formData, {}, getTokenHeader())
   }
 
   // Login
@@ -68,21 +72,18 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     formData.append('email', email)
     formData.append('password', password)
 
-    return api.post(`/api/accounts/login`, { email: email, password: password })
+    return api.post(`/api/accounts/login`, { email: email, password: password }, {}, getTokenHeader())
   }
 
   // Account
   const requestAccount = (token, accountId) => {
     // console.log('POST userAccount api콜 발생')
-    api.setHeader('x-auth', token)
 
-    return api.get(`/api/accounts/${accountId}/summary`)
+    return api.get(`/api/accounts/${accountId}/summary`, {}, getTokenHeader())
   }
 
   const requestOtherInfo = (token, accountId) => {
-    api.setHeader('x-auth', token)
-
-    return api.get(`/api/accounts/${accountId}/summary`)
+    return api.get(`/api/accounts/${accountId}/summary`, {}, getTokenHeader())
   }
 
   const checkUserEpisode = (token, active) => {
@@ -90,9 +91,8 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     const formData = new FormData()
 
     formData.append('active', active)
-    api.setHeader('x-auth', token)
 
-    return api.get(`/api/episodes`, { active: active })
+    return api.get(`/api/episodes`, { active: active }, {}, getTokenHeader())
   }
 
   const requestUserFeeds = (token, accountId, withFollowing) => {
@@ -101,9 +101,10 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
 
     formData.append('accountId', accountId)
     formData.append('withFollowing', withFollowing)
-    api.setHeader('x-auth', token)
 
-    return api.get(`/api/feeds?withFollowing=${withFollowing}&size=7`)
+    console.tron.log(getTokenHeader())
+
+    return api.get(`/api/feeds?withFollowing=${withFollowing}&size=7`, {}, getTokenHeader())
   }
 
   const requestOtherFeeds = (token, accountId, active) => {
@@ -114,9 +115,8 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
 
     // formData.append('accountId', accountId)
     // formData.append('withFollowing', active)
-    api.setHeader('x-auth', token)
 
-    return api.get(`/api/feeds?accountId=${accountId}&withFollowing=${active}&size=7`)
+    return api.get(`/api/feeds?accountId=${accountId}&withFollowing=${active}&size=7`, {}, getTokenHeader())
   }
 
   const postFollow = (token, id) => {
@@ -124,41 +124,33 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     const formData = new FormData()
 
     formData.append('id', id)
-    api.setHeader('x-auth', token)
 
-    return api.post(`/api/accounts/follow`, formData)
+    return api.post(`/api/accounts/follow`, formData, {}, getTokenHeader())
   }
 
   const deleteFollow = (token, id) => {
     console.log('DELETE account/follow api콜 발생')
 
-    api.setHeader('x-auth', token)
-
-    return api.delete(`/api/accounts/follow?id=${id}`)
+    return api.delete(`/api/accounts/follow?id=${id}`, {}, getTokenHeader())
   }
 
   const getFollowing = (token, id) => {
     console.log('GET account/following api콜 발생')
 
-    api.setHeader('x-auth', token)
-
-    return api.get(`/api/accounts/${id}/following`)
+    return api.get(`/api/accounts/${id}/following`, {}, getTokenHeader())
   }
 
   const getFollower = (token, id) => {
     console.log('GET account/follower api콜 발생')
 
-    api.setHeader('x-auth', token)
-
-    return api.get(`/api/accounts/${id}/follower`)
+    return api.get(`/api/accounts/${id}/follower`, {}, getTokenHeader())
   }
 
   // episode
   const postEpisode = (token) => {
     console.log('POST episode api콜 발생')
-    api.setHeader('x-auth', token)
 
-    return api.post(`/api/episodes`)
+    return api.post(`/api/episodes`, {}, getTokenHeader())
   }
 
   const putEpisode = (token, episodeId, active) => {
@@ -170,9 +162,8 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
 
     formData.append('id', episodeId)
     formData.append('active', active)
-    api.setHeader('x-auth', token)
 
-    return api.put(`/api/episodes/${episodeId}?active=${active}`)
+    return api.put(`/api/episodes/${episodeId}?active=${active}`, {}, getTokenHeader())
   }
 
   const requestSingleEpisode = (token, episodeId) => {
@@ -180,9 +171,8 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     const formData = new FormData()
 
     formData.append('episodeId', episodeId)
-    api.setHeader('x-auth', token)
 
-    return api.get(`/api/episodes/${episodeId}`)
+    return api.get(`/api/episodes/${episodeId}`, {}, getTokenHeader())
   }
 
   // content
@@ -205,11 +195,10 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     if (message !== null) {
       formData.append('message', message)
     }
-    api.setHeader('x-auth', token)
 
     console.tron.log(formData)
 
-    return api.post(`/api/contents`, formData)
+    return api.post(`/api/contents`, formData, getTokenHeader())
   }
 
   const postLike = (token, contentId) => {
@@ -217,9 +206,8 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     const formData = new FormData()
 
     formData.append('contentId', contentId)
-    api.setHeader('x-auth', token)
 
-    return api.post(`/api/contents/like`, formData)
+    return api.post(`/api/contents/like`, formData, getTokenHeader())
   }
 
   const deleteLike = (token, contentId) => {
@@ -227,10 +215,9 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     const formData = new FormData()
 
     formData.append('contentId', contentId)
-    api.setHeader('x-auth', token)
     console.log(contentId)
 
-    return api.delete(`/api/contents/like?contentId=${contentId}`)
+    return api.delete(`/api/contents/like?contentId=${contentId}`, {}, getTokenHeader())
     // return api.delete(`/api/contents/like`, { data: {formData} })
   }
 
@@ -241,33 +228,29 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
 
     formData.append('contentId', contentId)
     formData.append('message', message)
-    api.setHeader('x-auth', token)
 
-    return api.post(`/api/comments`, formData)
+    return api.post(`/api/comments`, formData, getTokenHeader())
   }
 
   const getComment = (token, episodeId) => {
     console.log(episodeId)
     console.log('GET comment api콜 발생')
-    api.setHeader('x-auth', token)
 
-    return api.get(`/api/comments?owner=episode&ownerId=${episodeId}`)
+    return api.get(`/api/comments?owner=episode&ownerId=${episodeId}`, {}, getTokenHeader())
   }
 
   // feeds
   const getBestFeeds = (token) => {
-    console.log('GET bestFeeds api콜 발생')
-    api.setHeader('x-auth', token)
-
-    return api.get(`/api/feeds/best?size=7`)
+    console.tron.log('GET bestFeeds api콜 발생')
+    console.tron.log(getTokenHeader())
+    return api.get(`/api/feeds/best?size=7`, {}, getTokenHeader())
   }
 
   // noties
   const getNoties = (token) => {
     console.log('GET noties api콜 발생')
-    api.setHeader('x-auth', token)
 
-    return api.get(`/api/notifications`)
+    return api.get(`/api/notifications`, {}, getTokenHeader())
   }
 
   return {

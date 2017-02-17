@@ -89,6 +89,7 @@ class FeedScreen extends Component {
 
     this.props.requestInfo(token, accountId)
     this.props.resetCommentModal()
+    this.props.requestUserEpisodes(token, accountId, true)
   }
 
   componentWillReceiveProps (nextProps) {

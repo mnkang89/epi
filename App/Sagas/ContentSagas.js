@@ -1,7 +1,7 @@
 import { put, call } from 'redux-saga/effects'
 import { path } from 'ramda'
 import ContentActions from '../Redux/ContentRedux'
-import { getToken } from '../Auth/Auth'
+import { getToken } from '../Services/Auth'
 import CameraScreenActions from '../Redux/CameraScreenRedux'
 
 // get active episodeId if not exist, then create new episode

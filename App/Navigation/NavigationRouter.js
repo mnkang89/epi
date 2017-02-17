@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Scene, Router, ActionConst, Actions } from 'react-native-router-flux'
+import { Scene, Router, ActionConst, Actions, Switch } from 'react-native-router-flux'
 import Styles from './Styles/NavigationContainerStyle'
 import NavItems from './NavItems'
 import TabIcon from '../Components/common/TabIcon'
@@ -19,6 +19,7 @@ import UserProfileScreen from '../Containers/UserProfileScreen'
 import SingleEpisodeScreen from '../Containers/SingleEpisodeScreen'
 
 import ScreenActions from '../Redux/ScreenRedux'
+import { isLoggedIn } from '../Services/Auth'
 
 /*
 <Scene
@@ -30,6 +31,19 @@ import ScreenActions from '../Redux/ScreenRedux'
 */
 
 class NavigationRouter extends Component {
+
+  constructor (props) {
+    super(props)
+    this.initialScence = 'Greeting'
+  }
+
+  componentWillMount () {
+    console.tron.log('is login ? ' + isLoggedIn())
+    if (isLoggedIn()) {
+      this.initialScence = 'tabBar'
+    }
+  }
+
   render () {
     return (
       <Router
@@ -38,11 +52,11 @@ class NavigationRouter extends Component {
           key='root'
           navigationBarStyle={Styles.navBar}
           titleStyle={Styles.title}
-          leftButtonIconStyle={Styles.leftButton}
-          backButtonTextStyle={Styles.backButton}
-          rightButtonTextStyle={Styles.rightButton}>
+          unmountScenes
+          component={Switch}
+          tabs
+          selector={() => this.initialScence}>
           <Scene
-            initial
             key='Greeting'
             hideNavBar
             hideTabBar

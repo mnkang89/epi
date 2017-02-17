@@ -13,7 +13,6 @@ const store = createStore()
 
 class App extends Component {
   render () {
-    console.tron.log('app')
     return (
       <Provider store={store} >
         <RootContainer />
