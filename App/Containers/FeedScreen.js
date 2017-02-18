@@ -63,10 +63,12 @@ class FeedScreen extends Component {
 
   componentWillMount () {
     // const { token, accountId } = { token: '$2a$10$ii4p8jv8XDsAT4i4/TbnlOoNLcXpXvmmQ8koDKSfy2PJVsCe1IgEu', accountId: 1 }
-    // const { token, accountId } = this.props
-    // const withFollowing = true
+    const { token, accountId } = this.props
+    const withFollowing = true
+
     this.props.resetCommentModal()
-    // this.props.requestUserEpisodes(token, accountId, withFollowing)
+    this.props.requestUserEpisodes(token, accountId, withFollowing)
+    this.props.requestUserEpisodesWithFalse(token, accountId, false)
   }
 
   componentDidMount () {
@@ -274,6 +276,7 @@ const mapDispatchToProps = (dispatch) => {
     // EpisodeDetailContainer만들고 그쪽에서 넘겨주는 로직으로 변경할 예정
     requestNewEpisode: (token, episodeId) => dispatch(EpisodeActions.newEpisodeRequest(token, episodeId)),
     requestUserEpisodes: (token, accountId, withFollowing) => dispatch(EpisodeActions.userEpisodesRequest(token, accountId, withFollowing)),
+    requestUserEpisodesWithFalse: (token, accountId, withFollowing) => dispatch(EpisodeActions.userEpisodesWithFalseRequest(token, accountId, withFollowing)),
 
     resetCommentModal: () => dispatch(CommentActions.resetComment())
   }

@@ -22,7 +22,8 @@ export const getToken = () => {
 
 export const setToken = (token) => {
   let tokens = realm.objects('token')
-  realm.delete(tokens)
+  console.log(tokens)
+  // realm.delete(tokens)
   realm.write(() => realm.create('token', {token: token}))
 }
 

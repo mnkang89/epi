@@ -175,10 +175,10 @@ class GreetingScreen extends Component {
       console.log('로그인 시도')
       if (!newProps.fetching && newProps.signInError === null && newProps.token !== null) {
         console.log('로그인 성공')
-        const { token, accountId } = newProps
+        // const { token, accountId } = newProps
 
-        this.props.requestUserEpisodes(token, accountId, true)
-        this.props.requestUserEpisodesWithFalse(token, accountId, false)
+        // this.props.requestUserEpisodes(token, accountId, true)
+        // this.props.requestUserEpisodesWithFalse(token, accountId, false)
 
         NavigationActions.tabBar({type: ActionConst.RESET})
       } else if (!newProps.fetching && newProps.signInError === 'INVALID_FORMAT') {

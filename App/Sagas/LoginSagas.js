@@ -40,8 +40,8 @@ export function * login (api, action) {
       const token = path(['data', 'token'], response)
 
       setToken(token)
-      yield put(TokenActions.tokenRequest(token, accountId))
       yield put(LoginActions.loginSuccess(email))
+      yield put(TokenActions.tokenRequest(token, accountId))
       // idRequest는 deprecated
       // yield put(TokenActions.idRequest(accountId))
     } else {

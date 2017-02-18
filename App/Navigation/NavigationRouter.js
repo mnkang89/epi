@@ -1,7 +1,8 @@
 // @flow
 import React, { Component } from 'react'
 import { StatusBar } from 'react-native'
-import { Scene, Router, ActionConst, Actions, Switch } from 'react-native-router-flux'
+// import { Scene, Router, ActionConst, Actions, Switch } from 'react-native-router-flux'
+import { Scene, Router, ActionConst, Actions } from 'react-native-router-flux'
 import Styles from './Styles/NavigationContainerStyle'
 import NavItems from './NavItems'
 import TabIcon from '../Components/common/TabIcon'
@@ -36,13 +37,23 @@ class NavigationRouter extends Component {
     super(props)
     this.initialScence = 'Greeting'
   }
-
+  /*
   componentWillMount () {
     console.tron.log('is login ? ' + isLoggedIn())
     if (isLoggedIn()) {
       this.initialScence = 'tabBar'
     }
   }
+
+  <Scene
+    key='root'
+    navigationBarStyle={Styles.navBar}
+    titleStyle={Styles.title}
+    unmountScenes
+    component={Switch}
+    tabs
+    selector={() => this.initialScence}>
+  */
 
   render () {
     return (
@@ -51,18 +62,15 @@ class NavigationRouter extends Component {
         <Scene
           key='root'
           navigationBarStyle={Styles.navBar}
-          titleStyle={Styles.title}
-          unmountScenes
-          component={Switch}
-          tabs
-          selector={() => this.initialScence}>
+          titleStyle={Styles.title} >
           <Scene
-            initial
+            initial={!isLoggedIn()}
             key='Greeting'
             hideNavBar
             hideTabBar
             component={GreetingScreen} />
           <Scene
+            initial={isLoggedIn()}
             key='tabBar'
             tabs
             tabBarStyle={{backgroundColor: '#000000', justifyContent: 'center', alignItems: 'center', alignSelf: 'center', height: 48.5}}>
@@ -170,6 +178,7 @@ class NavigationRouter extends Component {
                 Actions.profileTab()
               }}
               navigationBarStyle={Styles.navBar}
+              leftButtonIconStyle={Styles.leftButton}
               titleStyle={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>
               <Scene
                 key='profileScreen'
