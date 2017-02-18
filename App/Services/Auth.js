@@ -1,40 +1,35 @@
 // @flow
-
-import Realm from 'realm'
-
-const TokenSchema = {
-  name: 'token',
-  properties: {
-    token: 'string',
-    accountId: 'int'
-  }
-}
-
-const realm = new Realm({schema: [TokenSchema], schemaVersion: 1})
+import { getRealm } from './RealmFactory'
 
 export const getToken = () => {
-  let tokens = realm.objects('token')
-  if (tokens.length === 0) {
+  let realm = getRealm()
+  let accounts = realm.objects('account')
+  if (accounts.length === 0) {
     return null
   } else {
-    return tokens[0].token
+    return accounts[0].token
   }
 }
 
 export const getAccountId = () => {
-  let tokens = realm.objects('token')
-  if (tokens.length === 0) {
+  let realm = getRealm()
+  let accounts = realm.objects('account')
+  if (accounts.length === 0) {
     return null
   } else {
-    return tokens[0].accountId
+    return accounts[0].accountId
   }
 }
 
 export const setToken = (token, accountId) => {
-  let tokens = realm.objects('token')
-  console.log(tokens)
-  // realm.delete(tokens)
-  realm.write(() => realm.create('token', {token: token, accountId: accountId}))
+  let realm = getRealm()
+  realm.write(() => {
+    let accounts = realm.objects('account')
+    realm.delete(accounts)
+    realm.create('account', {token: token, accountId: accountId})
+  })
+
+  realm.write(() => realm.create('account', {token: token, accountId: accountId}))
 }
 
 export const isLoggedIn = () => {

@@ -2,13 +2,13 @@ import React, { Component, PropTypes } from 'react'
 import {
   Text,
   View,
-  Image,
   TouchableOpacity,
   ActivityIndicator,
   // ListView,
   Dimensions
  } from 'react-native'
 import { Actions as NavigationActions } from 'react-native-router-flux'
+import CachableImage from '../../Common/CachableImage'
 
 import { Colors, Images, Metrics } from '../../Themes/'
 import { convert2TimeDiffString } from '../../Lib/Utilities'
@@ -224,13 +224,13 @@ class EpisodeDetail extends Component {
     let uri = `${this.props.account.profileImagePath}?random_number=${new Date().getTime()}`
     if (this.props.account.profileImagePath) {
       return (
-        <Image
+        <CachableImage
           style={styles.profileStyle}
-          source={{uri}} />
+          source={{uri: uri}} />
       )
     } else {
       return (
-        <Image
+        <CachableImage
           style={styles.profileStyle}
           source={Images.profileImage} />
       )

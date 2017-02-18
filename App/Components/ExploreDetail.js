@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { ScrollView, Dimensions, Text, View, Image, TouchableOpacity } from 'react-native'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import Video from 'react-native-video'
+import { CachableImage } from '../Common/CachableImage'
 
 import { Colors, Images, Metrics } from '../Themes/'
 
@@ -101,13 +102,12 @@ class ExploreDetail extends Component {
 
   renderContents () {
     const contents = this.props.episode.contents
-
     return contents.map(content => {
       if (content.type === 'Image') {
         return (
           <TouchableOpacity key={contents.indexOf(content)} onPress={this.onEpisodePress.bind(this, content.id)} >
             <View style={{marginRight: 8.1}}>
-              <Image style={{width: windowSize.width - 228.4, height: windowSize.width - 228.4}} source={{ uri: content.path }} />
+              <CachableImage style={{width: windowSize.width - 228.4, height: windowSize.width - 228.4}} source={{ uri: content.path }} />
             </View>
           </TouchableOpacity>
         )
@@ -159,7 +159,7 @@ class ExploreDetail extends Component {
   }
 
   render () {
-    console.log('팔로잉여부')
+    console.tron.log('팔로잉여부')
     console.log(this.props.following)
     const { userTextStyle } = styles
 

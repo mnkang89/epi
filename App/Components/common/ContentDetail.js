@@ -2,14 +2,13 @@ import React, { Component, PropTypes } from 'react'
 import {
   Text,
   View,
-  Image,
   TouchableWithoutFeedback,
   Dimensions
  } from 'react-native'
 import Video from 'react-native-video'
 import * as Animatable from 'react-native-animatable'
 
-// import { Videos } from '../../Themes'
+import CachableImage from '../../Common/CachableImage'
 
 const windowSize = Dimensions.get('window')
 
@@ -266,7 +265,7 @@ class ContentDetailClass extends Component {
             delayLongPress={350}
             onPress={this.onDoublePress.bind(this)}
             onLongPress={this.onLongPress.bind(this)} >
-            <Image
+            <CachableImage
               ref={this.props.playerRef}
               style={{
                 alignItems: 'center',
@@ -289,7 +288,7 @@ class ContentDetailClass extends Component {
                   {message}
                 </Text>
               </View>
-            </Image>
+            </CachableImage>
           </TouchableWithoutFeedback>
         </View>
       )
