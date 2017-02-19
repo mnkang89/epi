@@ -48,7 +48,7 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     formData.append('accountId', accountId)
     formData.append('nickname', nickname)
 
-    return api.post(`/api/accounts/${accountId}/nickname`, formData, {}, getTokenHeader())
+    return api.post(`/api/accounts/${accountId}/nickname`, formData, getTokenHeader())
   }
 
   const requestPhoto = (photoSource, token, accountId) => {
@@ -62,7 +62,7 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
 
     formData.append('file', photo)
 
-    return api.post(`/api/accounts/${accountId}/profile-image`, formData, {}, getTokenHeader())
+    return api.post(`/api/accounts/${accountId}/profile-image`, formData, getTokenHeader())
   }
 
   // Login
@@ -72,12 +72,13 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     formData.append('email', email)
     formData.append('password', password)
 
-    return api.post(`/api/accounts/login`, { email: email, password: password }, {}, getTokenHeader())
+    return api.post(`/api/accounts/login`, { email: email, password: password }, getTokenHeader())
   }
 
   // Account
   const requestAccount = (token, accountId) => {
-    // console.log('POST userAccount api콜 발생')
+    console.log('POST userAccount api콜 발생')
+    console.log(accountId)
 
     return api.get(`/api/accounts/${accountId}/summary`, {}, getTokenHeader())
   }
@@ -92,7 +93,7 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
 
     formData.append('active', active)
 
-    return api.get(`/api/episodes`, { active: active }, {}, getTokenHeader())
+    return api.get(`/api/episodes`, { active: active }, getTokenHeader())
   }
 
   const requestUserFeeds = (token, accountId, withFollowing) => {
@@ -125,7 +126,7 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
 
     formData.append('id', id)
 
-    return api.post(`/api/accounts/follow`, formData, {}, getTokenHeader())
+    return api.post(`/api/accounts/follow`, formData, getTokenHeader())
   }
 
   const deleteFollow = (token, id) => {

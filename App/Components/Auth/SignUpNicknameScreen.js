@@ -67,6 +67,7 @@ class SignUpNicknameScreen extends Component {
       confirmStyle: 'confirm'
     })
   }
+
   onSetting () {
     console.log('온세팅')
     this.setState({

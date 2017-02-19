@@ -10,8 +10,7 @@ import {
  } from 'react-native'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 
-import { Colors, Metrics } from '../../Themes/'
-// import { Colors, Images, Metrics } from '../../Themes/'
+import { Colors, Images, Metrics } from '../../Themes/'
 import { convert2TimeDiffString } from '../../Lib/Utilities'
 
 import ContentContainer from '../../Containers/common/ContentContainer'
@@ -214,6 +213,14 @@ class EpisodeDetail extends Component {
 */
 /*
   renderProfileImage () {
+    return (
+      <Image
+        style={styles.profileStyle}
+        source={{uri: 'https://facebook.github.io/react/img/logo_og.png'}} />
+    )
+  }
+*/
+  renderProfileImage () {
     let uri = `${this.props.account.profileImagePath}?random_number=${new Date().getTime()}`
     if (this.props.account.profileImagePath) {
       return (
@@ -228,14 +235,6 @@ class EpisodeDetail extends Component {
           source={Images.profileImage} />
       )
     }
-  }
-*/
-  renderProfileImage () {
-    return (
-      <Image
-        style={styles.profileStyle}
-        source={{uri: 'https://facebook.github.io/react/img/logo_og.png'}} />
-    )
   }
 
   renderActiveRed () {

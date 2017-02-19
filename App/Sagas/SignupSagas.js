@@ -2,6 +2,7 @@ import { put, call } from 'redux-saga/effects'
 import { path } from 'ramda'
 import SignupActions from '../Redux/SignupRedux'
 import TokenActions from '../Redux/TokenRedux'
+import { setToken } from '../Services/Auth'
 
 let validateEmail = (email) => {
   // const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -54,6 +55,7 @@ export function * email (api, action) {
 // attempts to check nickname
 export function * password (action) {
   const { email, password, passwordCheck } = action
+
   if (password === '') {
     yield put(SignupActions.passwordFailure('VACANT'))
   } else if (password === passwordCheck) {
@@ -133,6 +135,7 @@ export function * signup (api, action) {
     const token = path(['data', 'token'], response)
     const accountId = path(['data', 'id'], response)
 
+    setToken(token, accountId)
     yield put(SignupActions.signupSuccess(email, password))
     yield put(TokenActions.tokenRequest(token, accountId))
     // idRequest는 deprecated

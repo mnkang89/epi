@@ -13,6 +13,8 @@ import {
 } from '../Experimental/ListExampleShared_e'
 import FlatListE from '../Experimental/FlatList_e'
 
+import { getAccountId } from '../Services/Auth'
+
 import styles from './Styles/FeedScreenStyle'
 import { getObjectDiff, getArrayDiff } from '../Lib/Utilities'
 import EpisodeDetail from '../Components/common/EpisodeDetail'
@@ -63,8 +65,10 @@ class FeedScreen extends Component {
 
   componentWillMount () {
     // const { token, accountId } = { token: '$2a$10$ii4p8jv8XDsAT4i4/TbnlOoNLcXpXvmmQ8koDKSfy2PJVsCe1IgEu', accountId: 1 }
-    const { token, accountId } = this.props
+    // const { token, accountId } = this.props
+    const token = null
     const withFollowing = true
+    const accountId = getAccountId()
 
     this.props.resetCommentModal()
     this.props.requestUserEpisodes(token, accountId, withFollowing)
@@ -72,7 +76,9 @@ class FeedScreen extends Component {
   }
 
   componentDidMount () {
-    const { token, accountId } = this.props
+    // const { token, accountId } = this.props
+    const token = null
+    const accountId = getAccountId()
 
     this.props.requestInfo(token, accountId)
   }

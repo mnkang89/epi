@@ -36,10 +36,10 @@ export function * login (api, action) {
     // dispatch successful logins
     if (response.ok) {
       console.log(response)
-      const accountId = path(['data', 'id'], response)
       const token = path(['data', 'token'], response)
+      const accountId = path(['data', 'id'], response)
 
-      setToken(token)
+      setToken(token, accountId)
       yield put(LoginActions.loginSuccess(email))
       yield put(TokenActions.tokenRequest(token, accountId))
       // idRequest는 deprecated

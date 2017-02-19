@@ -9,7 +9,7 @@ import {
 import Video from 'react-native-video'
 import * as Animatable from 'react-native-animatable'
 
-import { Videos } from '../../Themes'
+// import { Videos } from '../../Themes'
 
 const windowSize = Dimensions.get('window')
 
@@ -163,9 +163,8 @@ class ContentDetailClass extends Component {
     }
   }
 
-// source={{ uri: content.path }} >
+/*
   renderContent (content) {
-    // const { imageStyle } = styles
     const paddingRight = this.state.paddingRight
     const message = content.message === 'undefined' ? '' : content.message
 
@@ -253,8 +252,8 @@ class ContentDetailClass extends Component {
       )
     }
   }
+*/
 
-/*
   renderContent (content) {
     // const { imageStyle } = styles
     const paddingRight = this.state.paddingRight
@@ -343,7 +342,7 @@ class ContentDetailClass extends Component {
       )
     }
   }
-*/
+
   render () {
     const content = this.props.content
 

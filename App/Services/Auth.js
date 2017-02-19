@@ -5,11 +5,12 @@ import Realm from 'realm'
 const TokenSchema = {
   name: 'token',
   properties: {
-    token: 'string'
+    token: 'string',
+    accountId: 'int'
   }
 }
 
-const realm = new Realm({schema: [TokenSchema]})
+const realm = new Realm({schema: [TokenSchema], schemaVersion: 1})
 
 export const getToken = () => {
   let tokens = realm.objects('token')
@@ -20,11 +21,20 @@ export const getToken = () => {
   }
 }
 
-export const setToken = (token) => {
+export const getAccountId = () => {
+  let tokens = realm.objects('token')
+  if (tokens.length === 0) {
+    return null
+  } else {
+    return tokens[0].accountId
+  }
+}
+
+export const setToken = (token, accountId) => {
   let tokens = realm.objects('token')
   console.log(tokens)
   // realm.delete(tokens)
-  realm.write(() => realm.create('token', {token: token}))
+  realm.write(() => realm.create('token', {token: token, accountId: accountId}))
 }
 
 export const isLoggedIn = () => {
