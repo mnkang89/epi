@@ -265,30 +265,32 @@ class ContentDetailClass extends Component {
             delayLongPress={350}
             onPress={this.onDoublePress.bind(this)}
             onLongPress={this.onLongPress.bind(this)} >
-            <CachableImage
-              ref={this.props.playerRef}
-              style={{
-                alignItems: 'center',
-                height: windowSize.width - 30,
-                width: windowSize.width - 30
-              }}
-              source={{ uri: content.path }} >
-              <View style={{flex: 1, marginTop: 90}}>
-                {this.renderAnimation()}
-              </View>
-              <View style={{flex: 1, justifyContent: 'flex-end', marginBottom: 10, backgroundColor: 'rgba(0,0,0,0)'}}>
-                <Text
-                  style={{
-                    textShadowOffset: {width: 1, height: 2},
-                    textShadowColor: 'rgba(0, 0, 0, 0.5)',
-                    textShadowRadius: 1,
-                    color: 'white',
-                    fontSize: 20,
-                    fontWeight: 'bold' }} >
-                  {message}
-                </Text>
-              </View>
-            </CachableImage>
+            <View>
+              <CachableImage
+                ref={this.props.playerRef}
+                style={{
+                  alignItems: 'center',
+                  height: windowSize.width - 30,
+                  width: windowSize.width - 30
+                }}
+                source={{ uri: content.path }} >
+                <View style={{flex: 1, marginTop: 90}}>
+                  {this.renderAnimation()}
+                </View>
+                <View style={{flex: 1, justifyContent: 'flex-end', marginBottom: 10, backgroundColor: 'rgba(0,0,0,0)'}}>
+                  <Text
+                    style={{
+                      textShadowOffset: {width: 1, height: 2},
+                      textShadowColor: 'rgba(0, 0, 0, 0.5)',
+                      textShadowRadius: 1,
+                      color: 'white',
+                      fontSize: 20,
+                      fontWeight: 'bold' }} >
+                    {message}
+                  </Text>
+                </View>
+              </CachableImage>
+            </View>
           </TouchableWithoutFeedback>
         </View>
       )
