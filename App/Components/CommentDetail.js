@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { Text, View, Image, TouchableOpacity, Modal } from 'react-native'
+import CachableImage from '../Common/CachableImage'
 
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import { Colors, Images, Metrics } from '../Themes/'
@@ -81,7 +82,7 @@ class CommentDetail extends Component {
     const { profileImagePath } = this.props.comment.account
     if (profileImagePath) {
       return (
-        <Image
+        <CachableImage
           style={styles.imageStyle}
           source={{uri: profileImagePath}} />
       )
