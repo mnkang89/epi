@@ -18,6 +18,16 @@ const CacheImageSchema = {
   }
 }
 
+const CacheVideoSchema = {
+  name: 'cacheVideo',
+  properties: {
+    id: { type: 'string', indexed: true },
+    url: 'string',
+    path: 'string',
+    expireDateTime: {type: 'date'}
+  }
+}
+
 export const getRealm = () => {
-  return new Realm({schema: [AccountSchema, CacheImageSchema]})
+  return new Realm({schema: [AccountSchema, CacheImageSchema, CacheVideoSchema]})
 }

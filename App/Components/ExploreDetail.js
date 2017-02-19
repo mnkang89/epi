@@ -107,7 +107,7 @@ class ExploreDetail extends Component {
         return (
           <TouchableOpacity key={contents.indexOf(content)} onPress={this.onEpisodePress.bind(this, content.id)} >
             <View style={{marginRight: 8.1}}>
-              <CachableImage style={{width: windowSize.width - 228.4, height: windowSize.width - 228.4}} source={{ uri: content.path }} />
+              <Image style={{width: windowSize.width - 228.4, height: windowSize.width - 228.4}} source={{ uri: content.path }} />
             </View>
           </TouchableOpacity>
         )

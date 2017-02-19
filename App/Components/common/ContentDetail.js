@@ -9,6 +9,7 @@ import Video from 'react-native-video'
 import * as Animatable from 'react-native-animatable'
 
 import CachableImage from '../../Common/CachableImage'
+import CachableVideo from '../../Common/CachableVideo'
 
 const windowSize = Dimensions.get('window')
 
@@ -267,7 +268,7 @@ class ContentDetailClass extends Component {
             onLongPress={this.onLongPress.bind(this)} >
             <View>
               <CachableImage
-                ref={this.props.playerRef}
+                imageRef={this.props.playerRef}
                 style={{
                   alignItems: 'center',
                   height: windowSize.width - 30,
@@ -303,10 +304,10 @@ class ContentDetailClass extends Component {
             onPress={this.onDoublePress.bind(this)}
             onLongPress={this.onLongPress.bind(this)} >
             <View style={{height: windowSize.width - 30, width: windowSize.width - 30}}>
-              <Video
+              <CachableVideo
                 source={{uri: content.path}}   // Can be a URL or a local file.
                 muted
-                ref={this.props.playerRef}                             // Store reference
+                videoRef={this.props.playerRef}                             // Store reference
                 paused                 // Pauses playback entirely.
                 resizeMode='cover'             // Fill the whole screen at aspect ratio.
                 repeat                         // Repeat forever.

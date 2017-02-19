@@ -121,17 +121,12 @@ export default class CachableImage extends Component {
   }
 
   renderDefaultImage () {
-    return (
-      <Image ref={this.props.ref}
-        style={this.props.style}>
-        {this.props.children}
-      </Image>
-    )
+    return false
   }
 
   renderImage () {
     return (
-      <Image ref={this.props.ref}
+      <Image ref={this.props.imageRef}
         style={this.props.style}
         source={{uri: this.state.imagePath}}>
         {this.props.children}
@@ -141,7 +136,7 @@ export default class CachableImage extends Component {
 
   renderFailImage () {
     return (
-      <Image ref={this.props.ref}
+      <Image ref={this.props.imageRef}
         style={this.props.style}
         source={{uri: this.state.imagePath}}>
         {this.props.children}
