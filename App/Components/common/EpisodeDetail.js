@@ -221,7 +221,7 @@ class EpisodeDetail extends Component {
   }
 */
   renderProfileImage () {
-    let uri = `${this.props.account.profileImagePath}?random_number=${new Date().getTime()}`
+    let uri = this.props.account.profileImagePath
     if (this.props.account.profileImagePath) {
       return (
         <CachableImage
