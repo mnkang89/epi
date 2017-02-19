@@ -11,7 +11,7 @@ const AccountSchema = {
 const CacheImageSchema = {
   name: 'cacheImage',
   properties: {
-    id: 'string',
+    id: { type: 'string', indexed: true },
     url: 'string',
     path: 'string',
     expireDateTime: {type: 'date'}

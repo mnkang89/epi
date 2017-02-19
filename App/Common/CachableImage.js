@@ -37,9 +37,17 @@ export default class CachableImage extends Component {
     let cachedImage = this.findCachedImage(this.props.source.uri)
     if (cachedImage != null) {
       console.tron.log('cached image called : ' + cachedImage.path)
-      this.useCacheImage(cachedImage)
+      RNFS.exists(cachedImage.path)
+      .then((result) => {
+        if (result) {
+          this.useCacheImage(cachedImage)
+        } else {
+          console.tron.log('file not exist at path : ' + cachedImage.path)
+          console.tron.log('download image called : ' + this.props.source.uri)
+          this.downloadAndCacheImage(this.props.source.uri)
+        }
+      })
     } else {
-      console.tron.log('download image called : ' + this.props.source.uri)
       this.downloadAndCacheImage(this.props.source.uri)
     }
   }
@@ -95,6 +103,10 @@ export default class CachableImage extends Component {
   cacheImage (url, path, expirePeriodInDay) {
     let expireDateTime = new Date()
     expireDateTime.setDate(expireDateTime.getDate() + expirePeriodInDay)
+    let images = realm.objects('cacheImage')
+      .filtered('id = ' + this.wrapDoubleQueto(hashing(url)))
+      .filtered('url = ' + this.wrapDoubleQueto(url))
+    realm.write(() => realm.delete(images))
     realm.write(() => realm.create('cacheImage', {id: '' + hashing(url), url: url, path: path, expireDateTime: expireDateTime}))
   }
 
