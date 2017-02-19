@@ -34,11 +34,8 @@ export default class CachableVideo extends Component {
   }
 
   componentDidMount () {
-    console.tron.log('here')
-
     let cachedVideo = this.findcachedVideo(this.props.source.uri)
     if (cachedVideo != null) {
-      console.tron.log('here3')
       console.tron.log('cached video called : ' + cachedVideo.path)
       RNFS.exists(cachedVideo.path)
       .then((result) => {

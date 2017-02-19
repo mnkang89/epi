@@ -2,7 +2,8 @@ import React, { Component, PropTypes } from 'react'
 import { ScrollView, Dimensions, Text, View, Image, TouchableOpacity } from 'react-native'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import Video from 'react-native-video'
-// import { CachableImage } from '../Common/CachableImage'
+import CachableImage from '../Common/CachableImage'
+import CachableVideo from '../Common/CachableVideo'
 
 import { Colors, Images, Metrics } from '../Themes/'
 
@@ -106,8 +107,8 @@ class ExploreDetail extends Component {
       if (content.type === 'Image') {
         return (
           <TouchableOpacity key={contents.indexOf(content)} onPress={this.onEpisodePress.bind(this, content.id)} >
-            <View style={{marginRight: 8.1}}>
-              <Image style={{width: windowSize.width - 228.4, height: windowSize.width - 228.4}} source={{ uri: content.path }} />
+            <View style={{marginRight: 8.1}} >
+              <CachableImage style={{width: windowSize.width - 228.4, height: windowSize.width - 228.4}} source={{ uri: content.path }} />
             </View>
           </TouchableOpacity>
         )
@@ -116,10 +117,10 @@ class ExploreDetail extends Component {
           <TouchableOpacity key={contents.indexOf(content)} onPress={this.onEpisodePress.bind(this, content.id)} >
             <View style={{marginRight: 8.1}}>
               <View style={{width: windowSize.width - 228.4, height: windowSize.width - 228.4}}>
-                <Video
+                <CachableVideo
                   source={{uri: content.path}}   // Can be a URL or a local file.
                   muted
-                  ref={(ref) => {
+                  videoRef={(ref) => {
                     this.player = ref
                   }}                             // Store reference
                   paused={false}                 // Pauses playback entirely.
@@ -146,7 +147,7 @@ class ExploreDetail extends Component {
 
   renderProfileImage () {
     if (this.props.account.profileImagePath) {
-      return (<Image
+      return (<CachableImage
         style={styles.imageStyle}
         source={{uri: this.props.account.profileImagePath}} />
       )
