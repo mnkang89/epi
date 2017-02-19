@@ -47,7 +47,7 @@ export default class CachableVideo extends Component {
         } else {
           console.tron.log('file not exist at path : ' + cachedVideo.path)
           console.tron.log('download video called : ' + this.props.source.uri)
-          this.downloadAndCacheImage(this.props.source.uri)
+          this.downloadAndCacheVideo(this.props.source.uri)
         }
       })
     } else {
