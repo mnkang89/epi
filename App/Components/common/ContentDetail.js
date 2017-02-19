@@ -5,7 +5,6 @@ import {
   TouchableWithoutFeedback,
   Dimensions
  } from 'react-native'
-import Video from 'react-native-video'
 import * as Animatable from 'react-native-animatable'
 
 import CachableImage from '../../Common/CachableImage'
@@ -308,7 +307,7 @@ class ContentDetailClass extends Component {
                 source={{uri: content.path}}   // Can be a URL or a local file.
                 muted
                 videoRef={this.props.playerRef}                             // Store reference
-                paused                 // Pauses playback entirely.
+                paused={this.state.paused}                 // Pauses playback entirely.
                 resizeMode='cover'             // Fill the whole screen at aspect ratio.
                 repeat                         // Repeat forever.
                 playInBackground={false}       // Audio continues to play when app entering background.
