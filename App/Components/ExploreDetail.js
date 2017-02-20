@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { ScrollView, Dimensions, Text, View, Image, TouchableOpacity } from 'react-native'
 import { Actions as NavigationActions } from 'react-native-router-flux'
-import Video from 'react-native-video'
+// import Video from 'react-native-video'
 import CachableImage from '../Common/CachableImage'
 import CachableVideo from '../Common/CachableVideo'
 

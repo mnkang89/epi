@@ -232,8 +232,8 @@ class FeedScreen extends Component {
           onRefresh={this._onRefresh.bind(this)}
           refreshing={this.state.refreshing}
           onViewableItemsChanged={this._onViewableItemsChanged}
-          onEndReached={this._onEndReached.bind(this)}
-          onEndReachedThreshold={0}
+          // onEndReached={this._onEndReached.bind(this)}
+          // onEndReachedThreshold={0}
           shouldItemUpdate={this._shouldItemUpdate} />
         <View style={{height: 48.5}} />
         <CommentModalContainer screen={'FeedScreen'} token={this.props.token} />
