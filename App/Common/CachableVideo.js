@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Image } from 'react-native'
 import Video from 'react-native-video'
 import { getRealm } from '../Services/RealmFactory'
 import RNFS from 'react-native-fs'
@@ -122,7 +123,9 @@ export default class CachableVideo extends Component {
   }
 
   renderdefaultVideo () {
-    return null
+    return (
+      <Image source={null} style={this.props.style} />
+    )
   }
 
   renderVideo () {

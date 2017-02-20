@@ -4,7 +4,6 @@ import { getRealm } from '../Services/RealmFactory'
 import RNFS from 'react-native-fs'
 
 export const expirePeriodInDay = 7
-
 const realm = getRealm()
 
 const hashing = (string) => {
@@ -33,7 +32,7 @@ export default class CachableImage extends Component {
     }
   }
 
-  componentDidMount () {
+  componentWillMount () {
     let cachedImage = this.findCachedImage(this.props.source.uri)
     if (cachedImage != null) {
       console.tron.log('cached image called : ' + cachedImage.path)
@@ -121,7 +120,10 @@ export default class CachableImage extends Component {
   }
 
   renderDefaultImage () {
-    return false
+    // return false
+    return (
+      <Image source={null} style={this.props.style} />
+    )
   }
 
   renderImage () {

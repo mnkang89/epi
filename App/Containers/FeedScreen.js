@@ -1,12 +1,17 @@
 import React, { Component, PropTypes } from 'react'
 import {
   View,
-  ActivityIndicator
+  ActivityIndicator,
+  ListView,
+  ScrollView,
+  RefreshControl,
+  TouchableOpacity,
+  Text
   // Dimensions
 } from 'react-native'
 import { connect } from 'react-redux'
 import _ from 'lodash'
-// import { Actions as NavigationActions } from 'react-native-router-flux'
+import { Actions as NavigationActions } from 'react-native-router-flux'
 
 import {
   getItemLayout
@@ -99,6 +104,7 @@ class FeedScreen extends Component {
     }
 
     if (this.state.refreshing) {
+      console.log('리프레시인 피드1')
       this.setState({
         // data: this.props.items,
         refreshing: false
@@ -106,6 +112,7 @@ class FeedScreen extends Component {
     }
 
     if (this.state.footer) {
+      console.log('리프레시인 피드2')
       // deprecated되어 redux스토어를 업데이트 하는 방식으로 변경할 예정
       this.setState({
         footer: false
@@ -136,12 +143,82 @@ class FeedScreen extends Component {
 
     this.props.requestUserEpisodes(token, accountId, withFollowing)
   }
+  renderListView (dataSource) {
+    if (this.props.episodesRequesting) {
+      console.log('리퀘스팅중')
+      return
+    } else {
+      if (dataSource._cachedRowCount === 0) {
+        console.log('없음')
+        return (
+          <ScrollView
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this._onRefresh.bind(this)} />
+              } >
+            <View>
+              <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 100}}>
+                <Text style={{fontSize: 60, fontWeight: 'bold', color: 'white'}}>안녕하세요!</Text>
+              </View>
+              <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 80}}>
+                <Text style={{fontSize: 16, color: 'white'}}>다른 사람들의 에피소드를 구경하고</Text>
+                <Text style={{fontSize: 16, color: 'white'}}>팔로우 해보세요!</Text>
+              </View>
+              <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 18}}>
+                <TouchableOpacity onPress={NavigationActions.searchTab}>
+                  <View style={{paddingTop: 5, paddingBottom: 5, paddingLeft: 7, paddingRight: 7, borderRadius: 4, borderWidth: 1, borderColor: 'white'}}>
+                    <Text style={{fontSize: 16, color: 'white'}}>에피소드 탐색</Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </ScrollView>
+        )
+      } else {
+        return (
+          <ListView
+            removeClippedSubviews
+            pageSize={1}
+            enableEmptySections={false}
+            dataSource={dataSource}
+            renderRow={(item) =>
+              <EpisodeDetail
+                key={item.episode.id}
+                episode={item.episode}
+                account={item.account} />
+              }
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this._onRefresh.bind(this)} />
+              } />
+        )
+      }
+    }
+  }
+/*
+  render () {
+    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
+    const dataSource = ds.cloneWithRows(this.props.items.slice())
+
+    return (
+      <View style={styles.mainContainer}>
+        {this.renderListView(dataSource)}
+        <View style={{height: 48.5}} />
+        <CommentModalContainer screen={'FeedScreen'} token={this.props.token} />
+      </View>
+    )
+  }
+*/
+
 // this.props.items
   render () {
     console.log('데이터길이: ' + this.props.items.length)
     return (
       <View style={styles.mainContainer}>
         <FlatListE
+          keyExtractor={(item, index) => index}
           style={{ flex: 1 }}
           ref={this._captureRef}
           FooterComponent={this._renderFooter.bind(this)}
@@ -291,71 +368,4 @@ const mapDispatchToProps = (dispatch) => {
 export default connect(mapStateToProps, mapDispatchToProps)(FeedScreen)
 
 /*
-  renderListView (dataSource) {
-    if (this.props.episodesRequesting) {
-      console.log('리퀘스팅중')
-      return
-    } else {
-      if (dataSource._cachedRowCount === 0) {
-        console.log('없음')
-        return (
-          <ScrollView
-            refreshControl={
-              <RefreshControl
-                refreshing={this.state.refreshing}
-                onRefresh={this.onRefresh.bind(this)} />
-              } >
-            <View>
-              <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 100}}>
-                <Text style={{fontSize: 60, fontWeight: 'bold', color: 'white'}}>안녕하세요!</Text>
-              </View>
-              <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 80}}>
-                <Text style={{fontSize: 16, color: 'white'}}>다른 사람들의 에피소드를 구경하고</Text>
-                <Text style={{fontSize: 16, color: 'white'}}>팔로우 해보세요!</Text>
-              </View>
-              <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 18}}>
-                <TouchableOpacity onPress={NavigationActions.searchTab}>
-                  <View style={{paddingTop: 5, paddingBottom: 5, paddingLeft: 7, paddingRight: 7, borderRadius: 4, borderWidth: 1, borderColor: 'white'}}>
-                    <Text style={{fontSize: 16, color: 'white'}}>에피소드 탐색</Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </ScrollView>
-        )
-      } else {
-        return (
-          <ListView
-            removeClippedSubviews
-            pageSize={1}
-            enableEmptySections={false}
-            dataSource={dataSource}
-            renderRow={(item) =>
-              <EpisodeDetail
-                key={item.episode.id}
-                episode={item.episode}
-                account={item.account} />
-              }
-            refreshControl={
-              <RefreshControl
-                refreshing={this.state.refreshing}
-                onRefresh={this.onRefresh.bind(this)} />
-              } />
-        )
-      }
-    }
-  }
-
-  render () {
-    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
-    const dataSource = ds.cloneWithRows(this.props.items.slice())
-
-    return (
-      <View style={styles.mainContainer}>
-        {this.renderListView(dataSource)}
-        <View style={{height: 48.5}} />
-        <CommentModalContainer screen={'FeedScreen'} token={this.props.token} />
-      </View>
-    )
-  }
 */

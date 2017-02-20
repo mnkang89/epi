@@ -4,7 +4,6 @@ import {
   View,
   TouchableOpacity,
   ActivityIndicator,
-  // ListView,
   Dimensions
  } from 'react-native'
 import { Actions as NavigationActions } from 'react-native-router-flux'
@@ -57,8 +56,10 @@ class EpisodeDetail extends Component {
     this.dragEndingOffset
   }
 
+  componentDidMount () {
+  }
+
   componentWillMount () {
-    // console.log('나 랜더링한다!!')
     const contentTypeArray = []
 
     for (let i = 0; i < this.props.episode.contents.length; i++) {
@@ -70,9 +71,6 @@ class EpisodeDetail extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-  }
-
-  componentDidMount () {
   }
 
   stopEpisodeVideo = () => {
@@ -157,18 +155,17 @@ class EpisodeDetail extends Component {
       const { token, episode } = this.props
       this.dragEndingOffset = event.nativeEvent.contentOffset.x
 
-      console.log('오프셋들')
-      console.log(this.dragStartingOffset)
-      console.log(this.dragEndingOffset)
+      // console.log('오프셋들')
+      // console.log(this.dragStartingOffset)
+      // console.log(this.dragEndingOffset)
 
       if (this.dragStartingOffset - this.dragEndingOffset > 0) {
-        console.log('푸터 취소')
+        // console.log('푸터 취소')
         this.setState({footer: false})
       }
-      console.log('스타팅과 라스트가 같은가?')
-      console.log(this.dragStartingOffset === this.lastContentOffset)
-      if (active &&
-          this.dragStartingOffset >= this.lastContentOffset &&
+      // console.log('스타팅과 라스트가 같은가?')
+      // console.log(this.dragStartingOffset === this.lastContentOffset)
+      if (this.dragStartingOffset >= this.lastContentOffset &&
           this.dragStartingOffset - this.dragEndingOffset < 0) {
         console.log('리퀘스팅!')
         this.props.requestNewEpisode(token, episode.id)
@@ -176,50 +173,13 @@ class EpisodeDetail extends Component {
     }
   }
 
+  _onMomentumScrollBegin (event) {
+    this.horizontalLock = false
+  }
+
   _onEndReached () {
-    // console.log('onEndReached fired')
-    // this.setState({footer: true})
   }
 
-/*
-  handleChangeVisibleRows (visibleRows, changedRows) {
-    let centerIndex = 0
-    // 인덱스 어레이는 스트링 어레이이므로 정수어레이로 변환
-    const indexArray = Object.keys(visibleRows.s1).map(Number)
-    const numberOfVisibleRows = Object.keys(visibleRows.s1).length
-
-    if (numberOfVisibleRows === 1) {
-      centerIndex = indexArray[0]
-    } else if (numberOfVisibleRows === 2) {
-      if (indexArray[0] === 0) {
-        centerIndex = indexArray[0]
-      } else {
-        centerIndex = indexArray[1]
-      }
-    } else if (numberOfVisibleRows === 3) {
-      centerIndex = indexArray[1]
-    }
-    // console.log(indexArray)
-    for (let i = 0; i < this.state.contentTypeArray.length; i++) {
-      if (this.state.contentTypeArray[i] === 'Video' && i !== centerIndex) {
-        this.contentRefs[i].getWrappedInstance()._root._component.stopVideo()
-      }
-    }
-
-    if (this.state.contentTypeArray[centerIndex] === 'Video') {
-      this.contentRefs[centerIndex].getWrappedInstance()._root._component.playVideo()
-    }
-  }
-*/
-/*
-  renderProfileImage () {
-    return (
-      <Image
-        style={styles.profileStyle}
-        source={{uri: 'https://facebook.github.io/react/img/logo_og.png'}} />
-    )
-  }
-*/
   renderProfileImage () {
     let uri = this.props.account.profileImagePath
     if (this.props.account.profileImagePath) {
@@ -248,8 +208,6 @@ class EpisodeDetail extends Component {
   }
 
   render () {
-    // initialListSize={50} 리스트뷰에 아직 렌더링 되지않아 발생하는 에러를 해결하기 위함.
-    // 50개의 내부 row를 렌더링하는 의미이며 다소 하드코딩 되어 있으므로 개선이 필요함.
     const active = this.props.episode.active
     const activeEpisodeLength = this.props.episode.contents.length
     const commentCount = this.props.episode.contents.map(content => content.commentCount).reduce((a, b) => a + b, 0)
@@ -260,32 +218,26 @@ class EpisodeDetail extends Component {
     } = styles
 
     let xPosition = 0
-    // console.log('액티브:')
-    // console.log(active)
+
+    this.lastContentOffset = (activeEpisodeLength - 1) * (windowSize.width - 22)
 
     if (!this.props.xPosition) {
       if (active) {
         xPosition = (activeEpisodeLength - 1) * (windowSize.width - 22)
-        // console.log('xPosition:')
-        // console.log(xPosition)
       } else {
-        // console.log('xPosition:')
-        // console.log(xPosition)
         xPosition = 0
       }
     } else {
       xPosition = this.props.xPosition
     }
 
-    this.lastContentOffset = (activeEpisodeLength - 1) * (windowSize.width - 22)
-
-    // this.currentCenterIndex
     if (xPosition === 0) {
       this.currentCenterIndex = 0
     } else {
       this.currentCenterIndex = activeEpisodeLength - 1
     }
 
+    console.log('에피소드 리렌더')
     return (
       <View
         style={{flex: 1}}>
@@ -311,6 +263,7 @@ class EpisodeDetail extends Component {
           </View>
         </View>
         <FlatListE
+          keyExtractor={(item, index) => index}
           data={this.props.episode.contents}
           ItemComponent={this._renderItemComponent}
           FooterComponent={this._renderFooter.bind(this)}
@@ -321,6 +274,7 @@ class EpisodeDetail extends Component {
           initialListSize={50}
           onScrollBeginDrag={this._onScrollBeginDrag.bind(this)}
           onScrollEndDrag={this._onScrollEndDrag.bind(this)}
+          onMomentumScrollBegin={this._onMomentumScrollBegin.bind(this)}
           onViewableItemsChanged={this._onViewableItemsChanged}
           onEndReached={this._onEndReached.bind(this)}
           onEndReachedThreshold={0}
@@ -384,6 +338,8 @@ class EpisodeDetail extends Component {
   }
 
   _shouldItemUpdate (prev, next) {
+    console.log('슈드아이템업데이트 인 에피소드 디테일')
+    // return false
     return prev.item !== next.item
   }
 
@@ -399,9 +355,10 @@ class EpisodeDetail extends Component {
   ) => {
     /*
       this.horizontalLock은 해당 에피소드가 좌우 스크롤된적이 없을 경우 true이다.
-      onMomentumScrollEnd를 이용해 스크롤시 false로 변경한다.
+      onMomentumScrollBegin을 이용해 스크롤시 false로 변경한다.
     */
     if (info.viewableItems.length === 1 && !this.horizontalLock) {
+      console.log('호리즌탈락 풀림')
       const { parentHandler, index } = this.props
       const episodeViewability = parentHandler.viewableItemsArray.includes(index)
       const centerIndex = info.viewableItems[0].index
@@ -427,107 +384,6 @@ class EpisodeDetail extends Component {
       }
     }
   }
-
-/*
-  render () {
-    // initialListSize={50} 리스트뷰에 아직 렌더링 되지않아 발생하는 에러를 해결하기 위함.
-    // 50개의 내부 row를 렌더링하는 의미이며 다소 하드코딩 되어 있으므로 개선이 필요함.
-    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
-    const contents = this.props.episode.contents
-    const episodeId = this.props.episode.id
-    this.dataSource = ds.cloneWithRows(contents.slice())
-
-    const active = this.props.episode.active
-    const activeEpisodeLength = this.props.episode.contents.length
-    const commentCount = this.props.episode.contents.map(content => content.commentCount).reduce((a, b) => a + b, 0)
-    const timeDiffString = convert2TimeDiffString(
-      this.props.episode.updatedDateTime || this.props.episode.createDateTime)
-    const {
-      headerContentStyle
-      // textStyle
-    } = styles
-
-    let xPosition = 0
-
-    if (!this.props.xPosition) {
-      if (active) {
-        xPosition = (activeEpisodeLength - 1) * (windowSize.width - 22)
-      } else {
-        xPosition = 0
-      }
-    } else {
-      xPosition = this.props.xPosition
-    }
-
-    return (
-      <View
-        style={{flex: 1, overflow: 'hidden'}}>
-        <View style={headerContentStyle}>
-          <View style={{width: windowSize.width - 30, marginTop: 10}}>
-            <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-              <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
-                <View>
-                  {this.renderActiveRed()}
-                  <TouchableOpacity
-                    onPress={this.onPressProfile.bind(this)}>
-                    {this.renderProfileImage()}
-                  </TouchableOpacity>
-                </View>
-                <View style={{justifyContent: 'flex-start', paddingLeft: 5}}>
-                  <Text style={{color: 'rgb(217,217,217)', fontWeight: 'bold'}}>{this.props.account.nickname}</Text>
-                </View>
-              </View>
-              <View>
-                <Text style={{color: 'rgb(217,217,217)', fontSize: 13}}>최근 업데이트 : {timeDiffString}</Text>
-              </View>
-            </View>
-          </View>
-        </View>
-        <ListView
-          ref={(component) => {
-            this._listView = component
-          }}
-          pageSize={2}
-          initialListSize={50}
-          style={{marginTop: 10, paddingLeft: 7.5, paddingRight: 7.5}}
-          contentOffset={{x: xPosition, y: 0}}
-          onScroll={this.handleScroll.bind(this)}
-          onMomentumScrollEnd={this.handleMomentumScrollEnd.bind(this)}
-          onChangeVisibleRows={this.handleChangeVisibleRows.bind(this)}
-          scrollEventThrottle={100}
-          horizontal
-          snapToAlignment={'start'}
-          snapToInterval={windowSize.width - 22}
-          showsHorizontalScrollIndicator
-          directionalLockEnabled={false}
-          decelerationRate={'fast'}
-          dataSource={this.dataSource}
-          renderRow={(content) => {
-            return (
-              <ContentContainer
-                ref={(component) => {
-                  this.contentRefs[contents.indexOf(content)] = component
-                }}
-                playerRef={(player) => { this.player[contents.indexOf(content)] = player }}
-                key={contents.indexOf(content)}
-                length={contents.length}
-                number={contents.indexOf(content)}
-                episodeId={episodeId}
-                content={content}
-                like={this.like.bind(this)}
-                dislike={this.dislike.bind(this)} />
-            )
-          }} />
-        <View style={{width: windowSize.width - 30, backgroundColor: 'black', paddingTop: 15}}>
-          <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
-            <Text style={{fontSize: 13, paddingRight: 10, color: 'rgb(217,217,217)'}}>공감 {this.state.likeCount}</Text>
-            <Text style={{fontSize: 13, color: 'rgb(217,217,217)'}}>댓글 {commentCount}</Text>
-          </View>
-        </View>
-      </View>
-    )
-  }
-*/
 }
 
 EpisodeDetail.defaultProps = {
@@ -591,3 +447,116 @@ const styles = {
 }
 
 export default EpisodeDetail
+
+/*
+  render () {
+    // initialListSize={50} 리스트뷰에 아직 렌더링 되지않아 발생하는 에러를 해결하기 위함.
+    // 50개의 내부 row를 렌더링하는 의미이며 다소 하드코딩 되어 있으므로 개선이 필요함.
+    const active = this.props.episode.active
+    const activeEpisodeLength = this.props.episode.contents.length
+    const commentCount = this.props.episode.contents.map(content => content.commentCount).reduce((a, b) => a + b, 0)
+    const timeDiffString = convert2TimeDiffString(
+      this.props.episode.updatedDateTime || this.props.episode.createDateTime)
+    const {
+      headerContentStyle
+    } = styles
+
+    const contents = this.props.episode.contents
+    const episodeId = this.props.episode.id
+    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
+    this.dataSource = ds.cloneWithRows(contents.slice())
+
+    let xPosition = 0
+    // console.log('액티브:')
+    // console.log(active)
+
+    if (!this.props.xPosition) {
+      if (active) {
+        xPosition = (activeEpisodeLength - 1) * (windowSize.width - 22)
+        // console.log('xPosition:')
+        // console.log(xPosition)
+      } else {
+        // console.log('xPosition:')
+        // console.log(xPosition)
+        xPosition = 0
+      }
+    } else {
+      xPosition = this.props.xPosition
+    }
+
+    this.lastContentOffset = (activeEpisodeLength - 1) * (windowSize.width - 22)
+
+    // this.currentCenterIndex
+    if (xPosition === 0) {
+      this.currentCenterIndex = 0
+    } else {
+      this.currentCenterIndex = activeEpisodeLength - 1
+    }
+
+    console.log('에피소드 리렌더')
+    return (
+      <View
+        style={{flex: 1}}>
+        <View style={headerContentStyle}>
+          <View style={{width: windowSize.width - 30, marginTop: 10}}>
+            <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+              <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
+                <View>
+                  {this.renderActiveRed()}
+                  <TouchableOpacity
+                    onPress={this.onPressProfile.bind(this)}>
+                    {this.renderProfileImage()}
+                  </TouchableOpacity>
+                </View>
+                <View style={{justifyContent: 'flex-start', paddingLeft: 5}}>
+                  <Text style={{color: 'rgb(217,217,217)', fontWeight: 'bold'}}>{this.props.account.nickname}</Text>
+                </View>
+              </View>
+              <View>
+                <Text style={{color: 'rgb(217,217,217)', fontSize: 13}}>최근 업데이트 : {timeDiffString}</Text>
+              </View>
+            </View>
+          </View>
+        </View>
+        <ListView
+          ref={(component) => {
+            this._listView = component
+          }}
+          pageSize={2}
+          initialListSize={5}
+          style={{marginTop: 10, paddingLeft: 7.5, paddingRight: 7.5}}
+          contentOffset={{x: xPosition, y: 0}}
+          scrollEventThrottle={100}
+          horizontal
+          snapToAlignment={'start'}
+          snapToInterval={windowSize.width - 22}
+          showsHorizontalScrollIndicator
+          directionalLockEnabled={false}
+          decelerationRate={'fast'}
+          dataSource={this.dataSource}
+          renderRow={(content) => {
+            return (
+              <ContentContainer
+                ref={(component) => {
+                  this.contentRefs[contents.indexOf(content)] = component
+                }}
+                playerRef={(player) => { this.player[contents.indexOf(content)] = player }}
+                key={contents.indexOf(content)}
+                length={contents.length}
+                number={contents.indexOf(content)}
+                episodeId={episodeId}
+                content={content}
+                like={this.like.bind(this)}
+                dislike={this.dislike.bind(this)} />
+            )
+          }} />
+        <View style={{width: windowSize.width - 30, backgroundColor: 'black', paddingTop: 15}}>
+          <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
+            <Text style={{fontSize: 13, paddingRight: 10, color: 'rgb(217,217,217)'}}>공감 {this.state.likeCount}</Text>
+            <Text style={{fontSize: 13, color: 'rgb(217,217,217)'}}>댓글 {commentCount}</Text>
+          </View>
+        </View>
+      </View>
+    )
+  }
+*/
