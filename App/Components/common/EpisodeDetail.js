@@ -57,6 +57,31 @@ class EpisodeDetail extends Component {
   }
 
   componentDidMount () {
+    // horizontal 리프레쉬 비디오 플레이
+    console.log('디드 마운트')
+    const { parentHandler, index } = this.props
+    const episodeViewability = parentHandler.viewableItemsArray.includes(index)
+    const centerIndex = this.currentCenterIndex
+
+    for (let i = 0; i < this.state.contentTypeArray.length; i++) {
+      if (this.state.contentTypeArray[i] === 'Video' &&
+          // i === centerIndex면 중간에 온 비디오 컨텐츠이므로 stop할 필요가 없음.
+          i !== centerIndex &&
+          // undefined일 경우, 아직 contentRefs오브젝트에 추가되지 않은, 즉 아직 렌더링 되지 않은 컨텐츠이다.
+          this.contentRefs[i] !== undefined &&
+          // null일 경우, flatList최적화 기능에 의해 메모리에서 내려간 컨텐츠에 해당한다.
+          this.contentRefs[i] !== null) {
+        this.contentRefs[i].getWrappedInstance()._root._component.stopVideo()
+      }
+    }
+
+    if (episodeViewability &&
+        this.state.contentTypeArray[centerIndex] === 'Video' &&
+        this.contentRefs[centerIndex] !== null &&
+        this.contentRefs[centerIndex] !== undefined) {
+      this.contentRefs[centerIndex].getWrappedInstance()._root._component.playVideo()
+      this.currentCenterIndex = centerIndex
+    }
   }
 
   componentWillMount () {
