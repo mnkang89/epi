@@ -87,6 +87,19 @@ const { Types, Creators } = createActions({
     'newEpisodeError'
   ],
 
+  moreFeedsRequest: [
+    'token',
+    'accountId',
+    'withFollowing',
+    'before'
+  ],
+  moreFeedsSuccess: [
+    'moreFeeds'
+  ],
+  moreFeedsFailure: [
+    'moreFeedsError'
+  ],
+
   moreEpisodesRequest: [
     'token',
     'accountId',
@@ -98,6 +111,19 @@ const { Types, Creators } = createActions({
   ],
   moreEpisodesFailure: [
     'moreEpisodesError'
+  ],
+
+  moreOtherEpisodesRequest: [
+    'token',
+    'accountId',
+    'withFollowing',
+    'before'
+  ],
+  moreOtherEpisodesSuccess: [
+    'moreOtherEpisodes'
+  ],
+  moreOtherEpisodesFailure: [
+    'moreOtherEpisodesError'
   ]
 })
 
@@ -131,9 +157,17 @@ export const INITIAL_STATE = Immutable({
   newEpisodeRequesting: false,
   newEpisodeError: null,
 
+  moreFeeds: [],
+  moreFeedsRequesting: false,
+  moreFeedsError: null,
+
   moreEpisodes: [],
   moreEpisodesRequesting: false,
-  moreEpisodesError: null
+  moreEpisodesError: null,
+
+  moreOtherEpisodes: [],
+  moreOtherEpisodesRequesting: false,
+  moreOtherEpisodesError: null
 })
 
 /* ------------- Reducers ------------- */
@@ -226,18 +260,44 @@ export const newEpisodeSuccess = (state: Object, { newEpisode }: Object) => {
 export const newEpisodeFailure = (state: Object, { newEpisodeError }: Object) =>
   state.merge({ newEpisodeRequesting: false, newEpisodeError })
 
-// moreEpisodes
+// moreFeeds(FeedScreen)
+export const moreFeedsRequest = (state: Object, { token }: Object) =>
+  state.merge({ moreFeedsRequesting: true })
+
+export const moreFeedsSuccess = (state: Object, { moreFeeds }: Object) =>
+  state.merge({
+    moreFeedsRequesting: false,
+    moreFeedsError: null,
+    episodes: [...state.episodes, ...moreFeeds]})
+
+export const moreFeedsFailure = (state: Object, { moreFeedsError }: Object) =>
+  state.merge({ moreFeedsRequesting: false, moreFeedsError })
+
+// moreEpisodes(ProfileScreen)
 export const moreEpisodesRequest = (state: Object, { token }: Object) =>
   state.merge({ moreEpisodesRequesting: true })
 
 export const moreEpisodesSuccess = (state: Object, { moreEpisodes }: Object) =>
   state.merge({
     moreEpisodesRequesting: false,
-    moreEpisodeError: null,
-    episodes: [...state.episodes, ...moreEpisodes]})
+    moreEpisodesError: null,
+    episodesWithFalse: [...state.episodesWithFalse, ...moreEpisodes]})
 
 export const moreEpisodesFailure = (state: Object, { moreEpisodesError }: Object) =>
   state.merge({ moreEpisodesRequesting: false, moreEpisodesError })
+
+// moreOtherEpisodes(UserProfileScreen)
+export const moreOtherEpisodesRequest = (state: Object, { token }: Object) =>
+  state.merge({ moreOtherEpisodesRequesting: true })
+
+export const moreOtherEpisodesSuccess = (state: Object, { moreOtherEpisodes }: Object) =>
+  state.merge({
+    moreOtherEpisodesRequesting: false,
+    moreOtherEpisodesError: null,
+    otherEpisodes: [...state.otherEpisodes, ...moreOtherEpisodes]})
+
+export const moreOtherEpisodesFailure = (state: Object, { moreOtherEpisodesError }: Object) =>
+  state.merge({ moreOtherEpisodesRequesting: false, moreOtherEpisodesError })
 
 /* ------------- Hookup Reducers To Types ------------- */
 
@@ -270,7 +330,15 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.NEW_EPISODE_SUCCESS]: newEpisodeSuccess,
   [Types.NEW_EPISODE_FAILURE]: newEpisodeFailure,
 
+  [Types.MORE_FEEDS_REQUEST]: moreFeedsRequest,
+  [Types.MORE_FEEDS_SUCCESS]: moreFeedsSuccess,
+  [Types.MORE_FEEDS_FAILURE]: moreFeedsFailure,
+
   [Types.MORE_EPISODES_REQUEST]: moreEpisodesRequest,
   [Types.MORE_EPISODES_SUCCESS]: moreEpisodesSuccess,
-  [Types.MORE_EPISODES_FAILURE]: moreEpisodesFailure
+  [Types.MORE_EPISODES_FAILURE]: moreEpisodesFailure,
+
+  [Types.MORE_OTHER_EPISODES_REQUEST]: moreOtherEpisodesRequest,
+  [Types.MORE_OTHER_EPISODES_SUCCESS]: moreOtherEpisodesSuccess,
+  [Types.MORE_OTHER_EPISODES_FAILURE]: moreOtherEpisodesFailure
 })

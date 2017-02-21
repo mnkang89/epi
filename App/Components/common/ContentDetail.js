@@ -3,11 +3,12 @@ import {
   Text,
   View,
   TouchableWithoutFeedback,
-  Dimensions
+  Dimensions,
+  Image
  } from 'react-native'
 import * as Animatable from 'react-native-animatable'
 
-import CachableImage from '../../Common/CachableImage'
+// import CachableImage from '../../Common/CachableImage'
 // import CachableVideo from '../../Common/CachableVideo'
 import { Videos } from '../../Themes'
 import Video from 'react-native-video'
@@ -164,97 +165,6 @@ class ContentDetailClass extends Component {
     }
   }
 
-/*
-  renderContent (content) {
-    const paddingRight = this.state.paddingRight
-    const message = content.message === 'undefined' ? '' : content.message
-
-    if (content.type === 'Image') {
-      return (
-        <View style={{backgroundColor: 'black', paddingLeft: 8, paddingRight: paddingRight}}>
-          <TouchableWithoutFeedback
-            delayLongPress={800}
-            onPress={this.onDoublePress.bind(this)}
-            onLongPress={this.onLongPress.bind(this)} >
-            <Image
-              ref={this.props.playerRef}
-              style={{
-                alignItems: 'center',
-                height: windowSize.width - 30,
-                width: windowSize.width - 30
-              }}
-              source={{ uri: 'https://facebook.github.io/react/img/logo_og.png' }} >
-              <View style={{flex: 1, marginTop: 90}}>
-                {this.renderAnimation()}
-              </View>
-              <View style={{flex: 1, justifyContent: 'flex-end', marginBottom: 10, backgroundColor: 'rgba(0,0,0,0)'}}>
-                <Text
-                  style={{
-                    textShadowOffset: {width: 1, height: 2},
-                    textShadowColor: 'rgba(0, 0, 0, 0.5)',
-                    textShadowRadius: 1,
-                    color: 'white',
-                    fontSize: 20,
-                    fontWeight: 'bold' }} >
-                  {message}
-                </Text>
-              </View>
-            </Image>
-          </TouchableWithoutFeedback>
-        </View>
-      )
-    } else {
-      return (
-        <View style={{backgroundColor: 'black', paddingLeft: 8, paddingRight: paddingRight}}>
-          <TouchableWithoutFeedback
-            disabled={this.state.disabled}
-            delayLongPress={800}
-            onPress={this.onDoublePress.bind(this)}
-            onLongPress={this.onLongPress.bind(this)} >
-            <View style={{height: windowSize.width - 30, width: windowSize.width - 30}}>
-              <Video
-                source={Videos.ragu_8}   // Can be a URL or a local file.
-                muted
-                progressUpdateInterval={10000}
-                // onProgress={() => { console.log(this.props.episodeId) }}
-                ref={this.props.playerRef}                             // Store reference
-                paused={this.state.paused}                 // Pauses playback entirely.
-                resizeMode='cover'             // Fill the whole screen at aspect ratio.
-                repeat                         // Repeat forever.
-                playInBackground={false}       // Audio continues to play when app entering background.
-                playWhenInactive              // [iOS] Video continues to play when control or notification center are shown.
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0
-                }} />
-              <View style={{alignItems: 'center'}} >
-                <View style={{marginTop: 90}}>
-                  {this.renderAnimation()}
-                </View>
-                <View style={{justifyContent: 'flex-end', marginBottom: 10, backgroundColor: 'rgba(0,0,0,0)'}}>
-                  <Text
-                    style={{
-                      textShadowOffset: {width: 1, height: 2},
-                      textShadowColor: 'rgba(0, 0, 0, 0.5)',
-                      textShadowRadius: 1,
-                      color: 'white',
-                      fontSize: 20,
-                      fontWeight: 'bold' }}>
-                    {message}
-                  </Text>
-                </View>
-              </View>
-            </View>
-          </TouchableWithoutFeedback>
-        </View>
-      )
-    }
-  }
-*/
-
   renderContent (content) {
     // const { imageStyle } = styles
     const paddingRight = this.state.paddingRight
@@ -268,14 +178,15 @@ class ContentDetailClass extends Component {
             onPress={this.onDoublePress.bind(this)}
             onLongPress={this.onLongPress.bind(this)} >
             <View>
-              <CachableImage
+              <Image
                 imageRef={this.props.playerRef}
                 style={{
                   alignItems: 'center',
                   height: windowSize.width - 30,
                   width: windowSize.width - 30
                 }}
-                source={{ uri: content.path }} >
+                // source={{ uri: content.path }}
+                source={{ uri: 'https://facebook.github.io/react/img/logo_og.png' }} >
                 <View style={{flex: 1, marginTop: 90}}>
                   {this.renderAnimation()}
                 </View>
@@ -291,7 +202,7 @@ class ContentDetailClass extends Component {
                     {message}
                   </Text>
                 </View>
-              </CachableImage>
+              </Image>
             </View>
           </TouchableWithoutFeedback>
         </View>

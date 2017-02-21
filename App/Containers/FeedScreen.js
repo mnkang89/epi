@@ -101,30 +101,20 @@ class FeedScreen extends Component {
 
     if (_.isEqual(this.props.items, nextProps.items)) {
       console.log('아이템같음')
-      if (this.state.init && this.props.items.length !== 0) {
-        this.setState({
-          data: this.props.items,
-          init: false
-        })
-      }
+      // if (this.state.init && this.props.items.length !== 0) {
+      //   this.setState({
+      //     data: this.props.items,
+      //     init: false
+      //   })
+      // }
     } else {
       console.log('아이템다름')
     }
 
     if (this.state.refreshing) {
-      console.log('리프레시인 피드1')
       this.setState({
-        // data: this.props.items,
+        footer: false,
         refreshing: false
-      })
-    }
-
-    if (this.state.footer) {
-      console.log('리프레시인 피드2')
-      // deprecated되어 redux스토어를 업데이트 하는 방식으로 변경할 예정
-      this.setState({
-        footer: false
-        // data: this.state.data.concat(nextProps.items)
       })
     }
   }
@@ -149,7 +139,7 @@ class FeedScreen extends Component {
     const before = this.before
     const withFollowing = true
 
-    this.props.requestMoreEpisodes(token, accountId, withFollowing, before)
+    this.props.requestMoreFeeds(token, accountId, withFollowing, before)
   }
 
   renderListView (dataSource) {
@@ -283,7 +273,7 @@ class FeedScreen extends Component {
         <View>
           <ActivityIndicator
             color='white'
-            style={{marginBottom: 100}}
+            style={{marginBottom: 50}}
             size='large' />
         </View>
       )
@@ -365,7 +355,7 @@ const mapDispatchToProps = (dispatch) => {
     requestNewEpisode: (token, episodeId) => dispatch(EpisodeActions.newEpisodeRequest(token, episodeId)),
     requestUserEpisodes: (token, accountId, withFollowing) => dispatch(EpisodeActions.userEpisodesRequest(token, accountId, withFollowing)),
     requestUserEpisodesWithFalse: (token, accountId, withFollowing) => dispatch(EpisodeActions.userEpisodesWithFalseRequest(token, accountId, withFollowing)),
-    requestMoreEpisodes: (token, accountId, withFollowing, before) => dispatch(EpisodeActions.moreEpisodesRequest(token, accountId, withFollowing, before)),
+    requestMoreFeeds: (token, accountId, withFollowing, before) => dispatch(EpisodeActions.moreFeedsRequest(token, accountId, withFollowing, before)),
 
     resetCommentModal: () => dispatch(CommentActions.resetComment())
   }

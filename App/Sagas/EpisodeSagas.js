@@ -68,10 +68,29 @@ export function * otherEpisodes (api, action) {
   }
 }
 
+export function * moreFeeds (api, action) {
+  console.log('모어 피드 사가 진입')
+  const { token, accountId, withFollowing, before } = action
+  const response = yield call(api.requestMoreFeeds, token, accountId, withFollowing, before)
+  console.log(response)
+
+  if (response.ok) {
+    console.log('ok')
+    console.log(response)
+    const episodes = path(['data', 'items'], response)
+
+    yield put(EpisodeActions.moreFeedsSuccess(episodes))
+  } else {
+    console.log('error')
+    console.log(response)
+    yield put(EpisodeActions.moreFeedsFailure('WRONG'))
+  }
+}
+
 export function * moreEpisodes (api, action) {
   console.log('모어 에피소드 사가 진입')
   const { token, accountId, withFollowing, before } = action
-  const response = yield call(api.requestMoreEpisodes, token, accountId, withFollowing, before)
+  const response = yield call(api.requestMoreFeeds, token, accountId, withFollowing, before)
   console.log(response)
 
   if (response.ok) {
@@ -84,6 +103,25 @@ export function * moreEpisodes (api, action) {
     console.log('error')
     console.log(response)
     yield put(EpisodeActions.moreEpisodesFailure('WRONG'))
+  }
+}
+
+export function * moreOtherEpisodes (api, action) {
+  console.log('모어 아더 에피소드 사가 진입')
+  const { token, accountId, withFollowing, before } = action
+  const response = yield call(api.requestMoreOtherFeeds, token, accountId, withFollowing, before)
+  console.log(response)
+
+  if (response.ok) {
+    console.log('ok')
+    console.log(response)
+    const episodes = path(['data', 'items'], response)
+
+    yield put(EpisodeActions.moreOtherEpisodesSuccess(episodes))
+  } else {
+    console.log('error')
+    console.log(response)
+    yield put(EpisodeActions.moreOtherEpisodesFailure('WRONG'))
   }
 }
 

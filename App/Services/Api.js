@@ -118,8 +118,7 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     return api.get(`/api/feeds?accountId=${accountId}&withFollowing=${withFollowing}&size=7`, {}, getTokenHeader())
   }
 
-  const requestMoreEpisodes = (token, accountId, withFollowing, before) => {
-    console.log('GET userEpisode api콜 발생')
+  const requestMoreFeeds = (token, accountId, withFollowing, before) => {
     const formData = new FormData()
 
     formData.append('accountId', accountId)
@@ -129,6 +128,18 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     console.tron.log(getTokenHeader())
 
     return api.get(`/api/feeds?withFollowing=${withFollowing}&before=${before}&size=7`, {}, getTokenHeader())
+  }
+
+  const requestMoreOtherFeeds = (token, accountId, withFollowing, before) => {
+    const formData = new FormData()
+
+    formData.append('accountId', accountId)
+    formData.append('withFollowing', withFollowing)
+    formData.append('before', before)
+
+    console.tron.log(getTokenHeader())
+
+    return api.get(`/api/feeds?accountId=${accountId}&withFollowing=${withFollowing}&before=${before}&size=7`, {}, getTokenHeader())
   }
 
   const postFollow = (token, id) => {
@@ -280,7 +291,8 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     checkUserEpisode,
     requestUserFeeds,
     requestOtherFeeds,
-    requestMoreEpisodes,
+    requestMoreFeeds,
+    requestMoreOtherFeeds,
 
     postFollow,
     deleteFollow,
