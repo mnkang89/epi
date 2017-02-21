@@ -64,6 +64,7 @@ class FeedScreen extends Component {
       data: [],
       init: true
     }
+    this.before
     this.episodeRefs = {}
     this.viewableItemsArray = []
   }
@@ -90,6 +91,13 @@ class FeedScreen extends Component {
 
   componentWillReceiveProps (nextProps) {
     console.log(getObjectDiff(this.props, nextProps))
+
+    if (nextProps.items.length !== 0) {
+      console.log('하이루')
+      console.log(nextProps.items)
+      console.log(nextProps.items[nextProps.items.length - 1].episode.updatedDateTime)
+      this.before = nextProps.items[nextProps.items.length - 1].episode.updatedDateTime
+    }
 
     if (_.isEqual(this.props.items, nextProps.items)) {
       console.log('아이템같음')
@@ -138,11 +146,12 @@ class FeedScreen extends Component {
     console.log('onEndReached fired')
     this.setState({footer: true})
     const { token, accountId } = this.props
-    // const { before } = this.state
+    const before = this.before
     const withFollowing = true
 
-    this.props.requestUserEpisodes(token, accountId, withFollowing)
+    this.props.requestMoreEpisodes(token, accountId, withFollowing, before)
   }
+
   renderListView (dataSource) {
     if (this.props.episodesRequesting) {
       console.log('리퀘스팅중')
@@ -232,8 +241,8 @@ class FeedScreen extends Component {
           onRefresh={this._onRefresh.bind(this)}
           refreshing={this.state.refreshing}
           onViewableItemsChanged={this._onViewableItemsChanged}
-          // onEndReached={this._onEndReached.bind(this)}
-          // onEndReachedThreshold={0}
+          onEndReached={this._onEndReached.bind(this)}
+          onEndReachedThreshold={0}
           shouldItemUpdate={this._shouldItemUpdate} />
         <View style={{height: 48.5}} />
         <CommentModalContainer screen={'FeedScreen'} token={this.props.token} />
@@ -274,7 +283,7 @@ class FeedScreen extends Component {
         <View>
           <ActivityIndicator
             color='white'
-            style={{marginBottom: 50}}
+            style={{marginBottom: 100}}
             size='large' />
         </View>
       )
@@ -286,10 +295,6 @@ class FeedScreen extends Component {
   }
 
   _shouldItemUpdate (prev, next) {
-    // console.log(prev)
-    // console.log(next)
-    // console.log(prev.item !== next.item)
-    // console.log(getObjectDiff(prev.item, next.item))
     return prev.item !== next.item
   }
 
@@ -360,12 +365,10 @@ const mapDispatchToProps = (dispatch) => {
     requestNewEpisode: (token, episodeId) => dispatch(EpisodeActions.newEpisodeRequest(token, episodeId)),
     requestUserEpisodes: (token, accountId, withFollowing) => dispatch(EpisodeActions.userEpisodesRequest(token, accountId, withFollowing)),
     requestUserEpisodesWithFalse: (token, accountId, withFollowing) => dispatch(EpisodeActions.userEpisodesWithFalseRequest(token, accountId, withFollowing)),
+    requestMoreEpisodes: (token, accountId, withFollowing, before) => dispatch(EpisodeActions.moreEpisodesRequest(token, accountId, withFollowing, before)),
 
     resetCommentModal: () => dispatch(CommentActions.resetComment())
   }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(FeedScreen)
-
-/*
-*/

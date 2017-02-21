@@ -32,7 +32,7 @@ export default class CachableImage extends Component {
     }
   }
 
-  componentWillMount () {
+  componentDidMount () {
     let cachedImage = this.findCachedImage(this.props.source.uri)
     if (cachedImage != null) {
       console.tron.log('cached image called : ' + cachedImage.path)

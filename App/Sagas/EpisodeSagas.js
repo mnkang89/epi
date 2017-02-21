@@ -68,6 +68,25 @@ export function * otherEpisodes (api, action) {
   }
 }
 
+export function * moreEpisodes (api, action) {
+  console.log('모어 에피소드 사가 진입')
+  const { token, accountId, withFollowing, before } = action
+  const response = yield call(api.requestMoreEpisodes, token, accountId, withFollowing, before)
+  console.log(response)
+
+  if (response.ok) {
+    console.log('ok')
+    console.log(response)
+    const episodes = path(['data', 'items'], response)
+
+    yield put(EpisodeActions.moreEpisodesSuccess(episodes))
+  } else {
+    console.log('error')
+    console.log(response)
+    yield put(EpisodeActions.moreEpisodesFailure('WRONG'))
+  }
+}
+
 // attempts to post episode
 export function * postEpisode (api, action) {
   console.log('postEpisode사가워커 진입!!')

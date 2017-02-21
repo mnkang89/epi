@@ -19,7 +19,7 @@ import { CameraScreenTypes } from '../Redux/CameraScreenRedux'
 import { login } from './LoginSagas'
 import { email, password, nickname, profile, signup } from './SignupSagas'
 import { account, otherInfo, getActiveUserEpisode, postFollow, deleteFollow, getFollowing, getFollower } from './AccountSagas'
-import { userEpisodes, userEpisodesWithFalse, otherEpisodes, postEpisode, putEpisode, singleEpisode, newEpisode, deactivateEpisode } from './EpisodeSagas'
+import { userEpisodes, userEpisodesWithFalse, otherEpisodes, postEpisode, putEpisode, singleEpisode, newEpisode, deactivateEpisode, moreEpisodes } from './EpisodeSagas'
 import { postContent, postLike, deleteLike } from './ContentSagas'
 import { postComment, getComment } from './CommentSagas'
 import { getBestFeeds } from './FeedSagas'
@@ -82,16 +82,18 @@ export default function * root () {
     takeLatest(EpisodeTypes.USER_EPISODE_POST, postEpisode, api),
     // put episode
     takeLatest(EpisodeTypes.USER_EPISODE_PUT, putEpisode, api),
-    // get user episode
+    // get user episodes
     takeLatest(EpisodeTypes.USER_EPISODES_REQUEST, userEpisodes, api),
-    // get user episode with falses
+    // get user episodes with falses
     takeLatest(EpisodeTypes.USER_EPISODES_WITH_FALSE_REQUEST, userEpisodesWithFalse, api),
-    // get other episode
+    // get other episodes
     takeLatest(EpisodeTypes.OTHER_EPISODES_REQUEST, otherEpisodes, api),
     // get single episode
     takeLatest(EpisodeTypes.SINGLE_EPISODE_REQUEST, singleEpisode, api),
     // get new episode
     takeLatest(EpisodeTypes.NEW_EPISODE_REQUEST, newEpisode, api),
+    // get more episodes
+    takeLatest(EpisodeTypes.MORE_EPISODES_REQUEST, moreEpisodes, api),
 
     /* --- Content --- */
     // post content

@@ -58,9 +58,8 @@ class EpisodeDetail extends Component {
 
   componentDidMount () {
     // horizontal 리프레쉬 비디오 플레이
-    console.log('디드 마운트')
-    const { parentHandler, index } = this.props
-    const episodeViewability = parentHandler.viewableItemsArray.includes(index)
+    // const { parentHandler, index } = this.props
+    // const episodeViewability = parentHandler.viewableItemsArray.includes(index)
     const centerIndex = this.currentCenterIndex
 
     for (let i = 0; i < this.state.contentTypeArray.length; i++) {
@@ -75,7 +74,7 @@ class EpisodeDetail extends Component {
       }
     }
 
-    if (episodeViewability &&
+    if (// episodeViewability &&
         this.state.contentTypeArray[centerIndex] === 'Video' &&
         this.contentRefs[centerIndex] !== null &&
         this.contentRefs[centerIndex] !== undefined) {
@@ -413,7 +412,7 @@ class EpisodeDetail extends Component {
 
 EpisodeDetail.defaultProps = {
   type: null,
-  singleType: null,
+  absingleType: null,
 
   viewability: false
 }

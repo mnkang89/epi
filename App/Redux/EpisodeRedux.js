@@ -85,6 +85,19 @@ const { Types, Creators } = createActions({
   ],
   newEpisodeFailure: [
     'newEpisodeError'
+  ],
+
+  moreEpisodesRequest: [
+    'token',
+    'accountId',
+    'withFollowing',
+    'before'
+  ],
+  moreEpisodesSuccess: [
+    'moreEpisodes'
+  ],
+  moreEpisodesFailure: [
+    'moreEpisodesError'
   ]
 })
 
@@ -116,7 +129,11 @@ export const INITIAL_STATE = Immutable({
 
   newEpisode: [],
   newEpisodeRequesting: false,
-  newEpisodeError: null
+  newEpisodeError: null,
+
+  moreEpisodes: [],
+  moreEpisodesRequesting: false,
+  moreEpisodesError: null
 })
 
 /* ------------- Reducers ------------- */
@@ -209,6 +226,19 @@ export const newEpisodeSuccess = (state: Object, { newEpisode }: Object) => {
 export const newEpisodeFailure = (state: Object, { newEpisodeError }: Object) =>
   state.merge({ newEpisodeRequesting: false, newEpisodeError })
 
+// moreEpisodes
+export const moreEpisodesRequest = (state: Object, { token }: Object) =>
+  state.merge({ moreEpisodesRequesting: true })
+
+export const moreEpisodesSuccess = (state: Object, { moreEpisodes }: Object) =>
+  state.merge({
+    moreEpisodesRequesting: false,
+    moreEpisodeError: null,
+    episodes: [...state.episodes, ...moreEpisodes]})
+
+export const moreEpisodesFailure = (state: Object, { moreEpisodesError }: Object) =>
+  state.merge({ moreEpisodesRequesting: false, moreEpisodesError })
+
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
@@ -238,5 +268,9 @@ export const reducer = createReducer(INITIAL_STATE, {
 
   [Types.NEW_EPISODE_REQUEST]: newEpisodeRequest,
   [Types.NEW_EPISODE_SUCCESS]: newEpisodeSuccess,
-  [Types.NEW_EPISODE_FAILURE]: newEpisodeFailure
+  [Types.NEW_EPISODE_FAILURE]: newEpisodeFailure,
+
+  [Types.MORE_EPISODES_REQUEST]: moreEpisodesRequest,
+  [Types.MORE_EPISODES_SUCCESS]: moreEpisodesSuccess,
+  [Types.MORE_EPISODES_FAILURE]: moreEpisodesFailure
 })

@@ -8,9 +8,9 @@ import {
 import * as Animatable from 'react-native-animatable'
 
 import CachableImage from '../../Common/CachableImage'
-import CachableVideo from '../../Common/CachableVideo'
-// import { Videos } from '../../Themes'
-// import Video from 'react-native-video'
+// import CachableVideo from '../../Common/CachableVideo'
+import { Videos } from '../../Themes'
+import Video from 'react-native-video'
 
 const windowSize = Dimensions.get('window')
 
@@ -305,9 +305,9 @@ class ContentDetailClass extends Component {
             onPress={this.onDoublePress.bind(this)}
             onLongPress={this.onLongPress.bind(this)} >
             <View style={{height: windowSize.width - 30, width: windowSize.width - 30}}>
-              <CachableVideo
-                source={{uri: content.path}}   // Can be a URL or a local file.
-                // source={Videos.ragu_8}
+              <Video
+                // source={{uri: content.path}}   // Can be a URL or a local file.
+                source={Videos.ragu_8}
                 muted
                 videoRef={this.props.playerRef}                             // Store reference
                 paused={this.state.paused}                 // Pauses playback entirely.

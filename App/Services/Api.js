@@ -108,16 +108,27 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     return api.get(`/api/feeds?withFollowing=${withFollowing}&size=7`, {}, getTokenHeader())
   }
 
-  const requestOtherFeeds = (token, accountId, active) => {
+  const requestOtherFeeds = (token, accountId, withFollowing) => {
     console.log('GET otherEpisode api콜 발생')
-    console.log(accountId)
-    console.log(active)
     // const formData = new FormData()
 
     // formData.append('accountId', accountId)
     // formData.append('withFollowing', active)
 
-    return api.get(`/api/feeds?accountId=${accountId}&withFollowing=${active}&size=7`, {}, getTokenHeader())
+    return api.get(`/api/feeds?accountId=${accountId}&withFollowing=${withFollowing}&size=7`, {}, getTokenHeader())
+  }
+
+  const requestMoreEpisodes = (token, accountId, withFollowing, before) => {
+    console.log('GET userEpisode api콜 발생')
+    const formData = new FormData()
+
+    formData.append('accountId', accountId)
+    formData.append('withFollowing', withFollowing)
+    formData.append('before', before)
+
+    console.tron.log(getTokenHeader())
+
+    return api.get(`/api/feeds?withFollowing=${withFollowing}&before=${before}&size=7`, {}, getTokenHeader())
   }
 
   const postFollow = (token, id) => {
@@ -269,6 +280,7 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     checkUserEpisode,
     requestUserFeeds,
     requestOtherFeeds,
+    requestMoreEpisodes,
 
     postFollow,
     deleteFollow,
