@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { Text, View, Image, TouchableOpacity, Dimensions } from 'react-native'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import { Colors, Images, Metrics } from '../Themes/'
+// import CachableImage from '../Common/CachableImage'
 
 const windowSize = Dimensions.get('window')
 
@@ -92,6 +93,24 @@ class NotiDetail extends Component {
       )
     }
   }
+
+  // renderProfileImage () {
+  //   let uri = this.props.noti.notiCreateAccount.profileImagePath
+  //   // let uri = 'https://facebook.github.io/react/img/logo_og.png'
+  //   if (uri) {
+  //     return (
+  //       <CachableImage
+  //         style={styles.profileStyle}
+  //         source={{uri: uri}} />
+  //     )
+  //   } else {
+  //     return (
+  //       <CachableImage
+  //         style={styles.profileStyle}
+  //         source={Images.profileImage} />
+  //     )
+  //   }
+  // }
 
   render () {
     const { message } = this.props.noti

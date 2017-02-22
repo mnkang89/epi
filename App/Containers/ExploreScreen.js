@@ -1,15 +1,21 @@
 import React, { Component, PropTypes } from 'react'
 import {
   View,
-  ScrollView,
-  RefreshControl
+  // ScrollView,
+  // RefreshControl,
+  ActivityIndicator
 } from 'react-native'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 
-import ExploreList from '../Components/ExploreList'
+// import ExploreList from '../Components/ExploreList'
+import ExploreDetail from '../Components/ExploreDetail'
 import styles from './Styles/FeedScreenStyle'
 import { getObjectDiff } from '../Lib/Utilities'
+import {
+  getItemLayout
+} from '../Experimental/ListExampleShared_e'
+import FlatListE from '../Experimental/FlatList_e'
 
 import FeedActions from '../Redux/FeedRedux'
 import AccountActions from '../Redux/AccountRedux'
@@ -28,8 +34,10 @@ class ExploreScreen extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      refreshing: false
+      refreshing: false,
+      footer: false
     }
+    this.before
   }
 
   componentDidMount () {
@@ -49,7 +57,10 @@ class ExploreScreen extends Component {
       console.log('아이템다름')
     }
     if (this.state.refreshing) {
-      this.setState({refreshing: false})
+      this.setState({
+        refreshing: false,
+        footer: false
+      })
     }
 
     if ((this.props.followPosting === true && nextProps.followPosting === false) ||
@@ -58,35 +69,97 @@ class ExploreScreen extends Component {
     }
   }
 
-  onRefresh () {
+  shouldComponentUpdate (nextProps, nextState) {
+    console.log(this.props.items !== nextProps.items)
+    return this.props.items !== nextProps.items
+  }
+
+  _onRefresh () {
     const { token } = this.props
 
     this.setState({refreshing: true})
     this.props.requestBestFeeds(token)
   }
 
+  _onEndReached () {
+    console.log('onEndReached fired')
+    this.setState({footer: true})
+    if (this.props.items.length !== 0) {
+      this.before = this.props.items[this.props.items.length - 1].episode.updatedDateTime
+    }
+
+    // const { token, id } = this.props
+    // const before = this.before
+    // const withFollowing = false
+
+    // this.props.requestMoreOtherEpisodes(token, id, withFollowing, before)
+  }
+
   render () {
+    console.log('데이터길이: ' + this.props.items.length)
     return (
       <View style={styles.mainContainer}>
-        <View style={{backgroundColor: 'black', flex: 1}}>
-          <ScrollView
-            refreshControl={
-              <RefreshControl
-                refreshing={this.state.refreshing}
-                onRefresh={this.onRefresh.bind(this)}
-              />}
-          >
-            <ExploreList
-              token={this.props.token}
-              items={this.props.items}
-              requestBestFeeds={this.props.requestBestFeeds}
-              postFollow={this.props.postFollow}
-              deleteFollow={this.props.deleteFollow} />
-          </ScrollView>
-          <View style={{height: 48.5}} />
-        </View>
+        <FlatListE
+          keyExtractor={(item, index) => index}
+          style={{ flex: 1 }}
+          ref={this._captureRef}
+          FooterComponent={this._renderFooter.bind(this)}
+          ItemComponent={this._renderItemComponent.bind(this)}
+          disableVirtualization={false}
+          getItemLayout={undefined}
+          horizontal={false}
+          data={this.props.items}
+          key={'vf'}
+          legacyImplementation={false}
+          onRefresh={this._onRefresh.bind(this)}
+          refreshing={this.state.refreshing}
+          // onViewableItemsChanged={this._onViewableItemsChanged}
+          // onEndReached={this._onEndReached.bind(this)}
+          // onEndReachedThreshold={0}
+          shouldItemUpdate={this._shouldItemUpdate} />
+        <View style={{height: 48.5}} />
       </View>
     )
+  }
+
+  _captureRef = (ref) => { this._listRef = ref }
+
+  _getItemLayout = (data: any, index: number) => {
+    return getItemLayout(data, index, this.state.horizontal)
+  }
+
+  _renderItemComponent = ({item}) => {
+    return (
+      <ExploreDetail
+        key={item.episode.id}
+        token={this.props.token}
+        following={item.following}
+        episode={item.episode}
+        account={item.account}
+        postFollow={this.props.postFollow}
+        deleteFollow={this.props.deleteFollow} />
+    )
+  }
+
+  _renderFooter () {
+    if (this.state.footer) {
+      return (
+        <View>
+          <ActivityIndicator
+            color='white'
+            style={{marginBottom: 50}}
+            size='large' />
+        </View>
+      )
+    } else {
+      return (
+        <View />
+      )
+    }
+  }
+
+  _shouldItemUpdate (prev, next) {
+    return prev.item !== next.item
   }
 }
 
@@ -110,3 +183,29 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ExploreScreen)
+
+/*
+  render () {
+    return (
+      <View style={styles.mainContainer}>
+        <View style={{backgroundColor: 'black', flex: 1}}>
+          <ScrollView
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this.onRefresh.bind(this)}
+              />}
+          >
+            <ExploreList
+              token={this.props.token}
+              items={this.props.items}
+              requestBestFeeds={this.props.requestBestFeeds}
+              postFollow={this.props.postFollow}
+              deleteFollow={this.props.deleteFollow} />
+          </ScrollView>
+          <View style={{height: 48.5}} />
+        </View>
+      </View>
+    )
+  }
+*/

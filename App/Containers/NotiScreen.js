@@ -11,7 +11,12 @@ import { connect } from 'react-redux'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import _ from 'lodash'
 
-import NotiList from '../Components/NotiList'
+import {
+  getItemLayout
+} from '../Experimental/ListExampleShared_e'
+import FlatListE from '../Experimental/FlatList_e'
+// import NotiList from '../Components/NotiList'
+import NotiDetail from '../Components/NotiDetail'
 import styles from './Styles/FeedScreenStyle'
 
 import NotiActions from '../Redux/NotiRedux'
@@ -55,7 +60,7 @@ class NotiScreen extends Component {
     }
   }
 
-  onRefresh () {
+  _onRefresh () {
     const { token } = this.props
 
     this.setState({refreshing: true})
@@ -74,7 +79,7 @@ class NotiScreen extends Component {
             refreshControl={
               <RefreshControl
                 refreshing={this.state.refreshing}
-                onRefresh={this.onRefresh.bind(this)} />
+                onRefresh={this._onRefresh.bind(this)} />
               } >
             <View>
               <View style={{justifyContent: 'center', alignItems: 'center', marginTop: windowSize.height - 410}}>
@@ -93,23 +98,46 @@ class NotiScreen extends Component {
         )
       } else {
         return (
-          <ScrollView
-            refreshControl={
-              <RefreshControl
-                refreshing={this.state.refreshing}
-                onRefresh={this.onRefresh.bind(this)} />
-            }
-          >
-            <NotiList
-              token={this.props.token}
-              noties={this.props.noties}
-              myAccount={this.props.myAccount}
-              openComment={this.props.openComment}
-              getComment={this.props.getComment} />
-          </ScrollView>
+          <FlatListE
+            keyExtractor={(item, index) => index}
+            style={{ flex: 1 }}
+            ref={this._captureRef}
+            ItemComponent={this._renderItemComponent.bind(this)}
+            disableVirtualization={false}
+            getItemLayout={undefined}
+            horizontal={false}
+            data={this.props.noties}
+            key={'vf'}
+            legacyImplementation={false}
+            onRefresh={this._onRefresh.bind(this)}
+            refreshing={this.state.refreshing}
+            shouldItemUpdate={this._shouldItemUpdate} />
         )
       }
     }
+  }
+
+  _captureRef = (ref) => { this._listRef = ref }
+
+  _getItemLayout = (data: any, index: number) => {
+    return getItemLayout(data, index, this.state.horizontal)
+  }
+
+  _renderItemComponent = ({item}) => {
+    const noti = item
+    return (
+      <NotiDetail
+        key={noti.id}
+        token={this.props.token}
+        noti={noti}
+        myAccount={this.props.myAccount}
+        openComment={this.props.openComment}
+        getComment={this.props.getComment} />
+    )
+  }
+
+  _shouldItemUpdate (prev, next) {
+    return prev.item !== next.item
   }
 
   render () {
@@ -146,3 +174,22 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(NotiScreen)
+
+/*
+return (
+  <ScrollView
+    refreshControl={
+      <RefreshControl
+        refreshing={this.state.refreshing}
+        onRefresh={this.onRefresh.bind(this)} />
+    }
+  >
+    <NotiList
+      token={this.props.token}
+      noties={this.props.noties}
+      myAccount={this.props.myAccount}
+      openComment={this.props.openComment}
+      getComment={this.props.getComment} />
+  </ScrollView>
+)
+*/

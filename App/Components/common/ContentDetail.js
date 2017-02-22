@@ -3,15 +3,15 @@ import {
   Text,
   View,
   TouchableWithoutFeedback,
-  Dimensions,
-  Image
+  Dimensions
+  // Image
  } from 'react-native'
 import * as Animatable from 'react-native-animatable'
 
-// import CachableImage from '../../Common/CachableImage'
-// import CachableVideo from '../../Common/CachableVideo'
-import { Videos } from '../../Themes'
-import Video from 'react-native-video'
+import CachableImage from '../../Common/CachableImage'
+import CachableVideo from '../../Common/CachableVideo'
+// import { Videos } from '../../Themes'
+// import Video from 'react-native-video'
 
 const windowSize = Dimensions.get('window')
 
@@ -178,15 +178,16 @@ class ContentDetailClass extends Component {
             onPress={this.onDoublePress.bind(this)}
             onLongPress={this.onLongPress.bind(this)} >
             <View>
-              <Image
+              <CachableImage
                 imageRef={this.props.playerRef}
                 style={{
                   alignItems: 'center',
                   height: windowSize.width - 30,
                   width: windowSize.width - 30
                 }}
-                // source={{ uri: content.path }}
-                source={{ uri: 'https://facebook.github.io/react/img/logo_og.png' }} >
+                source={{ uri: content.path }}
+                // source={{ uri: 'https://facebook.github.io/react/img/logo_og.png' }}
+                >
                 <View style={{flex: 1, marginTop: 90}}>
                   {this.renderAnimation()}
                 </View>
@@ -202,7 +203,7 @@ class ContentDetailClass extends Component {
                     {message}
                   </Text>
                 </View>
-              </Image>
+              </CachableImage>
             </View>
           </TouchableWithoutFeedback>
         </View>
@@ -216,9 +217,9 @@ class ContentDetailClass extends Component {
             onPress={this.onDoublePress.bind(this)}
             onLongPress={this.onLongPress.bind(this)} >
             <View style={{height: windowSize.width - 30, width: windowSize.width - 30}}>
-              <Video
-                // source={{uri: content.path}}   // Can be a URL or a local file.
-                source={Videos.ragu_8}
+              <CachableVideo
+                source={{uri: content.path}}   // Can be a URL or a local file.
+                // source={Videos.ragu_8}
                 muted
                 videoRef={this.props.playerRef}                             // Store reference
                 paused={this.state.paused}                 // Pauses playback entirely.
