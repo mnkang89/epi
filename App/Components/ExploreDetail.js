@@ -123,7 +123,7 @@ class ExploreDetail extends Component {
                   videoRef={(ref) => {
                     this.player = ref
                   }}                             // Store reference
-                  paused={false}                 // Pauses playback entirely.
+                  paused
                   resizeMode='cover'             // Fill the whole screen at aspect ratio.
                   repeat={false}                         // Repeat forever.
                   playInBackground={false}       // Audio continues to play when app entering background.

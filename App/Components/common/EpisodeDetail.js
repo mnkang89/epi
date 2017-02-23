@@ -205,8 +205,8 @@ class EpisodeDetail extends Component {
   }
 
   renderProfileImage () {
-    // let uri = this.props.account.profileImagePath
-    let uri = 'https://facebook.github.io/react/img/logo_og.png'
+    let uri = this.props.account.profileImagePath
+    // let uri = 'https://facebook.github.io/react/img/logo_og.png'
     if (this.props.account.profileImagePath) {
       return (
         <CachableImage

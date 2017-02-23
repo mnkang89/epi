@@ -285,6 +285,7 @@ const mapDispatchToProps = (dispatch) => {
     requestOtherInfo: (token, accountId) => dispatch(AccountActions.otherInfoRequest(token, accountId)),
     requestOtherEpisodes: (token, accountId, active) => dispatch(EpisodeActions.otherEpisodesRequest(token, accountId, active)),
     requestMoreOtherEpisodes: (token, accountId, withFollowing, before) => dispatch(EpisodeActions.moreOtherEpisodesRequest(token, accountId, withFollowing, before)),
+    requestNewEpisode: (token, episodeId) => dispatch(EpisodeActions.newEpisodeRequest(token, episodeId)),
 
     postFollow: (token, id) => dispatch(AccountActions.followPost(token, id)),
     deleteFollow: (token, id) => dispatch(AccountActions.followDelete(token, id)),

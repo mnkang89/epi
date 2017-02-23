@@ -273,6 +273,7 @@ const mapDispatchToProps = (dispatch) => {
     requestInfo: (token, accountId) => dispatch(AccountActions.infoRequest(token, accountId)),
     requestProfileImage: (photoSource, token, accountId) => dispatch(SignupActions.profileRequest(photoSource, token, accountId)),
     requestUserEpisodesWithFalse: (token, accountId, withFollowing) => dispatch(EpisodeActions.userEpisodesWithFalseRequest(token, accountId, withFollowing)),
+    requestNewEpisode: (token, episodeId) => dispatch(EpisodeActions.newEpisodeRequest(token, episodeId)),
     requestMoreEpisodes: (token, accountId, withFollowing, before) => dispatch(EpisodeActions.moreEpisodesRequest(token, accountId, withFollowing, before)),
 
     postFollow: (token, id) => dispatch(AccountActions.followPost(token, id)),
