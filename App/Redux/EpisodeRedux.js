@@ -87,6 +87,28 @@ const { Types, Creators } = createActions({
     'newEpisodeError'
   ],
 
+  newEpisodeWithFalseRequest: [
+    'token',
+    'episodeId'
+  ],
+  newEpisodeWithFalseSuccess: [
+    'newEpisode'
+  ],
+  newEpisodeWithFalseFailure: [
+    'newEpisodeError'
+  ],
+
+  newOtherEpisodeRequest: [
+    'token',
+    'episodeId'
+  ],
+  newOtherEpisodeSuccess: [
+    'newEpisode'
+  ],
+  newOtherEpisodeFailure: [
+    'newEpisodeError'
+  ],
+
   moreFeedsRequest: [
     'token',
     'accountId',
@@ -246,6 +268,9 @@ export const newEpisodeSuccess = (state: Object, { newEpisode }: Object) => {
     }
   }
   nextIndex = insertIndex + 1
+  console.log('뉴에피소드')
+  console.log(newEpisode)
+  console.log('뉴에피소드')
 
   return state.merge({
     newEpisodeRequesting: false,
@@ -258,6 +283,64 @@ export const newEpisodeSuccess = (state: Object, { newEpisode }: Object) => {
 }
 
 export const newEpisodeFailure = (state: Object, { newEpisodeError }: Object) =>
+  state.merge({ newEpisodeRequesting: false, newEpisodeError })
+
+// we're attempting to get new EpisodesWithFalse
+export const newEpisodeWithFalseRequest = (state: Object, { token }: Object) =>
+  state.merge({ newEpisodeRequesting: true })
+
+export const newEpisodeWithFalseSuccess = (state: Object, { newEpisode }: Object) => {
+  const episodesWithFalse = state.episodesWithFalse
+  let insertIndex
+  let nextIndex
+
+  for (let i = 0; i < episodesWithFalse.length; i++) {
+    if (episodesWithFalse[i].episode.id === newEpisode[0].id) {
+      insertIndex = i
+    }
+  }
+  nextIndex = insertIndex + 1
+
+  return state.merge({
+    newEpisodeRequesting: false,
+    newEpisodeError: null,
+    episodesWithFalse: [
+      ...episodesWithFalse.slice(0, insertIndex),
+      {...episodesWithFalse[insertIndex], episode: newEpisode[0]},
+      ...episodesWithFalse.slice(nextIndex)]
+  })
+}
+
+export const newEpisodeWithFalseFailure = (state: Object, { newEpisodeError }: Object) =>
+  state.merge({ newEpisodeRequesting: false, newEpisodeError })
+
+// we're attempting to get new otherEpisode
+export const newOtherEpisodeRequest = (state: Object, { token }: Object) =>
+  state.merge({ newEpisodeRequesting: true })
+
+export const newOtherEpisodeSuccess = (state: Object, { newEpisode }: Object) => {
+  const otherEpisodes = state.otherEpisodes
+  let insertIndex
+  let nextIndex
+
+  for (let i = 0; i < otherEpisodes.length; i++) {
+    if (otherEpisodes[i].episode.id === newEpisode[0].id) {
+      insertIndex = i
+    }
+  }
+  nextIndex = insertIndex + 1
+
+  return state.merge({
+    newEpisodeRequesting: false,
+    newEpisodeError: null,
+    otherEpisodes: [
+      ...otherEpisodes.slice(0, insertIndex),
+      {...otherEpisodes[insertIndex], episode: newEpisode[0]},
+      ...otherEpisodes.slice(nextIndex)]
+  })
+}
+
+export const newOtherEpisodeFailure = (state: Object, { newEpisodeError }: Object) =>
   state.merge({ newEpisodeRequesting: false, newEpisodeError })
 
 // moreFeeds(FeedScreen)
@@ -329,6 +412,14 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.NEW_EPISODE_REQUEST]: newEpisodeRequest,
   [Types.NEW_EPISODE_SUCCESS]: newEpisodeSuccess,
   [Types.NEW_EPISODE_FAILURE]: newEpisodeFailure,
+
+  [Types.NEW_EPISODE_WITH_FALSE_REQUEST]: newEpisodeWithFalseRequest,
+  [Types.NEW_EPISODE_WITH_FALSE_SUCCESS]: newEpisodeWithFalseSuccess,
+  [Types.NEW_EPISODE_WITH_FALSE_FAILURE]: newEpisodeWithFalseFailure,
+
+  [Types.NEW_OTHER_EPISODE_REQUEST]: newOtherEpisodeRequest,
+  [Types.NEW_OTHER_EPISODE_SUCCESS]: newOtherEpisodeSuccess,
+  [Types.NEW_OTHER_EPISODE_FAILURE]: newOtherEpisodeFailure,
 
   [Types.MORE_FEEDS_REQUEST]: moreFeedsRequest,
   [Types.MORE_FEEDS_SUCCESS]: moreFeedsSuccess,

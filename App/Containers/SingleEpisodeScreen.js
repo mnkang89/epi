@@ -1,4 +1,3 @@
-// TODO: 싱글에피소드 api 리스펀스 오브젝트의 경우 피드와는 다른 형태를 가진다. 때문에, EpisdoeList(현재는 피드에 맞추어 설계되어 있음) 말고 EpisodeDetail을 직접 사용한다.
 
 import React, { Component, PropTypes } from 'react'
 import { View, Dimensions } from 'react-native'
@@ -6,7 +5,7 @@ import { connect } from 'react-redux'
 import _ from 'lodash'
 
 import styles from './Styles/FeedScreenStyle'
-import { getObjectDiff } from '../Lib/Utilities'
+import { getObjectDiff, getArrayDiff } from '../Lib/Utilities'
 
 import EpisodeDetail from '../Components/common/EpisodeDetail'
 import CommentModalContainer from './common/CommentModalContainer'
@@ -65,16 +64,13 @@ class SingleEpisodeScreen extends Component {
   }
 
   shouldComponentUpdate (nextProps, nextState) {
-    if (nextProps.items === this.props.items) {
-      return false
-    }
-    return true
+    return this.props.items !== nextProps.items
   }
 
   _onRefresh () {
     const { token, episodeId } = this.props
-    this.setState({refreshing: true})
 
+    this.setState({refreshing: true})
     this.props.requestSingleEpisode(token, episodeId)
   }
 
@@ -114,7 +110,6 @@ class SingleEpisodeScreen extends Component {
   }
 
   _renderItemComponent = (episode) => {
-    console.log(episode)
     const index = episode.index
     const { contentId, account } = this.props
     let xPosition = 0
@@ -123,11 +118,19 @@ class SingleEpisodeScreen extends Component {
     if (contentId) {
       xPosition = contents.map((content) => { return content.id }).indexOf(contentId) * (windowSize.width - 22)
     }
+    console.log('xPosition: ' + xPosition)
 
     return (
       <EpisodeDetail
+        ref={(component) => {
+          if (component !== null) {
+            this.episodeRefs[index] = component
+          }
+        }}
         key={index}
+        index={index}
         token={this.props.token}
+        parentHandler={this}
         episode={episode.item}
         account={account}
         type={this.props.detailType}
@@ -141,53 +144,55 @@ class SingleEpisodeScreen extends Component {
     return prev.item !== next.item
   }
 
-  // _onViewableItemsChanged = (info: {
-  //     changed: Array<{
-  //       key: string, isViewable: boolean, item: any, index: ?number, section?: any
-  //     }>
-  //   }
-  // ) => {
-  //   /* info오브젝트에서 뷰어블인 에피소드의 인덱스 추출하고 해당 에피소드를 제외한 에피소드는 모두 stopEpisodeVideo()호출 */
-  //
-  //   const viewableItemsArray = []
-  //   const episodeRefsArray = Object.keys(this.episodeRefs).map(Number)
-  //
-  //   for (let i = 0; i < info.viewableItems.length; i++) {
-  //     viewableItemsArray.push(info.viewableItems[i].index)
-  //   }
-  //
-  //   this.viewableItemsArray = viewableItemsArray
-  //
-  //   const inViewableItemsArray = getArrayDiff(episodeRefsArray, viewableItemsArray)
-  //
-  //   for (let i in inViewableItemsArray) {
-  //     const index = inViewableItemsArray[i]
-  //
-  //     if (this.episodeRefs[index] !== null) {
-  //       this.episodeRefs[index].stopEpisodeVideo()
-  //     } else {
-  //       // console.log('null인놈들')
-  //       // console.log(index)
-  //     }
-  //   }
-  //   // 뷰어블한 아이템이 3개이면 중간 아이템만 play
-  //   if (viewableItemsArray.length === 3) {
-  //     if (this.episodeRefs[viewableItemsArray[0]] !== null) {
-  //       this.episodeRefs[viewableItemsArray[0]].stopEpisodeVideo()
-  //     }
-  //     if (this.episodeRefs[viewableItemsArray[2]] !== null) {
-  //       this.episodeRefs[viewableItemsArray[2]].stopEpisodeVideo()
-  //     }
-  //   } else {
-  //     for (let j in viewableItemsArray) {
-  //       const index = viewableItemsArray[j]
-  //
-  //       if (this.episodeRefs[index] !== null && this.episodeRefs[index] !== undefined) {
-  //         this.episodeRefs[index].playEpisodeVideo()
-  //       }
-  //     }
-  //   }
-  // }
+  _onViewableItemsChanged = (info: {
+      changed: Array<{
+        key: string, isViewable: boolean, item: any, index: ?number, section?: any
+      }>
+    }
+  ) => {
+    /* info오브젝트에서 뷰어블인 에피소드의 인덱스 추출하고 해당 에피소드를 제외한 에피소드는 모두 stopEpisodeVideo()호출 */
+    console.log('싱글에피소드 스크린 온뷰어블 아이템스 체인지드')
+
+    const viewableItemsArray = []
+    const episodeRefsArray = Object.keys(this.episodeRefs).map(Number)
+
+    for (let i = 0; i < info.viewableItems.length; i++) {
+      viewableItemsArray.push(info.viewableItems[i].index)
+    }
+
+    this.viewableItemsArray = viewableItemsArray
+
+    const inViewableItemsArray = getArrayDiff(episodeRefsArray, viewableItemsArray)
+
+    for (let i in inViewableItemsArray) {
+      const index = inViewableItemsArray[i]
+
+      if (this.episodeRefs[index] !== null) {
+        this.episodeRefs[index].stopEpisodeVideo()
+      } else {
+        // console.log('null인놈들')
+        // console.log(index)
+      }
+    }
+    // 뷰어블한 아이템이 3개이면 중간 아이템만 play
+    if (viewableItemsArray.length === 3) {
+      if (this.episodeRefs[viewableItemsArray[0]] !== null) {
+        this.episodeRefs[viewableItemsArray[0]].stopEpisodeVideo()
+      }
+      if (this.episodeRefs[viewableItemsArray[2]] !== null) {
+        this.episodeRefs[viewableItemsArray[2]].stopEpisodeVideo()
+      }
+    } else {
+      for (let j in viewableItemsArray) {
+        const index = viewableItemsArray[j]
+
+        if (this.episodeRefs[index] !== null && this.episodeRefs[index] !== undefined) {
+          console.log('싱글에피소드스크린 비디오켜라')
+          this.episodeRefs[index].playEpisodeVideo()
+        }
+      }
+    }
+  }
 
 }
 

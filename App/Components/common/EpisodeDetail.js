@@ -191,7 +191,6 @@ class EpisodeDetail extends Component {
       // console.log(this.dragStartingOffset === this.lastContentOffset)
       if (this.dragStartingOffset >= this.lastContentOffset &&
           this.dragStartingOffset - this.dragEndingOffset < 0) {
-        console.log('리퀘스팅!')
         this.props.requestNewEpisode(token, episode.id)
       }
     }
@@ -205,8 +204,8 @@ class EpisodeDetail extends Component {
   }
 
   renderProfileImage () {
-    let uri = this.props.account.profileImagePath
-    // let uri = 'https://facebook.github.io/react/img/logo_og.png'
+    // let uri = this.props.account.profileImagePath
+    let uri = 'https://facebook.github.io/react/img/logo_og.png'
     if (this.props.account.profileImagePath) {
       return (
         <CachableImage
@@ -246,23 +245,19 @@ class EpisodeDetail extends Component {
 
     this.lastContentOffset = (activeEpisodeLength - 1) * (windowSize.width - 22)
 
-    if (!this.props.xPosition) {
+    if (this.props.xPosition === undefined) {
       if (active) {
         xPosition = (activeEpisodeLength - 1) * (windowSize.width - 22)
+        this.currentCenterIndex = activeEpisodeLength - 1
       } else {
         xPosition = 0
+        this.currentCenterIndex = 0
       }
     } else {
       xPosition = this.props.xPosition
+      this.currentCenterIndex = (this.props.xPosition / (windowSize.width - 22))
     }
 
-    if (xPosition === 0) {
-      this.currentCenterIndex = 0
-    } else {
-      this.currentCenterIndex = activeEpisodeLength - 1
-    }
-
-    console.log('에피소드 리렌더')
     return (
       <View
         style={{flex: 1}}>
@@ -382,6 +377,7 @@ class EpisodeDetail extends Component {
       this.horizontalLock은 해당 에피소드가 좌우 스크롤된적이 없을 경우 true이다.
       onMomentumScrollBegin을 이용해 스크롤시 false로 변경한다.
     */
+    console.log('에피소드디테일 온뷰어블 아이템스 체인지드')
     if (info.viewableItems.length === 1 && !this.horizontalLock) {
       console.log('호리즌탈락 풀림')
       const { parentHandler, index } = this.props

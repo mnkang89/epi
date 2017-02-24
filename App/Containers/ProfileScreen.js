@@ -51,9 +51,6 @@ class ProfileScreen extends Component {
     console.log(getObjectDiff(this.props, nextProps))
 
     if (nextProps.items.length !== 0) {
-      console.log('하이루')
-      console.log(nextProps.items)
-      console.log(nextProps.items[nextProps.items.length - 1].episode.updatedDateTime)
       this.before = nextProps.items[nextProps.items.length - 1].episode.updatedDateTime
     }
 
@@ -90,9 +87,6 @@ class ProfileScreen extends Component {
     console.log('onEndReached fired')
     this.setState({footer: true})
     if (this.props.items.length !== 0) {
-      console.log('하이루')
-      console.log(this.props.items)
-      console.log(this.props.items[this.props.items.length - 1].episode.updatedDateTime)
       this.before = this.props.items[this.props.items.length - 1].episode.updatedDateTime
     }
 
@@ -273,7 +267,7 @@ const mapDispatchToProps = (dispatch) => {
     requestInfo: (token, accountId) => dispatch(AccountActions.infoRequest(token, accountId)),
     requestProfileImage: (photoSource, token, accountId) => dispatch(SignupActions.profileRequest(photoSource, token, accountId)),
     requestUserEpisodesWithFalse: (token, accountId, withFollowing) => dispatch(EpisodeActions.userEpisodesWithFalseRequest(token, accountId, withFollowing)),
-    requestNewEpisode: (token, episodeId) => dispatch(EpisodeActions.newEpisodeRequest(token, episodeId)),
+    requestNewEpisode: (token, episodeId) => dispatch(EpisodeActions.newEpisodeWithFalseRequest(token, episodeId)),
     requestMoreEpisodes: (token, accountId, withFollowing, before) => dispatch(EpisodeActions.moreEpisodesRequest(token, accountId, withFollowing, before)),
 
     postFollow: (token, id) => dispatch(AccountActions.followPost(token, id)),

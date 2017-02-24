@@ -1,17 +1,16 @@
 import React, { Component, PropTypes } from 'react'
 import {
   View,
-  ActivityIndicator,
-  ListView,
-  ScrollView,
-  RefreshControl,
-  TouchableOpacity,
-  Text
-  // Dimensions
+  ActivityIndicator
+  // ListView,
+  // ScrollView,
+  // RefreshControl,
+  // TouchableOpacity,
+  // Text
 } from 'react-native'
 import { connect } from 'react-redux'
 import _ from 'lodash'
-import { Actions as NavigationActions } from 'react-native-router-flux'
+// import { Actions as NavigationActions } from 'react-native-router-flux'
 
 import {
   getItemLayout
@@ -58,11 +57,7 @@ class FeedScreen extends Component {
     super(props)
     this.state = {
       refreshing: false,
-      footer: false,
-      before: null,
-
-      data: [],
-      init: true
+      footer: false
     }
     this.before
     this.episodeRefs = {}
@@ -113,14 +108,13 @@ class FeedScreen extends Component {
 
     if (this.state.refreshing) {
       this.setState({
-        footer: false,
-        refreshing: false
+        refreshing: false,
+        footer: false
       })
     }
   }
 
   shouldComponentUpdate (nextProps, nextState) {
-    console.log(this.props.items !== nextProps.items)
     return this.props.items !== nextProps.items
   }
 
@@ -141,7 +135,7 @@ class FeedScreen extends Component {
 
     this.props.requestMoreFeeds(token, accountId, withFollowing, before)
   }
-
+/*
   renderListView (dataSource) {
     if (this.props.episodesRequesting) {
       console.log('리퀘스팅중')
@@ -196,7 +190,7 @@ class FeedScreen extends Component {
       }
     }
   }
-/*
+
   render () {
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
     const dataSource = ds.cloneWithRows(this.props.items.slice())
@@ -231,9 +225,9 @@ class FeedScreen extends Component {
           onRefresh={this._onRefresh.bind(this)}
           refreshing={this.state.refreshing}
           onViewableItemsChanged={this._onViewableItemsChanged}
+          shouldItemUpdate={this._shouldItemUpdate}
           onEndReached={this._onEndReached.bind(this)}
-          onEndReachedThreshold={0}
-          shouldItemUpdate={this._shouldItemUpdate} />
+          onEndReachedThreshold={0} />
         <View style={{height: 48.5}} />
         <CommentModalContainer screen={'FeedScreen'} token={this.props.token} />
       </View>
@@ -256,9 +250,9 @@ class FeedScreen extends Component {
             this.episodeRefs[index] = component
           }
         }}
-        token={this.props.token}
         key={index}
         index={index}
+        token={this.props.token}
         parentHandler={this}
         episode={episode.item.episode}
         account={episode.item.account}

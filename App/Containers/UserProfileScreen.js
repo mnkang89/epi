@@ -65,9 +65,6 @@ class UserProfileScreen extends Component {
     console.log(getObjectDiff(this.props, nextProps))
 
     if (nextProps.items.length !== 0) {
-      console.log('하이루')
-      console.log(nextProps.items)
-      console.log(nextProps.items[nextProps.items.length - 1].episode.updatedDateTime)
       this.before = nextProps.items[nextProps.items.length - 1].episode.updatedDateTime
     }
 
@@ -86,7 +83,6 @@ class UserProfileScreen extends Component {
   }
 
   shouldComponentUpdate (nextProps, nextState) {
-    console.log(this.props.items !== nextProps.items)
     return this.props.items !== nextProps.items
   }
 
@@ -103,9 +99,6 @@ class UserProfileScreen extends Component {
     console.log('onEndReached fired')
     this.setState({footer: true})
     if (this.props.items.length !== 0) {
-      console.log('하이루')
-      console.log(this.props.items)
-      console.log(this.props.items[this.props.items.length - 1].episode.updatedDateTime)
       this.before = this.props.items[this.props.items.length - 1].episode.updatedDateTime
     }
 
@@ -284,8 +277,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     requestOtherInfo: (token, accountId) => dispatch(AccountActions.otherInfoRequest(token, accountId)),
     requestOtherEpisodes: (token, accountId, active) => dispatch(EpisodeActions.otherEpisodesRequest(token, accountId, active)),
+    requestNewEpisode: (token, episodeId) => dispatch(EpisodeActions.newOtherEpisodeRequest(token, episodeId)),
     requestMoreOtherEpisodes: (token, accountId, withFollowing, before) => dispatch(EpisodeActions.moreOtherEpisodesRequest(token, accountId, withFollowing, before)),
-    requestNewEpisode: (token, episodeId) => dispatch(EpisodeActions.newEpisodeRequest(token, episodeId)),
 
     postFollow: (token, id) => dispatch(AccountActions.followPost(token, id)),
     deleteFollow: (token, id) => dispatch(AccountActions.followDelete(token, id)),
@@ -297,44 +290,3 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserProfileScreen)
-
-/*
-render () {
-  console.log(this.props)
-  return (
-    <View style={styles.mainContainer}>
-      <ScrollView
-        refreshControl={
-          <RefreshControl
-            refreshing={this.state.refreshing}
-            onRefresh={this.onRefresh.bind(this)} />
-        } >
-        <EpisodeList
-          detailType={'other'}
-          items={this.props.items} >
-          <ProfileInfo
-            type={'other'}
-            token={this.props.token}
-            id={this.props.id}  // 내아이디 일때는 accountId
-
-            profileImagePath={this.props.profileImagePath} // props는 현재는 null인 상태에서 들어가는 상황
-            nickname={this.props.nickname}
-            followerCount={this.props.followerCount}
-            followingCount={this.props.followingCount}
-            following={this.props.following}
-
-            postFollow={this.props.postFollow}
-            deleteFollow={this.props.deleteFollow}
-
-            openFollow={this.props.openFollow}
-            getFollowing={this.props.getFollowing}
-            getFollower={this.props.getFollower} />
-        </EpisodeList>
-      </ScrollView>
-      <View style={{height: 48.5}} />
-      <CommentModalContainer screen={this.props.screen} token={this.props.token} />
-      <FollowModalContainer token={this.props.token} />
-    </View>
-  )
-}
-*/

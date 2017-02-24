@@ -222,3 +222,39 @@ export function * newEpisode (api, action) {
     yield put(EpisodeActions.newEpisodeFailure('WRONG'))
   }
 }
+
+export function * newEpisodeWithFalse (api, action) {
+  console.log('뉴 에피소드 위드 폻스 사가 진입')
+  const { token, episodeId } = action
+  const response = yield call(api.requestSingleEpisode, token, episodeId)
+
+  if (response.ok) {
+    console.log('ok')
+    console.log(response)
+    const newEpisode = path(['data', 'episodes'], response)
+
+    yield put(EpisodeActions.newEpisodeWithFalseSuccess(newEpisode))
+  } else {
+    console.log('error')
+    console.log(response)
+    yield put(EpisodeActions.newEpisodeWithFalseFailure('WRONG'))
+  }
+}
+
+export function * newOtherEpisode (api, action) {
+  console.log('뉴 아더 에피소드 사가 진입')
+  const { token, episodeId } = action
+  const response = yield call(api.requestSingleEpisode, token, episodeId)
+
+  if (response.ok) {
+    console.log('ok')
+    console.log(response)
+    const newEpisode = path(['data', 'episodes'], response)
+
+    yield put(EpisodeActions.newOtherEpisodeSuccess(newEpisode))
+  } else {
+    console.log('error')
+    console.log(response)
+    yield put(EpisodeActions.newOtherEpisodeFailure('WRONG'))
+  }
+}
