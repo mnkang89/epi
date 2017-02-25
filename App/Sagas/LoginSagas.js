@@ -2,6 +2,7 @@ import { put, call } from 'redux-saga/effects'
 import { path } from 'ramda'
 import LoginActions from '../Redux/LoginRedux'
 import TokenActions from '../Redux/TokenRedux'
+// import ScreenActions from '../Redux/ScreenRedux'
 import { setToken } from '../Services/Auth'
 
 let validateEmail = (email) => {
@@ -40,10 +41,9 @@ export function * login (api, action) {
       const accountId = path(['data', 'id'], response)
 
       setToken(token, accountId)
+      // yield put(ScreenActions.isFirstLogin(false))
       yield put(LoginActions.loginSuccess(email))
       yield put(TokenActions.tokenRequest(token, accountId))
-      // idRequest는 deprecated
-      // yield put(TokenActions.idRequest(accountId))
     } else {
       console.log(response)
       const message = path(['data', 'responseMessage'], response)

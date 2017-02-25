@@ -179,7 +179,6 @@ class GreetingScreen extends Component {
 
         // this.props.requestUserEpisodes(token, accountId, true)
         // this.props.requestUserEpisodesWithFalse(token, accountId, false)
-
         NavigationActions.tabBar({type: ActionConst.RESET})
       } else if (!newProps.fetching && newProps.signInError === 'INVALID_FORMAT') {
         console.log('유효하지 않은 형식')

@@ -1,10 +1,11 @@
 import React, { Component, PropTypes } from 'react'
 import { ScrollView, Dimensions, Text, View, Image, TouchableOpacity } from 'react-native'
 import { Actions as NavigationActions } from 'react-native-router-flux'
-// import Video from 'react-native-video'
+
 import CachableImage from '../Common/CachableImage'
 import CachableVideo from '../Common/CachableVideo'
-
+// import { Videos } from '../Themes'
+// import Video from 'react-native-video'
 import { Colors, Images, Metrics } from '../Themes/'
 
 const windowSize = Dimensions.get('window')
@@ -109,6 +110,7 @@ class ExploreDetail extends Component {
           <TouchableOpacity key={contents.indexOf(content)} onPress={this.onEpisodePress.bind(this, content.id)} >
             <View style={{marginRight: 8.1}} >
               <CachableImage style={{width: windowSize.width - 228.4, height: windowSize.width - 228.4}} source={{ uri: content.path }} />
+              {/* <Image style={{width: windowSize.width - 228.4, height: windowSize.width - 228.4}} source={{ uri: 'https://facebook.github.io/react/img/logo_og.png' }} /> */}
             </View>
           </TouchableOpacity>
         )
@@ -118,6 +120,7 @@ class ExploreDetail extends Component {
             <View style={{marginRight: 8.1}}>
               <View style={{width: windowSize.width - 228.4, height: windowSize.width - 228.4}}>
                 <CachableVideo
+                  // source={Videos.ragu_8}
                   source={{uri: content.path}}   // Can be a URL or a local file.
                   muted
                   videoRef={(ref) => {
@@ -136,6 +139,18 @@ class ExploreDetail extends Component {
                     right: 0,
                     bottom: 0
                   }} />
+                <View style={{backgroundColor: 'transparent'}}>
+                  <Text
+                    style={{
+                      textShadowOffset: {width: 1, height: 2},
+                      textShadowColor: 'rgba(0, 0, 0, 0.5)',
+                      textShadowRadius: 1,
+                      color: 'white',
+                      fontSize: 20,
+                      fontWeight: 'bold' }}>
+                      인디케이터요!
+                  </Text>
+                </View>
               </View>
             </View>
           </TouchableOpacity>

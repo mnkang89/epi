@@ -22,39 +22,7 @@ import SingleEpisodeScreen from '../Containers/SingleEpisodeScreen'
 import ScreenActions from '../Redux/ScreenRedux'
 import { isLoggedIn } from '../Services/Auth'
 
-/*
-<Scene
-  initial
-  key='Greeting'
-  hideNavBar
-  hideTabBar
-  component={GreetingScreen} />
-*/
-
 class NavigationRouter extends Component {
-
-  constructor (props) {
-    super(props)
-    this.initialScence = 'Greeting'
-  }
-  /*
-  componentWillMount () {
-    console.tron.log('is login ? ' + isLoggedIn())
-    if (isLoggedIn()) {
-      this.initialScence = 'tabBar'
-    }
-  }
-
-  <Scene
-    key='root'
-    navigationBarStyle={Styles.navBar}
-    titleStyle={Styles.title}
-    unmountScenes
-    component={Switch}
-    tabs
-    selector={() => this.initialScence}>
-  */
-
   render () {
     return (
       <Router
@@ -64,7 +32,7 @@ class NavigationRouter extends Component {
           navigationBarStyle={Styles.navBar}
           titleStyle={Styles.title} >
           <Scene
-            initial={isLoggedIn()}
+            initial={!isLoggedIn()}
             key='Greeting'
             hideNavBar
             hideTabBar
@@ -73,7 +41,7 @@ class NavigationRouter extends Component {
             initial={isLoggedIn()}
             key='tabBar'
             tabs
-            tabBarStyle={{backgroundColor: '#000000', justifyContent: 'center', alignItems: 'center', alignSelf: 'center', height: 48.5}}>
+            tabBarStyle={{backgroundColor: '#000000', justifyContent: 'center', alignItems: 'center', alignSelf: 'center', height: 48.5}} >
             <Scene
               key='homeTab'
               icon={TabIcon}
@@ -85,9 +53,8 @@ class NavigationRouter extends Component {
               }}
               navigationBarStyle={Styles.navBar}
               leftButtonIconStyle={Styles.leftButton}
-              titleStyle={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>
+              titleStyle={{color: 'white', fontSize: 20, fontWeight: 'bold'}} >
               <Scene
-                initial
                 key='feedScreen'
                 panHandlers={null}
                 component={FeedScreen}
