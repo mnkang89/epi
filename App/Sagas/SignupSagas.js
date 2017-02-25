@@ -2,7 +2,6 @@ import { put, call } from 'redux-saga/effects'
 import { path } from 'ramda'
 import SignupActions from '../Redux/SignupRedux'
 import TokenActions from '../Redux/TokenRedux'
-// import ScreenActions from '../Redux/ScreenRedux'
 import { setToken } from '../Services/Auth'
 
 let validateEmail = (email) => {
@@ -137,7 +136,6 @@ export function * signup (api, action) {
     const accountId = path(['data', 'id'], response)
 
     setToken(token, accountId)
-    // yield put(ScreenActions.isFirstLogin(true))
     yield put(SignupActions.signupSuccess(email, password))
     yield put(TokenActions.tokenRequest(token, accountId))
   } else {

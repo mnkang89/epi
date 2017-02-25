@@ -146,6 +146,7 @@ class GreetingScreen extends Component {
         console.log('유효한 닉네임')
         this.handleSignUpNicknameChecking()
         NavigationActions.tabBar({type: ActionConst.RESET})
+        NavigationActions.cameraTab()
       } else if (!newProps.signUpChecking && newProps.signUpError === 'VACANT') {
         console.log('유효하지 않은 닉네임(공백)')
         this.handleSignUpNicknameChecking()
