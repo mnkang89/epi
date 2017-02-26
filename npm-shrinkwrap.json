@@ -7032,6 +7032,11 @@
       "from": "react-native-permissions@>=0.2.5 <0.3.0",
       "resolved": "https://registry.npmjs.org/react-native-permissions/-/react-native-permissions-0.2.5.tgz"
     },
+    "react-native-push-notification": {
+      "version": "2.2.1",
+      "from": "react-native-push-notification@latest",
+      "resolved": "https://registry.npmjs.org/react-native-push-notification/-/react-native-push-notification-2.2.1.tgz"
+    },
     "react-native-router-flux": {
       "version": "3.37.0",
       "from": "react-native-router-flux@>=3.37.0 <4.0.0",

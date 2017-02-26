@@ -21,6 +21,7 @@ import styles from './Styles/FeedScreenStyle'
 
 import NotiActions from '../Redux/NotiRedux'
 import CommentActions from '../Redux/CommentRedux'
+import PushConfig from '../Config/PushConfig'
 
 const windowSize = Dimensions.get('window')
 
@@ -43,6 +44,12 @@ class NotiScreen extends Component {
     }
   }
 
+  componentDidMount () {
+    const { token } = this.props
+    PushConfig()
+    this.props.requestNoties(token)
+  }
+
   componentWillReceiveProps (nextProps) {
     if (_.isEqual(this.props.noties, nextProps.noties)) {
       console.log('노티같음')
@@ -52,15 +59,6 @@ class NotiScreen extends Component {
     if (this.state.refreshing) {
       this.setState({refreshing: false})
     }
-  }
-
-  componentDidMount () {
-    const { token } = this.props
-
-    this.props.requestNoties(token)
-    // this.autoRefresher = setInterval(() => {
-    //   this.props.requestNoties(token)
-    // }, 60000)
   }
 
   componentWillUnmount () {

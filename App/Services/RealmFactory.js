@@ -28,6 +28,13 @@ const CacheVideoSchema = {
   }
 }
 
+const PushTokenSchema = {
+  name: 'pushToken',
+  properties: {
+    token: {type: 'string'}
+  }
+}
+
 export const getRealm = () => {
-  return new Realm({schema: [AccountSchema, CacheImageSchema, CacheVideoSchema]})
+  return new Realm({schema: [AccountSchema, CacheImageSchema, CacheVideoSchema, PushTokenSchema]})
 }

@@ -40,6 +40,7 @@
     "react-native-keyboard-spacer": "^0.3.0",
     "react-native-modalbox": "^1.3.8",
     "react-native-permissions": "^0.2.5",
+    "react-native-push-notification": "^2.2.1",
     "react-native-router-flux": "^3.37.0",
     "react-native-vector-icons": "^3.0.0",
     "react-native-video": "git+https://github.com/younseunghyun/react-native-video.git#0.38-nill",

@@ -1,6 +1,6 @@
 // a library to wrap and simplify api calls
 import apisauce from 'apisauce'
-import { getToken } from './Auth'
+import { getToken, getAccountId } from './Auth'
 
 const getTokenHeader = () => {
   const token = getToken()
@@ -276,6 +276,16 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     return api.get(`/api/notifications`, {}, getTokenHeader())
   }
 
+  const registerPushToken = (os, token) => {
+    const accountId = getAccountId()
+    const formData = new FormData()
+
+    formData.append('os', os)
+    formData.append('token', token)
+
+    return api.post(`/api/accounts/${accountId}/register-push-notification`, formData, getTokenHeader())
+  }
+
   return {
     // a list of the API functions from step 2
     checkEmail,
@@ -312,7 +322,8 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
 
     getBestFeeds,
 
-    getNoties
+    getNoties,
+    registerPushToken
   }
 }
 
