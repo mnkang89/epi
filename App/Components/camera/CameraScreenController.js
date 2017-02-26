@@ -5,7 +5,8 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Modal as NativeModal,
-  TextInput
+  TextInput,
+  CameraRoll
 } from 'react-native'
 import { Images } from '../../Themes'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -15,6 +16,7 @@ import Camera from 'react-native-camera'
 import ProgressBar from './Progress-Bar'
 import ConfirmError from '../common/ConfirmError'
 import ContentType from './ContentTypeEnum'
+import ImageEditor from 'ImageEditor'
 
 class CameraScreenController extends Component {
 
@@ -53,7 +55,16 @@ class CameraScreenController extends Component {
     if (this.props.cameraHandler.getCamera() === null) return
     this.props.cameraHandler.getCamera().capture()
     .then((data) => {
-      this.props.takeContent(ContentType.Image, data.path)
+      ImageEditor.cropImage(
+        data.path,
+        // TODO: this is just for iphone, improve this
+        {offset: {x: 0, y: 420}, size: {width: 1080, height: 1080}, displaySize: {width: 540, height: 540}},
+        (data) => {
+          CameraRoll.saveToCameraRoll(data)
+          this.props.takeContent(ContentType.Image, data)
+        },
+        (err) => { console.err(err) }
+      )
     })
     .catch(err => console.error(err))
   }

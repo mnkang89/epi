@@ -167,8 +167,8 @@ class CameraSection extends Component {
               ref={(cam) => { this.props.cameraHandler.setCamera(cam) }}
               style={{ position: 'absolute', height: this.state.componentWidth, width: this.state.componentWidth }}
               captureMode={Camera.constants.CaptureMode.still}
-              captureTarget={Camera.constants.CaptureTarget.disk}
-              captureQuality={Camera.constants.CaptureQuality.high}
+              captureTarget={Camera.constants.CaptureTarget.cameraRoll}
+              captureQuality={Camera.constants.CaptureQuality['1080p']}
               captureAudio={false}
               type={this.props.cameraType}
               defaultOnFocusComponent={false}
