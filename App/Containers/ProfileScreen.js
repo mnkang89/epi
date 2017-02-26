@@ -68,6 +68,21 @@ class ProfileScreen extends Component {
     }
   }
 
+  componentDidMount () {
+    // const token = null
+    // const withFollowing = false
+    // const accountId = getAccountId()
+
+    // this.autoRefresher = setInterval(() => {
+    //   this.props.requestInfo(token, accountId)
+    //   this.props.requestUserEpisodesWithFalse(token, accountId, withFollowing)
+    // }, 60000)
+  }
+
+  componentWillUnmount () {
+    // clearInterval(this.autoRefresher)
+  }
+
   shouldComponentUpdate (nextProps, nextState) {
     console.log(this.props.items !== nextProps.items)
     return this.props.items !== nextProps.items
@@ -100,7 +115,7 @@ class ProfileScreen extends Component {
   render () {
     console.log('데이터길이: ' + this.props.items.length)
     return (
-      <View style={styles.mainContainer}>
+      <View style={styles.noNavBarContainer}>
         <FlatListE
           keyExtractor={(item, index) => index}
           style={{ flex: 1 }}

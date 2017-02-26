@@ -28,11 +28,7 @@ export default {
   backButton () {
     return (
       <TouchableOpacity onPress={NavigationActions.pop}>
-        <Icon name='angle-left'
-          size={Metrics.icons.medium}
-          color={Colors.snow}
-          style={styles.navButtonLeft}
-        />
+        <Image source={Images.backButton} style={{width: 11, height: 19}} />
       </TouchableOpacity>
     )
   },

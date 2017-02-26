@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import {
   Text,
   View,
+  Image,
   TouchableOpacity,
   ActivityIndicator,
   Dimensions
@@ -224,7 +225,7 @@ class EpisodeDetail extends Component {
   renderActiveRed () {
     if (this.props.episode.active) {
       return (
-        <View style={{top: 7, left: 33, height: 5.5, width: 5.5, borderRadius: 2.75, backgroundColor: '#FC1617'}} />
+        <View style={{top: 7, left: 33, height: 5.5, width: 5.5, borderRadius: 2.75, backgroundColor: '#D02C2C'}} />
       )
     } else {
       return
@@ -273,11 +274,11 @@ class EpisodeDetail extends Component {
                   </TouchableOpacity>
                 </View>
                 <View style={{justifyContent: 'flex-start', paddingLeft: 5}}>
-                  <Text style={{color: 'rgb(217,217,217)', fontWeight: 'bold'}}>{this.props.account.nickname}</Text>
+                  <Text style={{color: '#626262', fontWeight: 'bold'}}>{this.props.account.nickname}</Text>
                 </View>
               </View>
               <View>
-                <Text style={{color: 'rgb(217,217,217)', fontSize: 13}}>최근 업데이트 : {timeDiffString}</Text>
+                <Text style={{color: '#B2B2B2', fontSize: 13}}>{timeDiffString}</Text>
               </View>
             </View>
           </View>
@@ -307,10 +308,16 @@ class EpisodeDetail extends Component {
           showsHorizontalScrollIndicator
           decelerationRate={'fast'}
           directionalLockEnabled={false} />
-        <View style={{width: windowSize.width - 30, backgroundColor: 'black', paddingTop: 15}}>
-          <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
-            <Text style={{fontSize: 13, paddingRight: 10, color: 'rgb(217,217,217)'}}>공감 {this.state.likeCount}</Text>
-            <Text style={{fontSize: 13, color: 'rgb(217,217,217)'}}>댓글 {commentCount}</Text>
+        <View style={{width: windowSize.width - 30, backgroundColor: '#FFFFFF', paddingTop: 15}}>
+          <View style={{flexDirection: 'row', justifyContent: 'flex-start'}}>
+            <View style={{marginLeft: 15, justifyContent: 'center'}}>
+              <Image style={{width: 12, height: 10}} source={Images.likeCount} />
+            </View>
+            <Text style={{fontSize: 13, paddingLeft: 9, color: '#909090'}}>{this.state.likeCount}</Text>
+            <View style={{marginLeft: 21, justifyContent: 'center'}}>
+              <Image style={{width: 11, height: 10}} source={Images.commentCount} />
+            </View>
+            <Text style={{fontSize: 13, paddingLeft: 9, color: '#909090'}}>{commentCount}</Text>
           </View>
         </View>
       </View>
@@ -416,7 +423,7 @@ EpisodeDetail.defaultProps = {
 
 const styles = {
   headerContentStyle: {
-    backgroundColor: 'black',
+    backgroundColor: '#FFFFFF',
     alignItems: 'center'
   },
   headerTextStyle: {

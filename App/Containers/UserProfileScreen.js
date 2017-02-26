@@ -53,12 +53,26 @@ class UserProfileScreen extends Component {
     this.viewableItemsArray = []
   }
 
+  componentDidMount () {
+    // const { token, id } = this.props
+    // const active = false
+
+    // this.autoRefresher = setInterval(() => {
+    //   this.props.requestOtherInfo(token, id)
+    //   this.props.requestOtherEpisodes(token, id, active)
+    // }, 60000)
+  }
+
   componentWillMount () {
     const { token, id } = this.props
     const active = false
 
     this.props.requestOtherInfo(token, id)
     this.props.requestOtherEpisodes(token, id, active)
+  }
+
+  componentWillUnmount () {
+    // clearInterval(this.autoRefresher)
   }
 
   componentWillReceiveProps (nextProps) {

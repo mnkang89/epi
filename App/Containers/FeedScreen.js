@@ -12,17 +12,13 @@ import { connect } from 'react-redux'
 import _ from 'lodash'
 // import { Actions as NavigationActions } from 'react-native-router-flux'
 
-import {
-  getItemLayout
-} from '../Experimental/ListExampleShared_e'
-import FlatListE from '../Experimental/FlatList_e'
-
+import { getItemLayout } from '../Experimental/ListExampleShared_e'
 import { getAccountId } from '../Services/Auth'
-
-import styles from './Styles/FeedScreenStyle'
 import { getObjectDiff, getArrayDiff } from '../Lib/Utilities'
+import FlatListE from '../Experimental/FlatList_e'
 import EpisodeDetail from '../Components/common/EpisodeDetail'
 import CommentModalContainer from './common/CommentModalContainer'
+import styles from './Styles/FeedScreenStyle'
 
 import AccountActions from '../Redux/AccountRedux'
 import EpisodeActions from '../Redux/EpisodeRedux'
@@ -65,8 +61,6 @@ class FeedScreen extends Component {
   }
 
   componentWillMount () {
-    // const { token, accountId } = { token: '$2a$10$ii4p8jv8XDsAT4i4/TbnlOoNLcXpXvmmQ8koDKSfy2PJVsCe1IgEu', accountId: 1 }
-    // const { token, accountId } = this.props
     const token = null
     const withFollowing = true
     const accountId = getAccountId()
@@ -79,9 +73,14 @@ class FeedScreen extends Component {
   componentDidMount () {
     // const { token, accountId } = this.props
     const token = null
+    // const withFollowing = true
     const accountId = getAccountId()
 
     this.props.requestInfo(token, accountId)
+    // api 새로고침 60초 주기로
+    // this.autoRefresher = setInterval(() => {
+    //   this.props.requestUserEpisodes(token, accountId, withFollowing)
+    // }, 60000)
   }
 
   componentWillReceiveProps (nextProps) {
@@ -112,6 +111,10 @@ class FeedScreen extends Component {
         footer: false
       })
     }
+  }
+
+  componentWillUnmount () {
+    // clearInterval(this.autoRefresher)
   }
 
   shouldComponentUpdate (nextProps, nextState) {

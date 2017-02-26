@@ -3,6 +3,7 @@ import { Text, View, Image, TouchableOpacity, Dimensions } from 'react-native'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import { Colors, Images, Metrics } from '../Themes/'
 // import CachableImage from '../Common/CachableImage'
+// import { convert2TimeDiffString } from '../Lib/Utilities'
 
 const windowSize = Dimensions.get('window')
 
@@ -114,21 +115,23 @@ class NotiDetail extends Component {
 
   render () {
     const { message } = this.props.noti
+    // const timeDiffString = convert2TimeDiffString(this.props.noti.createDateTime)
+    // console.log(timeDiffString)
 
     return (
       <TouchableOpacity style={{alignItems: 'center'}} onPress={this.onNotiPress.bind(this)}>
-        <View style={{width: windowSize.width - 30, height: 55, borderBottomWidth: 1, borderColor: 'rgb(45, 45, 45)', flexDirection: 'row', backgroundColor: 'black'}}>
+        <View style={{width: windowSize.width - 30, height: 55, borderBottomWidth: 1, borderColor: '#F1F1F1', flexDirection: 'row', backgroundColor: '#FFFFFF'}}>
           <TouchableOpacity
-            style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}
+            style={{flex: 1, alignItems: 'center', justifyContent: 'center', paddingLeft: 3}}
             onPress={this.onProfilePress.bind(this)}>
             {this.renderProfileImage()}
           </TouchableOpacity>
-          <View style={{flex: 10, paddingLeft: 11.5, paddingTop: 10}}>
-            <View style={{flex: 1}}>
-              <Text style={{color: 'rgb(217, 217, 217)'}}>{message}</Text>
+          <View style={{flex: 10, flexDirection: 'row', paddingLeft: 11.5}}>
+            <View style={{flex: 7, justifyContent: 'center'}}>
+              <Text style={{color: '#777777', fontWeight: 'bold'}}>{message}</Text>
             </View>
-            <View style={{flex: 1, alignItems: 'flex-end'}}>
-              <Text style={{fontSize: 10, color: 'rgb(123,123,123)'}}>1시간 전</Text>
+            <View style={{flex: 3, alignItems: 'flex-end', justifyContent: 'center'}}>
+              <Text style={{fontSize: 10, color: '#B2B2B2'}}>1시간 전</Text>
             </View>
           </View>
         </View>

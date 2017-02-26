@@ -48,6 +48,13 @@ class SingleEpisodeScreen extends Component {
     const { token, episodeId } = this.props
 
     this.props.requestSingleEpisode(token, episodeId)
+    // this.autoRefresher = setInterval(() => {
+    //   this.props.requestSingleEpisode(token, episodeId)
+    // }, 60000)
+  }
+
+  componentWillUnmount () {
+    // clearInterval(this.autoRefresher)
   }
 
   componentWillReceiveProps (nextProps) {

@@ -11,9 +11,9 @@ const windowSize = Dimensions.get('window')
 export default StyleSheet.create({
   ...ApplicationStyles.screen,
   image: {
-    height: 99,
-    width: 99,
-    borderRadius: 49.5
+    height: 80,
+    width: 80,
+    borderRadius: 40
   },
   badge: {
     backgroundColor: 'red',

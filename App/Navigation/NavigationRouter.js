@@ -26,12 +26,13 @@ class NavigationRouter extends Component {
   render () {
     return (
       <Router
-        sceneStyle={{ backgroundColor: 'black' }}>
+        sceneStyle={{ backgroundColor: 'transparent' }}>
         <Scene
           key='root'
           navigationBarStyle={Styles.navBar}
           titleStyle={Styles.title} >
           <Scene
+            // inital
             initial={!isLoggedIn()}
             key='Greeting'
             hideNavBar
@@ -41,7 +42,7 @@ class NavigationRouter extends Component {
             initial={isLoggedIn()}
             key='tabBar'
             tabs
-            tabBarStyle={{backgroundColor: '#000000', justifyContent: 'center', alignItems: 'center', alignSelf: 'center', height: 48.5}} >
+            tabBarStyle={{backgroundColor: '#FFFFFF', justifyContent: 'center', alignItems: 'center', alignSelf: 'center', height: 60, borderTopColor: '#f3f3f3', borderTopWidth: 1}} >
             <Scene
               key='homeTab'
               icon={TabIcon}
@@ -60,6 +61,7 @@ class NavigationRouter extends Component {
                 component={FeedScreen}
                 renderTitle={NavItems.episodeLogo} />
               <Scene
+                renderBackButton={NavItems.backButton}
                 key='feedTouserProfileScreen'
                 component={UserProfileScreen}
                 title='프로필' />
@@ -75,17 +77,21 @@ class NavigationRouter extends Component {
               }}
               navigationBarStyle={Styles.navBar}
               leftButtonIconStyle={Styles.leftButton}
-              titleStyle={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>
+              renderTitle={NavItems.episodeLogo}
+              // titleStyle={{color: 'white', fontSize: 20, fontWeight: 'bold'}}
+              >
               <Scene
                 key='notiScreen'
                 panHandlers={null}
                 component={NotiScreen}
                 title='내소식' />
               <Scene
+                renderBackButton={NavItems.backButton}
                 key='singleEpisodeScreen'
                 component={SingleEpisodeScreen}
                 title='에피소드' />
               <Scene
+                renderBackButton={NavItems.backButton}
                 key='notiTouserProfileScreen'
                 component={UserProfileScreen}
                 title='프로필' />
@@ -120,17 +126,22 @@ class NavigationRouter extends Component {
               }}
               leftButtonIconStyle={Styles.leftButton}
               navigationBarStyle={Styles.navBar}
-              titleStyle={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>
+              renderTitle={NavItems.episodeLogo}
+              // titleStyle={{color: 'white', fontSize: 20, fontWeight: 'bold'}}
+              >
               <Scene
+                // renderBackButton={NavItems.backButton}
                 key='exploreScreen'
                 panHandlers={null}
                 component={ExploreScreen}
                 title='우연한 발견' />
               <Scene
+                renderBackButton={NavItems.backButton}
                 key='searchTouserProfileScreen'
                 component={UserProfileScreen}
                 title='프로필' />
               <Scene
+                renderBackButton={NavItems.backButton}
                 key='searchTosingleEpisodeScreen'
                 component={SingleEpisodeScreen}
                 title='에피소드' />
@@ -149,6 +160,7 @@ class NavigationRouter extends Component {
               titleStyle={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>
               <Scene
                 key='profileScreen'
+                hideNavBar
                 panHandlers={null}
                 component={ProfileScreen}
                 title='내 프로필' />

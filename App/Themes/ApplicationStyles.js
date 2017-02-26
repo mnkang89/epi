@@ -12,7 +12,11 @@ const ApplicationStyles = {
     mainContainer: {
       flex: 1,
       marginTop: Metrics.navBarHeight,
-      backgroundColor: 'black'
+      backgroundColor: 'white'
+    },
+    noNavBarContainer: {
+      flex: 1,
+      backgroundColor: 'white'
     },
     backgroundImage: {
       position: 'absolute',

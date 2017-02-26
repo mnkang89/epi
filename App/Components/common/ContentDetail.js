@@ -3,13 +3,14 @@ import {
   Text,
   View,
   TouchableWithoutFeedback,
-  // Image,
+  Image,
   Dimensions
  } from 'react-native'
 import * as Animatable from 'react-native-animatable'
 
 import CachableImage from '../../Common/CachableImage'
 import CachableVideo from '../../Common/CachableVideo'
+import { Images } from '../../Themes'
 // import { Videos } from '../../Themes'
 // import Video from 'react-native-video'
 
@@ -115,23 +116,24 @@ class ContentDetailClass extends Component {
   }
 
   renderAnimation () {
-    const textIndex = Math.floor(Math.random() * 10)
-    const message = this.state.textList
+    // const textIndex = Math.floor(Math.random() * 10)
+    // const message = this.state.textList
 
     if (this.state.animation) {
       if (this.state.IsAnimationTypeLike) {
         return (
-          <Animatable.Text
+          <Animatable.View
             animation='zoomIn'
-            duration={500}
-            style={{ textAlign: 'center', color: 'white', fontSize: 100, backgroundColor: 'rgba(0,0,0,0)' }}
+            duration={700}
+            // style={{ textAlign: 'center', color: 'white', fontSize: 100, backgroundColor: 'rgba(0,0,0,0)' }}
             onAnimationEnd={() => {
               this.setState({
                 animation: false
               })
             }}>
-            {message[textIndex]}
-          </Animatable.Text>
+            {/* {message[textIndex]} */}
+            <Image style={{marginTop: 30, width: 100, height: 90}} source={Images.like} />
+          </Animatable.View>
         )
       } else {
         return (
@@ -172,7 +174,7 @@ class ContentDetailClass extends Component {
 
     if (content.type === 'Image') {
       return (
-        <View style={{backgroundColor: 'black', paddingLeft: 8, paddingRight: paddingRight}}>
+        <View style={{backgroundColor: '#FFFFFF', paddingLeft: 8, paddingRight: paddingRight}}>
           <TouchableWithoutFeedback
             delayLongPress={350}
             onPress={this.onDoublePress.bind(this)}
@@ -210,7 +212,7 @@ class ContentDetailClass extends Component {
       )
     } else {
       return (
-        <View style={{backgroundColor: 'black', paddingLeft: 8, paddingRight: paddingRight}}>
+        <View style={{backgroundColor: '#FFFFFF', paddingLeft: 8, paddingRight: paddingRight}}>
           <TouchableWithoutFeedback
             disabled={this.state.disabled}
             delayLongPress={800}

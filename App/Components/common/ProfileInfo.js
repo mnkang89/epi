@@ -5,7 +5,7 @@ import { View, Image, ImagePickerIOS, TouchableOpacity, Text } from 'react-nativ
 import Permissions from 'react-native-permissions'
 
 import ConfirmError from './ConfirmError'
-import { Colors, Images } from '../../Themes'
+import { Images } from '../../Themes'
 import styles from '../../Containers/Styles/FeedScreenStyle'
 
 class ProfileInfo extends Component {
@@ -148,13 +148,13 @@ class ProfileInfo extends Component {
 
         return (
           <Image
-            style={[styles.image, {borderWidth: 1, borderColor: 'white', marginBottom: 14.5, marginTop: 39.5}]}
+            style={[styles.image, {borderWidth: 1, borderColor: 'white', marginBottom: 9, marginTop: 39.5}]}
             source={{uri}} />
         )
       } else {
         return (
           <Image
-            style={[styles.image, {borderWidth: 1, borderColor: 'white', marginBottom: 14.5, marginTop: 39.5}]}
+            style={[styles.image, {borderWidth: 1, borderColor: 'white', marginBottom: 9, marginTop: 39.5}]}
             source={Images.profileIcon} />
         )
       }
@@ -162,13 +162,13 @@ class ProfileInfo extends Component {
       if (this.props.profileImagePath) {
         return (
           <Image
-            style={[styles.image, {borderWidth: 1, borderColor: 'white', marginBottom: 14.5, marginTop: 39.5}]}
+            style={[styles.image, {borderWidth: 1, borderColor: 'white', marginBottom: 9, marginTop: 39.5}]}
             source={{uri: this.props.profileImagePath}} />)
       } else {
         return (
           <Image
-            style={[styles.image, {borderWidth: 1, borderColor: 'white', marginBottom: 14.5, marginTop: 39.5}]}
-            source={Images.profileIcon} />
+            style={[styles.image, {borderWidth: 1, borderColor: 'white', marginBottom: 9, marginTop: 39.5}]}
+            source={Images.othersProfile} />
         )
       }
     }
@@ -179,8 +179,8 @@ class ProfileInfo extends Component {
       return (
         <TouchableOpacity
           onPress={this.onFollowPress.bind(this)}>
-          <View style={{borderWidth: 0.5, borderColor: 'rgb(217, 217, 217)', borderRadius: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 8, paddingLeft: 8, backgroundColor: 'white'}}>
-            <Text style={{color: 'black'}}>팔로잉</Text>
+          <View style={{width: 68, height: 23, borderWidth: 0.5, borderColor: '#D5D5D5', borderRadius: 20, paddingTop: 5, paddingBottom: 5, paddingRight: 8, paddingLeft: 8, backgroundColor: 'white'}}>
+            <Text style={{color: '#9E9E9E', fontSize: 12, textAlign: 'center'}}>팔로잉</Text>
           </View>
         </TouchableOpacity>
       )
@@ -188,8 +188,8 @@ class ProfileInfo extends Component {
       return (
         <TouchableOpacity
           onPress={this.onFollowPress.bind(this)}>
-          <View style={{borderWidth: 0.5, borderColor: 'rgb(217, 217, 217)', borderRadius: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 8, paddingLeft: 8}}>
-            <Text style={{color: 'rgb(217, 217, 217)'}}>팔로우</Text>
+          <View style={{width: 68, height: 23, borderRadius: 20, paddingTop: 5, paddingBottom: 5, paddingRight: 8, paddingLeft: 8, backgroundColor: '#E76A5C'}}>
+            <Text style={{color: '#FFFFFF', fontSize: 12, textAlign: 'center'}}>팔로우</Text>
           </View>
         </TouchableOpacity>
       )
@@ -203,26 +203,24 @@ class ProfileInfo extends Component {
 
   renderProfileInfo () {
     if (this.props.type === 'me') {
-      console.log('미야미')
-      console.log(this.props.nickname)
-      console.log(this.props.followerCount)
-      console.log(this.props.followingCount)
       return (
-        <View style={{alignItems: 'center', backgroundColor: '#000000'}}>
+        <View style={{alignItems: 'center', backgroundColor: '#FFFFFF'}}>
           <View>
             <TouchableOpacity onPress={this.onProfileImagePress.bind(this)}>
               {this.renderProfileImage()}
             </TouchableOpacity>
           </View>
           <View style={{alignItems: 'center'}}>
-            <Text style={{color: Colors.snow, fontSize: 25, fontWeight: 'bold'}}>{this.props.nickname}</Text>
-            <View style={{flexDirection: 'row', marginTop: 10.5, marginBottom: 25.5}}>
+            <Text style={{color: '#626262', fontSize: 18, fontWeight: 'bold'}}>{this.props.nickname}</Text>
+            <View style={{flexDirection: 'row', marginTop: 7, marginBottom: 25.5}}>
               <TouchableOpacity onPress={this.onFollowerPress.bind(this)} >
-                <Text style={{color: Colors.snow, fontSize: 12}}>팔로워 {this.props.followerCount}</Text>
+                <Text style={{color: '#8E8E8E', fontSize: 14}}>팔로워 {this.props.followerCount}</Text>
               </TouchableOpacity>
-              <Text style={{color: Colors.snow, fontSize: 12}}> | </Text>
+              <View style={{top: 3, marginLeft: 9, marginRight: 9}}>
+                <Text style={{color: '#8E8E8E', fontSize: 10}}> | </Text>
+              </View>
               <TouchableOpacity onPress={this.onFollowingPress.bind(this)} >
-                <Text style={{color: Colors.snow, fontSize: 12}}>팔로잉 {this.props.followingCount} </Text>
+                <Text style={{color: '#8E8E8E', fontSize: 14}}>팔로잉 {this.props.followingCount} </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -230,19 +228,21 @@ class ProfileInfo extends Component {
       )
     } else {
       return (
-        <View style={{alignItems: 'center', backgroundColor: '#000000'}}>
+        <View style={{alignItems: 'center', backgroundColor: '#FFFFFF'}}>
           <View style={{flex: 2}}>
             {this.renderProfileImage()}
           </View>
           <View style={{flex: 1, alignItems: 'center'}} >
-            <Text style={{color: Colors.snow, fontSize: 25, fontWeight: 'bold'}}>{this.props.nickname}</Text>
-            <View style={{flexDirection: 'row', marginTop: 10.5, marginBottom: 25.5}}>
+            <Text style={{color: '#626262', fontSize: 18, fontWeight: 'bold'}}>{this.props.nickname}</Text>
+            <View style={{flexDirection: 'row', marginTop: 7, marginBottom: 25.5}}>
               <TouchableOpacity onPress={this.onFollowerPress.bind(this)} >
-                <Text style={{color: Colors.snow, fontSize: 12}}>팔로워 {this.props.followerCount}</Text>
+                <Text style={{color: '#8E8E8E', fontSize: 14}}>팔로워 {this.props.followerCount}</Text>
               </TouchableOpacity>
-              <Text style={{color: Colors.snow, fontSize: 12}}> | </Text>
+              <View style={{top: 3, marginLeft: 9, marginRight: 9}}>
+                <Text style={{color: '#8E8E8E', fontSize: 10}}> | </Text>
+              </View>
               <TouchableOpacity onPress={this.onFollowingPress.bind(this)} >
-                <Text style={{color: Colors.snow, fontSize: 12}}>팔로잉 {this.props.followingCount} </Text>
+                <Text style={{color: '#8E8E8E', fontSize: 14}}>팔로잉 {this.props.followingCount} </Text>
               </TouchableOpacity>
             </View>
           </View>

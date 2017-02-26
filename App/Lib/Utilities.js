@@ -36,15 +36,15 @@ export const convert2TimeDiffString = (datetimeStr : string) => {
   let timeDiffInSeconds = new Date() - datetime
   let hourInMillis = 3600000
   let minuteInMillis = 60000
-  let secondInMillis = 1000
+  // let secondInMillis = 1000
   if (timeDiffInSeconds > 86400000) {
     return datetime.toLocaleDateString()
   } else if (timeDiffInSeconds > hourInMillis) {
-    return Math.floor(timeDiffInSeconds / hourInMillis) + '시간전'
+    return Math.floor(timeDiffInSeconds / hourInMillis) + '시간 전'
   } else if (timeDiffInSeconds > minuteInMillis) {
-    return Math.floor(timeDiffInSeconds / minuteInMillis) + '분전'
+    return Math.floor(timeDiffInSeconds / minuteInMillis) + '분 전'
   } else {
-    return Math.floor(timeDiffInSeconds / secondInMillis) + '초전'
+    return '방금'
   }
 }
 

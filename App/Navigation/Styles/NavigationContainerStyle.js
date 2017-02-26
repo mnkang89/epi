@@ -8,8 +8,9 @@ export default {
   },
   navBar: {
     height: 65,
-    backgroundColor: '#000000',
-    borderBottomColor: '#000000'
+    backgroundColor: 'white',
+    borderBottomColor: '#EFEFEF',
+    opacity: 0.9
   },
   title: {
     color: Colors.snow,

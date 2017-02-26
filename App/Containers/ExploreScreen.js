@@ -44,6 +44,13 @@ class ExploreScreen extends Component {
     const { token } = this.props
 
     this.props.requestBestFeeds(token)
+    // this.autoRefresher = setInterval(() => {
+    //   this.props.requestBestFeeds(token)
+    // }, 60000)
+  }
+
+  componentWillUnmount () {
+    // clearInterval(this.autoRefresher)
   }
 
   componentWillReceiveProps (nextProps) {
@@ -128,14 +135,20 @@ class ExploreScreen extends Component {
     return getItemLayout(data, index, this.state.horizontal)
   }
 
-  _renderItemComponent = ({item}) => {
+  _renderItemComponent = (noti) => {
+    const length = noti.item.episode.contents.length
+    const index = noti.index
+    console.log(index)
+
     return (
       <ExploreDetail
-        key={item.episode.id}
+        key={noti.item.episode.id}
+        length={length}
+        number={index}
         token={this.props.token}
-        following={item.following}
-        episode={item.episode}
-        account={item.account}
+        following={noti.item.following}
+        episode={noti.item.episode}
+        account={noti.item.account}
         postFollow={this.props.postFollow}
         deleteFollow={this.props.deleteFollow} />
     )

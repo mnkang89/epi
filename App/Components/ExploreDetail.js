@@ -85,8 +85,8 @@ class ExploreDetail extends Component {
       return (
         <TouchableOpacity
           onPress={this.onFollowPress.bind(this)}>
-          <View style={{borderWidth: 0.5, borderColor: 'rgb(217, 217, 217)', borderRadius: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 8, paddingLeft: 8, backgroundColor: 'white'}}>
-            <Text style={{color: 'black'}}>팔로잉</Text>
+          <View style={{width: 68, height: 23, borderRadius: 20, paddingTop: 5, paddingBottom: 5, paddingRight: 8, paddingLeft: 8, backgroundColor: '#E76A5C'}}>
+            <Text style={{color: '#FFFFFF', fontSize: 12, textAlign: 'center'}}>팔로우</Text>
           </View>
         </TouchableOpacity>
       )
@@ -94,8 +94,8 @@ class ExploreDetail extends Component {
       return (
         <TouchableOpacity
           onPress={this.onFollowPress.bind(this)}>
-          <View style={{borderWidth: 0.5, borderColor: 'rgb(217, 217, 217)', borderRadius: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 8, paddingLeft: 8}}>
-            <Text style={{color: 'rgb(217, 217, 217)'}}>팔로우</Text>
+          <View style={{width: 68, height: 23, borderWidth: 0.5, borderColor: '#D5D5D5', borderRadius: 20, paddingTop: 5, paddingBottom: 5, paddingRight: 8, paddingLeft: 8, backgroundColor: 'white'}}>
+            <Text style={{color: '#9E9E9E', fontSize: 12, textAlign: 'center'}}>팔로잉</Text>
           </View>
         </TouchableOpacity>
       )
@@ -105,11 +105,13 @@ class ExploreDetail extends Component {
   renderContents () {
     const contents = this.props.episode.contents
     return contents.map(content => {
+      const marginLeft = contents.indexOf(content) === 0 ? 15 : 0
+
       if (content.type === 'Image') {
         return (
           <TouchableOpacity key={contents.indexOf(content)} onPress={this.onEpisodePress.bind(this, content.id)} >
-            <View style={{marginRight: 8.1}} >
-              <CachableImage style={{width: windowSize.width - 228.4, height: windowSize.width - 228.4}} source={{ uri: content.path }} />
+            <View style={{marginLeft: marginLeft, marginRight: 10}} >
+              <CachableImage style={{width: windowSize.width - 220.4, height: windowSize.width - 220.4}} source={{ uri: content.path }} />
               {/* <Image style={{width: windowSize.width - 228.4, height: windowSize.width - 228.4}} source={{ uri: 'https://facebook.github.io/react/img/logo_og.png' }} /> */}
             </View>
           </TouchableOpacity>
@@ -117,8 +119,8 @@ class ExploreDetail extends Component {
       } else {
         return (
           <TouchableOpacity key={contents.indexOf(content)} onPress={this.onEpisodePress.bind(this, content.id)} >
-            <View style={{marginRight: 8.1}}>
-              <View style={{width: windowSize.width - 228.4, height: windowSize.width - 228.4}}>
+            <View style={{marginLeft: marginLeft, marginRight: 10}}>
+              <View style={{width: windowSize.width - 220.4, height: windowSize.width - 220.4}}>
                 <CachableVideo
                   // source={Videos.ragu_8}
                   source={{uri: content.path}}   // Can be a URL or a local file.
@@ -180,8 +182,8 @@ class ExploreDetail extends Component {
     const { userTextStyle } = styles
 
     return (
-      <View>
-        <View style={{flexDirection: 'row', justifyContent: 'space-between', height: 57.5, marginLeft: 15, marginRight: 14.45, backgroundColor: 'black'}}>
+      <View style={{borderBottomWidth: 1, borderBottomColor: '#F1F1F1', paddingBottom: 15}}>
+        <View style={{flexDirection: 'row', justifyContent: 'space-between', height: 57.5, marginLeft: 15, marginRight: 14.45, backgroundColor: '#FFFFFF'}}>
           <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
             <TouchableOpacity onPress={this.onProfileImagePress.bind(this)}>
               {this.renderProfileImage()}
@@ -190,11 +192,11 @@ class ExploreDetail extends Component {
               <Text style={userTextStyle}>{this.props.account.nickname}</Text>
             </View>
           </View>
-          <View style={{marginTop: 14.5}}>
+          <View style={{justifyContent: 'center'}}>
             {this.renderFollowButton()}
           </View>
         </View>
-        <View style={{height: windowSize.width - 213, marginLeft: 15, marginRight: 15}}>
+        <View style={{height: windowSize.width - 213}}>
           <ScrollView
             snapToAlignment={'center'}
             scrollEventThrottle={299}
@@ -217,7 +219,7 @@ const styles = {
     backgroundColor: 'white'
   },
   userTextStyle: {
-    color: 'rgb(217, 217, 217)',
+    color: '#626262',
     fontSize: 12.5,
     fontWeight: 'bold'
   },

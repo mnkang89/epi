@@ -43,12 +43,6 @@ class NotiScreen extends Component {
     }
   }
 
-  componentDidMount () {
-    const { token } = this.props
-
-    this.props.requestNoties(token)
-  }
-
   componentWillReceiveProps (nextProps) {
     if (_.isEqual(this.props.noties, nextProps.noties)) {
       console.log('노티같음')
@@ -58,6 +52,19 @@ class NotiScreen extends Component {
     if (this.state.refreshing) {
       this.setState({refreshing: false})
     }
+  }
+
+  componentDidMount () {
+    const { token } = this.props
+
+    this.props.requestNoties(token)
+    // this.autoRefresher = setInterval(() => {
+    //   this.props.requestNoties(token)
+    // }, 60000)
+  }
+
+  componentWillUnmount () {
+    // clearInterval(this.autoRefresher)
   }
 
   _onRefresh () {
@@ -83,13 +90,13 @@ class NotiScreen extends Component {
               } >
             <View>
               <View style={{justifyContent: 'center', alignItems: 'center', marginTop: windowSize.height - 410}}>
-                <Text style={{fontSize: 16, color: 'white'}} >아직은 전해드릴 소식이 없네요.</Text>
-                <Text style={{fontSize: 16, color: 'white'}} >에피소드를 공유하고 소식을 받아보세요:)</Text>
+                <Text style={{fontSize: 16, color: '#626262'}} >아직은 전해드릴 소식이 없네요.</Text>
+                <Text style={{fontSize: 16, color: '#626262'}} >에피소드를 공유하고 소식을 받아보세요:)</Text>
               </View>
               <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 18}}>
                 <TouchableOpacity onPress={NavigationActions.cameraTab}>
-                  <View style={{paddingTop: 5, paddingBottom: 5, paddingLeft: 7, paddingRight: 7, borderRadius: 4, borderWidth: 1, borderColor: 'white'}}>
-                    <Text style={{fontSize: 16, color: 'white'}}>에피소드 공유</Text>
+                  <View style={{paddingTop: 5, paddingBottom: 5, paddingLeft: 7, paddingRight: 7, borderRadius: 4, borderWidth: 1, borderColor: '#626262'}}>
+                    <Text style={{fontSize: 16, color: '#626262'}}>에피소드 공유</Text>
                   </View>
                 </TouchableOpacity>
               </View>
@@ -102,6 +109,7 @@ class NotiScreen extends Component {
             keyExtractor={(item, index) => index}
             style={{ flex: 1 }}
             ref={this._captureRef}
+            HeaderComponent={this._renderHeaderComponent.bind(this)}
             ItemComponent={this._renderItemComponent.bind(this)}
             disableVirtualization={false}
             getItemLayout={undefined}
@@ -121,6 +129,14 @@ class NotiScreen extends Component {
 
   _getItemLayout = (data: any, index: number) => {
     return getItemLayout(data, index, this.state.horizontal)
+  }
+
+  _renderHeaderComponent () {
+    return (
+      <View>
+        <View style={{flex: 1, height: 7, backgroundColor: '#F4F4F4', borderWidth: 2, borderColor: '#F1F1F1'}} />
+      </View>
+    )
   }
 
   _renderItemComponent = ({item}) => {
@@ -145,7 +161,7 @@ class NotiScreen extends Component {
 
     return (
       <View style={styles.mainContainer}>
-        <View style={{backgroundColor: 'black', flex: 1}}>
+        <View style={{backgroundColor: '#FFFFFF', flex: 1}}>
           {this.renderScrollview(noties)}
           <View style={{height: 48.5}} />
         </View>
