@@ -126,7 +126,7 @@ class UserProfileScreen extends Component {
   render () {
     console.log('데이터길이: ' + this.props.items.length)
     return (
-      <View style={styles.mainContainer}>
+      <View style={styles.noNavBarContainer}>
         <FlatListE
           keyExtractor={(item, index) => index}
           style={{ flex: 1 }}

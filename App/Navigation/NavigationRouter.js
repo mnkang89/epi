@@ -32,7 +32,6 @@ class NavigationRouter extends Component {
           navigationBarStyle={Styles.navBar}
           titleStyle={Styles.title} >
           <Scene
-            // inital
             initial={!isLoggedIn()}
             key='Greeting'
             hideNavBar
@@ -61,6 +60,7 @@ class NavigationRouter extends Component {
                 component={FeedScreen}
                 renderTitle={NavItems.episodeLogo} />
               <Scene
+                hideNavBar
                 renderBackButton={NavItems.backButton}
                 key='feedTouserProfileScreen'
                 component={UserProfileScreen}
@@ -91,6 +91,7 @@ class NavigationRouter extends Component {
                 component={SingleEpisodeScreen}
                 title='에피소드' />
               <Scene
+                hideNavBar
                 renderBackButton={NavItems.backButton}
                 key='notiTouserProfileScreen'
                 component={UserProfileScreen}
@@ -136,6 +137,7 @@ class NavigationRouter extends Component {
                 component={ExploreScreen}
                 title='우연한 발견' />
               <Scene
+                hideNavBar
                 renderBackButton={NavItems.backButton}
                 key='searchTouserProfileScreen'
                 component={UserProfileScreen}
@@ -165,6 +167,7 @@ class NavigationRouter extends Component {
                 component={ProfileScreen}
                 title='내 프로필' />
               <Scene
+                hideNavBar
                 key='profileTouserProfileScreen'
                 component={UserProfileScreen}
                 title='프로필' />

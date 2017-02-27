@@ -108,8 +108,9 @@ class ExploreScreen extends Component {
       <View style={styles.mainContainer}>
         <FlatListE
           keyExtractor={(item, index) => index}
-          style={{ flex: 1 }}
+          style={{ flex: 1, backgroundColor: 'rgb(241, 241, 241)' }}
           ref={this._captureRef}
+          HeaderComponent={this._renderHeader.bind(this)}
           FooterComponent={this._renderFooter.bind(this)}
           ItemComponent={this._renderItemComponent.bind(this)}
           disableVirtualization={false}
@@ -151,6 +152,12 @@ class ExploreScreen extends Component {
         account={noti.item.account}
         postFollow={this.props.postFollow}
         deleteFollow={this.props.deleteFollow} />
+    )
+  }
+
+  _renderHeader () {
+    return (
+      <View style={{height: 10, backgroundColor: 'rgb(241, 241, 241)'}} />
     )
   }
 

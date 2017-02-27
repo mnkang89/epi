@@ -182,8 +182,8 @@ class ExploreDetail extends Component {
     const { userTextStyle } = styles
 
     return (
-      <View style={{borderBottomWidth: 1, borderBottomColor: '#F1F1F1', paddingBottom: 15}}>
-        <View style={{flexDirection: 'row', justifyContent: 'space-between', height: 57.5, marginLeft: 15, marginRight: 14.45, backgroundColor: '#FFFFFF'}}>
+      <View style={{borderBottomWidth: 1, borderBottomColor: '#F1F1F1', paddingBottom: 1.5}}>
+        <View style={{flexDirection: 'row', justifyContent: 'space-between', height: 57.5, paddingLeft: 15, paddingRight: 14.45, backgroundColor: '#FFFFFF'}}>
           <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
             <TouchableOpacity onPress={this.onProfileImagePress.bind(this)}>
               {this.renderProfileImage()}
@@ -198,6 +198,7 @@ class ExploreDetail extends Component {
         </View>
         <View style={{height: windowSize.width - 213}}>
           <ScrollView
+            style={{backgroundColor: '#FFFFFF'}}
             snapToAlignment={'center'}
             scrollEventThrottle={299}
             directionalLockEnabled

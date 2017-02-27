@@ -107,9 +107,8 @@ class NotiScreen extends Component {
         return (
           <FlatListE
             keyExtractor={(item, index) => index}
-            style={{ flex: 1 }}
+            style={{ flex: 1, backgroundColor: 'rgb(241, 241, 241)', paddingTop: 10 }}
             ref={this._captureRef}
-            HeaderComponent={this._renderHeaderComponent.bind(this)}
             ItemComponent={this._renderItemComponent.bind(this)}
             disableVirtualization={false}
             getItemLayout={undefined}
@@ -129,14 +128,6 @@ class NotiScreen extends Component {
 
   _getItemLayout = (data: any, index: number) => {
     return getItemLayout(data, index, this.state.horizontal)
-  }
-
-  _renderHeaderComponent () {
-    return (
-      <View>
-        <View style={{flex: 1, height: 7, backgroundColor: '#F4F4F4', borderWidth: 2, borderColor: '#F1F1F1'}} />
-      </View>
-    )
   }
 
   _renderItemComponent = ({item}) => {

@@ -120,7 +120,7 @@ class NotiDetail extends Component {
 
     return (
       <TouchableOpacity style={{alignItems: 'center'}} onPress={this.onNotiPress.bind(this)}>
-        <View style={{width: windowSize.width - 30, height: 55, borderBottomWidth: 1, borderColor: '#F1F1F1', flexDirection: 'row', backgroundColor: '#FFFFFF'}}>
+        <View style={{width: windowSize.width, paddingLeft: 15, paddingRight: 15, height: 55, borderBottomWidth: 1, borderColor: '#F1F1F1', flexDirection: 'row', backgroundColor: '#FFFFFF'}}>
           <TouchableOpacity
             style={{flex: 1, alignItems: 'center', justifyContent: 'center', paddingLeft: 3}}
             onPress={this.onProfilePress.bind(this)}>

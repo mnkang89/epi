@@ -261,9 +261,9 @@ class EpisodeDetail extends Component {
 
     return (
       <View
-        style={{flex: 1}}>
+        style={{flex: 1, marginBottom: 10}}>
         <View style={headerContentStyle}>
-          <View style={{width: windowSize.width - 30, marginTop: 10}}>
+          <View style={{width: windowSize.width - 30, marginTop: 10, marginBottom: 10}}>
             <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
               <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
                 <View>
@@ -300,7 +300,7 @@ class EpisodeDetail extends Component {
           onEndReached={this._onEndReached.bind(this)}
           onEndReachedThreshold={0}
           shouldItemUpdate={this._shouldItemUpdate}
-          style={{marginTop: 10, paddingLeft: 7.5, paddingRight: 7.5}}
+          style={{paddingLeft: 7.5, paddingRight: 7.5, backgroundColor: '#FFFFFF'}}
           contentOffset={{x: xPosition, y: 0}}
           scrollEventThrottle={100}
           snapToAlignment={'start'}
@@ -308,7 +308,7 @@ class EpisodeDetail extends Component {
           showsHorizontalScrollIndicator
           decelerationRate={'fast'}
           directionalLockEnabled={false} />
-        <View style={{width: windowSize.width - 30, backgroundColor: '#FFFFFF', paddingTop: 15}}>
+        <View style={{width: windowSize.width, backgroundColor: '#FFFFFF', paddingTop: 15, paddingBottom: 15}}>
           <View style={{flexDirection: 'row', justifyContent: 'flex-start'}}>
             <View style={{marginLeft: 15, justifyContent: 'center'}}>
               <Image style={{width: 12, height: 10}} source={Images.likeCount} />

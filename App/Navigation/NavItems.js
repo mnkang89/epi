@@ -17,9 +17,7 @@ const openDrawer = () => {
 export default {
   episodeLogo () {
     return (
-      <View style={{
-        paddingTop: 13
-      }}>
+      <View style={{paddingTop: 35}}>
         <Image source={Images.episodeLogo} style={styles.episodeLogo} />
       </View>
     )
@@ -27,7 +25,7 @@ export default {
 
   backButton () {
     return (
-      <TouchableOpacity onPress={NavigationActions.pop}>
+      <TouchableOpacity onPress={NavigationActions.pop} style={{paddingTop: 5}}>
         <Image source={Images.backButton} style={{width: 11, height: 19}} />
       </TouchableOpacity>
     )
