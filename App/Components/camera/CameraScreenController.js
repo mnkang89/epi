@@ -55,6 +55,7 @@ class CameraScreenController extends Component {
     if (this.props.cameraHandler.getCamera() === null) return
     this.props.cameraHandler.getCamera().capture()
     .then((data) => {
+      CameraRoll.saveToCameraRoll(data.path)
       ImageEditor.cropImage(
         data.path,
         // TODO: this is just for iphone, improve this
@@ -91,6 +92,7 @@ class CameraScreenController extends Component {
     .then((data) => {
       console.log(data)
       console.tron.log('video capture done')
+      CameraRoll.saveToCameraRoll(data.path)
       this.props.takeContent(ContentType.Video, data.path)
     })
     .catch(err => {
