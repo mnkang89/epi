@@ -107,6 +107,7 @@ shouldComponentUpdate (nextProps, nextState) {
   render () {
     return (
       <Modal
+        style={{position: 'absolute', top: 0, left: 0, bottom: 0, right: 0}}
         animationType={'slide'}
         transparent
         visible={this.state.modalVisible}>

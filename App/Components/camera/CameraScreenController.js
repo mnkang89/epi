@@ -9,7 +9,7 @@ import {
   CameraRoll
 } from 'react-native'
 import { Images } from '../../Themes'
-import Icon from 'react-native-vector-icons/FontAwesome'
+// import Icon from 'react-native-vector-icons/FontAwesome'
 import { connect } from 'react-redux'
 import CameraScreenAction from '../../Redux/CameraScreenRedux'
 import Camera from 'react-native-camera'
@@ -233,21 +233,25 @@ class CameraScreenController extends Component {
         <View style={{flex: 1}}>
           {this.renderCommentInput()}
           <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around'}}>
-            <TouchableOpacity
-              style={{marginLeft: 30}}
-              onPress={this.pressBackToReadyToTakeContent.bind(this)}>
-              <Image style={{width: 30, height: 30}} source={Images.backChevron} />
-            </TouchableOpacity>
+            <View style={{flex: 1, alignItems: 'flex-end'}}>
+              <TouchableOpacity
+                onPress={this.pressBackToReadyToTakeContent.bind(this)}>
+                <Image style={{width: 16, height: 27}} source={Images.backChevron} />
+              </TouchableOpacity>
+            </View>
 
-            <TouchableOpacity onPress={this.postContent.bind(this)}>
-              <Image style={{width: 85, height: 85}} source={Images.aftercaptureButton} />
-            </TouchableOpacity>
+            <View style={{flex: 2, alignItems: 'center'}}>
+              <TouchableOpacity onPress={this.postContent.bind(this)}>
+                <Image style={{width: 85, height: 85}} source={Images.aftercaptureButton} />
+              </TouchableOpacity>
+            </View>
 
-            <TouchableOpacity
-              style={{marginRight: 30}}
-              onPress={this.onPressOpenTextInput.bind(this)} >
-              <Image style={{width: 31, height: 31}} source={Images.write} />
-            </TouchableOpacity>
+            <View style={{flex: 1}}>
+              <TouchableOpacity
+                onPress={this.onPressOpenTextInput.bind(this)} >
+                <Image style={{width: 38, height: 38}} source={Images.write} />
+              </TouchableOpacity>
+            </View>
           </View>
           <ConfirmError
             confirmStyle={'setting'}
@@ -264,23 +268,26 @@ class CameraScreenController extends Component {
         <View style={{flex: 1, flexDirection: 'column', backgroundColor: 'white'}}>
           <View style={{flex: 15, alignItems: 'flex-end', backgroundColor: 'white'}} >
             {this.renderTimerComponent()}
-            <TouchableOpacity
-              style={{marginRight: 10, marginTop: 10}}
-              onPress={this.switchCamera.bind(this)}>
-              <Icon
-                name='repeat'
-                size={20}
-                style={{width: 22, height: 22, alignSelf: 'center', fontWeight: '300'}} />
-            </TouchableOpacity>
           </View>
-          <View style={{flex: 70, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center'}}>
-            <TouchableWithoutFeedback
-              delayLongPress={300}
-              onPress={this.takePicture.bind(this)}
-              onLongPress={this.takeVideo.bind(this)}
-              onPressOut={this.takeContent.bind(this)}>
-              <Image style={{width: 85, height: 85}} source={Images.captureButton} />
-            </TouchableWithoutFeedback>
+          <View style={{flex: 70, flexDirection: 'row', backgroundColor: 'white', alignItems: 'center', justifyContent: 'space-around'}}>
+            <View style={{flex: 1}} />
+
+            <View style={{flex: 2, alignItems: 'center'}}>
+              <TouchableWithoutFeedback
+                delayLongPress={300}
+                onPress={this.takePicture.bind(this)}
+                onLongPress={this.takeVideo.bind(this)}
+                onPressOut={this.takeContent.bind(this)}>
+                <Image style={{width: 85, height: 85}} source={Images.captureButton} />
+              </TouchableWithoutFeedback>
+            </View>
+
+            <View style={{flex: 1, paddingTop: 10}}>
+              <TouchableOpacity
+                onPress={this.switchCamera.bind(this)}>
+                <Image source={Images.cameraSwitch} />
+              </TouchableOpacity>
+            </View>
           </View>
           <View style={{flex: 15}} />
         </View>

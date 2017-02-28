@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from 'react'
 import {
   View,
   ActivityIndicator
+  // Dimensions,
+  // TouchableOpacity
   // ListView,
   // ScrollView,
   // RefreshControl,
@@ -25,6 +27,7 @@ import EpisodeActions from '../Redux/EpisodeRedux'
 import CommentActions from '../Redux/CommentRedux'
 
 // const windowSize = Dimensions.get('window')
+
 class FeedScreen extends Component {
 
   static propTypes = {

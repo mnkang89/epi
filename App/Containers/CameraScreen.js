@@ -55,13 +55,12 @@ class CameraScreen extends Component {
     return (
       <Modal
         ref={(modal) => { this.modal = modal }}
-        style={{backgroundColor: 'white', flex: 1}}
+        style={{backgroundColor: 'red', flex: 1}}
         position={'center'}
-        backdrop={false}
+        // backdrop={false}
         swipeThreshold={10}
         isOpen
-        onClosed={this.goToHomeTab.bind(this)}
-        >
+        onClosed={this.goToHomeTab.bind(this)} >
         <View style={{flex: 1, flexDirection: 'column'}}>
           <View style={{flex: cameraHeightAsFlex}}>
             <CameraComponent cameraHandler={this.state.cameraHandler} />
