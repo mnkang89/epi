@@ -18,20 +18,19 @@ const RegisterNotification = () => {
               if (res.ok) {
                 const realm = getRealm()
                 realm.write(() => {
-                  realm.objects('pushToken')
+                  const tokens = realm.objects('pushToken')
+                  realm.delete(tokens)
                   realm.create('pushToken', {token: token.token})
                 })
                 console.log('push token store to realm')
               }
             })
       }
-
-      if (__DEV__) console.log('TOKEN:', token)
     },
 
     // (required) Called when a remote or local notification is opened or received
     onNotification: (notification) => {
-      if (__DEV__) console.log('NOTIFICATION:', notification)
+      console.log('NOTIFICATION:', notification)
     },
 
     // ANDROID ONLY: (optional) GCM Sender ID.
@@ -47,7 +46,7 @@ const RegisterNotification = () => {
     // Should the initial notification be popped automatically
     // default: true
     // Leave this off unless you have good reason.
-    popInitialNotification: false,
+    popInitialNotification: true,
 
     /**
       * IOS ONLY: (optional) default: true
