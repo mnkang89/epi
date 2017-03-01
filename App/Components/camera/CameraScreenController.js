@@ -13,6 +13,7 @@ import { Images } from '../../Themes'
 import { connect } from 'react-redux'
 import CameraScreenAction from '../../Redux/CameraScreenRedux'
 import Camera from 'react-native-camera'
+import EpisodeControllerButton from './EpisodeControllerButton'
 import ProgressBar from './Progress-Bar'
 import ConfirmError from '../common/ConfirmError'
 import ContentType from './ContentTypeEnum'
@@ -270,7 +271,9 @@ class CameraScreenController extends Component {
             {this.renderTimerComponent()}
           </View>
           <View style={{flex: 70, flexDirection: 'row', backgroundColor: 'white', alignItems: 'center', justifyContent: 'space-around'}}>
-            <View style={{flex: 1}} />
+            <View style={{flex: 1, alignItems: 'flex-end'}} >
+              <EpisodeControllerButton />
+            </View>
 
             <View style={{flex: 2, alignItems: 'center'}}>
               <TouchableWithoutFeedback

@@ -11,7 +11,7 @@ import { connect } from 'react-redux'
 import Camera from 'react-native-camera'
 import Video from 'react-native-video'
 import ContentType from './ContentTypeEnum'
-import EpisodeControllerButton from './EpisodeControllerButton'
+// import EpisodeControllerButton from './EpisodeControllerButton'
 import CameraScreenActions from '../../Redux/CameraScreenRedux'
 import _ from 'lodash'
 
@@ -160,9 +160,9 @@ class CameraSection extends Component {
       } else {
         return (
           <View sytle={{flex: 1}}>
-            <View style={{position: 'absolute', marginTop: 30, marginLeft: 10, height: this.state.componentWidth, width: this.state.componentWidth, zIndex: 1}} >
+            {/* <View style={{position: 'absolute', marginTop: 30, marginLeft: 10, height: this.state.componentWidth, width: this.state.componentWidth, zIndex: 1}} >
               <EpisodeControllerButton />
-            </View>
+            </View> */}
             <Camera
               ref={(cam) => { this.props.cameraHandler.setCamera(cam) }}
               style={{ position: 'absolute', height: this.state.componentWidth, width: this.state.componentWidth }}
