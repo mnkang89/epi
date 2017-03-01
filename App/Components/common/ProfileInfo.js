@@ -8,6 +8,7 @@ import ConfirmError from './ConfirmError'
 import { Images } from '../../Themes'
 import styles from '../../Containers/Styles/FeedScreenStyle'
 import { Actions as NavigationActions } from 'react-native-router-flux'
+import CachableImage from '../../Common/CachableImage'
 
 class ProfileInfo extends Component {
 
@@ -149,7 +150,7 @@ class ProfileInfo extends Component {
   renderProfileImage () {
     if (this.props.type === 'me') {
       if (this.state.photoSource) {
-        let uri = `${this.state.photoSource}?random_number=${new Date().getTime()}`
+        let uri = `${this.state.photoSource}}`
 
         return (
           <Image
@@ -166,7 +167,7 @@ class ProfileInfo extends Component {
     } else {
       if (this.props.profileImagePath) {
         return (
-          <Image
+          <CachableImage
             style={[styles.image, {borderWidth: 1, borderColor: 'white', marginBottom: 9, marginTop: 39.5}]}
             source={{uri: this.props.profileImagePath}} />)
       } else {

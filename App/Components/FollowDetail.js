@@ -1,8 +1,9 @@
 // TODO: 헤애함
 import React, { Component, PropTypes } from 'react'
-import { Text, View, Image, TouchableOpacity } from 'react-native'
+import { Text, View, TouchableOpacity } from 'react-native'
 
 import { Colors, Metrics } from '../Themes/'
+import CachableImage from '../Common/CachableImage'
 
 class FollowDetail extends Component {
 
@@ -56,7 +57,7 @@ class FollowDetail extends Component {
     return (
       <View style={{alignItems: 'center', justifyContent: 'center', height: 55, marginLeft: 15, borderBottomWidth: 0.5, borderColor: 'rgb(231, 231, 231)', flexDirection: 'row', backgroundColor: 'white'}}>
         <View style={{flex: 1}}>
-          <Image
+          <CachableImage
             style={styles.imageStyle}
             source={{uri: profileImagePath}}
           />
