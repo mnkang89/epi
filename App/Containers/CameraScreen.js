@@ -42,34 +42,37 @@ class CameraScreen extends Component {
   }
 
   goToHomeTab () {
-    const { token, accountId } = this.props
-    const withFollowing = true
+    // const { token, accountId } = this.props
+    // const withFollowing = true
 
-    this.props.requestUserEpisodes(token, accountId, withFollowing)
+    // this.props.requestUserEpisodes(token, accountId, withFollowing)
 
     StatusBar.setHidden(false)
-    NavigationActions.homeTab()
+    NavigationActions.pop()
   }
 
   render () {
     return (
-      <Modal
-        ref={(modal) => { this.modal = modal }}
-        style={{backgroundColor: 'red', flex: 1}}
-        position={'center'}
-        // backdrop={false}
-        swipeThreshold={10}
-        isOpen
-        onClosed={this.goToHomeTab.bind(this)} >
-        <View style={{flex: 1, flexDirection: 'column'}}>
-          <View style={{flex: cameraHeightAsFlex}}>
-            <CameraComponent cameraHandler={this.state.cameraHandler} />
+      <View style={{flex: 1, backgroundColor: 'transparent'}}>
+        <Modal
+          ref={(modal) => { this.modal = modal }}
+          style={{backgroundColor: 'transparent', flex: 1}}
+          position={'center'}
+          backdrop={false}
+          swipeThreshold={10}
+          isOpen
+          onClosed={this.goToHomeTab.bind(this)}
+          >
+          <View style={{flex: 1, flexDirection: 'column'}}>
+            <View style={{flex: cameraHeightAsFlex}}>
+              <CameraComponent cameraHandler={this.state.cameraHandler} />
+            </View>
+            <View style={{flex: cameraControllerHeightAsFlex}}>
+              <CameraController cameraHandler={this.state.cameraHandler} />
+            </View>
           </View>
-          <View style={{flex: cameraControllerHeightAsFlex}}>
-            <CameraController cameraHandler={this.state.cameraHandler} />
-          </View>
-        </View>
-      </Modal>
+        </Modal>
+      </View>
     )
   }
 }
