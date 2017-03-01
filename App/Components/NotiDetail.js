@@ -3,7 +3,7 @@ import { Text, View, Image, TouchableOpacity, Dimensions } from 'react-native'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import { Colors, Images, Metrics } from '../Themes/'
 import CachableImage from '../Common/CachableImage'
-// import { convert2TimeDiffString } from '../Lib/Utilities'
+import { convert2TimeDiffString } from '../Lib/Utilities'
 
 const windowSize = Dimensions.get('window')
 
@@ -115,8 +115,7 @@ class NotiDetail extends Component {
 
   render () {
     const { message } = this.props.noti
-    // const timeDiffString = convert2TimeDiffString(this.props.noti.createDateTime)
-    // console.log(timeDiffString)
+    const timeDiffString = convert2TimeDiffString(this.props.noti.createDatetime)
 
     return (
       <TouchableOpacity style={{alignItems: 'center'}} onPress={this.onNotiPress.bind(this)}>
@@ -131,7 +130,7 @@ class NotiDetail extends Component {
               <Text style={{color: '#777777', fontWeight: 'bold'}}>{message}</Text>
             </View>
             <View style={{flex: 3, alignItems: 'flex-end', justifyContent: 'center'}}>
-              <Text style={{fontSize: 10, color: '#B2B2B2'}}>1시간 전</Text>
+              <Text style={{fontSize: 10, color: '#B2B2B2'}}>{timeDiffString}</Text>
             </View>
           </View>
         </View>
