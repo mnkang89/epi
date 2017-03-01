@@ -150,12 +150,12 @@ class ProfileInfo extends Component {
   renderProfileImage () {
     if (this.props.type === 'me') {
       if (this.state.photoSource) {
-        let uri = `${this.state.photoSource}}`
-
+        console.tron.log(this.state.photoSource)
         return (
-          <Image
+
+          <CachableImage
             style={[styles.image, {borderWidth: 1, borderColor: 'white', marginBottom: 9, marginTop: 39.5}]}
-            source={{uri}} />
+            source={{uri: this.state.photoSource}} />
         )
       } else {
         return (
