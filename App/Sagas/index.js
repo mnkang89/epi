@@ -23,7 +23,7 @@ import {
   userEpisodes, userEpisodesWithFalse, otherEpisodes, postEpisode, putEpisode, singleEpisode, newEpisode,
   newEpisodeWithFalse, newOtherEpisode, deactivateEpisode, moreFeeds, moreEpisodes, moreOtherEpisodes } from './EpisodeSagas'
 import { postContent, postLike, deleteLike } from './ContentSagas'
-import { postComment, getComment } from './CommentSagas'
+import { postComment, getComment, deleteComment } from './CommentSagas'
 import { getBestFeeds } from './FeedSagas'
 import { getNoties } from './NotiSagas'
 
@@ -118,6 +118,8 @@ export default function * root () {
     takeLatest(CommentTypes.COMMENT_POST, postComment, api),
     // get comment
     takeLatest(CommentTypes.COMMENT_GET, getComment, api),
+    // delete comment
+    takeLatest(CommentTypes.COMMENT_DELETE, deleteComment, api),
 
     /* --- Feed --- */
     // get BestFeeds

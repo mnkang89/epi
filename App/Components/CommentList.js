@@ -15,7 +15,8 @@ class CommentList extends Component {
     contentId: PropTypes.number,
 
     resetCommentModal: PropTypes.func,
-    getComment: PropTypes.func
+    getComment: PropTypes.func,
+    deleteComment: PropTypes.func
   }
 
   constructor (props) {
@@ -52,9 +53,13 @@ class CommentList extends Component {
     return sortedComments.map(comment =>
       <CommentDetail
         key={comment.id}
+        token={this.props.token}
+        episodeId={this.props.episodeId}
+        contentId={this.props.contentId}
         comment={comment}
         screen={this.props.screen}
-        resetCommentModal={this.props.resetCommentModal} />
+        resetCommentModal={this.props.resetCommentModal}
+        deleteComment={this.props.deleteComment} />
     )
   }
 
@@ -64,8 +69,7 @@ class CommentList extends Component {
         refreshControl={
           <RefreshControl
             refreshing={this.state.refreshing}
-            onRefresh={this.onRefresh.bind(this)}
-          />
+            onRefresh={this.onRefresh.bind(this)} />
         } >
         {this.renderComments()}
       </ScrollView>

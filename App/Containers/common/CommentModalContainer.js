@@ -11,7 +11,8 @@ const mapStateToProps = (state) => {
     visible: state.comment.visible,
 
     comments: state.comment.comments,
-    commentPosting: state.comment.commentPosting
+    commentPosting: state.comment.commentPosting,
+    commentDeleting: state.comment.commentDeleting
   }
 }
 
@@ -19,7 +20,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     resetCommentModal: () => dispatch(CommentActions.resetComment()),
     getComment: (token, episodeId, contentId) => dispatch(CommentActions.commentGet(token, episodeId, contentId)),
-    postComment: (token, episodeId, contentId, message) => dispatch(CommentActions.commentPost(token, episodeId, contentId, message))
+    postComment: (token, episodeId, contentId, message) => dispatch(CommentActions.commentPost(token, episodeId, contentId, message)),
+    deleteComment: (token, episodeId, contentId, commentId) => dispatch(CommentActions.commentDelete(token, episodeId, contentId, commentId))
   }
 }
 

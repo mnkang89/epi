@@ -24,6 +24,27 @@ export function * postComment (api, action) {
   }
 }
 
+export function * deleteComment (api, action) {
+  console.log('deleteComment사가워커 진입')
+  const { token, episodeId, contentId, commentId } = action
+  console.log('코멘트아이디' + commentId)
+  const response = yield call(api.deleteComment, commentId)
+
+  if (response.ok) {
+    console.log('ok')
+    console.log(response)
+
+    yield put(CommentActions.commentDeleteSuccess())
+    yield put(CommentActions.commentGet(token, episodeId, contentId))
+  } else {
+    console.log('error')
+    console.log(response)
+
+    // TODO: 에러케이스 구분
+    yield put(CommentActions.commentDeleteFailure('WRONG'))
+  }
+}
+
 // attempts to get comment
 export function * getComment (api, action) {
   console.log('getComment사가워커 진입!!')

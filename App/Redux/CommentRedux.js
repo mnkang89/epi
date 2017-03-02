@@ -35,6 +35,19 @@ const { Types, Creators } = createActions({
   ],
   commentGetFailure: [
     'error'
+  ],
+
+  commentDelete: [
+    'token',
+    'episodeId',
+    'contentId',
+    'commentId'
+  ],
+  commentDeleteSuccess: [
+
+  ],
+  commentDeleteFailure: [
+    'error'
   ]
 })
 
@@ -51,7 +64,9 @@ export const INITIAL_STATE = Immutable({
   error: null,
 
   commentsRequesting: false,
-  comments: []
+  comments: [],
+
+  commentDeleting: false
 })
 
 /* ------------- Reducers ------------- */
@@ -82,6 +97,16 @@ export const getCommentSuccess = (state: Object, { comments }: Object) =>
 export const getCommentFailure = (state: Object, { error }: Object) =>
   state.merge({ commentsRequesting: false, error })
 
+// we're attempting to deleting Comment
+export const deleteComment = (state: Object, { token, episodeId, contentId, commentId }: Object) =>
+  state.merge({ commentDeleting: true })
+
+export const deleteCommentSuccess = (state: Object, { response }: Object) =>
+  state.merge({ commentDeleting: false })
+
+export const deleteCommentFailure = (state: Object, { error }: Object) =>
+  state.merge({ commentDeleting: false })
+
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
@@ -95,5 +120,9 @@ export const reducer = createReducer(INITIAL_STATE, {
 
   [Types.COMMENT_GET]: getComment,
   [Types.COMMENT_GET_SUCCESS]: getCommentSuccess,
-  [Types.COMMENT_GET_FAILURE]: getCommentFailure
+  [Types.COMMENT_GET_FAILURE]: getCommentFailure,
+
+  [Types.COMMENT_DELETE]: deleteComment,
+  [Types.COMMENT_DELETE_SUCCESS]: deleteCommentSuccess,
+  [Types.COMMENT_DELETE_FAILURE]: deleteCommentFailure
 })

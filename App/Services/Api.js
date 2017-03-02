@@ -262,6 +262,12 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     return api.get(`/api/comments?owner=episode&ownerId=${episodeId}`, {}, getTokenHeader())
   }
 
+  const deleteComment = (commentId) => {
+    console.log('DELETE comment api콜 발생')
+
+    return api.delete(`/api/comments?commentId=${commentId}`, {}, getTokenHeader())
+  }
+
   // feeds
   const getBestFeeds = (token) => {
     console.tron.log('GET bestFeeds api콜 발생')
@@ -319,6 +325,7 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
 
     postComment,
     getComment,
+    deleteComment,
 
     getBestFeeds,
 

@@ -5,14 +5,21 @@ import CachableImage from '../Common/CachableImage'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import { Colors, Images, Metrics } from '../Themes/'
 import { getObjectDiff, convert2TimeDiffString } from '../Lib/Utilities'
+import { getAccountId } from '../Services/Auth'
+
+const accountId = getAccountId()
 
 class CommentDetail extends Component {
 
   static propTypes = {
+    token: PropTypes.string,
+    episodeId: PropTypes.number,
+    contentId: PropTypes.number,
     comment: PropTypes.object.isRequired,
     screen: PropTypes.string,
 
-    resetCommentModal: PropTypes.func
+    resetCommentModal: PropTypes.func,
+    deleteComment: PropTypes.func
   }
 
   constructor (props) {
@@ -46,9 +53,14 @@ class CommentDetail extends Component {
   }
 
   removeCommentPress () {
+    const { token, episodeId, contentId } = this.props
+    const commentId = this.props.comment.id
+
     this.setState({
       settingModal: false
     })
+
+    this.props.deleteComment(token, episodeId, contentId, commentId)
   }
 
   onProfilePress () {
@@ -95,6 +107,24 @@ class CommentDetail extends Component {
     }
   }
 
+  renderCommentOption () {
+    if (this.props.comment.account.id === accountId) {
+      return (
+        <TouchableOpacity
+          style={{width: 20, height: 20, marginTop: 20, marginLeft: 11}}
+          onPress={this.commentSetting.bind(this)} >
+          <View style={{flexDirection: 'row'}}>
+            <View style={{marginRight: 3, width: 3, height: 3, backgroundColor: 'rgb(198,198,198)'}} />
+            <View style={{marginRight: 3, width: 3, height: 3, backgroundColor: 'rgb(198,198,198)'}} />
+            <View style={{width: 3, height: 3, backgroundColor: 'rgb(198,198,198)'}} />
+          </View>
+        </TouchableOpacity>
+      )
+    } else {
+      return null
+    }
+  }
+
   render () {
     const { message } = this.props.comment
     const { nickname } = this.props.comment.account
@@ -123,15 +153,7 @@ class CommentDetail extends Component {
             </View>
           </View>
           <View style={{marginTop: 14, marginLeft: 11}}>
-            <TouchableOpacity
-              style={{width: 20, height: 20, marginTop: 20, marginLeft: 11}}
-              onPress={this.commentSetting.bind(this)} >
-              <View style={{flexDirection: 'row'}}>
-                <View style={{marginRight: 3, width: 3, height: 3, backgroundColor: 'rgb(198,198,198)'}} />
-                <View style={{marginRight: 3, width: 3, height: 3, backgroundColor: 'rgb(198,198,198)'}} />
-                <View style={{width: 3, height: 3, backgroundColor: 'rgb(198,198,198)'}} />
-              </View>
-            </TouchableOpacity>
+            {this.renderCommentOption()}
           </View>
         </View>
         <Modal

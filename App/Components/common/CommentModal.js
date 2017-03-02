@@ -26,10 +26,12 @@ class CommentModal extends Component {
     visible: PropTypes.bool,
     comments: PropTypes.array,
     commentPosting: PropTypes.bool,
+    commentDeleting: PropTypes.bool,
 
     resetCommentModal: PropTypes.func,
     getComment: PropTypes.func,
-    postComment: PropTypes.func
+    postComment: PropTypes.func,
+    deleteComment: PropTypes.func
   }
 
   constructor (props) {
@@ -67,6 +69,7 @@ class CommentModal extends Component {
       }
     }
   }
+
 /*
 shouldComponentUpdate (nextProps, nextState) {
   if (nextState.message !== this.state.message) {
@@ -76,6 +79,16 @@ shouldComponentUpdate (nextProps, nextState) {
   return true
 }
 */
+
+  // componentDidUpdate (prevProps, prevState) {
+  //   // On modal open request slide the view up and fade in the backdrop
+  //   if (this.state.modalVisible && !prevState.modalVisible) {
+  //     this._open()
+  //   // On modal close request slide the view down and fade out the backdrop
+  //   } else if (!this.props.modalVisible && prevProps.modalVisible) {
+  //     this._close()
+  //   }
+  // }
 
   resetCommentModal () {
     this.setState({modalVisible: false})
@@ -108,10 +121,12 @@ shouldComponentUpdate (nextProps, nextState) {
     return (
       <Modal
         style={{position: 'absolute', top: 0, left: 0, bottom: 0, right: 0}}
-        animationType={'slide'}
+        animationType={'none'}
         transparent
         visible={this.state.modalVisible}>
-        <View style={styles2.containerStyle}>
+        <View
+          ref={(ref) => { this.contentRef = ref }}
+          style={styles2.containerStyle}>
           <View style={{backgroundColor: 'white', flex: 1, marginTop: 151, borderTopLeftRadius: 8, borderTopRightRadius: 8}}>
             <View style={{flexDirection: 'row', height: 42.5, marginRight: 4.5, marginLeft: 4.5, borderBottomWidth: 0.5, borderBottomColor: 'rgb(204, 204, 204)'}}>
               <TouchableOpacity
@@ -134,7 +149,8 @@ shouldComponentUpdate (nextProps, nextState) {
               episodeId={this.props.episodeId}
               contentId={this.props.contentId}
               resetCommentModal={this.resetCommentModal.bind(this)}
-              getComment={this.props.getComment} />
+              getComment={this.props.getComment}
+              deleteComment={this.props.deleteComment} />
             <View style={{flexDirection: 'row', backgroundColor: 'rgb(236, 236, 236)'}}>
               <View style={styles2.textContainer}>
                 <AutoGrowingTextInput
