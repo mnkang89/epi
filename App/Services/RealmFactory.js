@@ -8,6 +8,15 @@ const AccountSchema = {
   }
 }
 
+const EpisodeSchema = {
+  name: 'episode',
+  primaryKey: 'id',
+  properties: {
+    id: { type: 'int', indexed: true },
+    offset: {type: 'int', default: 0}
+  }
+}
+
 const CacheImageSchema = {
   name: 'cacheImage',
   properties: {
@@ -36,5 +45,5 @@ const PushTokenSchema = {
 }
 
 export const getRealm = () => {
-  return new Realm({schema: [AccountSchema, CacheImageSchema, CacheVideoSchema, PushTokenSchema]})
+  return new Realm({schema: [AccountSchema, EpisodeSchema, CacheImageSchema, CacheVideoSchema, PushTokenSchema]})
 }

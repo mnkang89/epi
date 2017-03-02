@@ -8,18 +8,17 @@ import {
   Dimensions
  } from 'react-native'
 import { Actions as NavigationActions } from 'react-native-router-flux'
-import CachableImage from '../../Common/CachableImage'
 
+import FlatListE from '../../Experimental/FlatList_e'
 import { Colors, Images, Metrics } from '../../Themes/'
 import { convert2TimeDiffString } from '../../Lib/Utilities'
-
+import { getRealm } from '../../Services/RealmFactory'
+import CachableImage from '../../Common/CachableImage'
 import ContentContainer from '../../Containers/common/ContentContainer'
-import {
-  getItemLayout
-} from '../../Experimental/ListExampleShared_e'
-import FlatListE from '../../Experimental/FlatList_e'
+import { getItemLayout } from '../../Experimental/ListExampleShared_e'
 
 const windowSize = Dimensions.get('window')
+const realm = getRealm()
 
 class EpisodeDetail extends Component {
 
@@ -62,6 +61,9 @@ class EpisodeDetail extends Component {
     // const { parentHandler, index } = this.props
     // const episodeViewability = parentHandler.viewableItemsArray.includes(index)
     const centerIndex = this.currentCenterIndex
+    const episodeId = this.props.episode.id
+    let episode = realm.objects('episode')
+      .filtered('id = ' + episodeId)
 
     for (let i = 0; i < this.state.contentTypeArray.length; i++) {
       if (this.state.contentTypeArray[i] === 'Video' &&
@@ -81,6 +83,15 @@ class EpisodeDetail extends Component {
         this.contentRefs[centerIndex] !== undefined) {
       this.contentRefs[centerIndex].getWrappedInstance()._root._component.playVideo()
       this.currentCenterIndex = centerIndex
+    }
+
+    if (episode.length === 0) {
+      realm.write(() => {
+        realm.delete(episode)
+        realm.create('episode', {id: episodeId})
+      })
+    } else {
+      return
     }
   }
 
@@ -180,16 +191,9 @@ class EpisodeDetail extends Component {
       const { token, episode } = this.props
       this.dragEndingOffset = event.nativeEvent.contentOffset.x
 
-      // console.log('오프셋들')
-      // console.log(this.dragStartingOffset)
-      // console.log(this.dragEndingOffset)
-
       if (this.dragStartingOffset - this.dragEndingOffset > 0) {
-        // console.log('푸터 취소')
         this.setState({footer: false})
       }
-      // console.log('스타팅과 라스트가 같은가?')
-      // console.log(this.dragStartingOffset === this.lastContentOffset)
       if (this.dragStartingOffset >= this.lastContentOffset &&
           this.dragStartingOffset - this.dragEndingOffset < 0) {
         this.props.requestNewEpisode(token, episode.id)
@@ -199,6 +203,18 @@ class EpisodeDetail extends Component {
 
   _onMomentumScrollBegin (event) {
     this.horizontalLock = false
+  }
+
+  _onMomentumScrollEnd (event) {
+    const episodeId = this.props.episode.id
+    const offset = event.nativeEvent.contentOffset.x
+    let episode = realm.objects('episode')
+      .filtered('id = ' + episodeId)
+
+    realm.write(() => {
+      realm.create('episode', {id: episodeId, offset: offset}, true)
+      console.log(episode[0].offset)
+    })
   }
 
   _onEndReached () {
@@ -233,7 +249,8 @@ class EpisodeDetail extends Component {
   }
 
   render () {
-    const active = this.props.episode.active
+    const episodeId = this.props.episode.id
+    // const active = this.props.episode.active
     const activeEpisodeLength = this.props.episode.contents.length
     const commentCount = this.props.episode.contents.map(content => content.commentCount).reduce((a, b) => a + b, 0)
     const timeDiffString = convert2TimeDiffString(
@@ -242,18 +259,25 @@ class EpisodeDetail extends Component {
       headerContentStyle
     } = styles
 
+    let episode = realm.objects('episode').filtered('id = ' + episodeId)
     let xPosition = 0
 
     this.lastContentOffset = (activeEpisodeLength - 1) * (windowSize.width - 22)
 
     if (this.props.xPosition === undefined) {
-      if (active) {
-        xPosition = (activeEpisodeLength - 1) * (windowSize.width - 22)
-        this.currentCenterIndex = activeEpisodeLength - 1
-      } else {
+      // if (active) {
+      //   xPosition = (activeEpisodeLength - 1) * (windowSize.width - 22)
+      //   this.currentCenterIndex = activeEpisodeLength - 1
+      // } else {
+      //   xPosition = 0
+      //   this.currentCenterIndex = 0
+      // }
+      if (episode[0] === undefined) {
         xPosition = 0
-        this.currentCenterIndex = 0
+      } else {
+        xPosition = episode[0].offset
       }
+      this.currentCenterIndex = xPosition / (windowSize.width - 22)
     } else {
       xPosition = this.props.xPosition
       this.currentCenterIndex = (this.props.xPosition / (windowSize.width - 22))
@@ -296,6 +320,7 @@ class EpisodeDetail extends Component {
           onScrollBeginDrag={this._onScrollBeginDrag.bind(this)}
           onScrollEndDrag={this._onScrollEndDrag.bind(this)}
           onMomentumScrollBegin={this._onMomentumScrollBegin.bind(this)}
+          onMomentumScrollEnd={this._onMomentumScrollEnd.bind(this)}
           onViewableItemsChanged={this._onViewableItemsChanged}
           onEndReached={this._onEndReached.bind(this)}
           onEndReachedThreshold={0}
