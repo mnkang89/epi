@@ -3,7 +3,6 @@ import {
   View,
   ActivityIndicator
   // Dimensions,
-  // TouchableOpacity
   // ListView,
   // ScrollView,
   // RefreshControl,
@@ -87,6 +86,7 @@ class FeedScreen extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
+    console.log('리시브프랍스인 피드스크린')
     console.log(getObjectDiff(this.props, nextProps))
 
     if (nextProps.items.length !== 0) {
@@ -98,14 +98,14 @@ class FeedScreen extends Component {
 
     if (_.isEqual(this.props.items, nextProps.items)) {
       console.log('아이템같음')
-      // if (this.state.init && this.props.items.length !== 0) {
-      //   this.setState({
-      //     data: this.props.items,
-      //     init: false
-      //   })
-      // }
     } else {
       console.log('아이템다름')
+    }
+
+    if (nextProps.beforeScreen === 'homeTab') {
+      if (nextProps.beforeScreen === nextProps.pastScreen) {
+        this._listRef.scrollToIndex({index: 0})
+      }
     }
 
     if (this.state.refreshing) {
@@ -213,10 +213,10 @@ class FeedScreen extends Component {
 
 // this.props.items
   render () {
-    console.log('데이터길이: ' + this.props.items.length)
     return (
       <View style={styles.mainContainer}>
         <FlatListE
+          scrollsToTop
           keyExtractor={(item, index) => index}
           style={{ flex: 1 }}
           ref={this._captureRef}
@@ -344,7 +344,11 @@ const mapStateToProps = (state) => {
     accountId: state.token.id,
 
     episodesRequesting: state.episode.episodesRequesting,
-    items: state.episode.episodes
+    items: state.episode.episodes,
+
+    trigger: state.screen.trigger,
+    beforeScreen: state.screen.beforeScreen,
+    pastScreen: state.screen.pastScreen
   }
 }
 

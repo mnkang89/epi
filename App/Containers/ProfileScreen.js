@@ -60,6 +60,12 @@ class ProfileScreen extends Component {
       console.log('아이템다름')
     }
 
+    if (nextProps.beforeScreen === 'profileTab') {
+      if (nextProps.beforeScreen === nextProps.pastScreen) {
+        this._listRef.scrollToIndex({index: 0})
+      }
+    }
+
     if (this.state.refreshing) {
       this.setState({
         refreshing: false,
@@ -273,7 +279,11 @@ const mapStateToProps = (state) => {
     followerCount: state.account.followerCount,
     followingCount: state.account.followingCount,
 
-    items: state.episode.episodesWithFalse
+    items: state.episode.episodesWithFalse,
+
+    trigger: state.screen.trigger,
+    beforeScreen: state.screen.beforeScreen,
+    pastScreen: state.screen.pastScreen
   }
 }
 

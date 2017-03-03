@@ -198,6 +198,7 @@ class ExploreDetail extends Component {
         </View>
         <View style={{height: windowSize.width - 213}}>
           <ScrollView
+            scrollsToTop={false}
             style={{backgroundColor: '#FFFFFF'}}
             snapToAlignment={'center'}
             scrollEventThrottle={299}

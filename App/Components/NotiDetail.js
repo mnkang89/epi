@@ -28,9 +28,7 @@ class NotiDetail extends Component {
   onNotiPress () {
     const { episodeId, contentId } = this.props.noti.notiRelateEntityMeta
     const { token } = this.props
-    // const account = this.props.noti.notiCreateAccount
     const account = this.props.myAccount
-    console.log(this.state.type)
 
     if (this.state.type === 'comment') {
       this.props.openComment(true)
@@ -116,6 +114,10 @@ class NotiDetail extends Component {
   render () {
     const { message } = this.props.noti
     const timeDiffString = convert2TimeDiffString(this.props.noti.createDatetime)
+    const nickname = this.props.noti.notiCreateAccount.nickname
+    const nicknameStartingIndex = message.search(nickname)
+    const nicknameEndingIndex = nicknameStartingIndex + nickname.length
+    const messageWithoutNickname = message.slice(nicknameEndingIndex)
 
     return (
       <TouchableOpacity style={{alignItems: 'center'}} onPress={this.onNotiPress.bind(this)}>
@@ -127,7 +129,7 @@ class NotiDetail extends Component {
           </TouchableOpacity>
           <View style={{flex: 10, flexDirection: 'row', paddingLeft: 11.5}}>
             <View style={{flex: 7, justifyContent: 'center'}}>
-              <Text style={{color: '#777777', fontWeight: 'bold'}}>{message}</Text>
+              <Text style={{color: '#777777', fontWeight: 'bold'}}><Text style={{color: 'rgb(33, 33, 33)', fontWeight: 'bold'}}>{nickname}</Text>{messageWithoutNickname}</Text>
             </View>
             <View style={{flex: 3, alignItems: 'flex-end', justifyContent: 'center'}}>
               <Text style={{fontSize: 10, color: '#B2B2B2'}}>{timeDiffString}</Text>
@@ -137,7 +139,8 @@ class NotiDetail extends Component {
       </TouchableOpacity>
     )
   }
-};
+
+}
 
 const styles = {
   headerContentStyle: {

@@ -8,6 +8,9 @@ import Immutable from 'seamless-immutable'
 const { Types, Creators } = createActions({
   screenRegister: [
     'beforeScreen'
+  ],
+  tabTouched: [
+    'trigger'
   ]
 })
 
@@ -17,16 +20,22 @@ export default Creators
 /* ------------- Initial State ------------- */
 
 export const INITIAL_STATE = Immutable({
-  beforeScreen: 'homeTab'
+  beforeScreen: 'homeTab',
+  pastScreen: '',
+  trigger: false
 })
 
 /* ------------- Reducers ------------- */
 // we're attempting to get Episodes
 export const registerScreen = (state: Object, { beforeScreen }: Object) =>
-  state.merge({ beforeScreen })
+  state.merge({ beforeScreen, pastScreen: state.beforeScreen })
+
+export const touchedTab = (state: Object) =>
+  state.merge({ trigger: !state.trigger })
 
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
-  [Types.SCREEN_REGISTER]: registerScreen
+  [Types.SCREEN_REGISTER]: registerScreen,
+  [Types.TAB_TOUCHED]: touchedTab
 })

@@ -54,6 +54,7 @@ class NavigationRouter extends Component {
               selectedTabIcon='home'
               tabIcon='home'
               onPress={() => {
+                this.props.tabTouched()
                 this.props.registerScreen('homeTab')
                 Actions.homeTab()
               }}
@@ -78,6 +79,7 @@ class NavigationRouter extends Component {
               selectedTabIcon='bell-o'
               tabIcon='bell'
               onPress={() => {
+                this.props.tabTouched()
                 this.props.registerScreen('alarmTab')
                 Actions.alarmTab()
               }}
@@ -121,6 +123,7 @@ class NavigationRouter extends Component {
               selectedTabIcon='search'
               tabIcon='search'
               onPress={() => {
+                this.props.tabTouched()
                 this.props.registerScreen('searchTab')
                 Actions.searchTab()
               }}
@@ -153,6 +156,7 @@ class NavigationRouter extends Component {
               selectedTabIcon='user'
               tabIcon='user'
               onPress={() => {
+                this.props.tabTouched()
                 this.props.registerScreen('profileTab')
                 Actions.profileTab()
               }}
@@ -194,7 +198,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    registerScreen: (beforeScreen) => dispatch(ScreenActions.screenRegister(beforeScreen))
+    registerScreen: (beforeScreen) => dispatch(ScreenActions.screenRegister(beforeScreen)),
+    tabTouched: () => dispatch(ScreenActions.tabTouched())
   }
 }
 

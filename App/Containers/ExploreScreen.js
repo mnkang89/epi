@@ -69,6 +69,11 @@ class ExploreScreen extends Component {
         footer: false
       })
     }
+    if (nextProps.beforeScreen === 'searchTab') {
+      if (nextProps.beforeScreen === nextProps.pastScreen) {
+        this._listRef.scrollToIndex({index: 0})
+      }
+    }
 
     if ((this.props.followPosting === true && nextProps.followPosting === false) ||
         (this.props.followDeleting === true && nextProps.followDeleting === false)) {
@@ -189,7 +194,11 @@ const mapStateToProps = (state) => {
     items: state.feed.bestFeeds,
 
     followPosting: state.account.followPosting,
-    followDeleting: state.account.followDeleting
+    followDeleting: state.account.followDeleting,
+
+    trigger: state.screen.trigger,
+    beforeScreen: state.screen.beforeScreen,
+    pastScreen: state.screen.pastScreen
   }
 }
 

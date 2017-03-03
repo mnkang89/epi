@@ -308,6 +308,7 @@ class EpisodeDetail extends Component {
           </View>
         </View>
         <FlatListE
+          scrollsToTop={false}
           keyExtractor={(item, index) => index}
           data={this.props.episode.contents}
           ItemComponent={this._renderItemComponent}

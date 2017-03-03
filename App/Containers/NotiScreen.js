@@ -59,6 +59,12 @@ class NotiScreen extends Component {
     if (this.state.refreshing) {
       this.setState({refreshing: false})
     }
+
+    if (nextProps.beforeScreen === 'alarmTab') {
+      if (nextProps.beforeScreen === nextProps.pastScreen) {
+        this._listRef.scrollToIndex({index: 0})
+      }
+    }
   }
 
   componentWillUnmount () {
