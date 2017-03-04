@@ -4,7 +4,9 @@ import {
   Modal,
   Text,
   TouchableOpacity,
-  Dimensions
+  Dimensions,
+  Animated,
+  Easing
 } from 'react-native'
 import KeyboardSpacer from 'react-native-keyboard-spacer'
 import {AutoGrowingTextInput} from 'react-native-autogrow-textinput'
@@ -42,13 +44,15 @@ class CommentModal extends Component {
       inputBottom: 40,
       modalVisible: false
     }
+    this.animatedValue
   }
 
   componentDidMount () {
-    // this.props.resetCommentModal()
   }
 
   componentWillReceiveProps (nextProps) {
+    console.log('디스닷스테이트모달비저블')
+    console.log(this.state.modalVisible)
     if (nextProps.visible) {
       if (nextProps.commentPosting) {
         console.log('아직 코멘트 포스팅중')
@@ -65,20 +69,29 @@ class CommentModal extends Component {
 
         this.setState({
           modalVisible
+        }, () => {
+          Animated.timing(this.animatedValue, {
+            toValue: 0,
+            duration: 250,
+            easing: Easing.in(Easing.quad),
+            delay: 100
+          }).start()
         })
       }
     }
   }
 
-/*
-shouldComponentUpdate (nextProps, nextState) {
-  if (nextState.message !== this.state.message) {
-    console.log('메세지값 변경')
-    return false
+  componentWillMount () {
+    this.animatedValue = new Animated.Value(600)
   }
-  return true
-}
-*/
+
+  // shouldComponentUpdate (nextProps, nextState) {
+  //   if (nextState.message !== this.state.message) {
+  //     console.log('메세지값 변경')
+  //     return false
+  //   }
+  //   return true
+  // }
 
   // componentDidUpdate (prevProps, prevState) {
   //   // On modal open request slide the view up and fade in the backdrop
@@ -91,11 +104,16 @@ shouldComponentUpdate (nextProps, nextState) {
   // }
 
   resetCommentModal () {
-    this.setState({modalVisible: false})
+    Animated.timing(this.animatedValue, {
+      toValue: 600,
+      duration: 250,
+      delay: 0
+    }).start()
 
     setTimeout(() => {
+      this.setState({modalVisible: false})
       this.props.resetCommentModal()
-    }, 500)
+    }, 250)
   }
 
   handleChangeMessage = (text) => {
@@ -118,16 +136,17 @@ shouldComponentUpdate (nextProps, nextState) {
   }
 
   render () {
+    console.log('모달렌더!!!')
     return (
       <Modal
         style={{position: 'absolute', top: 0, left: 0, bottom: 0, right: 0}}
-        animationType={'none'}
+        animationType={'fade'}
         transparent
         visible={this.state.modalVisible}>
         <View
           ref={(ref) => { this.contentRef = ref }}
           style={styles2.containerStyle}>
-          <View style={{backgroundColor: 'white', flex: 1, marginTop: 151, borderTopLeftRadius: 8, borderTopRightRadius: 8}}>
+          <Animated.View style={{transform: [{translateY: this.animatedValue}], backgroundColor: 'white', flex: 1, marginTop: 131, borderTopLeftRadius: 8, borderTopRightRadius: 8}}>
             <View style={{flexDirection: 'row', height: 42.5, marginRight: 4.5, marginLeft: 4.5, borderBottomWidth: 0.5, borderBottomColor: 'rgb(204, 204, 204)'}}>
               <TouchableOpacity
                 onPress={() => {
@@ -171,7 +190,7 @@ shouldComponentUpdate (nextProps, nextState) {
               </View>
             </View>
             <KeyboardSpacer style={{backgroundColor: 'black'}} />
-          </View>
+          </Animated.View>
         </View>
       </Modal>
     )
