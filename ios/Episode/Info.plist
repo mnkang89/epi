@@ -23,11 +23,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-<<<<<<< 6f41daa5c7b2ed04df3e2d09de88e1c8de6791c5
-	<string>2017030101605</string>
-=======
 	<string>2017030101720</string>
->>>>>>> chore: updated report.xml
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSApplicationCategoryType</key>

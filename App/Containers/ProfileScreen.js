@@ -4,9 +4,6 @@ import { connect } from 'react-redux'
 import _ from 'lodash'
 
 import { getObjectDiff, getArrayDiff } from '../Lib/Utilities'
-import {
-  getItemLayout
-} from '../Experimental/ListExampleShared_e'
 import FlatListE from '../Experimental/FlatList_e'
 import ProfileInfo from '../Components/common/ProfileInfo'
 import EpisodeDetail from '../Components/common/EpisodeDetail'
@@ -19,6 +16,8 @@ import styles from './Styles/FeedScreenStyle'
 import SignupActions from '../Redux/SignupRedux'
 import EpisodeActions from '../Redux/EpisodeRedux'
 import AccountActions from '../Redux/AccountRedux'
+
+const ITEM_HEIGHT = 447
 
 class ProfileScreen extends Component {
   static propTypes = {
@@ -62,7 +61,6 @@ class ProfileScreen extends Component {
 
     if (nextProps.beforeScreen === 'profileTab') {
       if (nextProps.beforeScreen === nextProps.pastScreen) {
-        this._listRef.scrollToIndex({index: 0})
       }
     }
 
@@ -130,7 +128,7 @@ class ProfileScreen extends Component {
           FooterComponent={this._renderFooter.bind(this)}
           ItemComponent={this._renderItemComponent.bind(this)}
           disableVirtualization={false}
-          getItemLayout={undefined}
+          getItemLayout={this._getItemLayout}
           horizontal={false}
           data={this.props.items}
           key={'vf'}
@@ -150,9 +148,9 @@ class ProfileScreen extends Component {
 
   _captureRef = (ref) => { this._listRef = ref }
 
-  _getItemLayout = (data: any, index: number) => {
-    return getItemLayout(data, index, this.state.horizontal)
-  }
+  _getItemLayout = (data: any, index: number) => ({
+    length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index
+  })
 
   _renderItemComponent = (episode) => {
     const index = episode.index

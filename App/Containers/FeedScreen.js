@@ -13,7 +13,6 @@ import { connect } from 'react-redux'
 import _ from 'lodash'
 // import { Actions as NavigationActions } from 'react-native-router-flux'
 
-import { getItemLayout } from '../Experimental/ListExampleShared_e'
 import { getAccountId } from '../Services/Auth'
 import { getObjectDiff, getArrayDiff } from '../Lib/Utilities'
 import FlatListE from '../Experimental/FlatList_e'
@@ -26,6 +25,7 @@ import EpisodeActions from '../Redux/EpisodeRedux'
 import CommentActions from '../Redux/CommentRedux'
 
 // const windowSize = Dimensions.get('window')
+const ITEM_HEIGHT = 447
 
 class FeedScreen extends Component {
 
@@ -216,18 +216,18 @@ class FeedScreen extends Component {
     return (
       <View style={styles.mainContainer}>
         <FlatListE
-          scrollsToTop
-          keyExtractor={(item, index) => index}
           style={{ flex: 1 }}
           ref={this._captureRef}
-          FooterComponent={this._renderFooter.bind(this)}
-          ItemComponent={this._renderItemComponent.bind(this)}
-          disableVirtualization={false}
-          getItemLayout={undefined}
-          horizontal={false}
-          data={this.props.items}
           key={'vf'}
+          keyExtractor={(item, index) => index}
+          disableVirtualization={false}
           legacyImplementation={false}
+          data={this.props.items}
+          ItemComponent={this._renderItemComponent.bind(this)}
+          FooterComponent={this._renderFooter.bind(this)}
+          getItemLayout={this._getItemLayout}
+          horizontal={false}
+          scrollsToTop
           onRefresh={this._onRefresh.bind(this)}
           refreshing={this.state.refreshing}
           onViewableItemsChanged={this._onViewableItemsChanged}
@@ -242,9 +242,9 @@ class FeedScreen extends Component {
 
   _captureRef = (ref) => { this._listRef = ref }
 
-  _getItemLayout = (data: any, index: number) => {
-    return getItemLayout(data, index, this.state.horizontal)
-  }
+  _getItemLayout = (data: any, index: number) => ({
+    length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index
+  })
 
   _renderItemComponent = (episode) => {
     const index = episode.index
