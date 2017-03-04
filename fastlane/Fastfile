@@ -18,7 +18,7 @@ default_platform :ios
 platform :ios do
   before_all do
     ENV["SLACK_URL"] = "https://hooks.slack.com/services/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"
-    # @username = "itunes_email@gmail.com"
+    @username = "episode.kr@gmail.com"
   end
 
   desc "Tests Slack"
@@ -58,6 +58,7 @@ platform :ios do
 
     # Change build number
     increment_build_number(
+      build_number: latest_testflight_build_number + 1,
       xcodeproj: "./ios/Episode.xcodeproj"
     )
 
@@ -68,8 +69,6 @@ platform :ios do
       # especially if you bring in pods!
       # workspace: "./ios/AppName.xcworkspace"
     )
-
-    testflight
 
     # Sometimes itunes email is different!
     if changelog
