@@ -61,6 +61,7 @@ class ProfileScreen extends Component {
 
     if (nextProps.beforeScreen === 'profileTab') {
       if (nextProps.beforeScreen === nextProps.pastScreen) {
+        this._listRef.scrollToOffset({y: 0})
       }
     }
 
