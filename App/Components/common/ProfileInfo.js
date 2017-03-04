@@ -9,6 +9,7 @@ import { Images } from '../../Themes'
 import styles from '../../Containers/Styles/FeedScreenStyle'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import CachableImage from '../../Common/CachableImage'
+import { getAccountId } from '../../Services/Auth'
 
 class ProfileInfo extends Component {
 
@@ -117,10 +118,10 @@ class ProfileInfo extends Component {
 
   onFollowingPress () {
     if (this.props.type === 'me') {
-      const { token, accountId } = this.props
+      const { token } = this.props
 
       this.props.openFollow(true, '팔로잉')
-      this.props.getFollowing(token, accountId)
+      this.props.getFollowing(token, getAccountId())
     } else {
       const { token, id } = this.props
 
@@ -131,10 +132,10 @@ class ProfileInfo extends Component {
 
   onFollowerPress () {
     if (this.props.type === 'me') {
-      const { token, accountId } = this.props
+      const { token } = this.props
 
       this.props.openFollow(true, '팔로워')
-      this.props.getFollower(token, accountId)
+      this.props.getFollower(token, getAccountId())
     } else {
       const { token, id } = this.props
 
