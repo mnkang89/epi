@@ -1,6 +1,6 @@
 # iOS
-# app_identifier "com.episode.app" # The bundle identifier of your app
-# apple_id "episode.kr@gmail.com" # Your Apple email address
+app_identifier "Episode.example.native.reactjs.org" # The bundle identifier of your app
+apple_id "episode.kr@gmail.com" # Your Apple email address
 # team_id "3FTD6ME549"  # Developer Portal Team ID
 
 # Android
