@@ -25,17 +25,39 @@ class TabIcon extends Component {
 
   render () {
     if (this.props.tabIcon === 'home') {
-      return (
-        <View style={styles.container}>
-          <Image style={{width: 22, height: 23}} source={Images.tabHome} />
-        </View>
-      )
+      if (this.props.selected) {
+        return (
+          <View style={styles.container}>
+            <Image style={{width: 22, height: 23}} source={Images.tabHome} />
+            <View style={{position: 'absolute', left: 0, right: 0, bottom: -5, alignItems: 'center'}}>
+              <View style={{width: 37, height: 3, backgroundColor: '#F85032'}} />
+            </View>
+          </View>
+        )
+      } else {
+        return (
+          <View style={styles.container}>
+            <Image style={{width: 22, height: 23}} source={Images.tabHome} />
+          </View>
+        )
+      }
     } else if (this.props.tabIcon === 'bell') {
-      return (
-        <View style={styles.container}>
-          <Image style={{width: 20, height: 23}} source={Images.tabAlarm} />
-        </View>
-      )
+      if (this.props.selected) {
+        return (
+          <View style={styles.container}>
+            <Image style={{width: 22, height: 25}} source={Images.tabAlarm} />
+            <View style={{position: 'absolute', left: 0, right: 0, bottom: -5, alignItems: 'center'}}>
+              <Image style={{width: 37, height: 3}} source={Images.menuon} />
+            </View>
+          </View>
+        )
+      } else {
+        return (
+          <View style={styles.container}>
+            <Image style={{width: 22, height: 25}} source={Images.tabAlarm} />
+          </View>
+        )
+      }
     } else if (this.props.tabIcon === 'camera') {
       return (
         <View style={styles.container}>
@@ -43,17 +65,39 @@ class TabIcon extends Component {
         </View>
       )
     } else if (this.props.tabIcon === 'search') {
-      return (
-        <View style={styles.container}>
-          <Image style={{width: 23, height: 23}} source={Images.tabFind} />
-        </View>
-      )
+      if (this.props.selected) {
+        return (
+          <View style={styles.container}>
+            <Image style={{width: 22, height: 23}} source={Images.tabFind} />
+            <View style={{position: 'absolute', left: 0, right: 0, bottom: -5, alignItems: 'center'}}>
+              <Image style={{width: 37, height: 3}} source={Images.menuon} />
+            </View>
+          </View>
+        )
+      } else {
+        return (
+          <View style={styles.container}>
+            <Image style={{width: 22, height: 23}} source={Images.tabFind} />
+          </View>
+        )
+      }
     } else if (this.props.tabIcon === 'user') {
-      return (
-        <View style={styles.container}>
-          <Image style={{width: 20, height: 23}} source={Images.tabUser} />
-        </View>
-      )
+      if (this.props.selected) {
+        return (
+          <View style={styles.container}>
+            <Image style={{width: 22, height: 23}} source={Images.tabUser} />
+            <View style={{position: 'absolute', left: 0, right: 0, bottom: -5, alignItems: 'center'}}>
+              <Image style={{width: 37, height: 3}} source={Images.menuon} />
+            </View>
+          </View>
+        )
+      } else {
+        return (
+          <View style={styles.container}>
+            <Image style={{width: 22, height: 23}} source={Images.tabUser} />
+          </View>
+        )
+      }
     }
   }
 }
@@ -61,6 +105,7 @@ class TabIcon extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: 'center',
     justifyContent: 'center'
   }
 })
