@@ -3,7 +3,9 @@ import {
   View,
   Modal,
   Text,
-  TouchableOpacity
+  TouchableOpacity,
+  Animated,
+  Easing
 } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
@@ -36,6 +38,11 @@ class FollowModal extends Component {
       followVisible: this.props.followVisible === undefined ? false : this.props.followVisible
       // follows: this.props.follows === undefined ? [] : this.props.follows
     }
+    this.animatedValue
+  }
+
+  componentWillMount () {
+    this.animatedValue = new Animated.Value(600)
   }
 
   componentDidMount () {
@@ -46,46 +53,61 @@ class FollowModal extends Component {
     if (nextProps.followVisible) {
       this.setState({
         followVisible: nextProps.followVisible
+      }, () => {
+        Animated.timing(this.animatedValue, {
+          toValue: 0,
+          duration: 250,
+          easing: Easing.in(Easing.quad),
+          delay: 0
+        }).start()
       })
     }
   }
 
   resetFollowModal () {
-    this.setState({followVisible: false})
+    Animated.timing(this.animatedValue, {
+      toValue: 600,
+      duration: 250,
+      delay: 0
+    }).start()
 
     setTimeout(() => {
+      this.setState({followVisible: false})
       this.props.openFollow(false, null)
-    }, 500)
+    }, 250)
   }
 
   render () {
     return (
       <Modal
-        animationType={'slide'}
+        animationType={'fade'}
         transparent
         visible={this.state.followVisible}>
         <View style={styles2.containerStyle}>
-          <View style={{backgroundColor: 'white', flex: 1, marginTop: 151, borderTopLeftRadius: 8, borderTopRightRadius: 8}}>
+          <Animated.View style={{transform: [{translateY: this.animatedValue}], backgroundColor: 'white', flex: 1, marginTop: 151, borderTopLeftRadius: 8, borderTopRightRadius: 8}}>
             <View style={{flexDirection: 'row', height: 42.5, marginRight: 4.5, marginLeft: 4.5, borderBottomWidth: 0.5, borderBottomColor: 'rgb(204, 204, 204)'}}>
               <TouchableOpacity
                 onPress={() => {
                   this.resetFollowModal()
                 }}
-                style={{paddingTop: 10, paddingLeft: 16}} >
+                style={{flex: 1, paddingTop: 10}} >
                 <Icon
                   name='chevron-down'
                   size={16}
                   style={{width: 16, height: 16, alignSelf: 'center', fontWeight: '300'}} />
               </TouchableOpacity>
-              <Text style={{left: 140, marginTop: 10, fontSize: 17, fontWeight: 'bold'}} >
-                {this.props.showType === undefined ? '' : this.props.showType}
-              </Text>
+              <View style={{flex: 10, alignItems: 'center'}}>
+                <Text style={{marginTop: 10, fontSize: 17, fontWeight: 'bold'}} >
+                  {this.props.showType === undefined ? '' : this.props.showType}
+                </Text>
+              </View>
+              <View style={{flex: 1}} />
             </View>
             <FollowList
               follows={this.props.follows === undefined ? [] : this.props.follows}
               postFollow={this.props.postFollow}
               deleteFollow={this.props.deleteFollow} />
-          </View>
+          </Animated.View>
         </View>
       </Modal>
     )
