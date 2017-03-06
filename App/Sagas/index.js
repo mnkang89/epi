@@ -24,7 +24,7 @@ import {
   newEpisodeWithFalse, newOtherEpisode, deactivateEpisode, moreFeeds, moreEpisodes, moreOtherEpisodes } from './EpisodeSagas'
 import { postContent, postLike, deleteLike } from './ContentSagas'
 import { postComment, getComment, deleteComment } from './CommentSagas'
-import { getBestFeeds } from './FeedSagas'
+import { getBestFeeds, moreBestFeeds } from './FeedSagas'
 import { getNoties } from './NotiSagas'
 
 /* ------------- API ------------- */
@@ -124,6 +124,8 @@ export default function * root () {
     /* --- Feed --- */
     // get BestFeeds
     takeLatest(FeedTypes.BEST_FEEDS_REQUEST, getBestFeeds, api),
+    // get more BestFeeds
+    takeLatest(FeedTypes.MORE_BEST_FEEDS_REQUEST, moreBestFeeds, api),
 
     /* --- Noti --- */
     // get Noties

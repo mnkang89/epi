@@ -275,6 +275,12 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     return api.get(`/api/feeds/best?size=7`, {}, getTokenHeader())
   }
 
+  const requestMoreBestFeeds = (token, accountId, before) => {
+    console.tron.log(getTokenHeader())
+
+    return api.get(`/api/feeds/best?before=${before}&size=7`, {}, getTokenHeader())
+  }
+
   // noties
   const getNoties = (token) => {
     console.log('GET noties api콜 발생')
@@ -328,6 +334,7 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     deleteComment,
 
     getBestFeeds,
+    requestMoreBestFeeds,
 
     getNoties,
     registerPushToken
