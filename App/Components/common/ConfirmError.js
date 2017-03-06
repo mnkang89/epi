@@ -47,7 +47,15 @@ const ConfirmError = ({ confirmStyle, visible, TextArray, onSetting, onAccept, A
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center'}}>
-        <View style={{borderRadius: 4, width: 263, height: 146, backgroundColor: 'white', alignItems: 'center'}}>
+        <View style={{
+          shadowOffset: {width: 1, height: 3},
+          shadowOpacity: 0.5,
+          shadowRadius: 5,
+          borderRadius: 4,
+          width: 263,
+          height: 146,
+          backgroundColor: 'white',
+          alignItems: 'center'}} >
           <View style={{
             width: 250.8,
             height: 104,
