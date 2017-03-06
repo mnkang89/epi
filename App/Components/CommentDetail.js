@@ -148,7 +148,7 @@ class CommentDetail extends Component {
               <Text style={userTextStyle}>{nickname}</Text>
             </View>
             <View style={{flex: 2, marginTop: 3, marginBottom: 10}}>
-              <Text style={{color: 'rgb(53, 53, 53)', fontSize: 15, lineHeight: 16}}>{message}</Text>
+              <Text style={{color: 'rgb(53, 53, 53)', fontSize: 15, lineHeight: 26}}>{message}</Text>
               <Text style={dateTextStyle}>{timeDiffString}</Text>
             </View>
           </View>
