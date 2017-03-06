@@ -1,9 +1,11 @@
 // TODO: 헤애함
 import React, { Component, PropTypes } from 'react'
-import { Text, View, TouchableOpacity } from 'react-native'
+import { Text, Image, View, TouchableOpacity, Dimensions } from 'react-native'
 
-import { Colors, Metrics } from '../Themes/'
+import { Colors, Metrics, Images } from '../Themes/'
 import CachableImage from '../Common/CachableImage'
+
+const windowSize = Dimensions.get('window')
 
 class FollowDetail extends Component {
 
@@ -17,7 +19,38 @@ class FollowDetail extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      follow: false
+      follow: this.props.follow.following
+    }
+  }
+
+  onFollowPress () {
+    const { token } = this.props
+    const id = this.props.follow.id
+
+    if (this.state.follow) {
+      this.props.deleteFollow(token, id)
+      this.setState({ follow: false })
+    } else {
+      this.props.postFollow(token, id)
+      this.setState({ follow: true })
+    }
+  }
+
+  renderProfileImage () {
+    let uri = this.props.follow.profileImagePath
+
+    if (uri) {
+      return (
+        <CachableImage
+          style={styles.imageStyle}
+          source={{uri: uri}} />
+      )
+    } else {
+      return (
+        <Image
+          style={styles.imageStyle}
+          source={Images.profileImage} />
+      )
     }
   }
 
@@ -25,11 +58,10 @@ class FollowDetail extends Component {
     if (this.state.follow) {
       return (
         <TouchableOpacity
-          onPress={() => {
-            this.setState({follow: false})
-          }}>
-          <View style={{borderWidth: 1, borderColor: 'rgb(53, 53, 53)', borderRadius: 5, paddingBottom: 5, paddingTop: 5, paddingLeft: 7, paddingRight: 7, backgroundColor: 'black'}}>
-            <Text style={{color: 'white'}}>팔로잉</Text>
+          style={{alignItems: 'center'}}
+          onPress={this.onFollowPress.bind(this)} >
+          <View style={{width: 68, height: 23, borderWidth: 0.5, borderColor: '#D5D5D5', borderRadius: 20, paddingTop: 5, paddingBottom: 5, paddingRight: 8, paddingLeft: 8, backgroundColor: 'white'}}>
+            <Text style={{color: '#9E9E9E', fontSize: 12, textAlign: 'center'}}>팔로잉</Text>
           </View>
         </TouchableOpacity>
       )
@@ -37,11 +69,9 @@ class FollowDetail extends Component {
       return (
         <TouchableOpacity
           style={{alignItems: 'center'}}
-          onPress={() => {
-            this.setState({follow: true})
-          }}>
-          <View style={{borderWidth: 1, borderColor: 'rgb(53, 53, 53)', borderRadius: 5, paddingBottom: 5, paddingTop: 5, paddingLeft: 7, paddingRight: 7, backgroundColor: 'white'}}>
-            <Text>팔로우</Text>
+          onPress={this.onFollowPress.bind(this)} >
+          <View style={{width: 68, height: 23, borderRadius: 20, paddingTop: 5, paddingBottom: 5, paddingRight: 8, paddingLeft: 8, backgroundColor: '#F85032'}}>
+            <Text style={{color: '#FFFFFF', fontSize: 12, textAlign: 'center'}}>팔로우</Text>
           </View>
         </TouchableOpacity>
       )
@@ -52,17 +82,14 @@ class FollowDetail extends Component {
     const {
             userTextStyle
           } = styles
-    const { nickname, profileImagePath } = this.props.follow
+    const { nickname } = this.props.follow
 
     return (
-      <View style={{alignItems: 'center', justifyContent: 'center', height: 55, marginLeft: 15, borderBottomWidth: 0.5, borderColor: 'rgb(231, 231, 231)', flexDirection: 'row', backgroundColor: 'white'}}>
-        <View style={{flex: 1}}>
-          <CachableImage
-            style={styles.imageStyle}
-            source={{uri: profileImagePath}}
-          />
+      <View style={{width: windowSize.width - 30, alignItems: 'center', height: 55, borderBottomWidth: 0.5, borderColor: 'rgb(231, 231, 231)', flexDirection: 'row', backgroundColor: 'white'}}>
+        <View style={{flex: 1, alignItems: 'flex-end'}}>
+          {this.renderProfileImage()}
         </View>
-        <View style={{flex: 3}}>
+        <View style={{flex: 5, justifyContent: 'center', paddingLeft: 10}}>
           <Text style={userTextStyle}>{nickname}</Text>
         </View>
         <View style={{flex: 1}}>
