@@ -146,14 +146,14 @@ class CameraSection extends Component {
   renderView () {
     if (!this.props.permission) {
       return (
-        <View style={{ flex: 1 }}>
+        <View style={{flex: 1}}>
           {this.renderAuthDenied()}
         </View>
       )
     } else {
       if (this.props.isContentTaken) {
         return (
-          <View style={{ flex: 1 }}>
+          <View style={{flex: 1}}>
             {this.renderPreview()}
           </View>
         )
@@ -183,7 +183,7 @@ class CameraSection extends Component {
 
   render () {
     return (
-      <View style={{ flex: 1 }} onLayout={(event) => { this.setState({ componentWidth: event.nativeEvent.layout.width }) }}>
+      <View style={{ flex: 1, backgroundColor: 'white' }} onLayout={(event) => { this.setState({ componentWidth: event.nativeEvent.layout.width }) }}>
         {this.renderView()}
       </View>
     )
