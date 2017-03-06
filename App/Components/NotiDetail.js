@@ -26,11 +26,13 @@ class NotiDetail extends Component {
   }
 
   onNotiPress () {
-    const { episodeId, contentId } = this.props.noti.notiRelateEntityMeta
+    // api에서 notiRelateEntityMeta주면 변경할 예정
+    // const { episodeId, contentId } = this.props.noti.notiRelateEntityMeta
     const { token } = this.props
     const account = this.props.myAccount
 
     if (this.state.type === 'comment') {
+      const { episodeId, contentId } = this.props.noti.notiRelateEntityMeta
       this.props.openComment(true)
       this.props.getComment(token, episodeId, contentId)
 
@@ -44,6 +46,7 @@ class NotiDetail extends Component {
         contentId: null
       })
     } else if (this.state.type === 'like') {
+      const { episodeId, contentId } = this.props.noti.notiRelateEntityMeta
       // TODO: openComment는 deprecated될 수 있음
       this.props.openComment(false)
 
@@ -57,6 +60,22 @@ class NotiDetail extends Component {
         contentId
       })
     } else if (this.state.type === 'follow') {
+      const accountId = this.props.noti.notiCreateAccount.id
+
+      NavigationActions.notiTouserProfileScreen({
+        type: 'push',
+        screen: 'NotiScreen',
+        id: accountId
+      })
+    } else if (this.state.type === 'newContent') {
+      const accountId = this.props.noti.notiCreateAccount.id
+
+      NavigationActions.notiTouserProfileScreen({
+        type: 'push',
+        screen: 'NotiScreen',
+        id: accountId
+      })
+    } else if (this.state.type === 'newEpisode') {
       const accountId = this.props.noti.notiCreateAccount.id
 
       NavigationActions.notiTouserProfileScreen({
@@ -93,24 +112,6 @@ class NotiDetail extends Component {
     }
   }
 
-  // renderProfileImage () {
-  //   let uri = this.props.noti.notiCreateAccount.profileImagePath
-  //   // let uri = 'https://facebook.github.io/react/img/logo_og.png'
-  //   if (uri) {
-  //     return (
-  //       <CachableImage
-  //         style={styles.profileStyle}
-  //         source={{uri: uri}} />
-  //     )
-  //   } else {
-  //     return (
-  //       <CachableImage
-  //         style={styles.profileStyle}
-  //         source={Images.profileImage} />
-  //     )
-  //   }
-  // }
-
   render () {
     const { message } = this.props.noti
     const timeDiffString = convert2TimeDiffString(this.props.noti.createDatetime)
@@ -121,17 +122,17 @@ class NotiDetail extends Component {
 
     return (
       <TouchableOpacity style={{alignItems: 'center'}} onPress={this.onNotiPress.bind(this)}>
-        <View style={{width: windowSize.width, paddingLeft: 15, paddingRight: 15, height: 55, borderBottomWidth: 1, borderColor: '#F1F1F1', flexDirection: 'row', backgroundColor: '#FFFFFF'}}>
+        <View style={{width: windowSize.width, paddingLeft: 15, height: 55, flexDirection: 'row', backgroundColor: '#FFFFFF'}}>
           <TouchableOpacity
             style={{flex: 1, alignItems: 'center', justifyContent: 'center', paddingLeft: 3}}
             onPress={this.onProfilePress.bind(this)}>
             {this.renderProfileImage()}
           </TouchableOpacity>
-          <View style={{flex: 10, flexDirection: 'row', paddingLeft: 11.5}}>
-            <View style={{flex: 7, justifyContent: 'center'}}>
+          <View style={{flex: 10, flexDirection: 'row', paddingLeft: 11.5, borderBottomWidth: 1, borderColor: '#F1F1F1'}}>
+            <View style={{flex: 8, justifyContent: 'center'}}>
               <Text style={{color: '#777777', fontWeight: 'bold'}}><Text style={{color: 'rgb(33, 33, 33)', fontWeight: 'bold'}}>{nickname}</Text>{messageWithoutNickname}</Text>
             </View>
-            <View style={{flex: 3, alignItems: 'flex-end', justifyContent: 'center'}}>
+            <View style={{flex: 2, alignItems: 'flex-end', justifyContent: 'center', paddingRight: 15}}>
               <Text style={{fontSize: 10, color: '#B2B2B2'}}>{timeDiffString}</Text>
             </View>
           </View>
