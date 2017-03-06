@@ -158,7 +158,7 @@ class NotiScreen extends Component {
       <View style={styles.mainContainer}>
         <View style={{backgroundColor: '#FFFFFF', flex: 1}}>
           {this.renderScrollview(noties)}
-          <View style={{height: 48.5}} />
+          <View style={{height: 60}} />
         </View>
       </View>
     )

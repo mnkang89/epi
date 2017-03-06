@@ -3,8 +3,10 @@ import {
   View,
   TouchableOpacity,
   Text,
-  Dimensions
+  Dimensions,
+  Image
 } from 'react-native'
+import { Images } from '../../Themes'
 
 const windowSize = Dimensions.get('window')
 
@@ -51,7 +53,8 @@ class FirstScreen extends Component {
         <View style={{flex: 1}} >
           <View style={{flex: 1, flexDirection: 'column', justifyContent: 'flex-end', marginBottom: 30}}>
             <View style={{marginLeft: 20, backgroundColor: 'rgba(0,0,0,0)'}}>
-              <Text style={{color: 'white', opacity: 0.9, fontWeight: 'bold', fontSize: 72}}>episode</Text>
+              {/* <Text style={{color: 'white', opacity: 0.9, fontWeight: 'bold', fontSize: 72}}>episode</Text> */}
+              <Image style={{width: 246, height: 48}} source={Images.whiteEpisodeLogo} />
             </View>
             <View style={{alignItems: 'center'}}>
               <TouchableOpacity

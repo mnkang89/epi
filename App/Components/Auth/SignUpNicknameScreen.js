@@ -159,7 +159,7 @@ class SignUpNicknameScreen extends Component {
     } else {
       if (this.state.photoSource === '') {
         return (
-          <Image source={Images.profileIcon} style={{alignSelf: 'center'}} />
+          <Image source={Images.profileImage} style={{alignSelf: 'center'}} />
         )
       } else {
         return (

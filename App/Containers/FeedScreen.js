@@ -79,10 +79,6 @@ class FeedScreen extends Component {
     const accountId = getAccountId()
 
     this.props.requestInfo(token, accountId)
-    // api 새로고침 60초 주기로
-    // this.autoRefresher = setInterval(() => {
-    //   this.props.requestUserEpisodes(token, accountId, withFollowing)
-    // }, 60000)
   }
 
   componentWillReceiveProps (nextProps) {
@@ -90,9 +86,6 @@ class FeedScreen extends Component {
     console.log(getObjectDiff(this.props, nextProps))
 
     if (nextProps.items.length !== 0) {
-      console.log('하이루')
-      console.log(nextProps.items)
-      console.log(nextProps.items[nextProps.items.length - 1].episode.updatedDateTime)
       this.before = nextProps.items[nextProps.items.length - 1].episode.updatedDateTime
     }
 
@@ -234,7 +227,7 @@ class FeedScreen extends Component {
           shouldItemUpdate={this._shouldItemUpdate}
           onEndReached={this._onEndReached.bind(this)}
           onEndReachedThreshold={0} />
-        <View style={{height: 48.5}} />
+        <View style={{height: 60}} />
         <CommentModalContainer screen={'FeedScreen'} token={this.props.token} />
       </View>
     )

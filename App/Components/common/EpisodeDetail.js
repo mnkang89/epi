@@ -231,7 +231,7 @@ class EpisodeDetail extends Component {
       )
     } else {
       return (
-        <CachableImage
+        <Image
           style={styles.profileStyle}
           source={Images.profileImage} />
       )

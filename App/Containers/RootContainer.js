@@ -18,7 +18,11 @@ export default class RootContainer extends Component {
     console.disableYellowBox = !DebugSettings.yellowBox
     return (
       <View style={styles.applicationView}>
-        <StatusBar barStyle='dark-content' />
+        {/* <View style={{height: 20, backgroundColor: 'white'}}> */}
+        <StatusBar
+          showHideTransition={'slide'}
+          barStyle='dark-content' />
+        {/* </View> */}
         <NavigationRouter />
       </View>
     )

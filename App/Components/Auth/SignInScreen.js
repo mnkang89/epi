@@ -128,11 +128,11 @@ shouldComponentUpdate (nextProps, nextState) {
             onPress={this.handlePressLogin.bind(this)} >
             <Text style={{color: 'black', fontWeight: 'bold', fontSize: 18}}>로그인</Text>
           </TouchableOpacity>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={{alignItems: 'center', marginTop: 20, backgroundColor: 'rgba(0,0,0,0)'}}
             onPress={this.onPressLostPassword.bind(this)} >
             <Text style={{textDecorationLine: 'underline', color: 'white', fontSize: 15}}>비밀번호를 잊어버렸어요</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </View>
     )

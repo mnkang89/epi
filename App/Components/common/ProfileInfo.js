@@ -162,7 +162,7 @@ class ProfileInfo extends Component {
         return (
           <Image
             style={[styles.image, {borderWidth: 1, borderColor: 'white', marginBottom: 9, marginTop: 39.5}]}
-            source={Images.profileIcon} />
+            source={Images.profileImage} />
         )
       }
     } else {
@@ -175,7 +175,7 @@ class ProfileInfo extends Component {
         return (
           <Image
             style={[styles.image, {borderWidth: 1, borderColor: 'white', marginBottom: 9, marginTop: 39.5}]}
-            source={Images.othersProfile} />
+            source={Images.profileImage} />
         )
       }
     }
@@ -195,7 +195,7 @@ class ProfileInfo extends Component {
       return (
         <TouchableOpacity
           onPress={this.onFollowPress.bind(this)}>
-          <View style={{width: 68, height: 23, borderRadius: 20, paddingTop: 5, paddingBottom: 5, paddingRight: 8, paddingLeft: 8, backgroundColor: '#E76A5C'}}>
+          <View style={{width: 68, height: 23, borderRadius: 20, paddingTop: 5, paddingBottom: 5, paddingRight: 8, paddingLeft: 8, backgroundColor: '#F85032'}}>
             <Text style={{color: '#FFFFFF', fontSize: 12, textAlign: 'center'}}>팔로우</Text>
           </View>
         </TouchableOpacity>

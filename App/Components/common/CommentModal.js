@@ -45,9 +45,7 @@ class CommentModal extends Component {
       modalVisible: false
     }
     this.animatedValue
-  }
-
-  componentDidMount () {
+    this.message
   }
 
   componentWillReceiveProps (nextProps) {
@@ -73,8 +71,7 @@ class CommentModal extends Component {
           Animated.timing(this.animatedValue, {
             toValue: 0,
             duration: 250,
-            easing: Easing.in(Easing.quad),
-            delay: 100
+            easing: Easing.in(Easing.quad)
           }).start()
         })
       }
@@ -85,29 +82,10 @@ class CommentModal extends Component {
     this.animatedValue = new Animated.Value(600)
   }
 
-  // shouldComponentUpdate (nextProps, nextState) {
-  //   if (nextState.message !== this.state.message) {
-  //     console.log('메세지값 변경')
-  //     return false
-  //   }
-  //   return true
-  // }
-
-  // componentDidUpdate (prevProps, prevState) {
-  //   // On modal open request slide the view up and fade in the backdrop
-  //   if (this.state.modalVisible && !prevState.modalVisible) {
-  //     this._open()
-  //   // On modal close request slide the view down and fade out the backdrop
-  //   } else if (!this.props.modalVisible && prevProps.modalVisible) {
-  //     this._close()
-  //   }
-  // }
-
   resetCommentModal () {
     Animated.timing(this.animatedValue, {
       toValue: 600,
-      duration: 250,
-      delay: 0
+      duration: 250
     }).start()
 
     setTimeout(() => {
@@ -136,7 +114,6 @@ class CommentModal extends Component {
   }
 
   render () {
-    console.log('모달렌더!!!')
     return (
       <Modal
         style={{position: 'absolute', top: 0, left: 0, bottom: 0, right: 0}}

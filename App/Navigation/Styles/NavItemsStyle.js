@@ -11,7 +11,7 @@ export default StyleSheet.create({
   },
   episodeLogo: {
     alignSelf: 'center',
-    width: 85,
-    height: 15
+    width: 82,
+    height: 16
   }
 })

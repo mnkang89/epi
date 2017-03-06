@@ -420,7 +420,7 @@ class GreetingScreen extends Component {
           visible={this.state.alertVisible}
           TextArray={this.state.alertTextArray}
           onAccept={this.onDecline.bind(this)} />
-        <Video source={Videos.backgroundVideo2}   // Can be a URL or a local file.
+        <Video source={Videos.backgroundVideo}   // Can be a URL or a local file.
           muted
           ref={(ref) => {
             this.player = ref

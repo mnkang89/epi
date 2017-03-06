@@ -146,7 +146,7 @@ class UserProfileScreen extends Component {
           onEndReached={this._onEndReached.bind(this)}
           onEndReachedThreshold={0}
           shouldItemUpdate={this._shouldItemUpdate} />
-        <View style={{height: 48.5}} />
+        <View style={{height: 60}} />
         <CommentModalContainer screen={this.props.screen} token={this.props.token} />
         <FollowModalContainer token={this.props.token} />
       </View>

@@ -85,8 +85,8 @@ class ExploreDetail extends Component {
       return (
         <TouchableOpacity
           onPress={this.onFollowPress.bind(this)}>
-          <View style={{width: 68, height: 23, borderRadius: 20, paddingTop: 5, paddingBottom: 5, paddingRight: 8, paddingLeft: 8, backgroundColor: '#E76A5C'}}>
-            <Text style={{color: '#FFFFFF', fontSize: 12, textAlign: 'center'}}>팔로우</Text>
+          <View style={{width: 68, height: 23, borderWidth: 0.5, borderColor: '#D5D5D5', borderRadius: 20, paddingTop: 5, paddingBottom: 5, paddingRight: 8, paddingLeft: 8, backgroundColor: 'white'}}>
+            <Text style={{color: '#9E9E9E', fontSize: 12, textAlign: 'center'}}>팔로잉</Text>
           </View>
         </TouchableOpacity>
       )
@@ -94,8 +94,8 @@ class ExploreDetail extends Component {
       return (
         <TouchableOpacity
           onPress={this.onFollowPress.bind(this)}>
-          <View style={{width: 68, height: 23, borderWidth: 0.5, borderColor: '#D5D5D5', borderRadius: 20, paddingTop: 5, paddingBottom: 5, paddingRight: 8, paddingLeft: 8, backgroundColor: 'white'}}>
-            <Text style={{color: '#9E9E9E', fontSize: 12, textAlign: 'center'}}>팔로잉</Text>
+          <View style={{width: 68, height: 23, borderRadius: 20, paddingTop: 5, paddingBottom: 5, paddingRight: 8, paddingLeft: 8, backgroundColor: '#F85032'}}>
+            <Text style={{color: '#FFFFFF', fontSize: 12, textAlign: 'center'}}>팔로우</Text>
           </View>
         </TouchableOpacity>
       )
@@ -141,17 +141,8 @@ class ExploreDetail extends Component {
                     right: 0,
                     bottom: 0
                   }} />
-                <View style={{backgroundColor: 'transparent'}}>
-                  <Text
-                    style={{
-                      textShadowOffset: {width: 1, height: 2},
-                      textShadowColor: 'rgba(0, 0, 0, 0.5)',
-                      textShadowRadius: 1,
-                      color: 'white',
-                      fontSize: 20,
-                      fontWeight: 'bold' }}>
-                      인디케이터요!
-                  </Text>
+                <View style={{marginLeft: 5, marginTop: 5, backgroundColor: 'transparent'}}>
+                  <Image style={{width: 19, height: 19}} source={Images.videoIndicator} />
                 </View>
               </View>
             </View>
@@ -182,7 +173,7 @@ class ExploreDetail extends Component {
     const { userTextStyle } = styles
 
     return (
-      <View style={{borderBottomWidth: 1, borderBottomColor: '#F1F1F1', paddingBottom: 1.5}}>
+      <View style={{borderBottomWidth: 1, borderBottomColor: '#F1F1F1'}}>
         <View style={{flexDirection: 'row', justifyContent: 'space-between', height: 57.5, paddingLeft: 15, paddingRight: 14.45, backgroundColor: '#FFFFFF'}}>
           <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
             <TouchableOpacity onPress={this.onProfileImagePress.bind(this)}>
@@ -196,7 +187,7 @@ class ExploreDetail extends Component {
             {this.renderFollowButton()}
           </View>
         </View>
-        <View style={{height: windowSize.width - 213}}>
+        <View style={{height: windowSize.width - 200}}>
           <ScrollView
             scrollsToTop={false}
             style={{backgroundColor: '#FFFFFF'}}

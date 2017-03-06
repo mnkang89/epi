@@ -38,7 +38,7 @@ class NavigationRouter extends Component {
           navigationBarStyle={Styles.navBar}
           titleStyle={Styles.title} >
           <Scene
-            initial={!isLoggedIn()}
+            initial={isLoggedIn()}
             key='Greeting'
             hideNavBar
             hideTabBar
@@ -47,7 +47,7 @@ class NavigationRouter extends Component {
             initial={isLoggedIn()}
             key='tabBar'
             tabs
-            tabBarStyle={{backgroundColor: '#FFFFFF', justifyContent: 'center', alignItems: 'center', alignSelf: 'center', height: 60, borderTopColor: '#f3f3f3', borderTopWidth: 1}} >
+            tabBarStyle={{backgroundColor: '#FFFFFF', alignItems: 'center', height: 60, borderTopColor: '#f3f3f3', borderTopWidth: 1}} >
             <Scene
               key='homeTab'
               icon={TabIcon}
