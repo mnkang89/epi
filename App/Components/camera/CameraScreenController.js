@@ -144,13 +144,18 @@ class CameraScreenController extends Component {
                 value={this.state.message}
                 style={{ height: 45, color: 'white', textAlign: 'center', fontSize: 20, paddingLeft: 15, paddingRight: 15 }}
                 maxLength={38}
-                multiline
                 placeholder='코멘트 쓰기..'
                 returnKeyType='done'
                 autoCapitalize='none'
                 autoCorrect={false}
                 enablesReturnKeyAutomatically
                 editable
+                onSubmitEditing={() => {
+                  console.tron.log('controller state message ' + this.state.message)
+                  this.props.registerContentText(this.state.message)
+                  this.props.toggleMessageWriteAble()
+                  return
+                }}
                 onChangeText={(text) => this.setState({message: text})}
                 autoFocus />
             </View>
@@ -190,9 +195,7 @@ class CameraScreenController extends Component {
         </View>
       )
     } else {
-      return (
-        <View />
-      )
+      return
     }
   }
 
@@ -300,7 +303,7 @@ class CameraScreenController extends Component {
 
   render () {
     return (
-      <View style={{flex: 1}} onLayout={(event) => { this.setState({ componentWidth: event.nativeEvent.layout.width }) }}>
+      <View style={{flex: 1, backgroundColor: 'white'}} onLayout={(event) => { this.setState({ componentWidth: event.nativeEvent.layout.width }) }}>
         {this.renderView()}
       </View>
     )
