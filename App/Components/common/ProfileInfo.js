@@ -8,7 +8,7 @@ import ConfirmError from './ConfirmError'
 import { Images } from '../../Themes'
 import styles from '../../Containers/Styles/FeedScreenStyle'
 import { Actions as NavigationActions } from 'react-native-router-flux'
-import CachableImage from '../../Common/CachableImage'
+// import CachableImage from '../../Common/CachableImage'
 import { getAccountId } from '../../Services/Auth'
 
 class ProfileInfo extends Component {
@@ -52,7 +52,8 @@ class ProfileInfo extends Component {
   }
 
   onProfileImagePress () {
-    const { token, accountId } = this.props
+    const { token } = this.props
+    const accountId = getAccountId()
 
     Permissions.getPermissionStatus('photo')
       .then(response => {
@@ -152,11 +153,13 @@ class ProfileInfo extends Component {
     if (this.props.type === 'me') {
       if (this.state.photoSource) {
         console.tron.log(this.state.photoSource)
-        return (
+        const randomTime = new Date().getTime()
+        const uri = `${this.state.photoSource}?random_number=${randomTime}`
 
-          <CachableImage
+        return (
+          <Image
             style={[styles.image, {borderWidth: 1, borderColor: 'white', marginBottom: 9, marginTop: 39.5}]}
-            source={{uri: this.state.photoSource}} />
+            source={{uri: uri}} />
         )
       } else {
         return (
@@ -168,7 +171,7 @@ class ProfileInfo extends Component {
     } else {
       if (this.props.profileImagePath) {
         return (
-          <CachableImage
+          <Image
             style={[styles.image, {borderWidth: 1, borderColor: 'white', marginBottom: 9, marginTop: 39.5}]}
             source={{uri: this.props.profileImagePath}} />)
       } else {
