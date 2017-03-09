@@ -148,7 +148,7 @@ class UserProfileScreen extends Component {
           shouldItemUpdate={this._shouldItemUpdate} />
         <View style={{height: 60}} />
         <CommentModalContainer screen={this.props.screen} token={this.props.token} />
-        <FollowModalContainer token={this.props.token} />
+        <FollowModalContainer screen={this.props.screen} token={this.props.token} />
       </View>
     )
   }

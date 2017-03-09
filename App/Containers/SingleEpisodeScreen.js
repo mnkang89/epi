@@ -104,8 +104,9 @@ class SingleEpisodeScreen extends Component {
         <CommentModalContainer
           screen={this.props.screen}
           token={this.props.token}
-          contentId={this.props.contentId}
-          episodeId={this.props.episodeId} />
+          // contentId={this.props.contentId}
+          // episodeId={this.props.episodeId}
+        />
       </View>
     )
   }
