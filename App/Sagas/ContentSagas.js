@@ -57,8 +57,8 @@ export function * getActiveEpisodeIdOrCreateNewEpisode (api, token) {
 // attempts to post like
 export function * postLike (api, action) {
   console.log('postLike사가워커 진입!!')
-  const { token, contentId } = action
-  const response = yield call(api.postLike, token, contentId)
+  const { token, episodeId } = action
+  const response = yield call(api.postLike, token, episodeId)
 
   // dispatch successful email checking
   if (response.ok) {
@@ -79,8 +79,8 @@ export function * postLike (api, action) {
 // attempts to delete like
 export function * deleteLike (api, action) {
   console.log('deleteLike사가워커 진입!!')
-  const { token, contentId } = action
-  const response = yield call(api.deleteLike, token, contentId)
+  const { token, episodeId } = action
+  const response = yield call(api.deleteLike, token, episodeId)
 
   // dispatch successful email checking
   if (response.ok) {

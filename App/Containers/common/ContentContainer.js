@@ -15,8 +15,8 @@ const mapDispatchToProps = (dispatch) => {
     openComment: (visible) => dispatch(CommentActions.openComment(visible)),
     getComment: (token, episodeId, contentId) => dispatch(CommentActions.commentGet(token, episodeId, contentId)),
 
-    postLike: (token, contentId) => dispatch(ContentActions.likePost(token, contentId)),
-    deleteLike: (token, contentId) => dispatch(ContentActions.likeDelete(token, contentId))
+    postLike: (token, episodeId) => dispatch(ContentActions.likePost(token, episodeId)),
+    deleteLike: (token, episodeId) => dispatch(ContentActions.likeDelete(token, episodeId))
   }
 }
 

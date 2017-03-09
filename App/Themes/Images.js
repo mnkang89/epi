@@ -37,7 +37,11 @@ const images = {
 
   videoIndicator: require('../Images/ic_video@3x.png'),
   whiteEpisodeLogo: require('../Images/intro_logo@3x.png'),
-  menuon: require('../Images/menuon@3x.png')
+  menuon: require('../Images/menuon@3x.png'),
+
+  likeHeart: require('../Images/ic_heart_on@3x.png'),
+  unlikeHeart: require('../Images/ic_heart@3x.png'),
+  episodeComment: require('../Images/ic_comment@3x.png')
 }
 
 export default images

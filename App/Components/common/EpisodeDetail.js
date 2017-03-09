@@ -38,7 +38,8 @@ class EpisodeDetail extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      likeCount: this.props.episode.contents.map(content => content.likeCount).reduce((a, b) => a + b, 0),
+      renderLikeHeart: this.props.episode.liked,
+      likeCount: this.props.episode.likeCount,
       contentTypeArray: [],
 
       footer: false
@@ -62,6 +63,7 @@ class EpisodeDetail extends Component {
     // const episodeViewability = parentHandler.viewableItemsArray.includes(index)
     const centerIndex = this.currentCenterIndex
     const episodeId = this.props.episode.id
+    const liked = this.props.episode.liked
     let episode = realm.objects('episode')
       .filtered('id = ' + episodeId)
 
@@ -88,7 +90,7 @@ class EpisodeDetail extends Component {
     if (episode.length === 0) {
       realm.write(() => {
         realm.delete(episode)
-        realm.create('episode', {id: episodeId})
+        realm.create('episode', {id: episodeId, like: liked})
       })
     } else {
       return
@@ -97,6 +99,9 @@ class EpisodeDetail extends Component {
 
   componentWillMount () {
     const contentTypeArray = []
+    const episodeId = this.props.episode.id
+    let episode = realm.objects('episode')
+      .filtered('id = ' + episodeId)
 
     for (let i = 0; i < this.props.episode.contents.length; i++) {
       contentTypeArray.push(this.props.episode.contents[i].type)
@@ -104,6 +109,15 @@ class EpisodeDetail extends Component {
     this.setState({
       contentTypeArray
     })
+
+    // 뺵에서 liked오면 derpecated될 예정
+    if (episode.length === 0) {
+      return
+    } else {
+      this.setState({
+        renderLikeHeart: episode[0].like
+      })
+    }
   }
 
   componentWillReceiveProps (nextProps) {
@@ -129,13 +143,15 @@ class EpisodeDetail extends Component {
 
   like () {
     this.setState({
-      likeCount: this.state.likeCount + 1
+      likeCount: this.state.likeCount + 1,
+      renderLikeHeart: true
     })
   }
 
   dislike () {
     this.setState({
-      likeCount: this.state.likeCount - 1
+      likeCount: this.state.likeCount - 1,
+      renderLikeHeart: false
     })
   }
 
@@ -210,6 +226,7 @@ class EpisodeDetail extends Component {
     const offset = event.nativeEvent.contentOffset.x
     let episode = realm.objects('episode')
       .filtered('id = ' + episodeId)
+    this.currentCenterIndex = offset / (windowSize.width - 22)
 
     realm.write(() => {
       realm.create('episode', {id: episodeId, offset: offset}, true)
@@ -218,6 +235,24 @@ class EpisodeDetail extends Component {
   }
 
   _onEndReached () {
+  }
+
+  _onPressHeart () {
+    const episodeId = this.props.episode.id
+    let episode = realm.objects('episode')
+      .filtered('id = ' + episodeId)
+
+    if (episode[0].like) {
+      this.setState({
+        renderLikeHeart: false
+      })
+      this.contentRefs[this.currentCenterIndex].getWrappedInstance()._root._component.playUnikeAnimation()
+    } else {
+      this.setState({
+        renderLikeHeart: true
+      })
+      this.contentRefs[this.currentCenterIndex].getWrappedInstance()._root._component.playLikeAnimation()
+    }
   }
 
   renderProfileImage () {
@@ -245,6 +280,18 @@ class EpisodeDetail extends Component {
       )
     } else {
       return
+    }
+  }
+
+  renderLikeHeart () {
+    if (this.state.renderLikeHeart) {
+      return (
+        <Image style={{width: 24, height: 20}} source={Images.likeHeart} />
+      )
+    } else {
+      return (
+        <Image style={{width: 24, height: 20}} source={Images.unlikeHeart} />
+      )
     }
   }
 
@@ -335,15 +382,25 @@ class EpisodeDetail extends Component {
           decelerationRate={'fast'}
           directionalLockEnabled={false} />
         <View style={{width: windowSize.width, backgroundColor: '#FFFFFF', paddingTop: 15, paddingBottom: 15}}>
-          <View style={{flexDirection: 'row', justifyContent: 'flex-start'}}>
-            <View style={{marginLeft: 15, justifyContent: 'center'}}>
-              <Image style={{width: 12, height: 10}} source={Images.likeCount} />
+          <View style={{flexDirection: 'row'}}>
+            <View style={{flex: 1, flexDirection: 'row'}}>
+              <View style={{marginLeft: 15, justifyContent: 'center'}}>
+                <Image style={{width: 12, height: 10}} source={Images.likeCount} />
+              </View>
+              <Text style={{fontSize: 13, paddingLeft: 9, color: '#909090'}}>{this.state.likeCount}</Text>
+              <View style={{marginLeft: 21, justifyContent: 'center'}}>
+                <Image style={{width: 11, height: 10}} source={Images.commentCount} />
+              </View>
+              <Text style={{fontSize: 13, paddingLeft: 9, color: '#909090'}}>{commentCount}</Text>
             </View>
-            <Text style={{fontSize: 13, paddingLeft: 9, color: '#909090'}}>{this.state.likeCount}</Text>
-            <View style={{marginLeft: 21, justifyContent: 'center'}}>
-              <Image style={{width: 11, height: 10}} source={Images.commentCount} />
+            <View style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-end', marginRight: 15}}>
+              <TouchableOpacity onPress={this._onPressHeart.bind(this)} >
+                {this.renderLikeHeart()}
+              </TouchableOpacity>
+              <TouchableOpacity style={{marginLeft: 17}}>
+                <Image source={Images.episodeComment} style={{width: 22, height: 20}} />
+              </TouchableOpacity>
             </View>
-            <Text style={{fontSize: 13, paddingLeft: 9, color: '#909090'}}>{commentCount}</Text>
           </View>
         </View>
       </View>
@@ -368,6 +425,7 @@ class EpisodeDetail extends Component {
         number={index}
         episodeId={episodeId}
         content={content.item}
+        // episodeLiked={this.state.liked}
         like={this.like.bind(this)}
         dislike={this.dislike.bind(this)} />
     )
@@ -501,116 +559,3 @@ const styles = {
 }
 
 export default EpisodeDetail
-
-/*
-  render () {
-    // initialListSize={50} 리스트뷰에 아직 렌더링 되지않아 발생하는 에러를 해결하기 위함.
-    // 50개의 내부 row를 렌더링하는 의미이며 다소 하드코딩 되어 있으므로 개선이 필요함.
-    const active = this.props.episode.active
-    const activeEpisodeLength = this.props.episode.contents.length
-    const commentCount = this.props.episode.contents.map(content => content.commentCount).reduce((a, b) => a + b, 0)
-    const timeDiffString = convert2TimeDiffString(
-      this.props.episode.updatedDateTime || this.props.episode.createDateTime)
-    const {
-      headerContentStyle
-    } = styles
-
-    const contents = this.props.episode.contents
-    const episodeId = this.props.episode.id
-    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
-    this.dataSource = ds.cloneWithRows(contents.slice())
-
-    let xPosition = 0
-    // console.log('액티브:')
-    // console.log(active)
-
-    if (!this.props.xPosition) {
-      if (active) {
-        xPosition = (activeEpisodeLength - 1) * (windowSize.width - 22)
-        // console.log('xPosition:')
-        // console.log(xPosition)
-      } else {
-        // console.log('xPosition:')
-        // console.log(xPosition)
-        xPosition = 0
-      }
-    } else {
-      xPosition = this.props.xPosition
-    }
-
-    this.lastContentOffset = (activeEpisodeLength - 1) * (windowSize.width - 22)
-
-    // this.currentCenterIndex
-    if (xPosition === 0) {
-      this.currentCenterIndex = 0
-    } else {
-      this.currentCenterIndex = activeEpisodeLength - 1
-    }
-
-    console.log('에피소드 리렌더')
-    return (
-      <View
-        style={{flex: 1}}>
-        <View style={headerContentStyle}>
-          <View style={{width: windowSize.width - 30, marginTop: 10}}>
-            <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-              <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
-                <View>
-                  {this.renderActiveRed()}
-                  <TouchableOpacity
-                    onPress={this.onPressProfile.bind(this)}>
-                    {this.renderProfileImage()}
-                  </TouchableOpacity>
-                </View>
-                <View style={{justifyContent: 'flex-start', paddingLeft: 5}}>
-                  <Text style={{color: 'rgb(217,217,217)', fontWeight: 'bold'}}>{this.props.account.nickname}</Text>
-                </View>
-              </View>
-              <View>
-                <Text style={{color: 'rgb(217,217,217)', fontSize: 13}}>최근 업데이트 : {timeDiffString}</Text>
-              </View>
-            </View>
-          </View>
-        </View>
-        <ListView
-          ref={(component) => {
-            this._listView = component
-          }}
-          pageSize={2}
-          initialListSize={5}
-          style={{marginTop: 10, paddingLeft: 7.5, paddingRight: 7.5}}
-          contentOffset={{x: xPosition, y: 0}}
-          scrollEventThrottle={100}
-          horizontal
-          snapToAlignment={'start'}
-          snapToInterval={windowSize.width - 22}
-          showsHorizontalScrollIndicator
-          directionalLockEnabled={false}
-          decelerationRate={'fast'}
-          dataSource={this.dataSource}
-          renderRow={(content) => {
-            return (
-              <ContentContainer
-                ref={(component) => {
-                  this.contentRefs[contents.indexOf(content)] = component
-                }}
-                playerRef={(player) => { this.player[contents.indexOf(content)] = player }}
-                key={contents.indexOf(content)}
-                length={contents.length}
-                number={contents.indexOf(content)}
-                episodeId={episodeId}
-                content={content}
-                like={this.like.bind(this)}
-                dislike={this.dislike.bind(this)} />
-            )
-          }} />
-        <View style={{width: windowSize.width - 30, backgroundColor: 'black', paddingTop: 15}}>
-          <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
-            <Text style={{fontSize: 13, paddingRight: 10, color: 'rgb(217,217,217)'}}>공감 {this.state.likeCount}</Text>
-            <Text style={{fontSize: 13, color: 'rgb(217,217,217)'}}>댓글 {commentCount}</Text>
-          </View>
-        </View>
-      </View>
-    )
-  }
-*/

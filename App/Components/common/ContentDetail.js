@@ -11,9 +11,11 @@ import * as Animatable from 'react-native-animatable'
 import CachableImage from '../../Common/CachableImage'
 import CachableVideo from '../../Common/CachableVideo'
 import { Images } from '../../Themes'
+import { getRealm } from '../../Services/RealmFactory'
 // import { Videos } from '../../Themes'
 // import Video from 'react-native-video'
 
+const realm = getRealm()
 const windowSize = Dimensions.get('window')
 
 class ContentDetailClass extends Component {
@@ -24,6 +26,7 @@ class ContentDetailClass extends Component {
     number: PropTypes.number,
     episodeId: PropTypes.number,
     content: PropTypes.object,
+    // episodeLiked: PropTypes.bool,
 
     like: PropTypes.func,
     dislike: PropTypes.func,
@@ -45,7 +48,7 @@ class ContentDetailClass extends Component {
       textList: [ '😀', '😀', '😀', '😀', '😀', '😀', '😀', '😀', '😀', '😀' ],
       pressIn: 0,
       modalVisible: false,
-      liked: this.props.content.liked,
+      // episodeLiked: this.props.episodeLiked,
       IsAnimationTypeLike: this.props.content.liked,
       disabled: false,
 
@@ -55,35 +58,37 @@ class ContentDetailClass extends Component {
 
   onDoublePress () {
     const delta = new Date().getTime() - this.state.lastPress
-    const { token } = this.props
-    const contentId = this.props.content.id
+    const { token, episodeId } = this.props
+
+    let episode = realm.objects('episode')
+      .filtered('id = ' + episodeId)
 
     if (delta < 500) {
       // double tap happend
       console.log('더블탭발생')
 
-      if (this.state.liked) {
-        console.log(`like여부는 트루${this.state.liked}`)
-        this.setState({
-          animation: true,
-          IsAnimationTypeLike: false,
-          liked: false,
-          disabled: false
-        })
-        this.props.dislike()
-        // delete날리기
-        this.props.deleteLike(token, contentId)
-      } else {
-        console.log(`like여부는 폴스${this.state.liked}`)
+      if (episode[0].like) {
+        console.log(`like여부는 트루`)
         this.setState({
           animation: true,
           IsAnimationTypeLike: true,
-          liked: true,
           disabled: false
         })
+      } else {
+        console.log(`like여부는 폴스`)
+        this.setState({
+          animation: true,
+          IsAnimationTypeLike: true,
+          disabled: false
+        })
+        realm.write(() => {
+          realm.create('episode', {id: episodeId, like: true}, true)
+        })
+
+        // EpisodeDetail관련
+        // like수 올리기
         this.props.like()
-        // post날리기
-        this.props.postLike(token, contentId)
+        this.props.postLike(token, episodeId)
       }
     }
 
@@ -113,6 +118,39 @@ class ContentDetailClass extends Component {
     this.setState({
       paused: true
     })
+  }
+
+  playLikeAnimation () {
+    const { token, episodeId } = this.props
+
+    this.setState({
+      animation: true,
+      IsAnimationTypeLike: true,
+      disabled: false
+    })
+
+    realm.write(() => {
+      realm.create('episode', {id: episodeId, like: true}, true)
+    })
+    // EpisodeDetail관련
+    this.props.like()
+    this.props.postLike(token, episodeId)
+  }
+
+  playUnikeAnimation () {
+    const { token, episodeId } = this.props
+
+    this.setState({
+      animation: true,
+      IsAnimationTypeLike: false,
+      disabled: false
+    })
+
+    realm.write(() => {
+      realm.create('episode', {id: episodeId, like: false}, true)
+    })
+    this.props.dislike()
+    this.props.deleteLike(token, episodeId)
   }
 
   renderAnimation () {

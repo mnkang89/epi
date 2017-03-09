@@ -20,9 +20,10 @@ const { Types, Creators } = createActions({
     'error'
   ],
 
+// EpisodeRedux쪽으로 로직 옮길 예정
   likePost: [
     'token',
-    'contentId'
+    'episodeId'
   ],
   likePostSuccess: [
     'response'
@@ -33,7 +34,7 @@ const { Types, Creators } = createActions({
 
   likeDelete: [
     'token',
-    'contentId'
+    'episodeId'
   ],
   likeDeleteSuccess: [
     'response'
@@ -74,7 +75,7 @@ export const postContentFailure = (state: Object, { error }: Object) =>
   state.merge({ contentPosting: false, error })
 
 // like POST
-export const postLike = (state: Object, { token, contentId }: Object) =>
+export const postLike = (state: Object, { token, episodeId }: Object) =>
   state.merge({ likePosting: true })
 
 export const postLikeSuccess = (state: Object, { response }: Object) =>
@@ -84,7 +85,7 @@ export const postLikeFailure = (state: Object, { error }: Object) =>
   state.merge({ likePosting: false })
 
 // like DELETE
-export const deleteLike = (state: Object, { token, contentId }: Object) =>
+export const deleteLike = (state: Object, { token, episodeId }: Object) =>
   state.merge({ likeDeleting: true })
 
 export const deleteLikeSuccess = (state: Object, { response }: Object) =>

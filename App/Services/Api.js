@@ -54,6 +54,7 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
   const requestPhoto = (photoSource, token, accountId) => {
     const formData = new FormData()
     console.log(photoSource)
+    console.log(accountId)
     const photo = {
       uri: photoSource,
       type: 'image/jpeg',
@@ -224,24 +225,22 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     return api.post(`/api/contents`, formData, getTokenHeader())
   }
 
-  const postLike = (token, contentId) => {
-    console.log('POST content/like api콜 발생')
-    const formData = new FormData()
+  const postLike = (token, episodeId) => {
+    console.log('POST episode/like api콜 발생')
+    // const formData = new FormData()
+    // formData.append('contentId', contentId)
 
-    formData.append('contentId', contentId)
-
-    return api.post(`/api/contents/like`, formData, getTokenHeader())
+    // return api.post(`/api/contents/like`, formData, getTokenHeader())
+    return api.post(`/api/episodes/${episodeId}/like`, {}, getTokenHeader())
   }
 
-  const deleteLike = (token, contentId) => {
-    console.log('DELETE content/like api콜 발생')
-    const formData = new FormData()
+  const deleteLike = (token, episodeId) => {
+    console.log('DELETE episode/like api콜 발생')
+    // const formData = new FormData()
+    // formData.append('contentId', contentId)
 
-    formData.append('contentId', contentId)
-    console.log(contentId)
-
-    return api.delete(`/api/contents/like?contentId=${contentId}`, {}, getTokenHeader())
     // return api.delete(`/api/contents/like`, { data: {formData} })
+    return api.delete(`/api/episodes/${episodeId}/like`, {}, getTokenHeader())
   }
 
   // comment

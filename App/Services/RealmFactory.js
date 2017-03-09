@@ -13,7 +13,8 @@ const EpisodeSchema = {
   primaryKey: 'id',
   properties: {
     id: { type: 'int', indexed: true },
-    offset: {type: 'int', default: 0}
+    offset: {type: 'int', default: 0},
+    like: {type: 'bool', default: false}
   }
 }
 
