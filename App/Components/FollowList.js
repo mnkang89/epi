@@ -7,9 +7,11 @@ class FollowList extends Component {
 
   static propTypes = {
     follows: PropTypes.array,
+    screen: PropTypes.string,
 
     postFollow: PropTypes.func,
-    deleteFollow: PropTypes.func
+    deleteFollow: PropTypes.func,
+    resetFollowModal: PropTypes.func
   }
 
   constructor (props) {
@@ -22,7 +24,9 @@ class FollowList extends Component {
     return this.props.follows.map(follow =>
       <FollowDetail
         key={follow.id}
+        screen={this.props.screen}
         follow={follow}
+        resetFollowModal={this.props.resetFollowModal}
         postFollow={this.props.postFollow}
         deleteFollow={this.props.deleteFollow} />
     )
@@ -35,6 +39,10 @@ class FollowList extends Component {
       </ScrollView>
     )
   }
+}
+
+FollowList.defaultProps = {
+  follows: []
 }
 
 export default FollowList

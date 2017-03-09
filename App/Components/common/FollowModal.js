@@ -9,7 +9,7 @@ import {
 } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
-import FollowList from '../FollowList'
+import FollowContainer from '../../Containers/common/FollowContainer'
 
 // 부모 컴포넌트로부터 내려받는 props의 경우 간혹 undefined문제가 발생하고 있음. 데이터 fetching이 되기전에 컴포넌트가 마운트되서 생기는 문제로
 // 현재는 ? 연산을 통해 undefined일 경우, default값을 주는 방식으로 진행중
@@ -18,6 +18,7 @@ class FollowModal extends Component {
 
   static propTypes = {
     token: PropTypes.string,
+    screen: PropTypes.string,
 
     showType: PropTypes.string,
     followVisible: PropTypes.bool,
@@ -30,19 +31,19 @@ class FollowModal extends Component {
 
   constructor (props) {
     super(props)
-    // console.log(this.props.follows)
     this.state = {
+      // follows: this.props.follows === undefined ? [] : this.props.follows,
       text: '',
       height: 5,
       inputBottom: 40,
-      followVisible: this.props.followVisible === undefined ? false : this.props.followVisible
-      // follows: this.props.follows === undefined ? [] : this.props.follows
+      followVisible: this.props.followVisible === undefined ? false : this.props.followVisible,
+      followContainerRender: false
     }
-    this.animatedValue
+    this.animatedValue = new Animated.Value(600)
   }
 
   componentWillMount () {
-    this.animatedValue = new Animated.Value(600)
+    // this.animatedValue = new Animated.Value(600)
   }
 
   componentDidMount () {
@@ -60,6 +61,9 @@ class FollowModal extends Component {
           easing: Easing.in(Easing.quad),
           delay: 0
         }).start()
+        setTimeout(() => {
+          this.setState({followContainerRender: true})
+        }, 500)
       })
     }
   }
@@ -72,9 +76,26 @@ class FollowModal extends Component {
     }).start()
 
     setTimeout(() => {
-      this.setState({followVisible: false})
+      this.setState({
+        followVisible: false,
+        followContainerRender: false
+      })
       this.props.openFollow(false, null)
     }, 250)
+  }
+
+  renderFollowContainer () {
+    if (this.state.followContainerRender) {
+      return (
+        <FollowContainer
+          screen={this.props.screen}
+          resetFollowModal={this.resetFollowModal.bind(this)} />
+      )
+    } else {
+      return (
+        <View style={{flex: 1}} />
+      )
+    }
   }
 
   render () {
@@ -103,10 +124,7 @@ class FollowModal extends Component {
               </View>
               <View style={{flex: 1}} />
             </View>
-            <FollowList
-              follows={this.props.follows === undefined ? [] : this.props.follows}
-              postFollow={this.props.postFollow}
-              deleteFollow={this.props.deleteFollow} />
+            {this.renderFollowContainer()}
           </Animated.View>
         </View>
       </Modal>

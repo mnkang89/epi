@@ -4,6 +4,7 @@ import { Text, Image, View, TouchableOpacity, Dimensions } from 'react-native'
 
 import { Colors, Metrics, Images } from '../Themes/'
 import CachableImage from '../Common/CachableImage'
+import { Actions as NavigationActions } from 'react-native-router-flux'
 
 const windowSize = Dimensions.get('window')
 
@@ -11,9 +12,11 @@ class FollowDetail extends Component {
 
   static propTypes = {
     follow: PropTypes.object,
+    screen: PropTypes.string,
 
     postFollow: PropTypes.func,
-    deleteFollow: PropTypes.func
+    deleteFollow: PropTypes.func,
+    resetFollowModal: PropTypes.func
   }
 
   constructor (props) {
@@ -33,6 +36,38 @@ class FollowDetail extends Component {
     } else {
       this.props.postFollow(token, id)
       this.setState({ follow: true })
+    }
+  }
+
+  onProfilePress () {
+    const accountId = this.props.follow.id
+    this.props.resetFollowModal()
+    console.log(this.props.screen)
+
+    if (this.props.screen === 'FeedScreen') {
+      console.log('feedscreen 인 팔로우')
+      NavigationActions.feedTouserProfileScreen({
+        type: 'push',
+        id: accountId
+      })
+    } else if (this.props.screen === 'NotiScreen') {
+      console.log('notiscreen 인 팔로우')
+      NavigationActions.notiTouserProfileScreen({
+        type: 'push',
+        id: accountId
+      })
+    } else if (this.props.screen === 'SearchScreen') {
+      console.log('searchscreen 인 팔로우')
+      NavigationActions.searchTouserProfileScreen({
+        type: 'push',
+        id: accountId
+      })
+    } else if (this.props.screen === 'ProfileScreen') {
+      console.log('profilescreen 인 팔로우')
+      NavigationActions.profileTouserProfileScreen({
+        type: 'push',
+        id: accountId
+      })
     }
   }
 
@@ -86,9 +121,11 @@ class FollowDetail extends Component {
 
     return (
       <View style={{width: windowSize.width - 30, alignItems: 'center', height: 55, borderBottomWidth: 0.5, borderColor: 'rgb(231, 231, 231)', flexDirection: 'row', backgroundColor: 'white'}}>
-        <View style={{flex: 1, alignItems: 'flex-end'}}>
+        <TouchableOpacity
+          style={{flex: 1, alignItems: 'flex-end'}}
+          onPress={this.onProfilePress.bind(this)} >
           {this.renderProfileImage()}
-        </View>
+        </TouchableOpacity>
         <View style={{flex: 5, justifyContent: 'center', paddingLeft: 10}}>
           <Text style={userTextStyle}>{nickname}</Text>
         </View>
