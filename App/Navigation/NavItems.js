@@ -25,7 +25,7 @@ export default {
 
   backButton () {
     return (
-      <TouchableOpacity onPress={NavigationActions.pop} style={{paddingTop: 5}}>
+      <TouchableOpacity onPress={NavigationActions.pop} style={{paddingTop: 5, width: 40, height: 35}}>
         <Image source={Images.backButton} style={{width: 11, height: 19}} />
       </TouchableOpacity>
     )
