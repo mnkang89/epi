@@ -11,9 +11,9 @@ import {
 import KeyboardSpacer from 'react-native-keyboard-spacer'
 import {AutoGrowingTextInput} from 'react-native-autogrow-textinput'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import _ from 'lodash'
+// import _ from 'lodash'
 
-import CommentList from '../CommentList'
+import CommentContainer from '../../Containers/common/CommentContainer'
 
 const windowSize = Dimensions.get('window')
 
@@ -42,44 +42,34 @@ class CommentModal extends Component {
       text: '',
       height: 5,
       inputBottom: 40,
-      modalVisible: false
+      modalVisible: false,
+      commentContainerRender: false
     }
-    this.animatedValue
+
     this.message
+    this.animatedValue = new Animated.Value(600)
   }
 
   componentWillReceiveProps (nextProps) {
-    console.log('디스닷스테이트모달비저블')
-    console.log(this.state.modalVisible)
     if (nextProps.visible) {
-      if (nextProps.commentPosting) {
-        console.log('아직 코멘트 포스팅중')
-        return
-      } else if (
-        this.props.commentPosting === true &&
-        nextProps.commentPosting === false) {
-        console.log('코멘트 포스팅 끝')
-      } else if (!_.isEqual(this.props.comments, nextProps.comments)) {
-        console.log('코멘트 포스팅 후 새로고침')
-      } else {
-        console.log('코멘트 첫 진입')
-        const modalVisible = nextProps.visible
+      const modalVisible = nextProps.visible
 
-        this.setState({
-          modalVisible
-        }, () => {
-          Animated.timing(this.animatedValue, {
-            toValue: 0,
-            duration: 250,
-            easing: Easing.in(Easing.quad)
-          }).start()
-        })
-      }
+      this.setState({
+        modalVisible
+      }, () => {
+        Animated.timing(this.animatedValue, {
+          toValue: 0,
+          duration: 300,
+          easing: Easing.in(Easing.quad)
+        }).start()
+        setTimeout(() => {
+          this.setState({commentContainerRender: true})
+        }, 500)
+      })
     }
   }
 
   componentWillMount () {
-    this.animatedValue = new Animated.Value(600)
   }
 
   resetCommentModal () {
@@ -89,7 +79,10 @@ class CommentModal extends Component {
     }).start()
 
     setTimeout(() => {
-      this.setState({modalVisible: false})
+      this.setState({
+        modalVisible: false,
+        commentContainerRender: false
+      })
       this.props.resetCommentModal()
     }, 250)
   }
@@ -110,6 +103,21 @@ class CommentModal extends Component {
     } else {
       this.message = ''
       this.refs.commentInput.clear()
+    }
+  }
+
+  renderCommentContainer () {
+    if (this.state.commentContainerRender) {
+      return (
+        <CommentContainer
+          screen={this.props.screen}
+          token={this.props.token}
+          resetCommentModal={this.resetCommentModal.bind(this)} />
+      )
+    } else {
+      return (
+        <View style={{flex: 1}} />
+      )
     }
   }
 
@@ -138,15 +146,7 @@ class CommentModal extends Component {
               </TouchableOpacity>
               <Text style={{left: 140, marginTop: 10, fontSize: 17, fontWeight: 'bold'}}>댓글</Text>
             </View>
-            <CommentList
-              screen={this.props.screen}
-              token={this.props.token}
-              comments={this.props.comments}
-              episodeId={this.props.episodeId}
-              contentId={this.props.contentId}
-              resetCommentModal={this.resetCommentModal.bind(this)}
-              getComment={this.props.getComment}
-              deleteComment={this.props.deleteComment} />
+            {this.renderCommentContainer()}
             <View style={{flexDirection: 'row', backgroundColor: 'rgb(236, 236, 236)'}}>
               <View style={styles2.textContainer}>
                 <AutoGrowingTextInput

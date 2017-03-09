@@ -14,6 +14,9 @@ class CommentList extends Component {
     episodeId: PropTypes.number,
     contentId: PropTypes.number,
 
+    commentPosting: PropTypes.bool,
+    commentDeleting: PropTypes.bool,
+
     resetCommentModal: PropTypes.func,
     getComment: PropTypes.func,
     deleteComment: PropTypes.func
@@ -34,6 +37,17 @@ class CommentList extends Component {
     }
     if (this.state.refreshing) {
       this.setState({refreshing: false})
+    }
+
+    if (nextProps.commentPosting) {
+      console.log('아직 코멘트 포스팅중')
+      return
+    } else if (
+      this.props.commentPosting === true &&
+      nextProps.commentPosting === false) {
+      console.log('코멘트 포스팅 끝')
+    } else if (!_.isEqual(this.props.comments, nextProps.comments)) {
+      console.log('코멘트 포스팅 후 새로고침')
     }
   }
 

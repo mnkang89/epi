@@ -29,6 +29,9 @@ class CommentDetail extends Component {
     }
   }
 
+  componentWillMount () {
+  }
+
   componentWillReceiveProps (nextProps) {
     console.log(getObjectDiff(this.props, nextProps))
   }
@@ -66,6 +69,8 @@ class CommentDetail extends Component {
   onProfilePress () {
     const accountId = this.props.comment.account.id
     this.props.resetCommentModal()
+
+    console.log('코멘트 프로필 클릭')
 
     if (this.props.screen === 'FeedScreen') {
       NavigationActions.feedTouserProfileScreen({
@@ -148,7 +153,7 @@ class CommentDetail extends Component {
               <Text style={userTextStyle}>{nickname}</Text>
             </View>
             <View style={{flex: 2, marginTop: 3, marginBottom: 10}}>
-              <Text style={{color: 'rgb(53, 53, 53)', fontSize: 15, lineHeight: 26}}>{message}</Text>
+              <Text style={{color: 'rgb(53, 53, 53)', fontSize: 15}}>{message}</Text>
               <Text style={dateTextStyle}>{timeDiffString}</Text>
             </View>
           </View>
