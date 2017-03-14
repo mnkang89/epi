@@ -115,7 +115,6 @@ class NotiScreen extends Component {
             ref={this._captureRef}
             ItemComponent={this._renderItemComponent.bind(this)}
             disableVirtualization={false}
-            getItemLayout={undefined}
             horizontal={false}
             data={this.props.noties}
             key={'vf'}

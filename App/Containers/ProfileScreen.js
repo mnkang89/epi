@@ -3,6 +3,7 @@ import { View, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 
+import { getAccountId } from '../Services/Auth'
 import { getObjectDiff, getArrayDiff } from '../Lib/Utilities'
 import FlatListE from '../Experimental/FlatList_e'
 import ProfileInfo from '../Components/common/ProfileInfo'
@@ -94,8 +95,11 @@ class ProfileScreen extends Component {
   }
 
   _onRefresh () {
+    const token = null
+    const accountId = getAccountId()
     this.setState({refreshing: true})
 
+    this.props.requestInfo(token, accountId)
     this.props.requestUserEpisodesWithFalse(
       this.props.token,
       this.props.accountId,
@@ -120,7 +124,7 @@ class ProfileScreen extends Component {
   render () {
     console.log('데이터길이: ' + this.props.items.length)
     return (
-      <View style={styles.noNavBarContainer}>
+      <View style={styles.mainContainer}>
         <FlatListE
           keyExtractor={(item, index) => index}
           style={{ flex: 1 }}
@@ -129,7 +133,6 @@ class ProfileScreen extends Component {
           FooterComponent={this._renderFooter.bind(this)}
           ItemComponent={this._renderItemComponent.bind(this)}
           disableVirtualization={false}
-          getItemLayout={this._getItemLayout}
           horizontal={false}
           data={this.props.items}
           key={'vf'}

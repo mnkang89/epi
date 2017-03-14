@@ -25,7 +25,7 @@ import EpisodeActions from '../Redux/EpisodeRedux'
 import CommentActions from '../Redux/CommentRedux'
 
 // const windowSize = Dimensions.get('window')
-const ITEM_HEIGHT = 447
+// const ITEM_HEIGHT = 471
 
 class FeedScreen extends Component {
 
@@ -73,9 +73,7 @@ class FeedScreen extends Component {
   }
 
   componentDidMount () {
-    // const { token, accountId } = this.props
     const token = null
-    // const withFollowing = true
     const accountId = getAccountId()
 
     this.props.requestInfo(token, accountId)
@@ -107,10 +105,6 @@ class FeedScreen extends Component {
         footer: false
       })
     }
-  }
-
-  componentWillUnmount () {
-    // clearInterval(this.autoRefresher)
   }
 
   shouldComponentUpdate (nextProps, nextState) {
@@ -197,14 +191,12 @@ class FeedScreen extends Component {
     return (
       <View style={styles.mainContainer}>
         {this.renderListView(dataSource)}
-        <View style={{height: 48.5}} />
+        <View style={{height: 48}} />
         <CommentModalContainer screen={'FeedScreen'} token={this.props.token} />
       </View>
     )
   }
 */
-
-// this.props.items
   render () {
     return (
       <View style={styles.mainContainer}>
@@ -218,7 +210,6 @@ class FeedScreen extends Component {
           data={this.props.items}
           ItemComponent={this._renderItemComponent.bind(this)}
           FooterComponent={this._renderFooter.bind(this)}
-          getItemLayout={this._getItemLayout}
           horizontal={false}
           scrollsToTop
           onRefresh={this._onRefresh.bind(this)}
@@ -234,10 +225,6 @@ class FeedScreen extends Component {
   }
 
   _captureRef = (ref) => { this._listRef = ref }
-
-  _getItemLayout = (data: any, index: number) => ({
-    length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index
-  })
 
   _renderItemComponent = (episode) => {
     const index = episode.index
@@ -256,7 +243,9 @@ class FeedScreen extends Component {
         episode={episode.item.episode}
         account={episode.item.account}
         // EpisodeDetailContainer만들고 그쪽에서 넘겨주는 로직으로 변경할 예정
-        requestNewEpisode={this.props.requestNewEpisode} />
+        requestNewEpisode={this.props.requestNewEpisode}
+        openComment={this.props.openComment}
+        getComment={this.props.getComment} />
     )
   }
 
@@ -278,6 +267,7 @@ class FeedScreen extends Component {
   }
 
   _shouldItemUpdate (prev, next) {
+    console.log('shouldItemUpdate in feedscreen.js')
     return prev.item !== next.item
   }
 
@@ -285,19 +275,16 @@ class FeedScreen extends Component {
       changed: Array<{
         key: string, isViewable: boolean, item: any, index: ?number, section?: any
       }>
-    }
-  ) => {
-    /* info오브젝트에서 뷰어블인 에피소드의 인덱스 추출하고 해당 에피소드를 제외한 에피소드는 모두 stopEpisodeVideo()호출 */
-
+    }) => {
     const viewableItemsArray = []
     const episodeRefsArray = Object.keys(this.episodeRefs).map(Number)
 
     for (let i = 0; i < info.viewableItems.length; i++) {
       viewableItemsArray.push(info.viewableItems[i].index)
     }
-
+    // 보이는 아이템들 어레이
     this.viewableItemsArray = viewableItemsArray
-
+    // 보이지않는 아이템들 어레이
     const inViewableItemsArray = getArrayDiff(episodeRefsArray, viewableItemsArray)
 
     for (let i in inViewableItemsArray) {
@@ -305,28 +292,24 @@ class FeedScreen extends Component {
 
       if (this.episodeRefs[index] !== null) {
         this.episodeRefs[index].stopEpisodeVideo()
-      } else {
-        // console.log('null인놈들')
-        // console.log(index)
       }
     }
     // 뷰어블한 아이템이 3개이면 중간 아이템만 play
-    if (viewableItemsArray.length === 3) {
-      if (this.episodeRefs[viewableItemsArray[0]] !== null) {
-        this.episodeRefs[viewableItemsArray[0]].stopEpisodeVideo()
-      }
-      if (this.episodeRefs[viewableItemsArray[2]] !== null) {
-        this.episodeRefs[viewableItemsArray[2]].stopEpisodeVideo()
-      }
-    } else {
-      for (let j in viewableItemsArray) {
-        const index = viewableItemsArray[j]
-
-        if (this.episodeRefs[index] !== null) {
-          this.episodeRefs[index].playEpisodeVideo()
-        }
-      }
-    }
+    // if (viewableItemsArray.length === 3) {
+    //   if (this.episodeRefs[viewableItemsArray[0]] !== null) {
+    //     this.episodeRefs[viewableItemsArray[0]].stopEpisodeVideo()
+    //   }
+    //   if (this.episodeRefs[viewableItemsArray[2]] !== null) {
+    //     this.episodeRefs[viewableItemsArray[2]].stopEpisodeVideo()
+    //   }
+    // } else {
+    //   for (let j in viewableItemsArray) {
+    //     const index = viewableItemsArray[j]
+    //     if (this.episodeRefs[index] !== null) {
+    //       this.episodeRefs[index].playEpisodeVideo()
+    //     }
+    //   }
+    // }
   }
 
 }
@@ -354,7 +337,9 @@ const mapDispatchToProps = (dispatch) => {
     requestUserEpisodesWithFalse: (token, accountId, withFollowing) => dispatch(EpisodeActions.userEpisodesWithFalseRequest(token, accountId, withFollowing)),
     requestMoreFeeds: (token, accountId, withFollowing, before) => dispatch(EpisodeActions.moreFeedsRequest(token, accountId, withFollowing, before)),
 
-    resetCommentModal: () => dispatch(CommentActions.resetComment())
+    resetCommentModal: () => dispatch(CommentActions.resetComment()),
+    openComment: (visible) => dispatch(CommentActions.openComment(visible)),
+    getComment: (token, episodeId, contentId) => dispatch(CommentActions.commentGet(token, episodeId, contentId))
   }
 }
 

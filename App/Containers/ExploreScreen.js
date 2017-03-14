@@ -123,7 +123,6 @@ class ExploreScreen extends Component {
           FooterComponent={this._renderFooter.bind(this)}
           ItemComponent={this._renderItemComponent.bind(this)}
           disableVirtualization={false}
-          getItemLayout={this._getItemLayout}
           horizontal={false}
           data={this.props.items}
           key={'vf'}
