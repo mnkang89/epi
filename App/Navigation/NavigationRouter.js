@@ -36,6 +36,7 @@ class NavigationRouter extends Component {
         getSceneStyle={getSceneStyle} >
         <Scene
           key='root'
+          // duration={0}
           navigationBarStyle={Styles.navBar}
           titleStyle={Styles.title} >
           <Scene
@@ -45,8 +46,10 @@ class NavigationRouter extends Component {
             hideTabBar
             component={GreetingScreen} />
           <Scene
+            // duration={0}
             initial={isLoggedIn()}
             key='tabBar'
+            type='reset'
             tabs
             tabBarStyle={{backgroundColor: '#FFFFFF', alignItems: 'center', height: 60, borderTopColor: '#f3f3f3', borderTopWidth: 1}} >
             <Scene
@@ -61,14 +64,13 @@ class NavigationRouter extends Component {
               }}
               navigationBarStyle={Styles.navBar}
               // leftButtonIconStyle={Styles.leftButton}
+              renderTitle={NavItems.episodeLogo}
               titleStyle={{color: 'white', fontSize: 20, fontWeight: 'bold'}} >
               <Scene
                 key='feedScreen'
                 panHandlers={null}
-                component={FeedScreen}
-                renderTitle={NavItems.episodeLogo} />
+                component={FeedScreen} />
               <Scene
-                hideNavBar
                 backButtonImage={Images.backButton}
                 key='feedTouserProfileScreen'
                 component={UserProfileScreen}
@@ -85,9 +87,7 @@ class NavigationRouter extends Component {
                 Actions.alarmTab()
               }}
               navigationBarStyle={Styles.navBar}
-              // leftButtonIconStyle={Styles.leftButton}
               renderTitle={NavItems.episodeLogo}
-              // titleStyle={{color: 'white', fontSize: 20, fontWeight: 'bold'}}
               >
               <Scene
                 key='notiScreen'
@@ -100,7 +100,6 @@ class NavigationRouter extends Component {
                 component={SingleEpisodeScreen}
                 title='에피소드' />
               <Scene
-                hideNavBar
                 backButtonImage={Images.backButton}
                 key='notiTouserProfileScreen'
                 component={UserProfileScreen}
@@ -138,14 +137,11 @@ class NavigationRouter extends Component {
                 component={ExploreScreen}
                 title='우연한 발견' />
               <Scene
-                hideNavBar
-                // renderBackButton={NavItems.backButton}
                 backButtonImage={Images.backButton}
                 key='searchTouserProfileScreen'
                 component={UserProfileScreen}
                 title='프로필' />
               <Scene
-                // renderBackButton={NavItems.backButton}
                 backButtonImage={Images.backButton}
                 key='searchTosingleEpisodeScreen'
                 component={SingleEpisodeScreen}
@@ -161,20 +157,15 @@ class NavigationRouter extends Component {
                 this.props.registerScreen('profileTab')
                 Actions.profileTab()
               }}
+              renderTitle={NavItems.episodeLogo}
               navigationBarStyle={Styles.navBar}
               leftButtonIconStyle={Styles.leftButton}
               titleStyle={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>
               <Scene
                 key='profileScreen'
-                hideNavBar
                 panHandlers={null}
                 component={ProfileScreen}
                 title='내 프로필' />
-              <Scene
-                hideNavBar
-                key='profileTouserProfileScreen'
-                component={UserProfileScreen}
-                title='프로필' />
             </Scene>
           </Scene>
           <Scene
