@@ -11,8 +11,8 @@ import * as Animatable from 'react-native-animatable'
 import CachableImage from '../../Common/CachableImage'
 import CachableVideo from '../../Common/CachableVideo'
 import { Images } from '../../Themes'
+// import { Images, Videos } from '../../Themes'
 import { getRealm } from '../../Services/RealmFactory'
-// import { Videos } from '../../Themes'
 // import Video from 'react-native-video'
 
 const realm = getRealm()
@@ -231,15 +231,17 @@ class ContentDetailClass extends Component {
                 <View style={{flex: 1, marginTop: 90}}>
                   {this.renderAnimation()}
                 </View>
-                <View style={{flex: 1, justifyContent: 'flex-end', marginBottom: 10, backgroundColor: 'rgba(0,0,0,0)'}}>
+                <View style={{flex: 1, justifyContent: 'flex-end', marginBottom: 10, backgroundColor: 'rgba(0,0,0,0)', paddingRight: 15, paddingLeft: 15}}>
                   <Text
+                    allowFontScaling={false}
                     style={{
-                      textShadowOffset: {width: 1, height: 2},
-                      textShadowColor: 'rgba(0, 0, 0, 0.5)',
-                      textShadowRadius: 1,
+                      textShadowOffset: {width: 0, height: 1},
+                      textShadowColor: 'rgba(0,0,0,0.39)',
+                      textShadowRadius: 3,
                       color: 'white',
-                      fontSize: 20,
-                      fontWeight: 'bold' }} >
+                      fontWeight: '500',
+                      textAlign: 'center',
+                      fontSize: 17 }} >
                     {message}
                   </Text>
                 </View>
@@ -275,19 +277,27 @@ class ContentDetailClass extends Component {
                   right: 0,
                   bottom: 0
                 }} />
-              <View style={{alignItems: 'center'}} >
+              <View style={{flex: 1, alignItems: 'center', justifyContent: 'flex-end'}} >
                 <View style={{marginTop: 90}}>
                   {this.renderAnimation()}
                 </View>
-                <View style={{justifyContent: 'flex-end', marginBottom: 10, backgroundColor: 'rgba(0,0,0,0)'}}>
+                <View style={{
+                  alignItems: 'center',
+                  // justifyContent: 'flex-end',
+                  paddingRight: 15,
+                  paddingLeft: 15,
+                  marginBottom: 10,
+                  backgroundColor: 'rgba(0,0,0,0)'}}>
                   <Text
+                    allowFontScaling={false}
                     style={{
-                      textShadowOffset: {width: 1, height: 2},
-                      textShadowColor: 'rgba(0, 0, 0, 0.5)',
-                      textShadowRadius: 1,
+                      textShadowOffset: {width: 0, height: 1},
+                      textShadowColor: 'rgba(0,0,0,0.39)',
+                      textShadowRadius: 3,
                       color: 'white',
-                      fontSize: 20,
-                      fontWeight: 'bold' }}>
+                      fontWeight: '500',
+                      textAlign: 'center',
+                      fontSize: 17 }} >
                     {message}
                   </Text>
                 </View>
