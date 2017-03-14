@@ -5,10 +5,10 @@ import {
   Text,
   TouchableOpacity,
   Animated,
-  Easing
+  Easing,
+  PanResponder
 } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
-
 import FollowContainer from '../../Containers/common/FollowContainer'
 
 // 부모 컴포넌트로부터 내려받는 props의 경우 간혹 undefined문제가 발생하고 있음. 데이터 fetching이 되기전에 컴포넌트가 마운트되서 생기는 문제로
@@ -39,11 +39,21 @@ class FollowModal extends Component {
       followVisible: this.props.followVisible === undefined ? false : this.props.followVisible,
       followContainerRender: false
     }
+
     this.animatedValue = new Animated.Value(600)
+    this._wrapperPanResponder = {}
   }
 
   componentWillMount () {
-    // this.animatedValue = new Animated.Value(600)
+    this._wrapperPanResponder = PanResponder.create({
+      onStartShouldSetPanResponder: (e, g) => {
+        return true
+      },
+      onPanResponderGrant: () => {
+        console.log('팬리스폰더 뷰 그랜트')
+        this.resetFollowModal()
+      }
+    })
   }
 
   componentDidMount () {
@@ -105,7 +115,10 @@ class FollowModal extends Component {
         transparent
         visible={this.state.followVisible}>
         <View style={styles2.containerStyle}>
-          <Animated.View style={{transform: [{translateY: this.animatedValue}], backgroundColor: 'white', flex: 1, marginTop: 151, borderTopLeftRadius: 8, borderTopRightRadius: 8}}>
+          <View
+            style={{flex: 18}}
+            {...this._wrapperPanResponder.panHandlers} />
+          <Animated.View style={{transform: [{translateY: this.animatedValue}], backgroundColor: 'white', flex: 82, borderTopLeftRadius: 8, borderTopRightRadius: 8}}>
             <View style={{flexDirection: 'row', height: 42.5, marginRight: 4.5, marginLeft: 4.5, borderBottomWidth: 0.5, borderBottomColor: 'rgb(204, 204, 204)'}}>
               <TouchableOpacity
                 onPress={() => {

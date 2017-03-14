@@ -295,21 +295,21 @@ class FeedScreen extends Component {
       }
     }
     // 뷰어블한 아이템이 3개이면 중간 아이템만 play
-    // if (viewableItemsArray.length === 3) {
-    //   if (this.episodeRefs[viewableItemsArray[0]] !== null) {
-    //     this.episodeRefs[viewableItemsArray[0]].stopEpisodeVideo()
-    //   }
-    //   if (this.episodeRefs[viewableItemsArray[2]] !== null) {
-    //     this.episodeRefs[viewableItemsArray[2]].stopEpisodeVideo()
-    //   }
-    // } else {
-    //   for (let j in viewableItemsArray) {
-    //     const index = viewableItemsArray[j]
-    //     if (this.episodeRefs[index] !== null) {
-    //       this.episodeRefs[index].playEpisodeVideo()
-    //     }
-    //   }
-    // }
+    if (viewableItemsArray.length === 3) {
+      if (this.episodeRefs[viewableItemsArray[0]] !== null) {
+        this.episodeRefs[viewableItemsArray[0]].stopEpisodeVideo()
+      }
+      if (this.episodeRefs[viewableItemsArray[2]] !== null) {
+        this.episodeRefs[viewableItemsArray[2]].stopEpisodeVideo()
+      }
+    } else {
+      for (let j in viewableItemsArray) {
+        const index = viewableItemsArray[j]
+        if (this.episodeRefs[index] !== null) {
+          this.episodeRefs[index].playEpisodeVideo()
+        }
+      }
+    }
   }
 
 }

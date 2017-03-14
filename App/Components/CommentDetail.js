@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react'
-import { Text, View, Image, TouchableOpacity, Modal, Animated } from 'react-native'
+import { Text, View, Image, TouchableOpacity, Modal, Animated, PanResponder } from 'react-native'
 import CachableImage from '../Common/CachableImage'
 
 import { Actions as NavigationActions } from 'react-native-router-flux'
@@ -29,9 +29,18 @@ class CommentDetail extends Component {
     }
 
     this.animatedValue = new Animated.Value(-200)
+    this._wrapperPanResponder = {}
   }
 
   componentWillMount () {
+    this._wrapperPanResponder = PanResponder.create({
+      onStartShouldSetPanResponder: (e, g) => {
+        return true
+      },
+      onPanResponderGrant: () => {
+        this.cancelPress()
+      }
+    })
   }
 
   componentWillReceiveProps (nextProps) {
@@ -183,10 +192,13 @@ class CommentDetail extends Component {
           animationType={'fade'}
           transparent
           visible={this.state.settingModal}>
-          <View style={{flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.7)'}}>
+          <View style={{flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.7)'}} >
+            <View
+              style={{flex: 82}}
+              {...this._wrapperPanResponder.panHandlers} />
             <Animated.View
               style={{
-                // transform: [{translateY: this.animatedValue}],
+                flex: 18,
                 width: 355,
                 marginBottom: this.animatedValue,
                 alignSelf: 'center',

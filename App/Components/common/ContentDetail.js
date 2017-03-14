@@ -170,7 +170,7 @@ class ContentDetailClass extends Component {
               })
             }}>
             {/* {message[textIndex]} */}
-            <Image style={{marginTop: 30, width: 100, height: 90}} source={Images.like} />
+            <Image style={{width: 100, height: 90}} source={Images.like} />
           </Animatable.View>
         )
       } else {
@@ -277,13 +277,15 @@ class ContentDetailClass extends Component {
                   right: 0,
                   bottom: 0
                 }} />
-              <View style={{flex: 1, alignItems: 'center', justifyContent: 'flex-end'}} >
-                <View style={{marginTop: 90}}>
+              <View style={{flex: 1, alignItems: 'center'}} >
+                <View style={{flex: 1}} />
+                <View style={{flex: 1}} >
                   {this.renderAnimation()}
                 </View>
                 <View style={{
+                  flex: 1,
+                  justifyContent: 'flex-end',
                   alignItems: 'center',
-                  // justifyContent: 'flex-end',
                   paddingRight: 15,
                   paddingLeft: 15,
                   marginBottom: 10,
