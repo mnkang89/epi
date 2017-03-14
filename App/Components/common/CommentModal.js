@@ -6,7 +6,9 @@ import {
   TouchableOpacity,
   Dimensions,
   Animated,
-  Easing
+  Easing,
+  Keyboard,
+  PanResponder
 } from 'react-native'
 import KeyboardSpacer from 'react-native-keyboard-spacer'
 import {AutoGrowingTextInput} from 'react-native-autogrow-textinput'
@@ -48,6 +50,7 @@ class CommentModal extends Component {
 
     this.message
     this.animatedValue = new Animated.Value(600)
+    this._wrapperPanResponder = {}
   }
 
   componentWillReceiveProps (nextProps) {
@@ -70,9 +73,21 @@ class CommentModal extends Component {
   }
 
   componentWillMount () {
+    this._wrapperPanResponder = PanResponder.create({
+      onStartShouldSetPanResponder: (e, g) => {
+        return true
+      },
+      onPanResponderGrant: () => {
+        console.log('팬리스폰더 뷰 그랜트')
+        this.resetCommentModal()
+      }
+    })
   }
 
   resetCommentModal () {
+    if (this.refs.commentInput.isFocused()) {
+      Keyboard.dismiss()
+    }
     Animated.timing(this.animatedValue, {
       toValue: 600,
       duration: 250
@@ -127,47 +142,54 @@ class CommentModal extends Component {
         style={{position: 'absolute', top: 0, left: 0, bottom: 0, right: 0}}
         animationType={'fade'}
         transparent
-        visible={this.state.modalVisible}>
+        visible={this.state.modalVisible} >
         <View
           ref={(ref) => { this.contentRef = ref }}
-          style={styles2.containerStyle}>
-          <Animated.View style={{transform: [{translateY: this.animatedValue}], backgroundColor: 'white', flex: 1, marginTop: 131, borderTopLeftRadius: 8, borderTopRightRadius: 8}}>
-            <View style={{flexDirection: 'row', height: 42.5, marginRight: 4.5, marginLeft: 4.5, borderBottomWidth: 0.5, borderBottomColor: 'rgb(204, 204, 204)'}}>
-              <TouchableOpacity
-                onPress={() => {
-                  this.resetCommentModal()
-                }}
-                style={{paddingTop: 10, paddingLeft: 16}}>
-                <Icon
-                  name='chevron-down'
-                  size={16}
-                  style={{width: 16, height: 16, alignSelf: 'center', fontWeight: '300'}}
-                />
-              </TouchableOpacity>
-              <Text style={{left: 140, marginTop: 10, fontSize: 17, fontWeight: 'bold'}}>댓글</Text>
-            </View>
-            {this.renderCommentContainer()}
-            <View style={{flexDirection: 'row', backgroundColor: 'rgb(236, 236, 236)'}}>
-              <View style={styles2.textContainer}>
-                <AutoGrowingTextInput
-                  ref='commentInput'
-                  style={styles2.input}
-                  placeholder={'댓글을 입력하세요...'}
-                  autoCapitalize='none'
-                  autoCorrect={false}
-                  onChangeText={this.handleChangeMessage.bind(this)}
-                  maxHeight={70} />
-              </View>
-              <View>
+          style={styles2.containerStyle} >
+          <View
+            style={{flex: 1}} >
+            <View
+              style={{flex: 18}}
+              {...this._wrapperPanResponder.panHandlers} />
+            <Animated.View
+              style={{transform: [{translateY: this.animatedValue}], backgroundColor: 'white', flex: 82, borderTopLeftRadius: 8, borderTopRightRadius: 8}}>
+              <View style={{flexDirection: 'row', height: 42.5, marginRight: 4.5, marginLeft: 4.5, borderBottomWidth: 0.5, borderBottomColor: 'rgb(204, 204, 204)'}}>
                 <TouchableOpacity
-                  style={styles2.sendContainer}
-                  onPress={this.onCommentButtonPress.bind(this)}>
-                  <Text style={styles2.sendButton}>게시</Text>
+                  onPress={() => {
+                    this.resetCommentModal()
+                  }}
+                  style={{paddingTop: 10, paddingLeft: 16}}>
+                  <Icon
+                    name='chevron-down'
+                    size={16}
+                    style={{width: 16, height: 16, alignSelf: 'center', fontWeight: '300'}}
+                  />
                 </TouchableOpacity>
+                <Text style={{left: 140, marginTop: 10, fontSize: 17, fontWeight: 'bold'}}>댓글</Text>
               </View>
-            </View>
-            <KeyboardSpacer style={{backgroundColor: 'black'}} />
-          </Animated.View>
+              {this.renderCommentContainer()}
+              <View style={{flexDirection: 'row', backgroundColor: 'rgb(236, 236, 236)'}}>
+                <View style={styles2.textContainer}>
+                  <AutoGrowingTextInput
+                    ref='commentInput'
+                    style={styles2.input}
+                    placeholder={'댓글을 입력하세요...'}
+                    autoCapitalize='none'
+                    autoCorrect={false}
+                    onChangeText={this.handleChangeMessage.bind(this)}
+                    maxHeight={70} />
+                </View>
+                <View>
+                  <TouchableOpacity
+                    style={styles2.sendContainer}
+                    onPress={this.onCommentButtonPress.bind(this)}>
+                    <Text style={styles2.sendButton}>게시</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <KeyboardSpacer style={{backgroundColor: 'black'}} />
+            </Animated.View>
+          </View>
         </View>
       </Modal>
     )

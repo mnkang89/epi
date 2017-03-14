@@ -58,10 +58,13 @@ class CommentList extends Component {
     this.props.getComment(token, episodeId, contentId)
   }
 
+  componentWillMount () {
+  }
+
   renderComments () {
     const unsortedComments = Immutable.asMutable(this.props.comments)
     const sortedComments = unsortedComments.sort(function (a, b) {
-      return new Date(b.createDateTime) - new Date(a.createDateTime)
+      return new Date(a.createDateTime) - new Date(b.createDateTime)
     })
 
     return sortedComments.map(comment =>
