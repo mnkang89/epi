@@ -235,13 +235,13 @@ class ContentDetailClass extends Component {
                   <Text
                     allowFontScaling={false}
                     style={{
-                      textShadowOffset: {width: 0, height: 1},
-                      textShadowColor: 'rgba(0,0,0,0.39)',
-                      textShadowRadius: 3,
+                      textShadowOffset: {width: 1, height: 2},
+                      textShadowColor: 'rgba(0, 0, 0, 0.5)',
+                      textShadowRadius: 1,
                       color: 'white',
-                      fontWeight: '500',
+                      fontWeight: 'bold',
                       textAlign: 'center',
-                      fontSize: 17 }} >
+                      fontSize: 20 }} >
                     {message}
                   </Text>
                 </View>
@@ -293,13 +293,13 @@ class ContentDetailClass extends Component {
                   <Text
                     allowFontScaling={false}
                     style={{
-                      textShadowOffset: {width: 0, height: 1},
-                      textShadowColor: 'rgba(0,0,0,0.39)',
-                      textShadowRadius: 3,
+                      textShadowOffset: {width: 1, height: 2},
+                      textShadowColor: 'rgba(0, 0, 0, 0.5)',
+                      textShadowRadius: 1,
                       color: 'white',
-                      fontWeight: '500',
+                      fontWeight: 'bold',
                       textAlign: 'center',
-                      fontSize: 17 }} >
+                      fontSize: 20 }} >
                     {message}
                   </Text>
                 </View>

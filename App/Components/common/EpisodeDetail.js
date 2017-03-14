@@ -13,6 +13,7 @@ import FlatListE from '../../Experimental/FlatList_e'
 import { Colors, Images, Metrics } from '../../Themes/'
 import { convert2TimeDiffString } from '../../Lib/Utilities'
 import { getRealm } from '../../Services/RealmFactory'
+
 // import CachableImage from '../../Common/CachableImage'
 import ContentContainer from '../../Containers/common/ContentContainer'
 
@@ -255,7 +256,6 @@ class EpisodeDetail extends Component {
     // let uri = 'https://facebook.github.io/react/img/logo_og.png'
     if (this.props.account.profileImagePath) {
       return (
-        // <CachableImage
         <Image
           style={styles.profileStyle}
           source={{uri: uri}} />

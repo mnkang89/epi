@@ -1,17 +1,15 @@
 // TODO: *프로필 컴포넌트 따로 만들기
 
 import React, { Component, PropTypes } from 'react'
-import { View, Dimensions, Modal, Image, ImagePickerIOS, TouchableOpacity, Text } from 'react-native'
+import { View, Image, ImagePickerIOS, TouchableOpacity, Text } from 'react-native'
 import Permissions from 'react-native-permissions'
 
 import ConfirmError from './ConfirmError'
 import { Images } from '../../Themes'
 import styles from '../../Containers/Styles/FeedScreenStyle'
 // import { Actions as NavigationActions } from 'react-native-router-flux'
-import CachableImage from '../../Common/CachableImage'
+// import CachableImage from '../../Common/CachableImage'
 import { getAccountId } from '../../Services/Auth'
-
-const windowSize = Dimensions.get('window')
 
 class ProfileInfo extends Component {
 
@@ -216,11 +214,6 @@ class ProfileInfo extends Component {
       )
     }
   }
-  /*
-  <TouchableOpacity onPress={this.onProfileImagePress.bind(this)}>
-    {this.renderProfileImage()}
-  </TouchableOpacity>
-  */
 
   renderProfileInfo () {
     if (this.props.type === 'me') {
@@ -287,21 +280,6 @@ class ProfileInfo extends Component {
           onAccept={this.onDecline.bind(this)}
           onSetting={this.onSetting.bind(this)} />
         {this.renderProfileInfo()}
-        <Modal
-          animationType={'fade'}
-          visible={this.state.photoViewerVisible}>
-          <View style={{flex: 1, justifyContent: 'center', backgroundColor: 'black'}}>
-            <View style={{flex: 1, justifyContent: 'center'}}>
-              <TouchableOpacity onPress={this._onPressViewerExit.bind(this)}>
-                <View style={{left: 10, top: 5, width: 20, height: 20, borderRadius: 10, backgroundColor: 'white'}} />
-              </TouchableOpacity>
-            </View>
-            <View style={{flex: 10, justifyContent: 'center'}}>
-              <CachableImage source={{uri: this.props.profileImagePath}} style={{width: windowSize.width, height: windowSize.height - 200}} />
-            </View>
-            <View style={{flex: 1}} />
-          </View>
-        </Modal>
       </View>
     )
   }
@@ -309,3 +287,19 @@ class ProfileInfo extends Component {
 }
 
 export default ProfileInfo
+
+// <Modal
+//   animationType={'fade'}
+//   visible={this.state.photoViewerVisible}>
+//   <View style={{flex: 1, justifyContent: 'center', backgroundColor: 'black'}}>
+//     <View style={{flex: 1, justifyContent: 'center'}}>
+//       <TouchableOpacity onPress={this._onPressViewerExit.bind(this)}>
+//         <View style={{left: 10, top: 5, width: 20, height: 20, borderRadius: 10, backgroundColor: 'white'}} />
+//       </TouchableOpacity>
+//     </View>
+//     <View style={{flex: 10, justifyContent: 'center'}}>
+//       <CachableImage source={{uri: this.props.profileImagePath}} style={{width: windowSize.width, height: windowSize.height - 200}} />
+//     </View>
+//     <View style={{flex: 1}} />
+//   </View>
+// </Modal>
