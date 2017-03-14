@@ -56,7 +56,6 @@ class CameraScreenController extends Component {
     if (this.props.cameraHandler.getCamera() === null) return
     this.props.cameraHandler.getCamera().capture()
     .then((data) => {
-      CameraRoll.saveToCameraRoll(data.path)
       ImageEditor.cropImage(
         data.path,
         // TODO: this is just for iphone, improve this
@@ -137,13 +136,24 @@ class CameraScreenController extends Component {
             this.props.toggleMessageWriteAble()
             return
           }}>
-
           <View style={{ flex: 1 }}>
-            <View style={{ position: 'absolute', width: this.state.componentWidth, marginTop: this.margin }}>
+            <View style={{ position: 'absolute', width: this.state.componentWidth, marginTop: this.margin - 10 }}>
               <TextInput
                 value={this.state.message}
-                style={{ height: 45, color: 'white', textAlign: 'center', fontSize: 20, paddingLeft: 15, paddingRight: 15 }}
-                maxLength={38}
+                style={{
+                  height: 45,
+                  color: 'white',
+                  textAlign: 'center',
+                  fontSize: 17,
+                  textShadowOffset: {width: 0, height: 1},
+                  textShadowColor: 'rgba(0,0,0,0.39)',
+                  textShadowRadius: 3,
+                  fontWeight: '500',
+                  paddingLeft: 15,
+                  paddingRight: 15,
+                  marginBottom: 10 }}
+                maxLength={300}
+                multiline
                 placeholder='코멘트 쓰기..'
                 returnKeyType='done'
                 autoCapitalize='none'
@@ -156,8 +166,8 @@ class CameraScreenController extends Component {
                   this.props.toggleMessageWriteAble()
                   return
                 }}
-                onChangeText={(text) => this.setState({message: text})}
-                autoFocus />
+                autofocu
+                onChangeText={(text) => this.setState({message: text})} />
             </View>
           </View>
         </TouchableWithoutFeedback>
@@ -172,7 +182,7 @@ class CameraScreenController extends Component {
           <NativeModal
             animationType={'none'}
             transparent
-            visible>
+            visible >
             {this.renderCommentArea()}
           </NativeModal>
         </View>
@@ -190,8 +200,7 @@ class CameraScreenController extends Component {
             fillstyles={{backgroundColor: 'rgb(250,0,0)', height: 10}}
             backgroundstyles={{backgroundColor: '#cccccc', borderRadius: 2, height: 10}}
             style={{width: this.state.componentWidth}}
-            progress={this.state.progress}
-            />
+            progress={this.state.progress} />
         </View>
       )
     } else {
