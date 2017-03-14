@@ -60,11 +60,11 @@ class EpisodeControllerButton extends Component {
           </TouchableOpacity>
           <ConfirmError
             confirmStyle={'setting'}
-            TextArray={['정말 종료하실거예요?😢']}
+            TextArray={['에피소드가 종료됩니다.', '정말 종료하실거예요?😢']}
             onAccept={this.acceptEndEpisode.bind(this)}
             onSetting={this.hiddenEndEpisodeAlert.bind(this)}
-            AcceptText={'물론이죠(단호)'}
-            SettingText={'아니에요😀'}
+            AcceptText={'네'}
+            SettingText={'아니요'}
             visible={this.state.visibleEndEpisodeAlert} />
         </View>
       )

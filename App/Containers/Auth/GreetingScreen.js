@@ -440,6 +440,7 @@ class GreetingScreen extends Component {
           }} />
         <View
           style={{backgroundColor: 'rgba(0,0,0,0.5)', height: windowSize.height}}
+          // style={{backgroundColor: 'rgba(0,0,0,0.5)', height: windowSize.height}}
           // onStartShouldSetResponderCapture={this._onStartShouldSetResponderCapture.bind(this)}
           >
           <ScrollView

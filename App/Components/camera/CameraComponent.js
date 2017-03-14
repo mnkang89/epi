@@ -135,8 +135,8 @@ class CameraSection extends Component {
       <TouchableWithoutFeedback onPress={this.openPermissionSetting.bind(this)}>
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'black'}}>
           <View>
-            <Text style={{fontSize: 17, color: 'rgb(255,255,255)'}}>휴대폰 설정에서 카메라 사용을</Text>
-            <Text style={{fontSize: 17, color: 'rgb(255,255,255)'}}>허용해주세요😱</Text>
+            <Text style={{fontSize: 17, color: 'rgb(255,255,255)', textAlign: 'center'}}>휴대폰 설정에서 카메라 사용을</Text>
+            <Text style={{fontSize: 17, color: 'rgb(255,255,255)', textAlign: 'center'}}>허용해주세요</Text>
           </View>
         </View>
       </TouchableWithoutFeedback>

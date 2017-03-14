@@ -63,7 +63,7 @@ class SignUpPasswordScreen extends Component {
         </View>
         <View style={{marginTop: 8, marginLeft: 23}}>
           <Text style={{color: 'white', opacity: 0.9, fontSize: 16}}>앞으로 더 자주 볼 수 있도록 이메일과 </Text>
-          <Text style={{color: 'white', opacity: 0.9, fontSize: 16}}>비밀번호를 등록해주세요 🙂</Text>
+          <Text style={{color: 'white', opacity: 0.9, fontSize: 16}}>비밀번호를 등록해주세요</Text>
         </View>
         <View style={{marginTop: 57, alignItems: 'center'}}>
           <View style={{width: windowSize.width - 40, paddingBottom: 7.5, borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.9)', backgroundColor: 'rgba(0,0,0,0)'}}>

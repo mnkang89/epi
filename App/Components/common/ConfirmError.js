@@ -24,10 +24,11 @@ const renderConfirm = (confirmStyle = 'confirm', onAccept, onSetting = null, Acc
   } else if (confirmStyle === 'setting') {
     // TODO: 터치영역 넓히기
     return (
-      <View style={{paddingTop: 9, flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+      <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
         <TouchableOpacity style={{flex: 1, alignItems: 'center'}} onPress={onAccept}>
           <Text style={{fontSize: 15, fontWeight: 'bold'}}>{AcceptText}</Text>
         </TouchableOpacity>
+        <View style={{width: 1, height: 30, backgroundColor: '#D9D9D9'}} />
         <TouchableOpacity style={{flex: 1, alignItems: 'center'}} onPress={onSetting}>
           <Text style={{fontSize: 15, fontWeight: 'bold'}}>{SettingText}</Text>
         </TouchableOpacity>

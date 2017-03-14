@@ -187,7 +187,7 @@ class VirtualizedList_e extends React.PureComponent {
       _usedIndexForKey = true;
       return String(index);
     },
-    maxToRenderPerBatch: 10,
+    maxToRenderPerBatch: 5,
     onEndReached: () => {},
     onEndReachedThreshold: 2, // multiples of length
     renderScrollComponent: (props: Props) => {
@@ -218,7 +218,7 @@ class VirtualizedList_e extends React.PureComponent {
     ) => true,
     updateCellsBatchingPeriod: 50,
     viewablePercentThreshold: 60,
-    windowSize: 3, // multiples of length
+    windowSize: 5, // multiples of length
   };
 
   state = {

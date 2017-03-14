@@ -83,7 +83,7 @@ shouldComponentUpdate (nextProps, nextState) {
           <Text style={{color: 'white', opacity: 0.9, fontWeight: 'bold', fontSize: 60}}>안녕하세요!</Text>
         </View>
         <View style={{marginTop: 8, marginLeft: 23, backgroundColor: 'rgba(0,0,0,0)'}} >
-          <Text style={{color: 'white', opacity: 0.9, fontSize: 16}}>등록된 이메일과 비밀번호를 입력해주세요 😄</Text>
+          <Text style={{color: 'white', opacity: 0.9, fontSize: 16}}>등록된 이메일과 비밀번호를 입력해주세요</Text>
         </View>
         <View style={{alignItems: 'center'}}>
           <View style={{width: windowSize.width - 40, marginTop: 78, paddingBottom: 7.5, borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.5)', backgroundColor: 'rgba(0,0,0,0)'}} >

@@ -193,7 +193,7 @@ class SignUpNicknameScreen extends Component {
         </View>
         <View style={{marginTop: 8, marginLeft: 23, backgroundColor: 'rgba(0,0,0,0)'}}>
           <Text style={{color: 'white', opacity: 0.9, fontSize: 16}}>에피소드에서 사용할 프로필사진과 이름을</Text>
-          <Text style={{color: 'white', opacity: 0.9, fontSize: 16}}>설정해주세요 😀</Text>
+          <Text style={{color: 'white', opacity: 0.9, fontSize: 16}}>설정해주세요</Text>
         </View>
         <View style={{alignItems: 'center'}}>
           <TouchableOpacity
