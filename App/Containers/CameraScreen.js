@@ -14,7 +14,6 @@ import CameraController from '../Components/camera/CameraScreenController'
 import CameraHandler from '../Components/camera/CameraHandler'
 import { connect } from 'react-redux'
 import CameraScreenActions from '../Redux/CameraScreenRedux'
-
 import EpisodeActions from '../Redux/EpisodeRedux'
 
 const { height, width } = Dimensions.get('window')
@@ -30,23 +29,20 @@ class CameraScreen extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      cameraHandler: new CameraHandler()
+      cameraHandler: new CameraHandler(),
+      type: 'back'
     }
   }
 
   componentDidUpdate () {
     if (this.props.endScreen) {
       this.props.initializeCameraScreenProps()
+
       this.goToHomeTab()
     }
   }
 
   goToHomeTab () {
-    // const { token, accountId } = this.props
-    // const withFollowing = true
-
-    // this.props.requestUserEpisodes(token, accountId, withFollowing)
-
     StatusBar.setHidden(false)
     NavigationActions.pop()
   }
@@ -59,16 +55,15 @@ class CameraScreen extends Component {
           style={{backgroundColor: 'transparent', flex: 1}}
           position={'center'}
           backdrop={false}
-          swipeThreshold={10}
+          swipeThreshold={100}
           isOpen
-          onClosed={this.goToHomeTab.bind(this)}
-          >
+          onClosed={this.goToHomeTab.bind(this)} >
           <View style={{flex: 1, flexDirection: 'column'}}>
             <View style={{flex: cameraHeightAsFlex}}>
-              <CameraComponent cameraHandler={this.state.cameraHandler} />
+              <CameraComponent type={this.state.type} cameraHandler={this.state.cameraHandler} />
             </View>
             <View style={{flex: cameraControllerHeightAsFlex}}>
-              <CameraController cameraHandler={this.state.cameraHandler} />
+              <CameraController parentThis={this} cameraHandler={this.state.cameraHandler} />
             </View>
           </View>
         </Modal>
