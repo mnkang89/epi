@@ -1,15 +1,17 @@
 // TODO: *프로필 컴포넌트 따로 만들기
 
 import React, { Component, PropTypes } from 'react'
-import { View, Image, ImagePickerIOS, TouchableOpacity, Text } from 'react-native'
+import { View, Dimensions, Modal, Image, ImagePickerIOS, TouchableOpacity, Text } from 'react-native'
 import Permissions from 'react-native-permissions'
 
 import ConfirmError from './ConfirmError'
 import { Images } from '../../Themes'
 import styles from '../../Containers/Styles/FeedScreenStyle'
-import { Actions as NavigationActions } from 'react-native-router-flux'
-// import CachableImage from '../../Common/CachableImage'
+// import { Actions as NavigationActions } from 'react-native-router-flux'
+import CachableImage from '../../Common/CachableImage'
 import { getAccountId } from '../../Services/Auth'
+
+const windowSize = Dimensions.get('window')
 
 class ProfileInfo extends Component {
 
@@ -43,7 +45,8 @@ class ProfileInfo extends Component {
       confirmStyle: 'confirm',
 
       photoSource: this.props.profileImagePath,
-      follow: this.props.following
+      follow: this.props.following,
+      photoViewerVisible: false
     }
   }
 
@@ -145,8 +148,16 @@ class ProfileInfo extends Component {
     }
   }
 
-  _onPressBackButton () {
-    NavigationActions.pop()
+  onOtherProfileImagePress () {
+    this.setState({
+      photoViewerVisible: true
+    })
+  }
+
+  _onPressViewerExit () {
+    this.setState({
+      photoViewerVisible: false
+    })
   }
 
   renderProfileImage () {
@@ -158,13 +169,13 @@ class ProfileInfo extends Component {
 
         return (
           <Image
-            style={[styles.image, {borderWidth: 1, borderColor: 'white', marginBottom: 9, marginTop: 39.5}]}
+            style={[styles.image, {borderWidth: 1, borderColor: 'white', marginBottom: 9, marginTop: 19}]}
             source={{uri: uri}} />
         )
       } else {
         return (
           <Image
-            style={[styles.image, {borderWidth: 1, borderColor: 'white', marginBottom: 9, marginTop: 39.5}]}
+            style={[styles.image, {borderWidth: 1, borderColor: 'white', marginBottom: 9, marginTop: 19}]}
             source={Images.profileImage} />
         )
       }
@@ -172,12 +183,12 @@ class ProfileInfo extends Component {
       if (this.props.profileImagePath) {
         return (
           <Image
-            style={[styles.image, {borderWidth: 1, borderColor: 'white', marginBottom: 9, marginTop: 39.5}]}
+            style={[styles.image, {borderWidth: 1, borderColor: 'white', marginBottom: 9, marginTop: 19}]}
             source={{uri: this.props.profileImagePath}} />)
       } else {
         return (
           <Image
-            style={[styles.image, {borderWidth: 1, borderColor: 'white', marginBottom: 9, marginTop: 39.5}]}
+            style={[styles.image, {borderWidth: 1, borderColor: 'white', marginBottom: 9, marginTop: 19}]}
             source={Images.profileImage} />
         )
       }
@@ -240,13 +251,9 @@ class ProfileInfo extends Component {
       return (
         <View style={{alignItems: 'center', backgroundColor: '#FFFFFF', marginBottom: 10}}>
           <View style={{flex: 2, flexDirection: 'row'}}>
-            <View style={{flex: 1, paddingLeft: 9, paddingTop: 39.5}}>
-              <TouchableOpacity onPress={this._onPressBackButton.bind(this)}>
-                <Image source={Images.backButton} />
-              </TouchableOpacity>
-            </View>
-            <View style={{flex: 3, alignItems: 'center'}}>{this.renderProfileImage()}</View>
-            <View style={{flex: 1}} />
+            <TouchableOpacity onPress={this.onOtherProfileImagePress.bind(this)}>
+              <View style={{flex: 3, alignItems: 'center'}}>{this.renderProfileImage()}</View>
+            </TouchableOpacity>
           </View>
           <View style={{flex: 1, alignItems: 'center'}} >
             <Text style={{color: '#626262', fontSize: 18, fontWeight: 'bold'}}>{this.props.nickname}</Text>
@@ -280,6 +287,21 @@ class ProfileInfo extends Component {
           onAccept={this.onDecline.bind(this)}
           onSetting={this.onSetting.bind(this)} />
         {this.renderProfileInfo()}
+        <Modal
+          animationType={'fade'}
+          visible={this.state.photoViewerVisible}>
+          <View style={{flex: 1, justifyContent: 'center', backgroundColor: 'black'}}>
+            <View style={{flex: 1, justifyContent: 'center'}}>
+              <TouchableOpacity onPress={this._onPressViewerExit.bind(this)}>
+                <View style={{left: 10, top: 5, width: 20, height: 20, borderRadius: 10, backgroundColor: 'white'}} />
+              </TouchableOpacity>
+            </View>
+            <View style={{flex: 10, justifyContent: 'center'}}>
+              <CachableImage source={{uri: this.props.profileImagePath}} style={{width: windowSize.width, height: windowSize.height - 200}} />
+            </View>
+            <View style={{flex: 1}} />
+          </View>
+        </Modal>
       </View>
     )
   }
