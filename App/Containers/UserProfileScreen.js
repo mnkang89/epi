@@ -54,16 +54,6 @@ class UserProfileScreen extends Component {
   }
 
   componentDidMount () {
-    // const { token, id } = this.props
-    // const active = false
-
-    // this.autoRefresher = setInterval(() => {
-    //   this.props.requestOtherInfo(token, id)
-    //   this.props.requestOtherEpisodes(token, id, active)
-    // }, 60000)
-  }
-
-  componentWillMount () {
     const { token, id } = this.props
     const active = false
 
@@ -71,8 +61,12 @@ class UserProfileScreen extends Component {
     this.props.requestOtherEpisodes(token, id, active)
   }
 
+  componentWillMount () {
+  }
+
   componentWillUnmount () {
-    // clearInterval(this.autoRefresher)
+    this.props.initOtherInfo()
+    this.props.initOtherEpisodes()
   }
 
   componentWillReceiveProps (nextProps) {
@@ -126,7 +120,7 @@ class UserProfileScreen extends Component {
   render () {
     console.log('데이터길이: ' + this.props.items.length)
     return (
-      <View style={styles.noNavBarContainer}>
+      <View style={styles.mainContainer}>
         <FlatListE
           keyExtractor={(item, index) => index}
           style={{ flex: 1 }}
@@ -135,7 +129,6 @@ class UserProfileScreen extends Component {
           FooterComponent={this._renderFooter.bind(this)}
           ItemComponent={this._renderItemComponent.bind(this)}
           disableVirtualization={false}
-          getItemLayout={undefined}
           horizontal={false}
           data={this.props.items}
           key={'vf'}
@@ -291,6 +284,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     requestOtherInfo: (token, accountId) => dispatch(AccountActions.otherInfoRequest(token, accountId)),
     requestOtherEpisodes: (token, accountId, active) => dispatch(EpisodeActions.otherEpisodesRequest(token, accountId, active)),
+    initOtherInfo: () => dispatch(AccountActions.initOtherInfo()),
+    initOtherEpisodes: () => dispatch(EpisodeActions.initOtherEpisodes()),
     requestNewEpisode: (token, episodeId) => dispatch(EpisodeActions.newOtherEpisodeRequest(token, episodeId)),
     requestMoreOtherEpisodes: (token, accountId, withFollowing, before) => dispatch(EpisodeActions.moreOtherEpisodesRequest(token, accountId, withFollowing, before)),
 

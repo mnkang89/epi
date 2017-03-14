@@ -40,6 +40,9 @@ const { Types, Creators } = createActions({
     'otherEpisodesError'
   ],
 
+  initOtherEpisodes: [
+  ],
+
   userEpisodePost: [
     'token',
     'fileType',
@@ -223,6 +226,10 @@ export const otherEpisodesSuccess = (state: Object, { otherEpisodes }: Object) =
 export const otherEpisodesFailure = (state: Object, { otherEpisodesError }: Object) =>
   state.merge({ otherEpisodesRequesting: false, otherEpisodesError })
 
+// init other user episodes
+export const otherEpisodesInit = (state: Object) =>
+  state.merge({ otherEpisodes: [] })
+
 // we're attempting to check posting Episode
 export const userEpisodePost = (state: Object, { token }: Object) =>
   state.merge({ episodePosting: true })
@@ -396,6 +403,8 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.OTHER_EPISODES_REQUEST]: otherEpisodesRequest,
   [Types.OTHER_EPISODES_SUCCESS]: otherEpisodesSuccess,
   [Types.OTHER_EPISODES_FAILURE]: otherEpisodesFailure,
+
+  [Types.OTHER_EPISODES_INIT]: otherEpisodesInit,
 
   [Types.USER_EPISODE_POST]: userEpisodePost,
   [Types.USER_EPISODE_POST_SUCCESS]: userEpisodePostSuccess,

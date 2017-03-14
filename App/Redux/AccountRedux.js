@@ -39,6 +39,9 @@ const { Types, Creators } = createActions({
     'error'
   ],
 
+  initOtherInfo: [
+  ],
+
   userEpisodeCheck: [
     'token',
     'active'
@@ -160,6 +163,18 @@ export const otherInfoSuccess = (state: Object, { otherAccountId, otherEmail, ot
 export const otherInfoFailure = (state: Object, { error }: Object) =>
   state.merge({ attempting: false, error })
 
+// init other info
+export const otherInfoInit = (state: Object) =>
+  state.merge({
+    otherAccountId: null,
+    otherEmail: null,
+    otherNickname: null,
+    otherProfileImagePath: null,
+    otherFollowerCount: null,
+    otherFollowingCount: null,
+    otherFollowing: null
+  })
+
 // we're attempting to check signup
 export const userEpisodeCheck = (state: Object, { token, active }: Object) =>
   state.merge({ episodeChecking: true })
@@ -223,6 +238,8 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.OTHER_INFO_REQUEST]: otherInfoRequest,
   [Types.OTHER_INFO_SUCCESS]: otherInfoSuccess,
   [Types.OTHER_INFO_FAILURE]: otherInfoFailure,
+
+  [Types.INIT_OTHER_INFO]: otherInfoInit,
 
   [Types.USER_EPISODE_CHECK]: userEpisodeCheck,
   [Types.USER_EPISODE_CHECK_SUCCESS]: userEpisodeCheckSuccess,
