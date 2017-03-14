@@ -13,12 +13,12 @@ import FlatListE from '../../Experimental/FlatList_e'
 import { Colors, Images, Metrics } from '../../Themes/'
 import { convert2TimeDiffString } from '../../Lib/Utilities'
 import { getRealm } from '../../Services/RealmFactory'
-import CachableImage from '../../Common/CachableImage'
+// import CachableImage from '../../Common/CachableImage'
 import ContentContainer from '../../Containers/common/ContentContainer'
-import { getItemLayout } from '../../Experimental/ListExampleShared_e'
 
 const windowSize = Dimensions.get('window')
 const realm = getRealm()
+// const ITEM_WIDTH = 367.5
 
 class EpisodeDetail extends Component {
 
@@ -58,9 +58,6 @@ class EpisodeDetail extends Component {
   }
 
   componentDidMount () {
-    // horizontal 리프레쉬 비디오 플레이
-    // const { parentHandler, index } = this.props
-    // const episodeViewability = parentHandler.viewableItemsArray.includes(index)
     const centerIndex = this.currentCenterIndex
     const episodeId = this.props.episode.id
     const liked = this.props.episode.liked
@@ -79,8 +76,7 @@ class EpisodeDetail extends Component {
       }
     }
 
-    if (// episodeViewability &&
-        this.state.contentTypeArray[centerIndex] === 'Video' &&
+    if (this.state.contentTypeArray[centerIndex] === 'Video' &&
         this.contentRefs[centerIndex] !== null &&
         this.contentRefs[centerIndex] !== undefined) {
       this.contentRefs[centerIndex].getWrappedInstance()._root._component.playVideo()
@@ -99,9 +95,6 @@ class EpisodeDetail extends Component {
 
   componentWillMount () {
     const contentTypeArray = []
-    const episodeId = this.props.episode.id
-    let episode = realm.objects('episode')
-      .filtered('id = ' + episodeId)
 
     for (let i = 0; i < this.props.episode.contents.length; i++) {
       contentTypeArray.push(this.props.episode.contents[i].type)
@@ -109,15 +102,6 @@ class EpisodeDetail extends Component {
     this.setState({
       contentTypeArray
     })
-
-    // 뺵에서 liked오면 derpecated될 예정
-    if (episode.length === 0) {
-      return
-    } else {
-      this.setState({
-        renderLikeHeart: episode[0].like
-      })
-    }
   }
 
   componentWillReceiveProps (nextProps) {
@@ -194,7 +178,6 @@ class EpisodeDetail extends Component {
       const dragStartingOffset = event.nativeEvent.contentOffset.x
 
       if (dragStartingOffset >= this.lastContentOffset) {
-        console.log('푸터 실행')
         this.setState({footer: true})
       }
     }
@@ -242,17 +225,29 @@ class EpisodeDetail extends Component {
     let episode = realm.objects('episode')
       .filtered('id = ' + episodeId)
 
-    if (episode[0].like) {
-      this.setState({
-        renderLikeHeart: false
-      })
-      this.contentRefs[this.currentCenterIndex].getWrappedInstance()._root._component.playUnikeAnimation()
-    } else {
-      this.setState({
-        renderLikeHeart: true
-      })
-      this.contentRefs[this.currentCenterIndex].getWrappedInstance()._root._component.playLikeAnimation()
+    if (this.contentRefs[this.currentCenterIndex] !== null &&
+        this.contentRefs[this.currentCenterIndex] !== undefined) {
+      if (episode[0].like) {
+        this.setState({
+          renderLikeHeart: false
+        })
+        this.contentRefs[this.currentCenterIndex].getWrappedInstance()._root._component.playUnikeAnimation()
+      } else {
+        this.setState({
+          renderLikeHeart: true
+        })
+        this.contentRefs[this.currentCenterIndex].getWrappedInstance()._root._component.playLikeAnimation()
+      }
     }
+  }
+
+  _onPressComment () {
+    const episodeId = this.props.episode.id
+    const token = null
+
+    this.props.openComment(true)
+    // getComment쪽 세번째 인자는 null이다. 수정이 필요함
+    this.props.getComment(token, episodeId, null)
   }
 
   renderProfileImage () {
@@ -260,7 +255,8 @@ class EpisodeDetail extends Component {
     // let uri = 'https://facebook.github.io/react/img/logo_og.png'
     if (this.props.account.profileImagePath) {
       return (
-        <CachableImage
+        // <CachableImage
+        <Image
           style={styles.profileStyle}
           source={{uri: uri}} />
       )
@@ -297,7 +293,6 @@ class EpisodeDetail extends Component {
 
   render () {
     const episodeId = this.props.episode.id
-    // const active = this.props.episode.active
     const activeEpisodeLength = this.props.episode.contents.length
     const commentCount = this.props.episode.contents.map(content => content.commentCount).reduce((a, b) => a + b, 0)
     const timeDiffString = convert2TimeDiffString(
@@ -312,13 +307,6 @@ class EpisodeDetail extends Component {
     this.lastContentOffset = (activeEpisodeLength - 1) * (windowSize.width - 22)
 
     if (this.props.xPosition === undefined) {
-      // if (active) {
-      //   xPosition = (activeEpisodeLength - 1) * (windowSize.width - 22)
-      //   this.currentCenterIndex = activeEpisodeLength - 1
-      // } else {
-      //   xPosition = 0
-      //   this.currentCenterIndex = 0
-      // }
       if (episode[0] === undefined) {
         xPosition = 0
       } else {
@@ -361,10 +349,9 @@ class EpisodeDetail extends Component {
           ItemComponent={this._renderItemComponent}
           FooterComponent={this._renderFooter.bind(this)}
           disableVirtualization={false}
-          getItemLayout={undefined}
           horizontal
           key={'hf'}
-          initialListSize={50}
+          initialListSize={1}
           onScrollBeginDrag={this._onScrollBeginDrag.bind(this)}
           onScrollEndDrag={this._onScrollEndDrag.bind(this)}
           onMomentumScrollBegin={this._onMomentumScrollBegin.bind(this)}
@@ -381,7 +368,7 @@ class EpisodeDetail extends Component {
           showsHorizontalScrollIndicator
           decelerationRate={'fast'}
           directionalLockEnabled={false} />
-        <View style={{width: windowSize.width, backgroundColor: '#FFFFFF', paddingTop: 15, paddingBottom: 15}}>
+        <View style={{width: windowSize.width, backgroundColor: '#FFFFFF', paddingTop: 20, paddingBottom: 20}}>
           <View style={{flexDirection: 'row'}}>
             <View style={{flex: 1, flexDirection: 'row'}}>
               <View style={{marginLeft: 15, justifyContent: 'center'}}>
@@ -393,11 +380,11 @@ class EpisodeDetail extends Component {
               </View>
               <Text style={{fontSize: 13, paddingLeft: 9, color: '#909090'}}>{commentCount}</Text>
             </View>
-            <View style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-end', marginRight: 15}}>
+            <View style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-end', marginRight: 24}}>
               <TouchableOpacity onPress={this._onPressHeart.bind(this)} >
                 {this.renderLikeHeart()}
               </TouchableOpacity>
-              <TouchableOpacity style={{marginLeft: 17}}>
+              <TouchableOpacity style={{marginLeft: 24}} onPress={this._onPressComment.bind(this)}>
                 <Image source={Images.episodeComment} style={{width: 22, height: 20}} />
               </TouchableOpacity>
             </View>
@@ -449,13 +436,7 @@ class EpisodeDetail extends Component {
   }
 
   _shouldItemUpdate (prev, next) {
-    console.log('슈드아이템업데이트 인 에피소드 디테일')
-    // return false
     return prev.item !== next.item
-  }
-
-  _getItemLayout = (data: any, index: number) => {
-    return getItemLayout(data, index, this.state.horizontal)
   }
 
   _onViewableItemsChanged = (info: {
@@ -468,9 +449,7 @@ class EpisodeDetail extends Component {
       this.horizontalLock은 해당 에피소드가 좌우 스크롤된적이 없을 경우 true이다.
       onMomentumScrollBegin을 이용해 스크롤시 false로 변경한다.
     */
-    console.log('에피소드디테일 온뷰어블 아이템스 체인지드')
     if (info.viewableItems.length === 1 && !this.horizontalLock) {
-      console.log('호리즌탈락 풀림')
       const { parentHandler, index } = this.props
       const episodeViewability = parentHandler.viewableItemsArray.includes(index)
       const centerIndex = info.viewableItems[0].index
