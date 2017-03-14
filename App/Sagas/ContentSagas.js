@@ -1,8 +1,9 @@
 import { put, call } from 'redux-saga/effects'
 import { path } from 'ramda'
 import ContentActions from '../Redux/ContentRedux'
-import { getToken } from '../Services/Auth'
+import { getToken, getAccountId } from '../Services/Auth'
 import CameraScreenActions from '../Redux/CameraScreenRedux'
+import EpisodeActions from '../Redux/EpisodeRedux'
 
 // get active episodeId if not exist, then create new episode
 export function * postContent (api, action) {
@@ -17,6 +18,7 @@ export function * postContent (api, action) {
     console.tron.log('state of postContentToEpisode ' + state)
     if (state) {
       yield put(CameraScreenActions.endCameraScreen())
+      yield put(EpisodeActions.userEpisodesRequest(null, getAccountId(), true))
     } else {
       yield put(CameraScreenActions.failToPostContent())
     }
