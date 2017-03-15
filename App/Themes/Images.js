@@ -18,6 +18,7 @@ const images = {
   profileIcon: require('../Images/add_profile.png'),
   endEpBtn: require('../Images/btn_end_epi.png'),
   episodeLogo: require('../Images/new_top_logo@3x.png'),
+  profileLogo: require('../Images/PROFILE@3x.png'),
   othersProfile: require('../Images/others_profile.png'),
   profileImage: require('../Images/new_default_profile@3x.png'),
   tabHome: require('../Images/new_home@3x.png'),

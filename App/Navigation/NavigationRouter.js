@@ -71,6 +71,7 @@ class NavigationRouter extends Component {
                 panHandlers={null}
                 component={FeedScreen} />
               <Scene
+                renderTitle={NavItems.profileLogo}
                 backButtonImage={Images.backButton}
                 key='feedTouserProfileScreen'
                 component={UserProfileScreen}
@@ -100,6 +101,7 @@ class NavigationRouter extends Component {
                 component={SingleEpisodeScreen}
                 title='에피소드' />
               <Scene
+                renderTitle={NavItems.profileLogo}
                 backButtonImage={Images.backButton}
                 key='notiTouserProfileScreen'
                 component={UserProfileScreen}
@@ -137,6 +139,7 @@ class NavigationRouter extends Component {
                 component={ExploreScreen}
                 title='우연한 발견' />
               <Scene
+                renderTitle={NavItems.profileLogo}
                 backButtonImage={Images.backButton}
                 key='searchTouserProfileScreen'
                 component={UserProfileScreen}
@@ -157,7 +160,7 @@ class NavigationRouter extends Component {
                 this.props.registerScreen('profileTab')
                 Actions.profileTab()
               }}
-              renderTitle={NavItems.episodeLogo}
+              renderTitle={NavItems.profileLogo}
               navigationBarStyle={Styles.navBar}
               leftButtonIconStyle={Styles.leftButton}
               titleStyle={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>

@@ -13,5 +13,10 @@ export default StyleSheet.create({
     alignSelf: 'center',
     width: 82,
     height: 16
+  },
+  profileLogo: {
+    alignSelf: 'center',
+    width: 82,
+    height: 16
   }
 })

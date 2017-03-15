@@ -23,6 +23,14 @@ export default {
     )
   },
 
+  profileLogo () {
+    return (
+      <View style={{paddingTop: 35}}>
+        <Image source={Images.profileLogo} style={styles.profileLogo} />
+      </View>
+    )
+  },
+
   backButton () {
     return (
       <TouchableOpacity onPress={NavigationActions.pop} style={{paddingTop: 5, width: 40, height: 35}}>
