@@ -166,7 +166,7 @@ class CameraScreenController extends Component {
                   this.props.toggleMessageWriteAble()
                   return
                 }}
-                autofocu
+                autofocus
                 onChangeText={(text) => this.setState({message: text})} />
             </View>
           </View>
