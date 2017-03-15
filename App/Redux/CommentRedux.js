@@ -78,7 +78,7 @@ export const openComment = (state: Object, { visible }: Object) =>
   state.merge({ visible })
 
 // we're attempting to check posting Comment
-export const postComment = (state: Object, { token }: Object) =>
+export const postComment = (state: Object) =>
   state.merge({ commentPosting: true })
 
 export const postCommentSuccess = (state: Object) =>
