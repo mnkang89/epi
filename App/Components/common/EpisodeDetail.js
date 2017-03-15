@@ -45,6 +45,7 @@ class EpisodeDetail extends Component {
 
       footer: false
     }
+    this._listRef
     // 컨텐츠 컴포넌트 ref
     this.contentRefs = {}
     // 비디오 컴포넌트 ref
@@ -168,9 +169,6 @@ class EpisodeDetail extends Component {
     }
   }
 
-  _onScroll (event) {
-  }
-
   _onScrollBeginDrag (event) {
     const active = this.props.episode.active
 
@@ -191,10 +189,14 @@ class EpisodeDetail extends Component {
       const { token, episode } = this.props
       this.dragEndingOffset = event.nativeEvent.contentOffset.x
 
+      // 오른쪽에서 왼쪽컨텐츠로 가면 푸터취소
       if (this.dragStartingOffset - this.dragEndingOffset > 0) {
-        this.setState({footer: false})
-      }
-      if (this.dragStartingOffset >= this.lastContentOffset &&
+        // 푸터가 활성상태일때만 취소
+        if (this.state.footer) {
+          this.setState({footer: false})
+        }
+      } else if (
+          this.dragStartingOffset >= this.lastContentOffset &&
           this.dragStartingOffset - this.dragEndingOffset < 0) {
         this.props.requestNewEpisode(token, episode.id)
       }
@@ -216,9 +218,6 @@ class EpisodeDetail extends Component {
       realm.create('episode', {id: episodeId, offset: offset}, true)
       console.log(episode[0].offset)
     })
-  }
-
-  _onEndReached () {
   }
 
   _onPressHeart () {
@@ -244,11 +243,11 @@ class EpisodeDetail extends Component {
 
   _onPressComment () {
     const episodeId = this.props.episode.id
+    const contentId = this.props.episode.contents[this.currentCenterIndex].id
     const token = null
 
     this.props.openComment(true)
-    // getComment쪽 세번째 인자는 null이다. 수정이 필요함
-    this.props.getComment(token, episodeId, null)
+    this.props.getComment(token, episodeId, contentId)
   }
 
   renderProfileImage () {
@@ -343,6 +342,7 @@ class EpisodeDetail extends Component {
           </View>
         </View>
         <FlatListE
+          ref={this._captureRef}
           scrollsToTop={false}
           keyExtractor={(item, index) => index}
           data={this.props.episode.contents}
@@ -351,14 +351,12 @@ class EpisodeDetail extends Component {
           disableVirtualization={false}
           horizontal
           key={'hf'}
-          initialListSize={1}
+          initialListSize={20}
           onScrollBeginDrag={this._onScrollBeginDrag.bind(this)}
           onScrollEndDrag={this._onScrollEndDrag.bind(this)}
           onMomentumScrollBegin={this._onMomentumScrollBegin.bind(this)}
           onMomentumScrollEnd={this._onMomentumScrollEnd.bind(this)}
           onViewableItemsChanged={this._onViewableItemsChanged}
-          onEndReached={this._onEndReached.bind(this)}
-          onEndReachedThreshold={0}
           shouldItemUpdate={this._shouldItemUpdate}
           style={{paddingLeft: 7.5, paddingRight: 7.5, backgroundColor: '#FFFFFF'}}
           contentOffset={{x: xPosition, y: 0}}
@@ -366,8 +364,7 @@ class EpisodeDetail extends Component {
           snapToAlignment={'start'}
           snapToInterval={windowSize.width - 22}
           showsHorizontalScrollIndicator
-          decelerationRate={'fast'}
-          directionalLockEnabled={false} />
+          decelerationRate={'fast'} />
         <View style={{width: windowSize.width, backgroundColor: '#FFFFFF', paddingTop: 20, paddingBottom: 20}}>
           <View style={{flexDirection: 'row'}}>
             <View style={{flex: 1, flexDirection: 'row'}}>
@@ -434,6 +431,8 @@ class EpisodeDetail extends Component {
       )
     }
   }
+
+  _captureRef = (ref) => { this._listRef = ref }
 
   _shouldItemUpdate (prev, next) {
     return prev.item !== next.item
