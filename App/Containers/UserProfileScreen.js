@@ -4,13 +4,9 @@ import { connect } from 'react-redux'
 import _ from 'lodash'
 
 import { getObjectDiff, getArrayDiff } from '../Lib/Utilities'
-import {
-  getItemLayout
-} from '../Experimental/ListExampleShared_e'
 import FlatListE from '../Experimental/FlatList_e'
 import ProfileInfo from '../Components/common/ProfileInfo'
 import EpisodeDetail from '../Components/common/EpisodeDetail'
-// import EpisodeList from '../Components/common/EpisodeList'
 import CommentModalContainer from './common/CommentModalContainer'
 import FollowModalContainer from './common/FollowModalContainer'
 
@@ -19,6 +15,7 @@ import styles from './Styles/FeedScreenStyle'
 
 import AccountActions from '../Redux/AccountRedux'
 import EpisodeActions from '../Redux/EpisodeRedux'
+import CommentActions from '../Redux/CommentRedux'
 
 class UserProfileScreen extends Component {
 
@@ -64,22 +61,11 @@ class UserProfileScreen extends Component {
   componentWillMount () {
   }
 
-  componentWillUnmount () {
-    this.props.initOtherInfo()
-    this.props.initOtherEpisodes()
-  }
-
   componentWillReceiveProps (nextProps) {
     console.log(getObjectDiff(this.props, nextProps))
 
     if (nextProps.items.length !== 0) {
       this.before = nextProps.items[nextProps.items.length - 1].episode.updatedDateTime
-    }
-
-    if (_.isEqual(this.props.items, nextProps.items)) {
-      console.log('아이템같음')
-    } else {
-      console.log('아이템다름')
     }
 
     if (this.state.refreshing) {
@@ -91,7 +77,11 @@ class UserProfileScreen extends Component {
   }
 
   shouldComponentUpdate (nextProps, nextState) {
-    return this.props.items !== nextProps.items
+    if (_.isEqual(this.props.items, nextProps.items)) {
+      return false
+    } else {
+      return true
+    }
   }
 
   _onRefresh () {
@@ -118,27 +108,26 @@ class UserProfileScreen extends Component {
   }
 
   render () {
-    console.log('데이터길이: ' + this.props.items.length)
     return (
       <View style={styles.mainContainer}>
         <FlatListE
           keyExtractor={(item, index) => index}
           style={{ flex: 1 }}
           ref={this._captureRef}
+          key={'vf'}
           HeaderComponent={this._renderHeader.bind(this)}
-          FooterComponent={this._renderFooter.bind(this)}
           ItemComponent={this._renderItemComponent.bind(this)}
+          FooterComponent={this._renderFooter.bind(this)}
           disableVirtualization={false}
           horizontal={false}
           data={this.props.items}
-          key={'vf'}
           legacyImplementation={false}
           onRefresh={this._onRefresh.bind(this)}
           refreshing={this.state.refreshing}
           onViewableItemsChanged={this._onViewableItemsChanged}
+          shouldItemUpdate={this._shouldItemUpdate}
           onEndReached={this._onEndReached.bind(this)}
-          onEndReachedThreshold={0}
-          shouldItemUpdate={this._shouldItemUpdate} />
+          onEndReachedThreshold={0} />
         <View style={{height: 60}} />
         <CommentModalContainer screen={this.props.screen} token={this.props.token} />
         <FollowModalContainer screen={this.props.screen} token={this.props.token} />
@@ -147,10 +136,6 @@ class UserProfileScreen extends Component {
   }
 
   _captureRef = (ref) => { this._listRef = ref }
-
-  _getItemLayout = (data: any, index: number) => {
-    return getItemLayout(data, index, this.state.horizontal)
-  }
 
   _renderItemComponent = (episode) => {
     const index = episode.index
@@ -162,15 +147,17 @@ class UserProfileScreen extends Component {
             this.episodeRefs[index] = component
           }
         }}
-        token={this.props.token}
         key={index}
         index={index}
+        token={this.props.token}
         parentHandler={this}
         episode={episode.item.episode}
         account={episode.item.account}
         type={'other'}
         // EpisodeDetailContainer만들고 그쪽에서 넘겨주는 로직으로 변경할 예정
-        requestNewEpisode={this.props.requestNewEpisode} />
+        requestNewEpisode={this.props.requestNewEpisode}
+        openComment={this.props.openComment}
+        getComment={this.props.getComment} />
     )
   }
 
@@ -284,17 +271,18 @@ const mapDispatchToProps = (dispatch) => {
   return {
     requestOtherInfo: (token, accountId) => dispatch(AccountActions.otherInfoRequest(token, accountId)),
     requestOtherEpisodes: (token, accountId, active) => dispatch(EpisodeActions.otherEpisodesRequest(token, accountId, active)),
-    initOtherInfo: () => dispatch(AccountActions.initOtherInfo()),
-    initOtherEpisodes: () => dispatch(EpisodeActions.initOtherEpisodes()),
-    requestNewEpisode: (token, episodeId) => dispatch(EpisodeActions.newOtherEpisodeRequest(token, episodeId)),
     requestMoreOtherEpisodes: (token, accountId, withFollowing, before) => dispatch(EpisodeActions.moreOtherEpisodesRequest(token, accountId, withFollowing, before)),
+    requestNewEpisode: (token, episodeId) => dispatch(EpisodeActions.newOtherEpisodeRequest(token, episodeId)),
 
     postFollow: (token, id) => dispatch(AccountActions.followPost(token, id)),
     deleteFollow: (token, id) => dispatch(AccountActions.followDelete(token, id)),
 
     openFollow: (followVisible, showType) => dispatch(AccountActions.openFollow(followVisible, showType)),
     getFollowing: (token, id) => dispatch(AccountActions.getFollowing(token, id)),
-    getFollower: (token, id) => dispatch(AccountActions.getFollower(token, id))
+    getFollower: (token, id) => dispatch(AccountActions.getFollower(token, id)),
+
+    openComment: (visible) => dispatch(CommentActions.openComment(visible)),
+    getComment: (token, episodeId, contentId) => dispatch(CommentActions.commentGet(token, episodeId, contentId))
   }
 }
 

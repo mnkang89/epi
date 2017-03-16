@@ -71,6 +71,14 @@ class NotiScreen extends Component {
     // clearInterval(this.autoRefresher)
   }
 
+  shouldComponentUpdate (nextProps, nextState) {
+    if (_.isEqual(this.props.noties, nextProps.noties)) {
+      return false
+    } else {
+      return true
+    }
+  }
+
   _onRefresh () {
     const { token } = this.props
 

@@ -67,7 +67,6 @@ class FeedScreen extends Component {
     const withFollowing = true
     const accountId = getAccountId()
 
-    this.props.resetCommentModal()
     this.props.requestUserEpisodes(token, accountId, withFollowing)
     this.props.requestUserEpisodesWithFalse(token, accountId, false)
   }
@@ -87,12 +86,6 @@ class FeedScreen extends Component {
       this.before = nextProps.items[nextProps.items.length - 1].episode.updatedDateTime
     }
 
-    if (_.isEqual(this.props.items, nextProps.items)) {
-      console.log('아이템같음')
-    } else {
-      console.log('아이템다름')
-    }
-
     if (nextProps.beforeScreen === 'homeTab') {
       if (nextProps.beforeScreen === nextProps.pastScreen) {
         this._listRef.scrollToIndex({index: 0})
@@ -108,7 +101,11 @@ class FeedScreen extends Component {
   }
 
   shouldComponentUpdate (nextProps, nextState) {
-    return this.props.items !== nextProps.items
+    if (_.isEqual(this.props.items, nextProps.items)) {
+      return false
+    } else {
+      return true
+    }
   }
 
   _onRefresh () {
@@ -337,7 +334,6 @@ const mapDispatchToProps = (dispatch) => {
     requestUserEpisodesWithFalse: (token, accountId, withFollowing) => dispatch(EpisodeActions.userEpisodesWithFalseRequest(token, accountId, withFollowing)),
     requestMoreFeeds: (token, accountId, withFollowing, before) => dispatch(EpisodeActions.moreFeedsRequest(token, accountId, withFollowing, before)),
 
-    resetCommentModal: () => dispatch(CommentActions.resetComment()),
     openComment: (visible) => dispatch(CommentActions.openComment(visible)),
     getComment: (token, episodeId, contentId) => dispatch(CommentActions.commentGet(token, episodeId, contentId))
   }

@@ -71,7 +71,11 @@ class SingleEpisodeScreen extends Component {
   }
 
   shouldComponentUpdate (nextProps, nextState) {
-    return this.props.items !== nextProps.items
+    if (_.isEqual(this.props.items, nextProps.items)) {
+      return false
+    } else {
+      return true
+    }
   }
 
   _onRefresh () {

@@ -61,12 +61,6 @@ class ExploreScreen extends Component {
       this.before = nextProps.items[nextProps.items.length - 1].episode.updatedDateTime
     }
 
-    if (_.isEqual(this.props.items, nextProps.items)) {
-      console.log('아이템같음')
-    } else {
-      console.log('아이템다름')
-    }
-
     if ((this.props.followPosting === true && nextProps.followPosting === false) ||
         (this.props.followDeleting === true && nextProps.followDeleting === false)) {
       this.props.requestBestFeeds(token)
@@ -87,8 +81,11 @@ class ExploreScreen extends Component {
   }
 
   shouldComponentUpdate (nextProps, nextState) {
-    console.log(this.props.items !== nextProps.items)
-    return this.props.items !== nextProps.items
+    if (_.isEqual(this.props.items, nextProps.items)) {
+      return false
+    } else {
+      return true
+    }
   }
 
   _onRefresh () {

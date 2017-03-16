@@ -54,12 +54,6 @@ class ProfileScreen extends Component {
       this.before = nextProps.items[nextProps.items.length - 1].episode.updatedDateTime
     }
 
-    if (_.isEqual(this.props.items, nextProps.items)) {
-      console.log('아이템같음')
-    } else {
-      console.log('아이템다름')
-    }
-
     if (nextProps.beforeScreen === 'profileTab') {
       if (nextProps.beforeScreen === nextProps.pastScreen) {
         this._listRef.scrollToOffset({y: 0})
@@ -75,23 +69,14 @@ class ProfileScreen extends Component {
   }
 
   componentDidMount () {
-    // const token = null
-    // const withFollowing = false
-    // const accountId = getAccountId()
-
-    // this.autoRefresher = setInterval(() => {
-    //   this.props.requestInfo(token, accountId)
-    //   this.props.requestUserEpisodesWithFalse(token, accountId, withFollowing)
-    // }, 60000)
-  }
-
-  componentWillUnmount () {
-    // clearInterval(this.autoRefresher)
   }
 
   shouldComponentUpdate (nextProps, nextState) {
-    console.log(this.props.items !== nextProps.items)
-    return this.props.items !== nextProps.items
+    if (_.isEqual(this.props.items, nextProps.items)) {
+      return false
+    } else {
+      return true
+    }
   }
 
   _onRefresh () {
