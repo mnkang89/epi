@@ -41,6 +41,14 @@ const { Types, Creators } = createActions({
 
   initOtherInfo: [
   ],
+  otherInfoObjectAdd: [
+    'otherAccountId',
+    'otherNickname',
+    'otherProfileImagePath',
+    'otherFollowerCount',
+    'otherFollowingCount',
+    'otherFollowing'
+  ],
 
   userEpisodeCheck: [
     'token',
@@ -127,6 +135,8 @@ export const INITIAL_STATE = Immutable({
   otherFollowingCount: null,
   otherFollowing: null,
 
+  otherInfoObject: {},
+
   episodeChecking: false,
   episodeStatus: null,
   activeEpisodeId: null,
@@ -175,6 +185,8 @@ export const otherInfoInit = (state: Object) =>
     otherFollowing: null
   })
 
+export const otherInfoObjectAdd = (state: Object, { otherAccountId, otherNickname, otherProfileImagePath, otherFollowerCount, otherFollowingCount, otherFollowing }: Object) =>
+  state.merge({ otherInfoObject: {...state.otherInfoObject, [otherAccountId]: {otherNickname, otherProfileImagePath, otherFollowerCount, otherFollowingCount, otherFollowing}} })
 // we're attempting to check signup
 export const userEpisodeCheck = (state: Object, { token, active }: Object) =>
   state.merge({ episodeChecking: true })
@@ -240,6 +252,7 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.OTHER_INFO_FAILURE]: otherInfoFailure,
 
   [Types.INIT_OTHER_INFO]: otherInfoInit,
+  [Types.OTHER_INFO_OBJECT_ADD]: otherInfoObjectAdd,
 
   [Types.USER_EPISODE_CHECK]: userEpisodeCheck,
   [Types.USER_EPISODE_CHECK_SUCCESS]: userEpisodeCheckSuccess,

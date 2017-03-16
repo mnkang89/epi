@@ -43,6 +43,11 @@ const { Types, Creators } = createActions({
   initOtherEpisodes: [
   ],
 
+  otherEpisodesObjectAdd: [
+    'otherId',
+    'otherEpisodes'
+  ],
+
   userEpisodePost: [
     'token',
     'fileType',
@@ -103,9 +108,11 @@ const { Types, Creators } = createActions({
 
   newOtherEpisodeRequest: [
     'token',
+    'accountId',
     'episodeId'
   ],
   newOtherEpisodeSuccess: [
+    'otherId',
     'newEpisode'
   ],
   newOtherEpisodeFailure: [
@@ -145,6 +152,7 @@ const { Types, Creators } = createActions({
     'before'
   ],
   moreOtherEpisodesSuccess: [
+    'otherId',
     'moreOtherEpisodes'
   ],
   moreOtherEpisodesFailure: [
@@ -168,6 +176,8 @@ export const INITIAL_STATE = Immutable({
   otherEpisodesRequesting: false,
   otherEpisodesError: null,
 
+  otherEpisodesObject: {},
+
   episodeId: null,
   episodePosting: false,
   error: null,
@@ -180,6 +190,7 @@ export const INITIAL_STATE = Immutable({
 
   newEpisode: [],
   newEpisodeRequesting: false,
+  newOtherEpisodeRequesting: false,
   newEpisodeError: null,
 
   moreFeeds: [],
@@ -229,6 +240,11 @@ export const otherEpisodesFailure = (state: Object, { otherEpisodesError }: Obje
 // init other user episodes
 export const otherEpisodesInit = (state: Object) =>
   state.merge({ otherEpisodes: [] })
+
+// other episodes object
+// bracket notation is used to make variable as a key name
+export const otherEpisodesObjectAdd = (state: Object, { otherId, otherEpisodes }: Object) =>
+  state.merge({ otherEpisodesObject: {...state.otherEpisodesObject, [otherId]: otherEpisodes} })
 
 // we're attempting to check posting Episode
 export const userEpisodePost = (state: Object, { token }: Object) =>
@@ -319,31 +335,36 @@ export const newEpisodeWithFalseSuccess = (state: Object, { newEpisode }: Object
 }
 
 export const newEpisodeWithFalseFailure = (state: Object, { newEpisodeError }: Object) =>
-  state.merge({ newEpisodeRequesting: false, newEpisodeError })
+  state.merge({ newOtherEpisodeRequesting: false, newEpisodeError })
 
 // we're attempting to get new otherEpisode
 export const newOtherEpisodeRequest = (state: Object, { token }: Object) =>
-  state.merge({ newEpisodeRequesting: true })
+  state.merge({ newOtherEpisodeRequesting: true })
 
-export const newOtherEpisodeSuccess = (state: Object, { newEpisode }: Object) => {
-  const otherEpisodes = state.otherEpisodes
+export const newOtherEpisodeSuccess = (state: Object, { otherId, newEpisode }: Object) => {
   let insertIndex
   let nextIndex
-
-  for (let i = 0; i < otherEpisodes.length; i++) {
-    if (otherEpisodes[i].episode.id === newEpisode[0].id) {
+  console.log('아더아이디')
+  console.log(otherId)
+  console.log(state.otherEpisodesObject[otherId])
+  for (let i = 0; i < state.otherEpisodesObject[otherId.toString()].length; i++) {
+    if (state.otherEpisodesObject[otherId.toString()][i].episode.id === newEpisode[0].id) {
       insertIndex = i
     }
   }
   nextIndex = insertIndex + 1
 
   return state.merge({
-    newEpisodeRequesting: false,
+    newOtherEpisodeRequesting: false,
     newEpisodeError: null,
-    otherEpisodes: [
-      ...otherEpisodes.slice(0, insertIndex),
-      {...otherEpisodes[insertIndex], episode: newEpisode[0]},
-      ...otherEpisodes.slice(nextIndex)]
+    otherEpisodesObject: {
+      ...state.otherEpisodesObject,
+      [otherId]: [
+        ...state.otherEpisodesObject[otherId.toString()].slice(0, insertIndex),
+        {...state.otherEpisodesObject[otherId.toString()][insertIndex], episode: newEpisode[0]},
+        ...state.otherEpisodesObject[otherId.toString()].slice(nextIndex)
+      ]
+    }
   })
 }
 
@@ -380,11 +401,15 @@ export const moreEpisodesFailure = (state: Object, { moreEpisodesError }: Object
 export const moreOtherEpisodesRequest = (state: Object, { token }: Object) =>
   state.merge({ moreOtherEpisodesRequesting: true })
 
-export const moreOtherEpisodesSuccess = (state: Object, { moreOtherEpisodes }: Object) =>
+export const moreOtherEpisodesSuccess = (state: Object, { otherId, moreOtherEpisodes }: Object) =>
   state.merge({
     moreOtherEpisodesRequesting: false,
     moreOtherEpisodesError: null,
-    otherEpisodes: [...state.otherEpisodes, ...moreOtherEpisodes]})
+    otherEpisodesObject: {
+      ...state.otherEpisodesObject,
+      [otherId]: [...state.otherEpisodesObject[otherId], ...moreOtherEpisodes]
+    }
+  })
 
 export const moreOtherEpisodesFailure = (state: Object, { moreOtherEpisodesError }: Object) =>
   state.merge({ moreOtherEpisodesRequesting: false, moreOtherEpisodesError })
@@ -405,6 +430,7 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.OTHER_EPISODES_FAILURE]: otherEpisodesFailure,
 
   [Types.OTHER_EPISODES_INIT]: otherEpisodesInit,
+  [Types.OTHER_EPISODES_OBJECT_ADD]: otherEpisodesObjectAdd,
 
   [Types.USER_EPISODE_POST]: userEpisodePost,
   [Types.USER_EPISODE_POST_SUCCESS]: userEpisodePostSuccess,

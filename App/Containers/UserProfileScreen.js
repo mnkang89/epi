@@ -63,9 +63,10 @@ class UserProfileScreen extends Component {
 
   componentWillReceiveProps (nextProps) {
     console.log(getObjectDiff(this.props, nextProps))
+    const items = nextProps.itemsObject[this.props.id]
 
-    if (nextProps.items.length !== 0) {
-      this.before = nextProps.items[nextProps.items.length - 1].episode.updatedDateTime
+    if (nextProps.itemsObject[this.props.id] !== undefined) {
+      this.before = items[items.length - 1].episode.updatedDateTime
     }
 
     if (this.state.refreshing) {
@@ -77,7 +78,23 @@ class UserProfileScreen extends Component {
   }
 
   shouldComponentUpdate (nextProps, nextState) {
-    if (_.isEqual(this.props.items, nextProps.items)) {
+    // otherInfo도 object화하기
+    if (getObjectDiff(this.props, nextProps)[0] === 'otherInfoObject') {
+      if (_.isEqual(this.props.otherInfoObject[this.props.id], nextProps.otherInfoObject[this.props.id])) {
+        return false
+      } else {
+        return true
+      }
+    } else if (getObjectDiff(this.props, nextProps)[0] === 'itemsObject') {
+      if (_.isEqual(this.props.itemsObject[this.props.id], nextProps.itemsObject[this.props.id])) {
+        return false
+      } else {
+        return true
+      }
+    } else if (
+      // refresh했을때 case
+      _.isEqual(this.props.otherInfoObject, nextProps.otherInfoObject) ||
+      _.isEqual(this.props.itemsObject, nextProps.itemsObject)) {
       return false
     } else {
       return true
@@ -95,14 +112,19 @@ class UserProfileScreen extends Component {
 
   _onEndReached () {
     console.log('onEndReached fired')
-    this.setState({footer: true})
-    if (this.props.items.length !== 0) {
-      this.before = this.props.items[this.props.items.length - 1].episode.updatedDateTime
-    }
-
+    const items = this.props.itemsObject[this.props.id]
     const { token, id } = this.props
     const before = this.before
     const withFollowing = false
+
+    this.setState({footer: true})
+
+    console.log('아이템스')
+    console.log(items[items.length - 1].episode.updatedDateTime)
+    console.log('아이템스')
+    if (items.length !== 0) {
+      this.before = items[items.length - 1].episode.updatedDateTime
+    }
 
     this.props.requestMoreOtherEpisodes(token, id, withFollowing, before)
   }
@@ -120,7 +142,7 @@ class UserProfileScreen extends Component {
           FooterComponent={this._renderFooter.bind(this)}
           disableVirtualization={false}
           horizontal={false}
-          data={this.props.items}
+          data={this.props.itemsObject[this.props.id]}
           legacyImplementation={false}
           onRefresh={this._onRefresh.bind(this)}
           refreshing={this.state.refreshing}
@@ -139,6 +161,7 @@ class UserProfileScreen extends Component {
 
   _renderItemComponent = (episode) => {
     const index = episode.index
+    console.log(episode.item.account)
 
     return (
       <EpisodeDetail
@@ -155,24 +178,31 @@ class UserProfileScreen extends Component {
         account={episode.item.account}
         type={'other'}
         // EpisodeDetailContainer만들고 그쪽에서 넘겨주는 로직으로 변경할 예정
-        requestNewEpisode={this.props.requestNewEpisode}
+        // requestNewEpisode={this.props.requestNewEpisode}
         openComment={this.props.openComment}
         getComment={this.props.getComment} />
     )
   }
 
   _renderHeader () {
+    if (this.props.otherInfoObject[this.props.id] === undefined) {
+      return (
+        <View />
+      )
+    }
+    const { otherProfileImagePath, otherNickname, otherFollowerCount, otherFollowingCount, otherFollowing } = this.props.otherInfoObject[this.props.id]
+
     return (
       <ProfileInfo
         type={'other'}
         token={this.props.token}
         id={this.props.id}  // 내아이디 일때는 accountId
 
-        profileImagePath={this.props.profileImagePath} // props는 현재는 null인 상태에서 들어가는 상황
-        nickname={this.props.nickname}
-        followerCount={this.props.followerCount}
-        followingCount={this.props.followingCount}
-        following={this.props.following}
+        profileImagePath={otherProfileImagePath} // props는 현재는 null인 상태에서 들어가는 상황
+        nickname={otherNickname}
+        followerCount={otherFollowerCount}
+        followingCount={otherFollowingCount}
+        following={otherFollowing}
 
         postFollow={this.props.postFollow}
         deleteFollow={this.props.deleteFollow}
@@ -256,14 +286,17 @@ class UserProfileScreen extends Component {
 const mapStateToProps = (state) => {
   return {
     token: state.token.token,
-    following: state.account.otherFollowing,
+    itemsObject: state.episode.otherEpisodesObject,
+    otherInfoObject: state.account.otherInfoObject
+    // newOtherEpisodeRequesting: state.episode.newOtherEpisodeRequesting
+    // following: state.account.otherFollowing,
 
-    profileImagePath: state.account.otherProfileImagePath,
-    nickname: state.account.otherNickname,
-    followerCount: state.account.otherFollowerCount,
-    followingCount: state.account.otherFollowingCount,
+    // profileImagePath: state.account.otherProfileImagePath,
+    // nickname: state.account.otherNickname,
+    // followerCount: state.account.otherFollowerCount,
+    // followingCount: state.account.otherFollowingCount,
 
-    items: state.episode.otherEpisodes
+    // items: state.episode.otherEpisodes
   }
 }
 
@@ -272,7 +305,7 @@ const mapDispatchToProps = (dispatch) => {
     requestOtherInfo: (token, accountId) => dispatch(AccountActions.otherInfoRequest(token, accountId)),
     requestOtherEpisodes: (token, accountId, active) => dispatch(EpisodeActions.otherEpisodesRequest(token, accountId, active)),
     requestMoreOtherEpisodes: (token, accountId, withFollowing, before) => dispatch(EpisodeActions.moreOtherEpisodesRequest(token, accountId, withFollowing, before)),
-    requestNewEpisode: (token, episodeId) => dispatch(EpisodeActions.newOtherEpisodeRequest(token, episodeId)),
+    requestNewEpisode: (token, accountId, episodeId) => dispatch(EpisodeActions.newOtherEpisodeRequest(token, accountId, episodeId)),
 
     postFollow: (token, id) => dispatch(AccountActions.followPost(token, id)),
     deleteFollow: (token, id) => dispatch(AccountActions.followDelete(token, id)),

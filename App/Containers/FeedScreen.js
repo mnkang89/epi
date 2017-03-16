@@ -101,9 +101,13 @@ class FeedScreen extends Component {
   }
 
   shouldComponentUpdate (nextProps, nextState) {
-    if (_.isEqual(this.props.items, nextProps.items)) {
+    // newEpisode콜시에 업뎃안되는 문제가 있음
+    if (_.isEqual(this.props.items, nextProps.items) &&
+        !getObjectDiff(this.props, nextProps).includes('newEpisodeRequesting')) {
+      console.log('슈드아이템 폴스')
       return false
     } else {
+      console.log('슈드아이템 트루')
       return true
     }
   }
@@ -317,6 +321,7 @@ const mapStateToProps = (state) => {
     accountId: state.token.id,
 
     episodesRequesting: state.episode.episodesRequesting,
+    newEpisodeRequesting: state.episode.newEpisodeRequesting,
     items: state.episode.episodes,
 
     trigger: state.screen.trigger,

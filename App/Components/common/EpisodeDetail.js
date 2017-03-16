@@ -8,6 +8,7 @@ import {
   Dimensions
  } from 'react-native'
 import { Actions as NavigationActions } from 'react-native-router-flux'
+// import _ from 'lodash'
 
 import FlatListE from '../../Experimental/FlatList_e'
 import { Colors, Images, Metrics } from '../../Themes/'
@@ -107,6 +108,12 @@ class EpisodeDetail extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
+    console.log('리시브프랍스인 에피소드디테일')
+    if (this.state.footer) {
+      this.setState({
+        footer: false
+      })
+    }
   }
 
   stopEpisodeVideo = () => {
@@ -198,7 +205,12 @@ class EpisodeDetail extends Component {
       } else if (
           this.dragStartingOffset >= this.lastContentOffset &&
           this.dragStartingOffset - this.dragEndingOffset < 0) {
-        this.props.requestNewEpisode(token, episode.id)
+        if (this.props.type === 'other') {
+          // this.props.requestNewEpisode(token, this.props.episode.accountId, episode.id)
+        } else {
+          console.log('mememe newnew')
+          this.props.requestNewEpisode(token, episode.id)
+        }
       }
     }
   }
@@ -421,7 +433,7 @@ class EpisodeDetail extends Component {
         <View style={{flex: 1, justifyContent: 'center'}}>
           <ActivityIndicator
             style={{paddingRight: 14.5}}
-            color='white'
+            color='black'
             size='large' />
         </View>
       )

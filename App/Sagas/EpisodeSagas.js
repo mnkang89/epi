@@ -60,7 +60,8 @@ export function * otherEpisodes (api, action) {
     console.log(response)
     const episodes = path(['data', 'items'], response)
 
-    yield put(EpisodeActions.otherEpisodesSuccess(episodes))
+    // yield put(EpisodeActions.otherEpisodesSuccess(episodes))
+    yield put(EpisodeActions.otherEpisodesObjectAdd(accountId, episodes))
   } else {
     console.log('error')
     console.log(response)
@@ -109,6 +110,10 @@ export function * moreEpisodes (api, action) {
 export function * moreOtherEpisodes (api, action) {
   console.log('모어 아더 에피소드 사가 진입')
   const { token, accountId, withFollowing, before } = action
+  console.log(token)
+  console.log(accountId)
+  console.log(withFollowing)
+  console.log(before)
   const response = yield call(api.requestMoreOtherFeeds, token, accountId, withFollowing, before)
   console.log(response)
 
@@ -117,7 +122,7 @@ export function * moreOtherEpisodes (api, action) {
     console.log(response)
     const episodes = path(['data', 'items'], response)
 
-    yield put(EpisodeActions.moreOtherEpisodesSuccess(episodes))
+    yield put(EpisodeActions.moreOtherEpisodesSuccess(accountId, episodes))
   } else {
     console.log('error')
     console.log(response)
@@ -243,15 +248,17 @@ export function * newEpisodeWithFalse (api, action) {
 
 export function * newOtherEpisode (api, action) {
   console.log('뉴 아더 에피소드 사가 진입')
-  const { token, episodeId } = action
-  const response = yield call(api.requestSingleEpisode, token, episodeId)
+  const { token, accountId, episodeId } = action
+  const response = yield call(api.requestSingleEpisode, token, accountId, episodeId)
+  console.log(accountId)
+  console.log(episodeId)
 
   if (response.ok) {
     console.log('ok')
     console.log(response)
     const newEpisode = path(['data', 'episodes'], response)
 
-    yield put(EpisodeActions.newOtherEpisodeSuccess(newEpisode))
+    yield put(EpisodeActions.newOtherEpisodeSuccess(accountId, newEpisode))
   } else {
     console.log('error')
     console.log(response)

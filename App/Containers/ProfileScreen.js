@@ -204,6 +204,7 @@ class ProfileScreen extends Component {
   }
 
   _shouldItemUpdate (prev, next) {
+    console.log('shouldItemUpdate in userProfileScreen.js')
     return prev.item !== next.item
   }
 

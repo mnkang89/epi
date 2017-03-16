@@ -44,14 +44,15 @@ export function * otherInfo (api, action) {
     console.log('ok')
     console.log(response)
     const accountId = path(['data', 'id'], response)
-    const email = path(['data', 'email'], response)
+    // const email = path(['data', 'email'], response)
     const nickname = path(['data', 'nickname'], response)
     const followerCount = path(['data', 'followerCount'], response)
     const followingCount = path(['data', 'followingCount'], response)
     const following = path(['data', 'following'], response)
     const profileImagePath = path(['data', 'profileImagePath'], response)
 
-    yield put(AccountActions.otherInfoSuccess(accountId, email, nickname, profileImagePath, followerCount, followingCount, following))
+    // yield put(AccountActions.otherInfoSuccess(accountId, email, nickname, profileImagePath, followerCount, followingCount, following))
+    yield put(AccountActions.otherInfoObjectAdd(accountId, nickname, profileImagePath, followerCount, followingCount, following))
   } else {
     console.log('error')
     console.log(response)
