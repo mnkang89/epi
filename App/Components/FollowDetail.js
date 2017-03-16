@@ -41,8 +41,6 @@ class FollowDetail extends Component {
 
   onProfilePress () {
     const accountId = this.props.follow.id
-    this.props.resetFollowModal()
-    console.log(this.props.screen)
 
     if (this.props.screen === 'FeedScreen') {
       console.log('feedscreen 인 팔로우')
@@ -69,6 +67,8 @@ class FollowDetail extends Component {
         id: accountId
       })
     }
+
+    this.props.resetFollowModal()
   }
 
   renderProfileImage () {
