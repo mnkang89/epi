@@ -19,7 +19,9 @@ class CommentDetail extends Component {
     screen: PropTypes.string,
 
     resetCommentModal: PropTypes.func,
-    deleteComment: PropTypes.func
+    deleteComment: PropTypes.func,
+    popHandler: PropTypes.func,
+    pushHandler: PropTypes.func
   }
 
   constructor (props) {
@@ -97,13 +99,20 @@ class CommentDetail extends Component {
     const accountId = this.props.comment.account.id
     this.props.resetCommentModal()
 
-    console.log('코멘트 프로필 클릭')
-
     if (this.props.screen === 'FeedScreen') {
-      NavigationActions.feedTouserProfileScreen({
-        type: 'push',
-        id: accountId
-      })
+      this.props.pushHandler()
+      setTimeout(() => {
+        NavigationActions.feedTouserProfileScreen({
+          type: 'push',
+          id: accountId,
+          screen: 'FeedScreen',
+          popHandler: this.props.popHandler,
+          onBack: () => {
+            this.props.popHandler()
+            NavigationActions.pop()
+          }
+        })
+      }, 500)
     } else if (this.props.screen === 'NotiScreen') {
       NavigationActions.notiTouserProfileScreen({
         type: 'push',

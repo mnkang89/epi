@@ -26,7 +26,9 @@ class FollowModal extends Component {
 
     openFollow: PropTypes.func,
     postFollow: PropTypes.func,
-    deleteFollow: PropTypes.func
+    deleteFollow: PropTypes.func,
+    pushHandler: PropTypes.func,
+    popHandler: PropTypes.func
   }
 
   constructor (props) {
@@ -99,7 +101,9 @@ class FollowModal extends Component {
       return (
         <FollowContainer
           screen={this.props.screen}
-          resetFollowModal={this.resetFollowModal.bind(this)} />
+          resetFollowModal={this.resetFollowModal.bind(this)}
+          pushHandler={this.props.pushHandler}
+          popHandler={this.props.popHandler} />
       )
     } else {
       return (

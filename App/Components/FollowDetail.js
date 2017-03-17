@@ -41,13 +41,23 @@ class FollowDetail extends Component {
 
   onProfilePress () {
     const accountId = this.props.follow.id
+    this.props.resetFollowModal()
 
     if (this.props.screen === 'FeedScreen') {
-      console.log('feedscreen 인 팔로우')
-      NavigationActions.feedTouserProfileScreen({
-        type: 'push',
-        id: accountId
-      })
+      this.props.pushHandler()
+      setTimeout(() => {
+        NavigationActions.feedTouserProfileScreen({
+          type: 'push',
+          id: accountId,
+          screen: 'FeedScreen',
+          popHandler: this.props.popHandler,
+          topOfStack: true,
+          onBack: () => {
+            this.props.popHandler()
+            NavigationActions.pop()
+          }
+        })
+      }, 500)
     } else if (this.props.screen === 'NotiScreen') {
       console.log('notiscreen 인 팔로우')
       NavigationActions.notiTouserProfileScreen({
@@ -67,8 +77,6 @@ class FollowDetail extends Component {
         id: accountId
       })
     }
-
-    this.props.resetFollowModal()
   }
 
   renderProfileImage () {

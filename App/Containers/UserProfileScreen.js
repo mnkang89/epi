@@ -32,6 +32,7 @@ class UserProfileScreen extends Component {
     items: PropTypes.array,
 
     screen: PropTypes.string,
+    topOfStack: PropTypes.bool,
 
     requestOtherInfo: PropTypes.func,
     requestOtherEpisodes: PropTypes.func,
@@ -43,11 +44,15 @@ class UserProfileScreen extends Component {
     super(props)
     this.state = {
       refreshing: false,
-      footer: false
+      footer: false,
+      scrollsToTop: true
     }
+    // this.topOfStack = this.props.topOfStack
     this.before
     this.episodeRefs = {}
     this.viewableItemsArray = []
+    this._onPushToUserProfileScreen = this._onPushToUserProfileScreen.bind(this)
+    this._onPopFromUserProfileScreen = this._onPopFromUserProfileScreen.bind(this)
   }
 
   componentDidMount () {
@@ -65,6 +70,18 @@ class UserProfileScreen extends Component {
     console.log(getObjectDiff(this.props, nextProps))
     const items = nextProps.itemsObject[this.props.id]
 
+    //
+    // if (this.topOfStack) {
+    //   this.setState({
+    //     scrollsToTop: true
+    //   })
+    // } else {
+    //   this.setState({
+    //     scrollsToTop: false
+    //   })
+    // }
+    //
+
     if (nextProps.itemsObject[this.props.id] !== undefined) {
       this.before = items[items.length - 1].episode.updatedDateTime
     }
@@ -78,6 +95,9 @@ class UserProfileScreen extends Component {
   }
 
   shouldComponentUpdate (nextProps, nextState) {
+    if (this.state.scrollsToTop !== nextState.scrollsToTop) {
+      return true
+    }
     // otherInfo도 object화하기
     if (getObjectDiff(this.props, nextProps)[0] === 'otherInfoObject') {
       if (_.isEqual(this.props.otherInfoObject[this.props.id], nextProps.otherInfoObject[this.props.id])) {
@@ -119,9 +139,6 @@ class UserProfileScreen extends Component {
 
     this.setState({footer: true})
 
-    console.log('아이템스')
-    console.log(items[items.length - 1].episode.updatedDateTime)
-    console.log('아이템스')
     if (items.length !== 0) {
       this.before = items[items.length - 1].episode.updatedDateTime
     }
@@ -129,10 +146,24 @@ class UserProfileScreen extends Component {
     this.props.requestMoreOtherEpisodes(token, id, withFollowing, before)
   }
 
+  _onPushToUserProfileScreen () {
+    this.setState({
+      scrollsToTop: false
+    })
+    // this.topOfStack = false
+  }
+
+  _onPopFromUserProfileScreen () {
+    this.setState({
+      scrollsToTop: true
+    })
+  }
+
   render () {
     return (
       <View style={styles.mainContainer}>
         <FlatListE
+          scrollsToTop={this.state.scrollsToTop}
           keyExtractor={(item, index) => index}
           style={{ flex: 1 }}
           ref={this._captureRef}
@@ -151,8 +182,16 @@ class UserProfileScreen extends Component {
           onEndReached={this._onEndReached.bind(this)}
           onEndReachedThreshold={0} />
         <View style={{height: 60}} />
-        <CommentModalContainer screen={this.props.screen} token={this.props.token} />
-        <FollowModalContainer screen={this.props.screen} token={this.props.token} />
+        <CommentModalContainer
+          screen={this.props.screen}
+          token={this.props.token}
+          pushHandler={this._onPushToUserProfileScreen}
+          popHandler={this._onPopFromUserProfileScreen} />
+        <FollowModalContainer
+          screen={this.props.screen}
+          token={this.props.token}
+          pushHandler={this._onPushToUserProfileScreen}
+          popHandler={this._onPopFromUserProfileScreen} />
       </View>
     )
   }
@@ -161,7 +200,6 @@ class UserProfileScreen extends Component {
 
   _renderItemComponent = (episode) => {
     const index = episode.index
-    console.log(episode.item.account)
 
     return (
       <EpisodeDetail
@@ -174,6 +212,8 @@ class UserProfileScreen extends Component {
         index={index}
         token={this.props.token}
         parentHandler={this}
+        pushHandler={this._onPushToUserProfileScreen}
+        popHandler={this._onPopFromUserProfileScreen}
         episode={episode.item.episode}
         account={episode.item.account}
         type={'other'}

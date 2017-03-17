@@ -11,7 +11,9 @@ class FollowList extends Component {
 
     postFollow: PropTypes.func,
     deleteFollow: PropTypes.func,
-    resetFollowModal: PropTypes.func
+    resetFollowModal: PropTypes.func,
+    pushHandler: PropTypes.func,
+    popHandler: PropTypes.func
   }
 
   constructor (props) {
@@ -28,7 +30,9 @@ class FollowList extends Component {
         follow={follow}
         resetFollowModal={this.props.resetFollowModal}
         postFollow={this.props.postFollow}
-        deleteFollow={this.props.deleteFollow} />
+        deleteFollow={this.props.deleteFollow}
+        pushHandler={this.props.pushHandler}
+        popHandler={this.props.popHandler} />
     )
   }
 

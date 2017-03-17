@@ -55,11 +55,14 @@ class FeedScreen extends Component {
     super(props)
     this.state = {
       refreshing: false,
-      footer: false
+      footer: false,
+      scrollsToTop: true
     }
     this.before
     this.episodeRefs = {}
     this.viewableItemsArray = []
+    this._onPushToUserProfileScreen = this._onPushToUserProfileScreen.bind(this)
+    this._onPopFromUserProfileScreen = this._onPopFromUserProfileScreen.bind(this)
   }
 
   componentWillMount () {
@@ -78,7 +81,7 @@ class FeedScreen extends Component {
     this.props.requestInfo(token, accountId)
   }
 
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps (nextProps, nextState) {
     console.log('리시브프랍스인 피드스크린')
     console.log(getObjectDiff(this.props, nextProps))
 
@@ -102,6 +105,9 @@ class FeedScreen extends Component {
 
   shouldComponentUpdate (nextProps, nextState) {
     // newEpisode콜시에 업뎃안되는 문제가 있음
+    if (this.state.scrollsToTop !== nextState.scrollsToTop) {
+      return true
+    }
     if (_.isEqual(this.props.items, nextProps.items) &&
         !getObjectDiff(this.props, nextProps).includes('newEpisodeRequesting')) {
       console.log('슈드아이템 폴스')
@@ -129,6 +135,20 @@ class FeedScreen extends Component {
 
     this.props.requestMoreFeeds(token, accountId, withFollowing, before)
   }
+
+  _onPushToUserProfileScreen () {
+    this.setState({
+      scrollsToTop: false
+    })
+    // this.topOfStack = false
+  }
+
+  _onPopFromUserProfileScreen () {
+    this.setState({
+      scrollsToTop: true
+    })
+  }
+
 /*
   renderListView (dataSource) {
     if (this.props.episodesRequesting) {
@@ -212,7 +232,7 @@ class FeedScreen extends Component {
           ItemComponent={this._renderItemComponent.bind(this)}
           FooterComponent={this._renderFooter.bind(this)}
           horizontal={false}
-          scrollsToTop
+          scrollsToTop={this.state.scrollsToTop}
           onRefresh={this._onRefresh.bind(this)}
           refreshing={this.state.refreshing}
           onViewableItemsChanged={this._onViewableItemsChanged}
@@ -220,7 +240,11 @@ class FeedScreen extends Component {
           onEndReached={this._onEndReached.bind(this)}
           onEndReachedThreshold={0} />
         <View style={{height: 60}} />
-        <CommentModalContainer screen={'FeedScreen'} token={this.props.token} />
+        <CommentModalContainer
+          screen={'FeedScreen'}
+          token={this.props.token}
+          pushHandler={this._onPushToUserProfileScreen}
+          popHandler={this._onPopFromUserProfileScreen} />
       </View>
     )
   }
@@ -241,6 +265,8 @@ class FeedScreen extends Component {
         index={index}
         token={this.props.token}
         parentHandler={this}
+        pushHandler={this._onPushToUserProfileScreen}
+        popHandler={this._onPopFromUserProfileScreen}
         episode={episode.item.episode}
         account={episode.item.account}
         // EpisodeDetailContainer만들고 그쪽에서 넘겨주는 로직으로 변경할 예정

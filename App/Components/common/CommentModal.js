@@ -35,7 +35,10 @@ class CommentModal extends Component {
     resetCommentModal: PropTypes.func,
     getComment: PropTypes.func,
     postComment: PropTypes.func,
-    deleteComment: PropTypes.func
+    deleteComment: PropTypes.func,
+
+    pushHandler: PropTypes.func,
+    popHandler: PropTypes.func
   }
 
   constructor (props) {
@@ -127,6 +130,8 @@ class CommentModal extends Component {
         <CommentContainer
           screen={this.props.screen}
           token={this.props.token}
+          popHandler={this.props.popHandler}
+          pushHandler={this.props.pushHandler}
           resetCommentModal={this.resetCommentModal.bind(this)} />
       )
     } else {

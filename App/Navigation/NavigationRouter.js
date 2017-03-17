@@ -36,7 +36,7 @@ class NavigationRouter extends Component {
         getSceneStyle={getSceneStyle} >
         <Scene
           key='root'
-          // duration={0}
+          unmountScenes
           navigationBarStyle={Styles.navBar}
           titleStyle={Styles.title} >
           <Scene

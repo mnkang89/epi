@@ -19,7 +19,9 @@ class CommentList extends Component {
 
     resetCommentModal: PropTypes.func,
     getComment: PropTypes.func,
-    deleteComment: PropTypes.func
+    deleteComment: PropTypes.func,
+    popHandler: PropTypes.func,
+    pushHandler: PropTypes.func
   }
 
   constructor (props) {
@@ -75,6 +77,8 @@ class CommentList extends Component {
         contentId={this.props.contentId}
         comment={comment}
         screen={this.props.screen}
+        popHandler={this.props.popHandler}
+        pushHandler={this.props.pushHandler}
         resetCommentModal={this.props.resetCommentModal}
         deleteComment={this.props.deleteComment} />
     )

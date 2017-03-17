@@ -168,11 +168,20 @@ class EpisodeDetail extends Component {
         })
       }
     } else {
-      NavigationActions.feedTouserProfileScreen({
-        type: 'push',
-        id: accountId,
-        screen: 'FeedScreen'
-      })
+      this.props.pushHandler()
+      setTimeout(() => {
+        NavigationActions.feedTouserProfileScreen({
+          type: 'push',
+          id: accountId,
+          screen: 'FeedScreen',
+          topOfStack: true,
+          popHandler: this.props.popHandler,
+          onBack: () => {
+            this.props.popHandler()
+            NavigationActions.pop()
+          }
+        })
+      }, 500)
     }
   }
 
