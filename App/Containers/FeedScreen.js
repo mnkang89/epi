@@ -1,17 +1,17 @@
 import React, { Component, PropTypes } from 'react'
 import {
   View,
-  ActivityIndicator
+  ActivityIndicator,
   // Dimensions,
   // ListView,
-  // ScrollView,
-  // RefreshControl,
-  // TouchableOpacity,
-  // Text
+  ScrollView,
+  RefreshControl,
+  TouchableOpacity,
+  Text
 } from 'react-native'
 import { connect } from 'react-redux'
 import _ from 'lodash'
-// import { Actions as NavigationActions } from 'react-native-router-flux'
+import { Actions as NavigationActions } from 'react-native-router-flux'
 
 import { getAccountId } from '../Services/Auth'
 import { getObjectDiff, getArrayDiff } from '../Lib/Utilities'
@@ -91,7 +91,10 @@ class FeedScreen extends Component {
 
     if (nextProps.beforeScreen === 'homeTab') {
       if (nextProps.beforeScreen === nextProps.pastScreen) {
-        this._listRef.scrollToIndex({index: 0})
+        if (this.props.items.length === 0) {
+        } else {
+          this._listRef.scrollToIndex({index: 0})
+        }
       }
     }
 
@@ -108,6 +111,11 @@ class FeedScreen extends Component {
     if (this.state.scrollsToTop !== nextState.scrollsToTop) {
       return true
     }
+
+    if (this.props.episodesRequesting !== nextProps.episodesRequesting) {
+      return true
+    }
+
     if (_.isEqual(this.props.items, nextProps.items) &&
         !getObjectDiff(this.props, nextProps).includes('newEpisodeRequesting')) {
       console.log('슈드아이템 폴스')
@@ -149,16 +157,17 @@ class FeedScreen extends Component {
     })
   }
 
-/*
   renderListView (dataSource) {
     if (this.props.episodesRequesting) {
       console.log('리퀘스팅중')
       return
     } else {
-      if (dataSource._cachedRowCount === 0) {
+      if (this.props.items.length === 0) {
         console.log('없음')
         return (
           <ScrollView
+            ref={this._captureRef}
+            style={{backgroundColor: 'white'}}
             refreshControl={
               <RefreshControl
                 refreshing={this.state.refreshing}
@@ -166,16 +175,16 @@ class FeedScreen extends Component {
               } >
             <View>
               <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 100}}>
-                <Text style={{fontSize: 60, fontWeight: 'bold', color: 'white'}}>안녕하세요!</Text>
+                <Text style={{fontSize: 60, fontWeight: 'bold', color: '#626262'}}>안녕하세요!</Text>
               </View>
               <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 80}}>
-                <Text style={{fontSize: 16, color: 'white'}}>다른 사람들의 에피소드를 구경하고</Text>
-                <Text style={{fontSize: 16, color: 'white'}}>팔로우 해보세요!</Text>
+                <Text style={{fontSize: 16, color: '#626262'}}>다른 사람들의 에피소드를 구경하고</Text>
+                <Text style={{fontSize: 16, color: '#626262'}}>팔로우 해보세요!</Text>
               </View>
               <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 18}}>
                 <TouchableOpacity onPress={NavigationActions.searchTab}>
-                  <View style={{paddingTop: 5, paddingBottom: 5, paddingLeft: 7, paddingRight: 7, borderRadius: 4, borderWidth: 1, borderColor: 'white'}}>
-                    <Text style={{fontSize: 16, color: 'white'}}>에피소드 탐색</Text>
+                  <View style={{paddingTop: 5, paddingBottom: 5, paddingLeft: 7, paddingRight: 7, borderRadius: 4, borderWidth: 1, borderColor: '#626262'}}>
+                    <Text style={{fontSize: 16, color: '#626262'}}>에피소드 탐색</Text>
                   </View>
                 </TouchableOpacity>
               </View>
@@ -184,61 +193,33 @@ class FeedScreen extends Component {
         )
       } else {
         return (
-          <ListView
-            removeClippedSubviews
-            pageSize={1}
-            enableEmptySections={false}
-            dataSource={dataSource}
-            renderRow={(item) =>
-              <EpisodeDetail
-                key={item.episode.id}
-                episode={item.episode}
-                account={item.account} />
-              }
-            refreshControl={
-              <RefreshControl
-                refreshing={this.state.refreshing}
-                onRefresh={this._onRefresh.bind(this)} />
-              } />
+          <FlatListE
+            style={{ flex: 1 }}
+            ref={this._captureRef}
+            key={'vf'}
+            keyExtractor={(item, index) => index}
+            disableVirtualization={false}
+            legacyImplementation={false}
+            data={this.props.items}
+            ItemComponent={this._renderItemComponent.bind(this)}
+            FooterComponent={this._renderFooter.bind(this)}
+            horizontal={false}
+            scrollsToTop={this.state.scrollsToTop}
+            onRefresh={this._onRefresh.bind(this)}
+            refreshing={this.state.refreshing}
+            onViewableItemsChanged={this._onViewableItemsChanged}
+            shouldItemUpdate={this._shouldItemUpdate}
+            onEndReached={this._onEndReached.bind(this)}
+            onEndReachedThreshold={0} />
         )
       }
     }
   }
 
   render () {
-    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
-    const dataSource = ds.cloneWithRows(this.props.items.slice())
-
     return (
       <View style={styles.mainContainer}>
-        {this.renderListView(dataSource)}
-        <View style={{height: 48}} />
-        <CommentModalContainer screen={'FeedScreen'} token={this.props.token} />
-      </View>
-    )
-  }
-*/
-  render () {
-    return (
-      <View style={styles.mainContainer}>
-        <FlatListE
-          style={{ flex: 1 }}
-          ref={this._captureRef}
-          key={'vf'}
-          keyExtractor={(item, index) => index}
-          disableVirtualization={false}
-          legacyImplementation={false}
-          data={this.props.items}
-          ItemComponent={this._renderItemComponent.bind(this)}
-          FooterComponent={this._renderFooter.bind(this)}
-          horizontal={false}
-          scrollsToTop={this.state.scrollsToTop}
-          onRefresh={this._onRefresh.bind(this)}
-          refreshing={this.state.refreshing}
-          onViewableItemsChanged={this._onViewableItemsChanged}
-          shouldItemUpdate={this._shouldItemUpdate}
-          onEndReached={this._onEndReached.bind(this)}
-          onEndReachedThreshold={0} />
+        {this.renderListView()}
         <View style={{height: 60}} />
         <CommentModalContainer
           screen={'FeedScreen'}
@@ -248,6 +229,37 @@ class FeedScreen extends Component {
       </View>
     )
   }
+
+  // render () {
+  //   return (
+  //     <View style={styles.mainContainer}>
+  //       <FlatListE
+  //         style={{ flex: 1 }}
+  //         ref={this._captureRef}
+  //         key={'vf'}
+  //         keyExtractor={(item, index) => index}
+  //         disableVirtualization={false}
+  //         legacyImplementation={false}
+  //         data={this.props.items}
+  //         ItemComponent={this._renderItemComponent.bind(this)}
+  //         FooterComponent={this._renderFooter.bind(this)}
+  //         horizontal={false}
+  //         scrollsToTop={this.state.scrollsToTop}
+  //         onRefresh={this._onRefresh.bind(this)}
+  //         refreshing={this.state.refreshing}
+  //         onViewableItemsChanged={this._onViewableItemsChanged}
+  //         shouldItemUpdate={this._shouldItemUpdate}
+  //         onEndReached={this._onEndReached.bind(this)}
+  //         onEndReachedThreshold={0} />
+  //       <View style={{height: 60}} />
+  //       <CommentModalContainer
+  //         screen={'FeedScreen'}
+  //         token={this.props.token}
+  //         pushHandler={this._onPushToUserProfileScreen}
+  //         popHandler={this._onPopFromUserProfileScreen} />
+  //     </View>
+  //   )
+  // }
 
   _captureRef = (ref) => { this._listRef = ref }
 

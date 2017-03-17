@@ -46,7 +46,6 @@ class NavigationRouter extends Component {
             hideTabBar
             component={GreetingScreen} />
           <Scene
-            // duration={0}
             initial={isLoggedIn()}
             key='tabBar'
             type='reset'
