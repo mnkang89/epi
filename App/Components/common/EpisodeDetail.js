@@ -89,7 +89,11 @@ class EpisodeDetail extends Component {
     if (episode.length === 0) {
       realm.write(() => {
         realm.delete(episode)
-        realm.create('episode', {id: episodeId, like: liked})
+        if (liked === undefined) {
+          realm.create('episode', {id: episodeId, like: false})
+        } else {
+          realm.create('episode', {id: episodeId, like: liked})
+        }
       })
     } else {
       return

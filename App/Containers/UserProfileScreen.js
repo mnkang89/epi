@@ -17,6 +17,8 @@ import AccountActions from '../Redux/AccountRedux'
 import EpisodeActions from '../Redux/EpisodeRedux'
 import CommentActions from '../Redux/CommentRedux'
 
+const ITEM_HEIGHT = 471
+
 class UserProfileScreen extends Component {
 
   static propTypes = {
@@ -178,6 +180,7 @@ class UserProfileScreen extends Component {
           onRefresh={this._onRefresh.bind(this)}
           refreshing={this.state.refreshing}
           onViewableItemsChanged={this._onViewableItemsChanged}
+          getItemLayout={this._getItemLayout}
           shouldItemUpdate={this._shouldItemUpdate}
           onEndReached={this._onEndReached.bind(this)}
           onEndReachedThreshold={0} />
@@ -195,6 +198,10 @@ class UserProfileScreen extends Component {
       </View>
     )
   }
+
+  _getItemLayout = (data: any, index: number) => ({
+    length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index
+  })
 
   _captureRef = (ref) => { this._listRef = ref }
 

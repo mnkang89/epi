@@ -15,6 +15,7 @@ import {
 import FlatListE from '../Experimental/FlatList_e'
 
 import EpisodeActions from '../Redux/EpisodeRedux'
+import CommentActions from '../Redux/CommentRedux'
 
 const windowSize = Dimensions.get('window')
 // contentId받아서 어떻게 할 것인지 정하기
@@ -48,13 +49,9 @@ class SingleEpisodeScreen extends Component {
     const { token, episodeId } = this.props
 
     this.props.requestSingleEpisode(token, episodeId)
-    // this.autoRefresher = setInterval(() => {
-    //   this.props.requestSingleEpisode(token, episodeId)
-    // }, 60000)
   }
 
   componentWillUnmount () {
-    // clearInterval(this.autoRefresher)
   }
 
   componentWillReceiveProps (nextProps) {
@@ -147,7 +144,9 @@ class SingleEpisodeScreen extends Component {
         type={this.props.detailType}
         singleType={this.props.singleType}
         xPosition={xPosition}
-        requestNewEpisode={this.props.requestSingleEpisode} />
+        requestNewEpisode={this.props.requestSingleEpisode}
+        openComment={this.props.openComment}
+        getComment={this.props.getComment} />
     )
   }
 
@@ -216,7 +215,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    requestSingleEpisode: (token, episodeId) => dispatch(EpisodeActions.singleEpisodeRequest(token, episodeId))
+    requestSingleEpisode: (token, episodeId) => dispatch(EpisodeActions.singleEpisodeRequest(token, episodeId)),
+    openComment: (visible) => dispatch(CommentActions.openComment(visible)),
+    getComment: (token, episodeId, contentId) => dispatch(CommentActions.commentGet(token, episodeId, contentId))
   }
 }
 

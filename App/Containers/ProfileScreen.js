@@ -19,7 +19,7 @@ import EpisodeActions from '../Redux/EpisodeRedux'
 import AccountActions from '../Redux/AccountRedux'
 import CommentActions from '../Redux/CommentRedux'
 
-const ITEM_HEIGHT = 447
+const ITEM_HEIGHT = 471
 
 class ProfileScreen extends Component {
   static propTypes = {
@@ -128,6 +128,7 @@ class ProfileScreen extends Component {
           onViewableItemsChanged={this._onViewableItemsChanged}
           onEndReached={this._onEndReached.bind(this)}
           onEndReachedThreshold={0}
+          getItemLayout={this._getItemLayout}
           shouldItemUpdate={this._shouldItemUpdate} />
         <View style={{height: 60}} />
         <CommentModalContainer screen={'ProfileScreen'} token={this.props.token} />
