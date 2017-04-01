@@ -26,6 +26,7 @@ export default class ProgressBar extends Component {
   }
 
   render () {
+    console.log('영상 프로그래싱')
     const fillWidth = this.state.progress
 
     return (
@@ -37,7 +38,7 @@ export default class ProgressBar extends Component {
 
   update () {
     Animated.timing(this.state.progress, {
-      easing: this.props.easing,
+      // easing: this.props.easing,
       duration: this.props.easingDuration,
       toValue: this.props.progress / 100
     }).start()

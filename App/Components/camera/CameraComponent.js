@@ -168,9 +168,10 @@ class CameraSection extends Component {
               style={{ position: 'absolute', height: this.state.componentWidth, width: this.state.componentWidth }}
               captureMode={Camera.constants.CaptureMode.still}
               captureTarget={Camera.constants.CaptureTarget.disk}
-              captureQuality={Camera.constants.CaptureQuality['1080p']}
+              captureQuality={Camera.constants.CaptureQuality.high}
               captureAudio={false}
-              type={this.props.cameraType}
+              // type={this.props.cameraType}
+              type={Camera.constants.Type.front}
               defaultOnFocusComponent={false}
               onFocusChanged={() => {}}
               onZoomChanged={() => {}}

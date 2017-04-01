@@ -110,14 +110,14 @@ class FeedScreen extends Component {
 
   shouldComponentUpdate (nextProps, nextState) {
     // newEpisode콜시에 업뎃안되는 문제가 있음
-    // if (this.state.scrollsToTop !== nextState.scrollsToTop) {
-    //   return true
-    // }
-    //
-    // if (this.props.episodesRequesting !== nextProps.episodesRequesting) {
-    //   return true
-    // }
-    //
+    if (this.state.scrollsToTop !== nextState.scrollsToTop) {
+      return true
+    }
+
+    if (this.props.episodesRequesting !== nextProps.episodesRequesting) {
+      return true
+    }
+
     if (this.state.commentModalVisible !== nextState.commentModalVisible) {
       return true
     }
@@ -129,6 +129,7 @@ class FeedScreen extends Component {
       console.log('슈드아이템 트루')
       return true
     }
+    // return true
   }
 
   _onRefresh () {
@@ -168,6 +169,21 @@ class FeedScreen extends Component {
       commentModalVisible: !this.state.commentModalVisible
     })
   }
+
+  // takeVideo () {
+  //   console.log('ih')
+  //   this.interval = setInterval(() => {
+  //     if (this.state.leftTime <= 0) {
+  //       console.tron.log('leftTime done')
+  //     } else {
+  //       console.log('변화중')
+  //       this.setState({
+  //         leftTime: this.state.leftTime - (1 / 10),
+  //         progress: this.state.progress + 3750 * 2 / 10
+  //       })
+  //     }
+  //   }, (1000 / 10))
+  // }
 
   // renderListView (dataSource) {
   //   if (this.props.episodesRequesting) {

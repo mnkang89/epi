@@ -113,11 +113,11 @@ class CameraScreenController extends Component {
         )
       } else {
         this.setState({
-          leftTime: this.state.leftTime - 1,
-          progress: this.state.progress + 3750 * 2
+          leftTime: this.state.leftTime - (1 / 10),
+          progress: (this.state.progress + 3750 * 2) / 10
         })
       }
-    }, 1000)
+    }, (1000 / 10))
   }
 
   onPressOpenTextInput () {
