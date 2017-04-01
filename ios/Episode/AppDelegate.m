@@ -28,23 +28,13 @@
                                                initialProperties:nil
                                                    launchOptions:launchOptions];
 
-  // 화이트 로딩스크린 문제 해결을 위한 코드
-  // NSArray *allPngImageNames = [[NSBundle mainBundle] pathsForResourcesOfType:@"png" inDirectory:nil];
-  //  for (NSString *imgName in allPngImageNames){
-  //    if ([imgName containsString:@"LaunchImage"]){
-  //      UIImage *img = [UIImage imageNamed:imgName];
-  //
-  //      if (img.scale == [UIScreen mainScreen].scale && CGSizeEqualToSize(img.size, [UIScreen mainScreen].bounds.size)) {
-  //        rootView.backgroundColor = [UIColor colorWithPatternImage:img];
-  //      }
-  //  }
-  // }
   // 원래 코드
   rootView.backgroundColor = [[UIColor alloc] initWithRed:1.0f green:1.0f blue:1.0f alpha:1];
 
   // 비디오 재생 중 다른앱 음악허용
   [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:nil];
 
+  // 일반적인 ios앱에서는 아래작업이 생략되고 윈도우에 스토리보드가 붙는 구조.
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
   UIViewController *rootViewController = [UIViewController new];
   rootViewController.view = rootView;
@@ -52,8 +42,6 @@
   [self.window makeKeyAndVisible];
 
   return YES;
-
-
 }
 // Required to register for notifications
 - (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings { [RCTPushNotificationManager didRegisterUserNotificationSettings:notificationSettings]; }

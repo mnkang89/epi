@@ -61,7 +61,8 @@ class CameraScreenController extends Component {
         // TODO: this is just for iphone, improve this
         {offset: {x: 0, y: 420}, size: {width: 1080, height: 1080}, displaySize: {width: 540, height: 540}},
         (data) => {
-          CameraRoll.saveToCameraRoll(data)
+          // 저장 로직으 업로드시점으로 이동
+          // CameraRoll.saveToCameraRoll(data)
           this.props.takeContent(ContentType.Image, data)
         },
         (err) => { console.err(err) }
@@ -92,7 +93,7 @@ class CameraScreenController extends Component {
     .then((data) => {
       console.log(data)
       console.tron.log('video capture done')
-      CameraRoll.saveToCameraRoll(data.path)
+      // CameraRoll.saveToCameraRoll(data.path)
       this.props.takeContent(ContentType.Video, data.path)
     })
     .catch(err => {
@@ -238,6 +239,7 @@ class CameraScreenController extends Component {
 
   postContent () {
     this.props.postContent(this.props.contentType, this.props.contentPath, this.props.message)
+    CameraRoll.saveToCameraRoll(this.props.contentPath)
   }
 
   renderView () {

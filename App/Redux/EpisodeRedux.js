@@ -243,8 +243,15 @@ export const otherEpisodesInit = (state: Object) =>
 
 // other episodes object
 // bracket notation is used to make variable as a key name
-export const otherEpisodesObjectAdd = (state: Object, { otherId, otherEpisodes }: Object) =>
-  state.merge({ otherEpisodesObject: {...state.otherEpisodesObject, [otherId]: otherEpisodes} })
+export const otherEpisodesObjectAdd = (state: Object, { otherId, otherEpisodes }: Object) => {
+  if (Object.keys(state.otherEpisodesObject).includes(otherId.toString())) {
+    console.log('해당 에피소드오브젝트 이미 존재')
+    return state.merge({})
+  } else {
+    console.log('해당 에피소드오브젝트 머지 성공')
+    return state.merge({ otherEpisodesObject: {...state.otherEpisodesObject, [otherId]: otherEpisodes} })
+  }
+}
 
 // we're attempting to check posting Episode
 export const userEpisodePost = (state: Object, { token }: Object) =>

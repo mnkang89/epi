@@ -59,6 +59,9 @@ class CommentModal extends Component {
   componentWillReceiveProps (nextProps) {
     if (nextProps.visible) {
       const modalVisible = nextProps.visible
+      console.log('모달비저블하게윌리시브프랍스')
+      console.log(modalVisible)
+      console.log('모달비저블하게윌리시브프랍스')
 
       this.setState({
         modalVisible

@@ -60,7 +60,6 @@ export function * otherEpisodes (api, action) {
     console.log(response)
     const episodes = path(['data', 'items'], response)
 
-    // yield put(EpisodeActions.otherEpisodesSuccess(episodes))
     yield put(EpisodeActions.otherEpisodesObjectAdd(accountId, episodes))
   } else {
     console.log('error')

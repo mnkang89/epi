@@ -17,6 +17,7 @@ import styles from './Styles/FeedScreenStyle'
 import SignupActions from '../Redux/SignupRedux'
 import EpisodeActions from '../Redux/EpisodeRedux'
 import AccountActions from '../Redux/AccountRedux'
+import CommentActions from '../Redux/CommentRedux'
 
 const ITEM_HEIGHT = 447
 
@@ -159,7 +160,9 @@ class ProfileScreen extends Component {
         account={episode.item.account}
         type={'me'}
         // EpisodeDetailContainer만들고 그쪽에서 넘겨주는 로직으로 변경할 예정
-        requestNewEpisode={this.props.requestNewEpisode} />
+        requestNewEpisode={this.props.requestNewEpisode}
+        openComment={this.props.openComment}
+        getComment={this.props.getComment} />
     )
   }
 
@@ -288,7 +291,10 @@ const mapDispatchToProps = (dispatch) => {
 
     openFollow: (followVisible, showType) => dispatch(AccountActions.openFollow(followVisible, showType)),
     getFollowing: (token, id) => dispatch(AccountActions.getFollowing(token, id)),
-    getFollower: (token, id) => dispatch(AccountActions.getFollower(token, id))
+    getFollower: (token, id) => dispatch(AccountActions.getFollower(token, id)),
+
+    openComment: (visible) => dispatch(CommentActions.openComment(visible)),
+    getComment: (token, episodeId, contentId) => dispatch(CommentActions.commentGet(token, episodeId, contentId))
   }
 }
 
