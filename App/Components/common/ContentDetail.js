@@ -36,7 +36,8 @@ class ContentDetailClass extends Component {
     openComment: PropTypes.func,
     getComment: PropTypes.func,
     postLike: PropTypes.func,
-    deleteLike: PropTypes.func
+    deleteLike: PropTypes.func,
+    commentModalHandler: PropTypes.func
   }
 
   constructor (props) {
@@ -102,7 +103,8 @@ class ContentDetailClass extends Component {
     const {token, episodeId} = this.props
     const contentId = this.props.content.id
 
-    this.props.openComment(true)
+    // this.props.openComment(true)
+    this.props.commentModalHandler()
     this.props.getComment(token, episodeId, contentId)
     console.log('onlongpress 끝남')
   }

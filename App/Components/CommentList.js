@@ -85,6 +85,7 @@ class CommentList extends Component {
   }
 
   render () {
+    console.log('염병~')
     return (
       <ScrollView
         refreshControl={

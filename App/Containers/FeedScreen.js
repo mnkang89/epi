@@ -56,7 +56,9 @@ class FeedScreen extends Component {
     this.state = {
       refreshing: false,
       footer: false,
-      scrollsToTop: true
+      scrollsToTop: true,
+//
+      commentModalVisible: false
     }
     this.before
     this.episodeRefs = {}
@@ -108,14 +110,17 @@ class FeedScreen extends Component {
 
   shouldComponentUpdate (nextProps, nextState) {
     // newEpisode콜시에 업뎃안되는 문제가 있음
-    if (this.state.scrollsToTop !== nextState.scrollsToTop) {
+    // if (this.state.scrollsToTop !== nextState.scrollsToTop) {
+    //   return true
+    // }
+    //
+    // if (this.props.episodesRequesting !== nextProps.episodesRequesting) {
+    //   return true
+    // }
+    //
+    if (this.state.commentModalVisible !== nextState.commentModalVisible) {
       return true
     }
-
-    if (this.props.episodesRequesting !== nextProps.episodesRequesting) {
-      return true
-    }
-
     if (_.isEqual(this.props.items, nextProps.items) &&
         !getObjectDiff(this.props, nextProps).includes('newEpisodeRequesting')) {
       console.log('슈드아이템 폴스')
@@ -154,6 +159,13 @@ class FeedScreen extends Component {
   _onPopFromUserProfileScreen () {
     this.setState({
       scrollsToTop: true
+    })
+  }
+
+  _toggleCommentModal () {
+    console.log('스테이트 변경함니다')
+    this.setState({
+      commentModalVisible: !this.state.commentModalVisible
     })
   }
 
@@ -232,6 +244,7 @@ class FeedScreen extends Component {
   // }
 
   render () {
+    console.log(this.state)
     return (
       <View style={styles.mainContainer}>
         <FlatListE
@@ -255,6 +268,8 @@ class FeedScreen extends Component {
           onEndReachedThreshold={0} />
         <View style={{height: 60}} />
         <CommentModalContainer
+          commentModalVisible={this.state.commentModalVisible}
+          commentModalHandler={this._toggleCommentModal.bind(this)}
           screen={'FeedScreen'}
           token={this.props.token}
           pushHandler={this._onPushToUserProfileScreen}
@@ -285,6 +300,7 @@ class FeedScreen extends Component {
         account={episode.item.account}
         // EpisodeDetailContainer만들고 그쪽에서 넘겨주는 로직으로 변경할 예정
         requestNewEpisode={this.props.requestNewEpisode}
+        commentModalHandler={this._toggleCommentModal.bind(this)}
         openComment={this.props.openComment}
         getComment={this.props.getComment} />
     )

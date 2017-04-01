@@ -271,7 +271,8 @@ class EpisodeDetail extends Component {
     const contentId = this.props.episode.contents[this.currentCenterIndex].id
     const token = null
 
-    this.props.openComment(true)
+    // this.props.openComment(true)
+    this.props.commentModalHandler()
     this.props.getComment(token, episodeId, contentId)
   }
 
@@ -435,6 +436,7 @@ class EpisodeDetail extends Component {
         episodeId={episodeId}
         content={content.item}
         // episodeLiked={this.state.liked}
+        commentModalHandler={this.props.commentModalHandler}
         like={this.like.bind(this)}
         dislike={this.dislike.bind(this)} />
     )

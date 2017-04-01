@@ -39,7 +39,8 @@ class SingleEpisodeScreen extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      refreshing: false
+      refreshing: false,
+      commentModalVisible: false
     }
     this.episodeRefs = {}
     this.viewableItemsArray = []
@@ -68,6 +69,9 @@ class SingleEpisodeScreen extends Component {
   }
 
   shouldComponentUpdate (nextProps, nextState) {
+    if (this.state.commentModalVisible !== nextState.commentModalVisible) {
+      return true
+    }
     if (_.isEqual(this.props.items, nextProps.items)) {
       return false
     } else {
@@ -80,6 +84,13 @@ class SingleEpisodeScreen extends Component {
 
     this.setState({refreshing: true})
     this.props.requestSingleEpisode(token, episodeId)
+  }
+
+  _toggleCommentModal () {
+    console.log('스테이트 변경함니다')
+    this.setState({
+      commentModalVisible: !this.state.commentModalVisible
+    })
   }
 
   render () {
@@ -102,6 +113,8 @@ class SingleEpisodeScreen extends Component {
           shouldItemUpdate={this._shouldItemUpdate} />
         <View style={{height: 48.5}} />
         <CommentModalContainer
+          commentModalVisible={this.state.commentModalVisible}
+          commentModalHandler={this._toggleCommentModal.bind(this)}
           screen={this.props.screen}
           token={this.props.token}
           // contentId={this.props.contentId}
@@ -145,6 +158,7 @@ class SingleEpisodeScreen extends Component {
         singleType={this.props.singleType}
         xPosition={xPosition}
         requestNewEpisode={this.props.requestSingleEpisode}
+        commentModalHandler={this._toggleCommentModal.bind(this)}
         openComment={this.props.openComment}
         getComment={this.props.getComment} />
     )

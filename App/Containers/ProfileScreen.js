@@ -41,7 +41,9 @@ class ProfileScreen extends Component {
     super(props)
     this.state = {
       refreshing: false,
-      footer: false
+      footer: false,
+
+      commentModalVisible: false
     }
     this.before
     this.episodeRefs = {}
@@ -73,6 +75,9 @@ class ProfileScreen extends Component {
   }
 
   shouldComponentUpdate (nextProps, nextState) {
+    if (this.state.commentModalVisible !== nextState.commentModalVisible) {
+      return true
+    }
     if (_.isEqual(this.props.items, nextProps.items)) {
       return false
     } else {
@@ -107,6 +112,13 @@ class ProfileScreen extends Component {
     this.props.requestMoreEpisodes(token, accountId, withFollowing, before)
   }
 
+  _toggleCommentModal () {
+    console.log('스테이트 변경함니다')
+    this.setState({
+      commentModalVisible: !this.state.commentModalVisible
+    })
+  }
+
   render () {
     console.log('데이터길이: ' + this.props.items.length)
     return (
@@ -131,7 +143,11 @@ class ProfileScreen extends Component {
           getItemLayout={this._getItemLayout}
           shouldItemUpdate={this._shouldItemUpdate} />
         <View style={{height: 60}} />
-        <CommentModalContainer screen={'ProfileScreen'} token={this.props.token} />
+        <CommentModalContainer
+          commentModalVisible={this.state.commentModalVisible}
+          commentModalHandler={this._toggleCommentModal.bind(this)}
+          screen={'ProfileScreen'}
+          token={this.props.token} />
         <FollowModalContainer token={this.props.token} />
       </View>
     )
@@ -161,6 +177,7 @@ class ProfileScreen extends Component {
         account={episode.item.account}
         type={'me'}
         // EpisodeDetailContainer만들고 그쪽에서 넘겨주는 로직으로 변경할 예정
+        commentModalHandler={this._toggleCommentModal.bind(this)}
         requestNewEpisode={this.props.requestNewEpisode}
         openComment={this.props.openComment}
         getComment={this.props.getComment} />

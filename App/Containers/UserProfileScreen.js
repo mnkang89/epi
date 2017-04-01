@@ -47,7 +47,9 @@ class UserProfileScreen extends Component {
     this.state = {
       refreshing: false,
       footer: false,
-      scrollsToTop: true
+      scrollsToTop: true,
+
+      commentModalVisible: false
     }
     // this.topOfStack = this.props.topOfStack
     this.before
@@ -97,6 +99,9 @@ class UserProfileScreen extends Component {
   }
 
   shouldComponentUpdate (nextProps, nextState) {
+    if (this.state.commentModalVisible !== nextState.commentModalVisible) {
+      return true
+    }
     if (this.state.scrollsToTop !== nextState.scrollsToTop) {
       return true
     }
@@ -161,6 +166,13 @@ class UserProfileScreen extends Component {
     })
   }
 
+  _toggleCommentModal () {
+    console.log('스테이트 변경함니다')
+    this.setState({
+      commentModalVisible: !this.state.commentModalVisible
+    })
+  }
+
   render () {
     return (
       <View style={styles.mainContainer}>
@@ -186,6 +198,8 @@ class UserProfileScreen extends Component {
           onEndReachedThreshold={0} />
         <View style={{height: 60}} />
         <CommentModalContainer
+          commentModalVisible={this.state.commentModalVisible}
+          commentModalHandler={this._toggleCommentModal.bind(this)}
           screen={this.props.screen}
           token={this.props.token}
           pushHandler={this._onPushToUserProfileScreen}
@@ -226,6 +240,7 @@ class UserProfileScreen extends Component {
         type={'other'}
         // EpisodeDetailContainer만들고 그쪽에서 넘겨주는 로직으로 변경할 예정
         // requestNewEpisode={this.props.requestNewEpisode}
+        commentModalHandler={this._toggleCommentModal.bind(this)}
         openComment={this.props.openComment}
         getComment={this.props.getComment} />
     )

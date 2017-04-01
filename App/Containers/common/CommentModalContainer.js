@@ -6,8 +6,8 @@ import CommentActions from '../../Redux/CommentRedux'
 const mapStateToProps = (state) => {
   return {
     contentId: state.comment.contentId,
-    episodeId: state.comment.episodeId,
-    visible: state.comment.visible
+    episodeId: state.comment.episodeId
+    // visible: state.comment.visible
   }
 }
 

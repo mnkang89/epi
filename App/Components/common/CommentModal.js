@@ -57,8 +57,11 @@ class CommentModal extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.visible) {
-      const modalVisible = nextProps.visible
+    // if (nextProps.visible) {
+    //   const modalVisible = nextProps.visible
+    console.log(nextProps)
+    if (nextProps.commentModalVisible) {
+      const modalVisible = nextProps.commentModalVisible
       console.log('모달비저블하게윌리시브프랍스')
       console.log(modalVisible)
       console.log('모달비저블하게윌리시브프랍스')
@@ -104,7 +107,8 @@ class CommentModal extends Component {
         modalVisible: false,
         commentContainerRender: false
       })
-      this.props.resetCommentModal()
+      // this.props.resetCommentModal()
+      this.props.commentModalHandler()
     }, 250)
   }
 
