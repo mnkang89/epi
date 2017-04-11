@@ -4,7 +4,9 @@ import React, { Component, PropTypes } from 'react'
 import {
   View,
   Dimensions,
-  StatusBar
+  StatusBar,
+  Modal as NativeModal,
+  ActivityIndicator
 } from 'react-native'
 
 import { Actions as NavigationActions } from 'react-native-router-flux'
@@ -30,21 +32,30 @@ class CameraScreen extends Component {
     super(props)
     this.state = {
       cameraHandler: new CameraHandler(),
-      type: 'back'
+      type: 'back',
+      loadingModal: false
     }
   }
 
   componentDidUpdate () {
     if (this.props.endScreen) {
       this.props.initializeCameraScreenProps()
-
       this.goToHomeTab()
     }
   }
 
   goToHomeTab () {
+    this.deactiveLoadingModal()
     StatusBar.setHidden(false)
     NavigationActions.pop()
+  }
+
+  activeLoadingModal () {
+    this.setState({loadingModal: true})
+  }
+
+  deactiveLoadingModal () {
+    this.setState({loadingModal: false})
   }
 
   render () {
@@ -59,6 +70,16 @@ class CameraScreen extends Component {
           isOpen
           onClosed={this.goToHomeTab.bind(this)} >
           <View style={{flex: 1, flexDirection: 'column'}}>
+            <NativeModal
+              animationType={'none'}
+              transparent
+              visible={this.state.loadingModal} >
+              <View style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.59)', alignItems: 'center', justifyContent: 'center'}}>
+                <ActivityIndicator
+                  size='large'
+                  color='white' />
+              </View>
+            </NativeModal>
             <View style={{flex: cameraHeightAsFlex}}>
               <CameraComponent type={this.state.type} cameraHandler={this.state.cameraHandler} />
             </View>
