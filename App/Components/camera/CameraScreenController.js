@@ -17,7 +17,10 @@ import EpisodeControllerButton from './EpisodeControllerButton'
 import ProgressBar from './Progress-Bar'
 import ConfirmError from '../common/ConfirmError'
 import ContentType from './ContentTypeEnum'
-import ImageEditor from 'ImageEditor'
+// import ImageEditor from 'ImageEditor'
+import ImageResizer from 'react-native-image-resizer'
+import VideoResizer from './VideoResizer'
+import _ from 'lodash'
 
 class CameraScreenController extends Component {
 
@@ -56,17 +59,72 @@ class CameraScreenController extends Component {
     if (this.props.cameraHandler.getCamera() === null) return
     this.props.cameraHandler.getCamera().capture()
     .then((data) => {
-      ImageEditor.cropImage(
-        data.path,
-        // TODO: this is just for iphone, improve this
-        {offset: {x: 0, y: 420}, size: {width: 1080, height: 1080}, displaySize: {width: 540, height: 540}},
-        (data) => {
-          // 저장 로직으 업로드시점으로 이동
-          // CameraRoll.saveToCameraRoll(data)
-          this.props.takeContent(ContentType.Image, data)
-        },
-        (err) => { console.err(err) }
-      )
+      // 원본
+      // CameraRoll.saveToCameraRoll(data.path)
+      // ImageEditor
+      // ImageEditor.cropImage(
+      //   data.path,
+      //   // TODO: this is just for iphone, improve this
+      //   {offset: {x: 0, y: 420}, size: {width: 2448, height: 3264}, displaySize: {width: 1224, height: 1632}},
+      //   (data) => {
+      //     // 저장 로직을 업로드시점으로 이동
+      //     CameraRoll.saveToCameraRoll(data)
+      //     this.props.takeContent(ContentType.Image, data)
+      //   },
+      //   (err) => { console.err(err) }
+      // )
+      CameraRoll.saveToCameraRoll(data.path)
+      this.props.takeContent(ContentType.Image, data.path)
+
+      // ImageResizer.createResizedImage(data.path, 1224, 1632, 'JPEG', 50)
+      //   .then((resizedImageUri) => {
+      //     console.log('리사이징 성공')
+      //     // CameraRoll.saveToCameraRoll(resizedImageUri)
+      //     this.props.takeContent(ContentType.Image, resizedImageUri)
+      //   }).catch((err) => {
+      //     console.log('리사이징 실패')
+      //     console.log(err)
+      //   })
+
+      // // ImageResizer Quality: 100
+      // ImageResizer.createResizedImage(data.path, 2448, 2448, 'JPEG', 100)
+      //   .then((resizedImageUri) => {
+      //     console.log('리사이징 성공')
+      //     CameraRoll.saveToCameraRoll(resizedImageUri)
+      //   }).catch((err) => {
+      //     console.log('리사이징 실패')
+      //     console.log(err)
+      //   })
+      //
+      // ImageResizer Quality: 80
+      // ImageResizer.createResizedImage(data.path, 1224, 1632, 'JPEG', 70)
+      //   .then((resizedImageUri) => {
+      //     console.log('리사이징 성공')
+      //     CameraRoll.saveToCameraRoll(resizedImageUri)
+      //   }).catch((err) => {
+      //     console.log('리사이징 실패')
+      //     console.log(err)
+      //   })
+      //
+      // // ImageResizer Quality: 40
+      // ImageResizer.createResizedImage(data.path, 2448, 3264, 'JPEG', 50)
+      //   .then((resizedImageUri) => {
+      //     console.log('리사이징 성공')
+      //     CameraRoll.saveToCameraRoll(resizedImageUri)
+      //   }).catch((err) => {
+      //     console.log('리사이징 실패')
+      //     console.log(err)
+      //   })
+      //
+      // // ImageResizer Quality: 20
+      // ImageResizer.createResizedImage(data.path, 720, 720, 'JPEG', 20)
+      //   .then((resizedImageUri) => {
+      //     console.log('리사이징 성공')
+      //     CameraRoll.saveToCameraRoll(resizedImageUri)
+      //   }).catch((err) => {
+      //     console.log('리사이징 실패')
+      //     console.log(err)
+      //   })
     })
     .catch(err => console.error(err))
   }
@@ -93,8 +151,17 @@ class CameraScreenController extends Component {
     .then((data) => {
       console.log(data)
       console.tron.log('video capture done')
-      // CameraRoll.saveToCameraRoll(data.path)
+      CameraRoll.saveToCameraRoll(data.path)
       this.props.takeContent(ContentType.Video, data.path)
+      VideoResizer.createResizedVideo(data.path)
+        .then((resizedVideoUri) => {
+          console.log('리사이징 성공')
+          CameraRoll.saveToCameraRoll(resizedVideoUri)
+        })
+        .catch((err) => {
+          console.log('리사이징 실패')
+          console.log(err)
+        })
     })
     .catch(err => {
       console.tron.log('video capture err')
@@ -238,8 +305,30 @@ class CameraScreenController extends Component {
   }
 
   postContent () {
-    this.props.postContent(this.props.contentType, this.props.contentPath, this.props.message)
-    CameraRoll.saveToCameraRoll(this.props.contentPath)
+    // 이미지 리사이징은 이 함수에서 진행된 후, post된다.
+    this.props.parentThis.activeLoadingModal()
+    if (_.isEqual(this.props.contentType, ContentType.Image)) {
+      ImageResizer.createResizedImage(this.props.contentPath, 1224, 1632, 'JPEG', 50)
+        .then((resizedImageUri) => {
+          console.log('리사이징 성공')
+          this.props.postContent(this.props.contentType, resizedImageUri, this.props.message)
+        }).catch((err) => {
+          console.log('리사이징 실패')
+          console.log(err)
+        })
+    } else if (_.isEqual(this.props.contentType, ContentType.Video)) {
+      VideoResizer.createResizedVideo(this.props.contentPath)
+        .then((resizedVideoUri) => {
+          console.log('리사이징 성공')
+          this.props.postContent(this.props.contentType, resizedVideoUri, this.props.message)
+        })
+        .catch((err) => {
+          console.log('리사이징 실패')
+          console.log(err)
+        })
+    } else {
+      this.props.parentThis.deactiveLoadingModal()
+    }
   }
 
   renderView () {

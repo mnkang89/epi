@@ -169,6 +169,7 @@ class CameraSection extends Component {
               captureMode={Camera.constants.CaptureMode.still}
               captureTarget={Camera.constants.CaptureTarget.disk}
               captureQuality={Camera.constants.CaptureQuality.high}
+              // captureQuality={Camera.constants.CaptureQuality.photo}
               captureAudio={false}
               type={this.props.cameraType}
               defaultOnFocusComponent={false}

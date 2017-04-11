@@ -46,6 +46,7 @@
 		EE45D8221E574E25000668DB /* libRealmReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EE45D8211E574DF8000668DB /* libRealmReact.a */; };
 		EE597A411DDDE8D000BA72E1 /* libAutoGrowTextInput.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EE597A2D1DDDE8B500BA72E1 /* libAutoGrowTextInput.a */; };
 		EE7B86231E222D86005BC920 /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EE7B86221E222D63005BC920 /* libRCTPushNotification.a */; };
+		EE8B49F61E9BB7BE00A9DDB7 /* videoResizer.m in Sources */ = {isa = PBXBuildFile; fileRef = EE8B49F51E9BB7BE00A9DDB7 /* videoResizer.m */; };
 		EED1F2341E27D13100C22EAC /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EED1F2311E27D0F700C22EAC /* libRCTAnimation.a */; };
 		EEEEE0E91DFD401700FE7A77 /* libRCTCameraRoll.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EEEEE0E81DFD400600FE7A77 /* libRCTCameraRoll.a */; };
 /* End PBXBuildFile section */
@@ -368,6 +369,8 @@
 		EE597A281DDDE8B500BA72E1 /* AutoGrowTextInput.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AutoGrowTextInput.xcodeproj; path = "../node_modules/react-native-autogrow-textinput/ios/AutoGrowTextInput.xcodeproj"; sourceTree = "<group>"; };
 		EE7B861C1E222BE9005BC920 /* Episode.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Episode.entitlements; path = Episode/Episode.entitlements; sourceTree = "<group>"; };
 		EE7B861D1E222D63005BC920 /* RCTPushNotification.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTPushNotification.xcodeproj; path = "../node_modules/react-native/Libraries/PushNotificationIOS/RCTPushNotification.xcodeproj"; sourceTree = "<group>"; };
+		EE8B49F41E9BB7BE00A9DDB7 /* videoResizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = videoResizer.h; sourceTree = "<group>"; };
+		EE8B49F51E9BB7BE00A9DDB7 /* videoResizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = videoResizer.m; sourceTree = "<group>"; };
 		EED1F22B1E27D0F700C22EAC /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		EEEEE0E31DFD400500FE7A77 /* RCTCameraRoll.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCameraRoll.xcodeproj; path = "../node_modules/react-native/Libraries/CameraRoll/RCTCameraRoll.xcodeproj"; sourceTree = "<group>"; };
 		F75F0D88671840D59AD5075B /* RealmReact.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RealmReact.xcodeproj; path = "../node_modules/realm/react-native/ios/RealmReact.xcodeproj"; sourceTree = "<group>"; };
@@ -512,6 +515,8 @@
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
+				EE8B49F41E9BB7BE00A9DDB7 /* videoResizer.h */,
+				EE8B49F51E9BB7BE00A9DDB7 /* videoResizer.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB71A68108700A75B9A /* main.m */,
@@ -1252,6 +1257,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				EE8B49F61E9BB7BE00A9DDB7 /* videoResizer.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
