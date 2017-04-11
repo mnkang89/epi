@@ -153,15 +153,15 @@ class CameraScreenController extends Component {
       console.tron.log('video capture done')
       CameraRoll.saveToCameraRoll(data.path)
       this.props.takeContent(ContentType.Video, data.path)
-      VideoResizer.createResizedVideo(data.path)
-        .then((resizedVideoUri) => {
-          console.log('리사이징 성공')
-          CameraRoll.saveToCameraRoll(resizedVideoUri)
-        })
-        .catch((err) => {
-          console.log('리사이징 실패')
-          console.log(err)
-        })
+      // VideoResizer.createResizedVideo(data.path)
+      //   .then((resizedVideoUri) => {
+      //     console.log('리사이징 성공')
+      //     CameraRoll.saveToCameraRoll(resizedVideoUri)
+      //   })
+      //   .catch((err) => {
+      //     console.log('리사이징 실패')
+      //     console.log(err)
+      //   })
     })
     .catch(err => {
       console.tron.log('video capture err')

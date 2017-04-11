@@ -8,6 +8,7 @@
 
 #import "VideoResizer.h"
 #import <AVFoundation/AVFoundation.h>
+#import "SDAVAssetExportSession.h"
 
 @implementation VideoResizer
 
@@ -46,6 +47,73 @@ NSString * generateMovieFilePath(NSString * ext, NSString * outputPath)
     completion(exportSession);
   }];
 }
+
+- (void)compressVideoWithSDAV:(NSURL*)inputURL
+                    outputURL:(NSURL*)outputURL
+                     fullPath:(NSString*)fullPath
+                     callback:(RCTResponseSenderBlock)callback
+{
+  SDAVAssetExportSession *compressionEncoder = [SDAVAssetExportSession.alloc initWithAsset:[AVAsset assetWithURL:inputURL]]; // provide inputVideo Url Here
+  compressionEncoder.outputFileType = AVFileTypeMPEG4;
+  compressionEncoder.outputURL = outputURL; //Provide output video Url here
+  compressionEncoder.videoSettings = @
+  {
+  AVVideoCodecKey: AVVideoCodecH264,
+  AVVideoWidthKey: @720,   //Set your resolution width here
+  AVVideoHeightKey: @1280,  //set your resolution height here
+  AVVideoCompressionPropertiesKey: @
+    {
+    AVVideoAverageBitRateKey: @ 2500000, // Give your bitrate here for lower size give low values
+    AVVideoProfileLevelKey: AVVideoProfileLevelH264High40,
+    },
+  };
+  compressionEncoder.audioSettings = @
+  {
+  AVFormatIDKey: @(kAudioFormatMPEG4AAC),
+  AVNumberOfChannelsKey: @2,
+  AVSampleRateKey: @44100,
+  AVEncoderBitRateKey: @128000,
+  };
+  
+  [compressionEncoder exportAsynchronouslyWithCompletionHandler:^
+   {
+     if (compressionEncoder.status == AVAssetExportSessionStatusCompleted)
+     {
+       NSLog(@"Compression Export Completed Successfully");
+       NSData *originalDataForUpload = [NSData dataWithContentsOfURL:inputURL];
+       NSLog(@"Size of original Video before compression is (bytes):%lu",[originalDataForUpload length]);
+       NSData *newDataForUpload = [NSData dataWithContentsOfURL:outputURL];
+       NSLog(@"Size of new Video after compression is (bytes):%lu",[newDataForUpload length]);
+       
+       callback(@[[NSNull null], fullPath]);
+     }
+     else if (compressionEncoder.status == AVAssetExportSessionStatusCancelled)
+     {
+       NSLog(@"Compression Export Canceled");
+     }
+     else
+     {
+       NSLog(@"Compression Failed");
+       NSLog(@"Video FALIED: %@",compressionEncoder.error);
+     }
+   }];
+  
+}
+
+RCT_EXPORT_METHOD(createResizedVideoWithSDAV:(NSString *)path
+                  outputPath:(NSString *)outputPath
+                  callback:(RCTResponseSenderBlock)callback)
+{
+  NSString* fullPath = generateMovieFilePath(@"mov", outputPath);
+  NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:path];
+  NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:fullPath];
+  
+  NSLog(@"Input: %@", path);
+  NSLog(@"Output: %@", fullPath);
+  NSLog(@"Video resize started!");
+  [self compressVideoWithSDAV:videoURL outputURL:outputURL fullPath:fullPath callback:callback];
+}
+
 
 RCT_EXPORT_METHOD(createResizedVideo:(NSString *)path
                   outputPath:(NSString *)outputPath

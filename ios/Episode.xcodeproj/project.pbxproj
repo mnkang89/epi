@@ -43,6 +43,7 @@
 		D0DCD4B6714C4F24B5EA0523 /* libRCTCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1222B62DEB9241F49BA3B278 /* libRCTCamera.a */; };
 		D6EF1174655C415F8DA9A153 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CC157AF7C96E4C23A0A224E1 /* SimpleLineIcons.ttf */; };
 		E59E032AADE84A44B7DF36E1 /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4DA47E7992F43A3978EFDBA /* libRNDeviceInfo.a */; };
+		EE214C991E9CF609005120CB /* SDAVAssetExportSession.m in Sources */ = {isa = PBXBuildFile; fileRef = EE214C981E9CF609005120CB /* SDAVAssetExportSession.m */; };
 		EE45D8221E574E25000668DB /* libRealmReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EE45D8211E574DF8000668DB /* libRealmReact.a */; };
 		EE597A411DDDE8D000BA72E1 /* libAutoGrowTextInput.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EE597A2D1DDDE8B500BA72E1 /* libAutoGrowTextInput.a */; };
 		EE7B86231E222D86005BC920 /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EE7B86221E222D63005BC920 /* libRCTPushNotification.a */; };
@@ -50,6 +51,17 @@
 		EED1F2341E27D13100C22EAC /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EED1F2311E27D0F700C22EAC /* libRCTAnimation.a */; };
 		EEEEE0E91DFD401700FE7A77 /* libRCTCameraRoll.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EEEEE0E81DFD400600FE7A77 /* libRCTCameraRoll.a */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXBuildRule section */
+		EE214C921E9CF16C005120CB /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+			);
+		};
+/* End PBXBuildRule section */
 
 /* Begin PBXContainerItemProxy section */
 		00C302AB1ABCB8CE00DB3ED1 /* PBXContainerItemProxy */ = {
@@ -365,6 +377,8 @@
 		EE0450EE1DD1649500138F4A /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialIcons.ttf; sourceTree = "<group>"; };
 		EE0450EF1DD1649500138F4A /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Octicons.ttf; sourceTree = "<group>"; };
 		EE0450F01DD1649500138F4A /* Zocial.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Zocial.ttf; sourceTree = "<group>"; };
+		EE214C941E9CF5D2005120CB /* SDAVAssetExportSession.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDAVAssetExportSession.h; sourceTree = "<group>"; };
+		EE214C981E9CF609005120CB /* SDAVAssetExportSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDAVAssetExportSession.m; sourceTree = "<group>"; };
 		EE45D81C1E574DF8000668DB /* RealmReact.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RealmReact.xcodeproj; path = "../node_modules/realm/react-native/ios/RealmReact.xcodeproj"; sourceTree = "<group>"; };
 		EE597A281DDDE8B500BA72E1 /* AutoGrowTextInput.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AutoGrowTextInput.xcodeproj; path = "../node_modules/react-native-autogrow-textinput/ios/AutoGrowTextInput.xcodeproj"; sourceTree = "<group>"; };
 		EE7B861C1E222BE9005BC920 /* Episode.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Episode.entitlements; path = Episode/Episode.entitlements; sourceTree = "<group>"; };
@@ -511,12 +525,11 @@
 		13B07FAE1A68108700A75B9A /* Episode */ = {
 			isa = PBXGroup;
 			children = (
+				EE214C911E9CEF6E005120CB /* VideoResizer */,
 				EE7B861C1E222BE9005BC920 /* Episode.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
-				EE8B49F41E9BB7BE00A9DDB7 /* videoResizer.h */,
-				EE8B49F51E9BB7BE00A9DDB7 /* videoResizer.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB71A68108700A75B9A /* main.m */,
@@ -646,6 +659,17 @@
 			);
 			name = Fonts;
 			path = ../../../Desktop/Fonts;
+			sourceTree = "<group>";
+		};
+		EE214C911E9CEF6E005120CB /* VideoResizer */ = {
+			isa = PBXGroup;
+			children = (
+				EE8B49F41E9BB7BE00A9DDB7 /* videoResizer.h */,
+				EE8B49F51E9BB7BE00A9DDB7 /* videoResizer.m */,
+				EE214C941E9CF5D2005120CB /* SDAVAssetExportSession.h */,
+				EE214C981E9CF609005120CB /* SDAVAssetExportSession.m */,
+			);
+			name = VideoResizer;
 			sourceTree = "<group>";
 		};
 		EE45D7F61E574CD4000668DB /* Products */ = {
@@ -794,6 +818,7 @@
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 			);
 			buildRules = (
+				EE214C921E9CF16C005120CB /* PBXBuildRule */,
 			);
 			dependencies = (
 			);
@@ -1259,6 +1284,7 @@
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				EE8B49F61E9BB7BE00A9DDB7 /* videoResizer.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				EE214C991E9CF609005120CB /* SDAVAssetExportSession.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1327,7 +1353,7 @@
 				DEVELOPMENT_TEAM = P8DVN3592K;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
+					"$(inherited)/**",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../node_modules/react-native/React/**",
 					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",
@@ -1373,7 +1399,7 @@
 				DEVELOPMENT_TEAM = P8DVN3592K;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
+					"$(inherited)/**",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../node_modules/react-native/React/**",
 					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",

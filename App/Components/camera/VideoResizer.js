@@ -5,7 +5,7 @@ import {
 export default {
   createResizedVideo: (path, outputPath) => {
     return new Promise((resolve, reject) => {
-      NativeModules.VideoResizer.createResizedVideo(path, outputPath, (err, resizedPath) => {
+      NativeModules.VideoResizer.createResizedVideoWithSDAV(path, outputPath, (err, resizedPath) => {
         if (err) {
           return reject(err)
         }
