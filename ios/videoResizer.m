@@ -60,10 +60,10 @@ NSString * generateMovieFilePath(NSString * ext, NSString * outputPath)
   {
   AVVideoCodecKey: AVVideoCodecH264,
   AVVideoWidthKey: @720,   //Set your resolution width here
-  AVVideoHeightKey: @1280,  //set your resolution height here
+  AVVideoHeightKey:@1280,  //set your resolution height here
   AVVideoCompressionPropertiesKey: @
     {
-    AVVideoAverageBitRateKey: @ 2500000, // Give your bitrate here for lower size give low values
+    AVVideoAverageBitRateKey: @2000000, // Give your bitrate here for lower size give low values
     AVVideoProfileLevelKey: AVVideoProfileLevelH264High40,
     },
   };

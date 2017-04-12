@@ -10,6 +10,7 @@ import styles from '../../Containers/Styles/FeedScreenStyle'
 // import { Actions as NavigationActions } from 'react-native-router-flux'
 // import CachableImage from '../../Common/CachableImage'
 import { getAccountId } from '../../Services/Auth'
+import ImageResizer from 'react-native-image-resizer'
 
 class ProfileInfo extends Component {
 
@@ -74,10 +75,17 @@ class ProfileInfo extends Component {
             { },
             (data) => {
               console.log('사진선택')
-              this.setState({
-                photoSource: data
-              })
-              this.props.requestProfileImage(data, token, accountId)
+              ImageResizer.createResizedImage(data, 150, 150, 'JPEG', 100)
+                .then((resizedImageUri) => {
+                  console.log('리사이징 성공')
+                  this.setState({
+                    photoSource: resizedImageUri
+                  })
+                  this.props.requestProfileImage(resizedImageUri, token, accountId)
+                }).catch((err) => {
+                  console.log('리사이징 실패')
+                  console.log(err)
+                })
             },
             () => {
               console.log('에러')

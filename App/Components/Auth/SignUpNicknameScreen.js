@@ -9,6 +9,7 @@ import {
   ImagePickerIOS
 } from 'react-native'
 import Permissions from 'react-native-permissions'
+import ImageResizer from 'react-native-image-resizer'
 
 import { Images } from '../../Themes'
 import ConfirmError from '../common/ConfirmError'
@@ -129,11 +130,18 @@ class SignUpNicknameScreen extends Component {
           ImagePickerIOS.openSelectDialog(
             { },
             (data) => {
+              ImageResizer.createResizedImage(data, 150, 150, 'JPEG', 100)
+                .then((resizedImageUri) => {
+                  console.log('리사이징 성공')
+                  this.setState({
+                    photoFlag: true,
+                    photoSource: resizedImageUri
+                  })
+                }).catch((err) => {
+                  console.log('리사이징 실패')
+                  console.log(err)
+                })
               console.log('사진선택')
-              this.setState({
-                photoFlag: true,
-                photoSource: data
-              })
             },
             () => {
               console.log('에러')

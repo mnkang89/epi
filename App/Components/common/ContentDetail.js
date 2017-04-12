@@ -8,12 +8,12 @@ import {
  } from 'react-native'
 import * as Animatable from 'react-native-animatable'
 
-// import CachableImage from '../../Common/CachableImage'
-// import CachableVideo from '../../Common/CachableVideo'
+import CachableImage from '../../Common/CachableImage'
+import CachableVideo from '../../Common/CachableVideo'
 import { Images } from '../../Themes'
 // import { Images, Videos } from '../../Themes'
 import { getRealm } from '../../Services/RealmFactory'
-import Video from 'react-native-video'
+// import Video from 'react-native-video'
 
 const realm = getRealm()
 const windowSize = Dimensions.get('window')
@@ -220,7 +220,7 @@ class ContentDetailClass extends Component {
             onPress={this.onDoublePress.bind(this)}
             onLongPress={this.onLongPress.bind(this)} >
             <View>
-              <Image
+              <CachableImage
                 imageRef={this.props.playerRef}
                 style={{
                   alignItems: 'center',
@@ -247,7 +247,7 @@ class ContentDetailClass extends Component {
                     {message}
                   </Text>
                 </View>
-              </Image>
+              </CachableImage>
             </View>
           </TouchableWithoutFeedback>
         </View>
@@ -261,7 +261,7 @@ class ContentDetailClass extends Component {
             onPress={this.onDoublePress.bind(this)}
             onLongPress={this.onLongPress.bind(this)} >
             <View style={{height: windowSize.width - 30, width: windowSize.width - 30}}>
-              <Video
+              <CachableVideo
                 source={{uri: content.path}}   // Can be a URL or a local file.
                 // source={Videos.ragu_8}
                 muted
