@@ -17,6 +17,7 @@ import CameraHandler from '../Components/camera/CameraHandler'
 import { connect } from 'react-redux'
 import CameraScreenActions from '../Redux/CameraScreenRedux'
 import EpisodeActions from '../Redux/EpisodeRedux'
+import Permissions from 'react-native-permissions'
 
 const { height, width } = Dimensions.get('window')
 const cameraHeightAsFlex = Math.ceil(width / height * 100)
@@ -44,6 +45,25 @@ class CameraScreen extends Component {
     }
   }
 
+  cameraPermissionCheck () {
+    Permissions.getPermissionStatus('camera')
+    .then(response => {
+      if (response === 'undetermined') {
+        Permissions.requestPermission('camera').then(response => {
+          if (response === 'authorized') {
+            this.props.setPermission(true)
+          } else {
+            this.props.setPermission(false)
+          }
+        })
+      } else if (response === 'denied') {
+        this.props.setPermission(false)
+      } else {
+        this.props.setPermission(true)
+      }
+    })
+  }
+
   goToHomeTab () {
     this.deactiveLoadingModal()
     StatusBar.setHidden(false)
@@ -68,6 +88,7 @@ class CameraScreen extends Component {
           backdrop={false}
           swipeThreshold={100}
           isOpen
+          onOpened={this.cameraPermissionCheck.bind(this)}
           onClosed={this.goToHomeTab.bind(this)} >
           <View style={{flex: 1, flexDirection: 'column'}}>
             <NativeModal
@@ -106,7 +127,9 @@ const mapStateToProps = (state) => {
 const mapStateToDispatch = (dispatch) => {
   return ({
     initializeCameraScreenProps: () => dispatch(CameraScreenActions.initialize()),
-    requestUserEpisodes: (token, accountId, withFollowing) => dispatch(EpisodeActions.userEpisodesRequest(token, accountId, withFollowing))
+    requestUserEpisodes: (token, accountId, withFollowing) => dispatch(EpisodeActions.userEpisodesRequest(token, accountId, withFollowing)),
+
+    setPermission: (state) => dispatch(CameraScreenActions.setPermission(state))
   })
 }
 

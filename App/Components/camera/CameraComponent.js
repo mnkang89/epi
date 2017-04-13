@@ -38,22 +38,22 @@ class CameraSection extends Component {
   }
 
   componentDidMount () {
-    Permissions.getPermissionStatus('camera')
-    .then(response => {
-      if (response === 'undetermined') {
-        Permissions.requestPermission('camera').then(response => {
-          if (response === 'authorized') {
-            this.props.setPermission(true)
-          } else {
-            this.props.setPermission(false)
-          }
-        })
-      } else if (response === 'denied') {
-        this.props.setPermission(false)
-      } else {
-        this.props.setPermission(true)
-      }
-    })
+    // Permissions.getPermissionStatus('camera')
+    // .then(response => {
+    //   if (response === 'undetermined') {
+    //     Permissions.requestPermission('camera').then(response => {
+    //       if (response === 'authorized') {
+    //         this.props.setPermission(true)
+    //       } else {
+    //         this.props.setPermission(false)
+    //       }
+    //     })
+    //   } else if (response === 'denied') {
+    //     this.props.setPermission(false)
+    //   } else {
+    //     this.props.setPermission(true)
+    //   }
+    // })
   }
 
   renderMessage () {
@@ -163,6 +163,9 @@ class CameraSection extends Component {
             {/* <View style={{position: 'absolute', marginTop: 30, marginLeft: 10, height: this.state.componentWidth, width: this.state.componentWidth, zIndex: 1}} >
               <EpisodeControllerButton />
             </View> */}
+            <View style={{position: 'absolute', marginTop: 8.5, alignItems: 'center', height: this.state.componentWidth, width: this.state.componentWidth, zIndex: 1}} >
+              <View style={{width: 36, height: 4, borderRadius: 2.5, backgroundColor: 'rgba(255, 255, 255, 0.5)'}} />
+            </View>
             <Camera
               ref={(cam) => { this.props.cameraHandler.setCamera(cam) }}
               style={{ position: 'absolute', height: this.state.componentWidth, width: this.state.componentWidth }}
