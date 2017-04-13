@@ -217,7 +217,7 @@ class VirtualizedList_e extends React.PureComponent {
       nextProps: {item: Item, index: number},
     ) => true,
     updateCellsBatchingPeriod: 50,
-    viewablePercentThreshold: 60,
+    viewablePercentThreshold: 70,
     windowSize: 3 // multiples of length
   };
 

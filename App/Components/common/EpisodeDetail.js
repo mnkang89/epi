@@ -140,7 +140,7 @@ class EpisodeDetail extends Component {
       this.isPlayVideo = true
       setTimeout(() => {
         if (this.isPlayVideo) { this.contentRefs[this.currentCenterIndex].getWrappedInstance()._root._component.playVideo() }
-      }, 200)
+      }, 400)
     }
   }
 
