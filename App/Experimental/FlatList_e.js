@@ -111,6 +111,8 @@ type OptionalProps = {
     prevProps: {item: Item, index: number},
     nextProps: {item: Item, index: number}
   ) => boolean,
+  initialNumToRender: number,
+  windowSize: number, // units of visible length
 };
 type Props = RequiredProps & OptionalProps; // plus props from the underlying implementation
 

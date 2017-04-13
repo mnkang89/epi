@@ -218,7 +218,7 @@ class VirtualizedList_e extends React.PureComponent {
     ) => true,
     updateCellsBatchingPeriod: 50,
     viewablePercentThreshold: 60,
-    windowSize: 5, // multiples of length
+    windowSize: 3 // multiples of length
   };
 
   state = {

@@ -58,6 +58,7 @@ class EpisodeDetail extends Component {
     this.lastContentOffset
     this.dragStartingOffset
     this.dragEndingOffset
+    this.isPlayVideo = false
   }
 
   componentDidMount () {
@@ -121,6 +122,7 @@ class EpisodeDetail extends Component {
   }
 
   stopEpisodeVideo = () => {
+    this.isPlayVideo = false
     for (let i = 0; i < this.state.contentTypeArray.length; i++) {
       if (this.state.contentTypeArray[i] === 'Video' &&
           // undefined일 경우, 아직 contentRefs오브젝트에 추가되지 않은, 즉 아직 렌더링 되지 않은 컨텐츠이다.
@@ -134,7 +136,11 @@ class EpisodeDetail extends Component {
 
   playEpisodeVideo = () => {
     if (this.state.contentTypeArray[this.currentCenterIndex] === 'Video') {
-      this.contentRefs[this.currentCenterIndex].getWrappedInstance()._root._component.playVideo()
+      // this.contentRefs[this.currentCenterIndex].getWrappedInstance()._root._component.playVideo()
+      this.isPlayVideo = true
+      setTimeout(() => {
+        if (this.isPlayVideo) { this.contentRefs[this.currentCenterIndex].getWrappedInstance()._root._component.playVideo() }
+      }, 200)
     }
   }
 
@@ -368,6 +374,9 @@ class EpisodeDetail extends Component {
           </View>
         </View>
         <FlatListE
+          debug
+          initialNumToRender={1}
+          windowSize={3}
           ref={this._captureRef}
           scrollsToTop={false}
           keyExtractor={(item, index) => index}
