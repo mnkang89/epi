@@ -1,7 +1,7 @@
 import { put, call } from 'redux-saga/effects'
 import { path } from 'ramda'
 import AccountActions from '../Redux/AccountRedux'
-import { getToken } from '../Services/Auth'
+import { getToken, getAccountId } from '../Services/Auth'
 import CameraScreenActions from '../Redux/CameraScreenRedux'
 
 // attempts to get account
@@ -134,6 +134,14 @@ export function * getFollowing (api, action) {
   const response = yield call(api.getFollowing, token, id)
   const follows = path(['data', 'accounts'], response)
 
+  if (id === getAccountId()) {
+    for (let i = 0; i < follows.length; i++) {
+      if (follows[i].id === getAccountId()) {
+        follows.splice(i, 1)
+      }
+    }
+  }
+
   // dispatch successful email checking
   if (response.ok) {
     console.log('ok')
@@ -156,6 +164,13 @@ export function * getFollower (api, action) {
   const response = yield call(api.getFollower, token, id)
   const follows = path(['data', 'accounts'], response)
 
+  if (id === getAccountId()) {
+    for (let i = 0; i < follows.length; i++) {
+      if (follows[i].id === getAccountId()) {
+        follows.splice(i, 1)
+      }
+    }
+  }
   // dispatch successful email checking
   if (response.ok) {
     console.log('ok')
