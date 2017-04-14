@@ -37,6 +37,7 @@ class ExploreScreen extends Component {
       footer: false
     }
     this.before
+    this.profileModifiedFlag = false
   }
 
   componentDidMount () {
@@ -81,6 +82,11 @@ class ExploreScreen extends Component {
   }
 
   shouldComponentUpdate (nextProps, nextState) {
+    if (this.props.profileModified !== nextProps.profileModified) {
+      this.profileModifiedFlag = true
+      return true
+    }
+
     if (_.isEqual(this.props.items, nextProps.items)) {
       return false
     } else {
@@ -109,7 +115,7 @@ class ExploreScreen extends Component {
   }
 
   render () {
-    console.log('데이터길이: ' + this.props.items.length)
+    console.log('프사업뎃')
     return (
       <View style={styles.mainContainer}>
         <FlatListE
@@ -129,7 +135,7 @@ class ExploreScreen extends Component {
           // onViewableItemsChanged={this._onViewableItemsChanged}
           onEndReached={this._onEndReached.bind(this)}
           onEndReachedThreshold={0}
-          shouldItemUpdate={this._shouldItemUpdate} />
+          shouldItemUpdate={this._shouldItemUpdate.bind(this)} />
         <View style={{height: 60}} />
       </View>
     )
@@ -184,12 +190,18 @@ class ExploreScreen extends Component {
   }
 
   _shouldItemUpdate (prev, next) {
+    if (this.profileModifiedFlag) {
+      this.profileModifiedFlag = false
+      return true
+    }
     return prev.item !== next.item
   }
 }
 
 const mapStateToProps = (state) => {
   return {
+    profileModified: state.signup.modified,
+
     token: state.token.token,
     items: state.feed.bestFeeds,
 

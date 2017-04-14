@@ -154,10 +154,13 @@ class ExploreDetail extends Component {
   }
 
   renderProfileImage () {
+    const randomTime = new Date().getTime()
+    const uri = `${this.props.account.profileImagePath}?random_number=${randomTime}`
+
     if (this.props.account.profileImagePath) {
-      return (<CachableImage
+      return (<Image
         style={styles.imageStyle}
-        source={{uri: this.props.account.profileImagePath}} />
+        source={{uri: uri}} />
       )
     } else {
       return (<Image

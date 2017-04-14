@@ -2,7 +2,10 @@ import { put, call } from 'redux-saga/effects'
 import { path } from 'ramda'
 import SignupActions from '../Redux/SignupRedux'
 import TokenActions from '../Redux/TokenRedux'
-import { setToken } from '../Services/Auth'
+import FeedActions from '../Redux/FeedRedux'
+import EpisodeActions from '../Redux/EpisodeRedux'
+import NotiActions from '../Redux/NotiRedux'
+import { setToken, getToken, getAccountId } from '../Services/Auth'
 
 let validateEmail = (email) => {
   // const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -117,6 +120,30 @@ export function * profile (api, action) {
     if (response.ok) {
       console.log(response)
       yield put(SignupActions.profileSuccess(photoSource))
+    } else {
+      console.log(response)
+      yield put(SignupActions.profileFailure('UPLOAD_FAIL'))
+    }
+  }
+}
+
+export function * profileModification (api, action) {
+  const { photoSource, token, accountId } = action
+
+  if (photoSource === '') {
+    // dispatch failure
+    yield put(SignupActions.profileFailure('NO_PHOTO'))
+  } else {
+    const response = yield call(api.requestPhoto, photoSource, token, accountId)
+
+    // dispatch successful profile request
+    if (response.ok) {
+      console.log(response)
+      yield put(SignupActions.profileSuccess(photoSource))
+      // yield put(EpisodeActions.userEpisodesWithFalseRequest(getToken(), getAccountId(), false))
+      // yield put(EpisodeActions.userEpisodesRequest(getToken(), getAccountId(), true))
+      // yield put(FeedActions.bestFeedsRequest(getToken()))
+      // yield put(NotiActions.notiesRequest(getToken()))
     } else {
       console.log(response)
       yield put(SignupActions.profileFailure('UPLOAD_FAIL'))

@@ -22,6 +22,8 @@ const { Types, Creators } = createActions({
   profileSuccess: ['photoSource'],
   profileFailure: ['photoerror'],
 
+  profileModification: ['photoSource', 'token', 'accountId'],
+
   signupRequest: ['email', 'password'],
   signupSuccess: ['email'],
   signupFailure: ['error']
@@ -41,6 +43,7 @@ export const INITIAL_STATE = Immutable({
   checking: false,
   attempting: false,
   photoAttempting: false,
+  modified: false,
   error: null,
   attemptingerror: null,
   photoerror: null
@@ -125,7 +128,8 @@ export const profileSuccess = (state: Object, { photoSource }: Object) =>
   state.merge({
     photoAttempting: false,
     photoerror: null,
-    photoSource
+    photoSource,
+    modified: !state.modified
   })
 
 // Invalid profile
@@ -134,6 +138,12 @@ export const profileFailure = (state: Object, { photoerror }: Object) =>
     photoAttempting: false,
     photoerror
   })
+
+export const profileModification = (state: Object, { photoSource, token, accountId }: Object) =>
+  state.merge({
+    photoAttempting: true
+  })
+
 // we're attempting to check signup
 export const request = (state: Object, { email, password }: Object) =>
   state.merge({ attempting: true, email, password })
@@ -170,6 +180,8 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.PROFILE_REQUEST]: profile,
   [Types.PROFILE_SUCCESS]: profileSuccess,
   [Types.PROFILE_FAILURE]: profileFailure,
+
+  [Types.PROFILE_MODIFICATION]: profileModification,
 
   [Types.SIGNUP_REQUEST]: request,
   [Types.SIGNUP_SUCCESS]: success,

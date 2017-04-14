@@ -283,8 +283,9 @@ class EpisodeDetail extends Component {
   }
 
   renderProfileImage () {
-    let uri = this.props.account.profileImagePath
-    // let uri = 'https://facebook.github.io/react/img/logo_og.png'
+    const randomTime = new Date().getTime()
+    const uri = `${this.props.account.profileImagePath}?random_number=${randomTime}`
+
     if (this.props.account.profileImagePath) {
       return (
         <Image

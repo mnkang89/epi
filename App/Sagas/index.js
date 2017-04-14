@@ -17,7 +17,7 @@ import { CameraScreenTypes } from '../Redux/CameraScreenRedux'
 /* ------------- Sagas ------------- */
 // episode
 import { login } from './LoginSagas'
-import { email, password, nickname, profile, signup } from './SignupSagas'
+import { email, password, nickname, profile, profileModification, signup } from './SignupSagas'
 import { account, otherInfo, getActiveUserEpisode, postFollow, deleteFollow, getFollowing, getFollower } from './AccountSagas'
 import {
   userEpisodes, userEpisodesWithFalse, otherEpisodes, postEpisode, putEpisode, singleEpisode, newEpisode,
@@ -50,6 +50,8 @@ export default function * root () {
     takeLatest(SignupTypes.NICKNAME_CHECK, nickname, api),
     // profile
     takeLatest(SignupTypes.PROFILE_REQUEST, profile, api),
+    // profileModification
+    takeLatest(SignupTypes.PROFILE_MODIFICATION, profileModification, api),
     // signup
     takeLatest(SignupTypes.SIGNUP_REQUEST, signup, api),
 

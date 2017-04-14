@@ -42,6 +42,8 @@ class NotiScreen extends Component {
     this.state = {
       refreshing: false
     }
+
+    this.profileModifiedFlag = false
   }
 
   componentDidMount () {
@@ -72,6 +74,11 @@ class NotiScreen extends Component {
   }
 
   shouldComponentUpdate (nextProps, nextState) {
+    if (this.props.profileModified !== nextProps.profileModified) {
+      this.profileModifiedFlag = true
+      return true
+    }
+
     if (_.isEqual(this.props.noties, nextProps.noties)) {
       return false
     } else {
@@ -129,7 +136,7 @@ class NotiScreen extends Component {
             legacyImplementation={false}
             onRefresh={this._onRefresh.bind(this)}
             refreshing={this.state.refreshing}
-            shouldItemUpdate={this._shouldItemUpdate} />
+            shouldItemUpdate={this._shouldItemUpdate.bind(this)} />
         )
       }
     }
@@ -155,10 +162,15 @@ class NotiScreen extends Component {
   }
 
   _shouldItemUpdate (prev, next) {
+    if (this.profileModifiedFlag) {
+      this.profileModifiedFlag = false
+      return true
+    }
     return prev.item !== next.item
   }
 
   render () {
+    console.log('프사업뎃')
     const { noties } = this.props
 
     return (
@@ -174,6 +186,8 @@ class NotiScreen extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    profileModified: state.signup.modified,
+
     token: state.token.token,
     myAccount: state.account,
 

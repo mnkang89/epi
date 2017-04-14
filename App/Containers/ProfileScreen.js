@@ -48,6 +48,7 @@ class ProfileScreen extends Component {
     this.before
     this.episodeRefs = {}
     this.viewableItemsArray = []
+    this.profileModifiedFlag = false
   }
 
   componentWillReceiveProps (nextProps) {
@@ -75,6 +76,11 @@ class ProfileScreen extends Component {
   }
 
   shouldComponentUpdate (nextProps, nextState) {
+    if (this.props.profileModified !== nextProps.profileModified) {
+      this.profileModifiedFlag = true
+      return true
+    }
+
     if (this.state.commentModalVisible !== nextState.commentModalVisible) {
       return true
     }
@@ -120,7 +126,7 @@ class ProfileScreen extends Component {
   }
 
   render () {
-    console.log('데이터길이: ' + this.props.items.length)
+    console.log('프사업뎃')
     return (
       <View style={styles.mainContainer}>
         <FlatListE
@@ -141,7 +147,7 @@ class ProfileScreen extends Component {
           onEndReached={this._onEndReached.bind(this)}
           onEndReachedThreshold={0}
           getItemLayout={this._getItemLayout}
-          shouldItemUpdate={this._shouldItemUpdate} />
+          shouldItemUpdate={this._shouldItemUpdate.bind(this)} />
         <View style={{height: 60}} />
         <CommentModalContainer
           commentModalVisible={this.state.commentModalVisible}
@@ -225,7 +231,11 @@ class ProfileScreen extends Component {
   }
 
   _shouldItemUpdate (prev, next) {
-    console.log('shouldItemUpdate in userProfileScreen.js')
+    // console.log('shouldItemUpdate in userProfileScreen.js')
+    if (this.profileModifiedFlag) {
+      this.profileModifiedFlag = false
+      return true
+    }
     return prev.item !== next.item
   }
 
@@ -280,6 +290,8 @@ class ProfileScreen extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    profileModified: state.signup.modified,
+
     token: state.token.token,
     accountId: state.token.id,
 
@@ -299,7 +311,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     requestInfo: (token, accountId) => dispatch(AccountActions.infoRequest(token, accountId)),
-    requestProfileImage: (photoSource, token, accountId) => dispatch(SignupActions.profileRequest(photoSource, token, accountId)),
+    requestProfileImage: (photoSource, token, accountId) => dispatch(SignupActions.profileModification(photoSource, token, accountId)),
     requestUserEpisodesWithFalse: (token, accountId, withFollowing) => dispatch(EpisodeActions.userEpisodesWithFalseRequest(token, accountId, withFollowing)),
     requestNewEpisode: (token, episodeId) => dispatch(EpisodeActions.newEpisodeWithFalseRequest(token, episodeId)),
     requestMoreEpisodes: (token, accountId, withFollowing, before) => dispatch(EpisodeActions.moreEpisodesRequest(token, accountId, withFollowing, before)),

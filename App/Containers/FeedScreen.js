@@ -1,13 +1,13 @@
 import React, { Component, PropTypes } from 'react'
 import {
   View,
-  ActivityIndicator
+  ActivityIndicator,
   // Dimensions,
   // ListView,
   // ScrollView,
   // RefreshControl,
-  // TouchableOpacity,
-  // Text
+  TouchableOpacity,
+  Text
 } from 'react-native'
 import { connect } from 'react-redux'
 import _ from 'lodash'
@@ -19,6 +19,8 @@ import FlatListE from '../Experimental/FlatList_e'
 import EpisodeDetail from '../Components/common/EpisodeDetail'
 import CommentModalContainer from './common/CommentModalContainer'
 import styles from './Styles/FeedScreenStyle'
+
+import ProgressBar from '../Components/camera/newProgressBar'
 
 import AccountActions from '../Redux/AccountRedux'
 import EpisodeActions from '../Redux/EpisodeRedux'
@@ -58,13 +60,15 @@ class FeedScreen extends Component {
       footer: false,
       scrollsToTop: true,
 //
-      commentModalVisible: false
+      commentModalVisible: false,
+      leftTime: 5
     }
     this.before
     this.episodeRefs = {}
     this.viewableItemsArray = []
     this._onPushToUserProfileScreen = this._onPushToUserProfileScreen.bind(this)
     this._onPopFromUserProfileScreen = this._onPopFromUserProfileScreen.bind(this)
+    this.profileModifiedFlag = false
   }
 
   componentWillMount () {
@@ -109,6 +113,10 @@ class FeedScreen extends Component {
   }
 
   shouldComponentUpdate (nextProps, nextState) {
+    if (this.props.profileModified !== nextProps.profileModified) {
+      this.profileModifiedFlag = true
+      return true
+    }
     // newEpisode콜시에 업뎃안되는 문제가 있음
     if (this.state.scrollsToTop !== nextState.scrollsToTop) {
       return true
@@ -129,7 +137,6 @@ class FeedScreen extends Component {
       console.log('슈드아이템 트루')
       return true
     }
-    // return true
   }
 
   _onRefresh () {
@@ -170,19 +177,30 @@ class FeedScreen extends Component {
     })
   }
 
-  // takeVideo () {
-  //   console.log('ih')
+  // onButton () {
+  //   this.progressBarName.start()
   //   this.interval = setInterval(() => {
   //     if (this.state.leftTime <= 0) {
-  //       console.tron.log('leftTime done')
+  //       // 촬영멈춰로직
+  //
+  //       // 프로그래스바 초기화 로직
+  //       this.progressBarName.init()
+  //       this.setState({leftTime: 5})
+  //       clearInterval(this.interval)
+  //       // 타이머 감춰 로직
   //     } else {
-  //       console.log('변화중')
   //       this.setState({
-  //         leftTime: this.state.leftTime - (1 / 10),
-  //         progress: this.state.progress + 3750 * 2 / 10
+  //         leftTime: this.state.leftTime - 1
   //       })
   //     }
-  //   }, (1000 / 10))
+  //   }, 1000)
+  // }
+  //
+  // onStopButton () {
+  //   // this.progressBarName.stop()
+  //   this.progressBarName.init()
+  //   this.setState({leftTime: 5})
+  //   clearInterval(this.interval)
   // }
 
   // renderListView (dataSource) {
@@ -260,7 +278,7 @@ class FeedScreen extends Component {
   // }
 
   render () {
-    console.log(this.state)
+    console.log('프사업뎃')
     return (
       <View style={styles.mainContainer}>
         <FlatListE
@@ -281,7 +299,7 @@ class FeedScreen extends Component {
           onRefresh={this._onRefresh.bind(this)}
           refreshing={this.state.refreshing}
           onViewableItemsChanged={this._onViewableItemsChanged}
-          shouldItemUpdate={this._shouldItemUpdate}
+          shouldItemUpdate={this._shouldItemUpdate.bind(this)}
           onEndReached={this._onEndReached.bind(this)}
           onEndReachedThreshold={0} />
         <View style={{height: 60}} />
@@ -346,7 +364,10 @@ class FeedScreen extends Component {
   })
 
   _shouldItemUpdate (prev, next) {
-    console.log('shouldItemUpdate in feedscreen.js')
+    if (this.profileModifiedFlag) {
+      this.profileModifiedFlag = false
+      return true
+    }
     return prev.item !== next.item
   }
 
@@ -395,6 +416,8 @@ class FeedScreen extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    profileModified: state.signup.modified,
+
     token: state.token.token,
     accountId: state.token.id,
 

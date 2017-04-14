@@ -97,11 +97,14 @@ class NotiDetail extends Component {
   }
 
   renderProfileImage () {
+    const randomTime = new Date().getTime()
+    const uri = `${this.props.noti.notiCreateAccount.profileImagePath}?random_number=${randomTime}`
+
     if (this.props.noti.notiCreateAccount.profileImagePath) {
       return (
-        <CachableImage
+        <Image
           style={styles.imageStyle}
-          source={{uri: this.props.noti.notiCreateAccount.profileImagePath}} />
+          source={{uri: uri}} />
       )
     } else {
       return (
