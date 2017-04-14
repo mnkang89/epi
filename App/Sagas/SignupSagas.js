@@ -2,10 +2,7 @@ import { put, call } from 'redux-saga/effects'
 import { path } from 'ramda'
 import SignupActions from '../Redux/SignupRedux'
 import TokenActions from '../Redux/TokenRedux'
-import FeedActions from '../Redux/FeedRedux'
-import EpisodeActions from '../Redux/EpisodeRedux'
-import NotiActions from '../Redux/NotiRedux'
-import { setToken, getToken, getAccountId } from '../Services/Auth'
+import { setToken } from '../Services/Auth'
 
 let validateEmail = (email) => {
   // const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/

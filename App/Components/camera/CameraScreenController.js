@@ -14,7 +14,8 @@ import { connect } from 'react-redux'
 import CameraScreenAction from '../../Redux/CameraScreenRedux'
 import Camera from 'react-native-camera'
 import EpisodeControllerButton from './EpisodeControllerButton'
-import ProgressBar from './Progress-Bar'
+// import ProgressBar from './Progress-Bar'
+import ProgressBar from './newProgressBar'
 import ConfirmError from '../common/ConfirmError'
 import ContentType from './ContentTypeEnum'
 // import ImageEditor from 'ImageEditor'
@@ -168,23 +169,38 @@ class CameraScreenController extends Component {
       console.log(err)
     })
 
+    this.progressBarName.start()
     this.interval = setInterval(() => {
       if (this.state.leftTime <= 0) {
-        console.tron.log('leftTime done')
         this.props.cameraHandler.getCamera().stopCapture()
-        this.stopProgress()
-        this.initializeProgress()
+        this.progressBarName.init()
         this.setState({
           timer: false
-        }
-        )
+        })
+        this.stopProgress()
       } else {
         this.setState({
-          leftTime: this.state.leftTime - 1,
-          progress: this.state.progress + 3750 * 2
+          leftTime: this.state.leftTime - 1
         })
       }
     }, 1000)
+
+    // this.interval = setInterval(() => {
+    //   if (this.state.leftTime <= 0) {
+    //     console.tron.log('leftTime done')
+    //     this.props.cameraHandler.getCamera().stopCapture()
+    //     this.stopProgress()
+    //     this.initializeProgress()
+    //     this.setState({
+    //       timer: false
+    //     })
+    //   } else {
+    //     this.setState({
+    //       leftTime: this.state.leftTime - 1,
+    //       progress: this.state.progress + 3750 * 2
+    //     })
+    //   }
+    // }, 1000)
   }
 
   onPressOpenTextInput () {
@@ -265,6 +281,9 @@ class CameraScreenController extends Component {
       return (
         <View style={{ height: 10, width: this.state.componentWidth }}>
           <ProgressBar
+            ref={(ref) => {
+              this.progressBarName = ref
+            }}
             fillstyles={{backgroundColor: 'rgb(250,0,0)', height: 10}}
             backgroundstyles={{backgroundColor: '#cccccc', borderRadius: 2, height: 10}}
             style={{width: this.state.componentWidth}}
@@ -284,7 +303,7 @@ class CameraScreenController extends Component {
     if (this.state.timer) {
       this.props.cameraHandler.getCamera().stopCapture()
       this.stopProgress()
-      this.initializeProgress()
+      this.progressBarName.init()
       this.setState({
         timer: false
       })

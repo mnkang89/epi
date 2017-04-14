@@ -1,13 +1,13 @@
 import React, { Component, PropTypes } from 'react'
 import {
   View,
-  ActivityIndicator,
+  ActivityIndicator
   // Dimensions,
   // ListView,
   // ScrollView,
   // RefreshControl,
-  TouchableOpacity,
-  Text
+  // TouchableOpacity,
+  // Text
 } from 'react-native'
 import { connect } from 'react-redux'
 import _ from 'lodash'
@@ -20,7 +20,7 @@ import EpisodeDetail from '../Components/common/EpisodeDetail'
 import CommentModalContainer from './common/CommentModalContainer'
 import styles from './Styles/FeedScreenStyle'
 
-import ProgressBar from '../Components/camera/newProgressBar'
+// import ProgressBar from '../Components/camera/newProgressBar'
 
 import AccountActions from '../Redux/AccountRedux'
 import EpisodeActions from '../Redux/EpisodeRedux'

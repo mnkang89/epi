@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { Text, View, Image, TouchableOpacity, Dimensions } from 'react-native'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import { Colors, Images, Metrics } from '../Themes/'
-import CachableImage from '../Common/CachableImage'
+// import CachableImage from '../Common/CachableImage'
 import { convert2TimeDiffString } from '../Lib/Utilities'
 
 const windowSize = Dimensions.get('window')

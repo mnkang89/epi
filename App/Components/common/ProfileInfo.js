@@ -56,6 +56,7 @@ class ProfileInfo extends Component {
   onProfileImagePress () {
     const { token } = this.props
     const accountId = getAccountId()
+    // this.props.requestProfileImage('https://facebook.github.io/react/img/logo_og.png', token, accountId)
 
     Permissions.getPermissionStatus('photo')
       .then(response => {
@@ -78,9 +79,9 @@ class ProfileInfo extends Component {
               ImageResizer.createResizedImage(data, 150, 150, 'JPEG', 100)
                 .then((resizedImageUri) => {
                   console.log('리사이징 성공')
-                  this.setState({
-                    photoSource: resizedImageUri
-                  })
+                  // this.setState({
+                  //   photoSource: resizedImageUri
+                  // })
                   this.props.requestProfileImage(resizedImageUri, token, accountId)
                 }).catch((err) => {
                   console.log('리사이징 실패')
@@ -169,9 +170,11 @@ class ProfileInfo extends Component {
   renderProfileImage () {
     if (this.props.type === 'me') {
       if (this.state.photoSource) {
+        console.log('프사바꿧따')
         console.tron.log(this.state.photoSource)
         const randomTime = new Date().getTime()
         const uri = `${this.state.photoSource}?random_number=${randomTime}`
+        // const uri = this.state.photoSource
 
         return (
           <Image
