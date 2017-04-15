@@ -65,7 +65,12 @@ class CameraScreen extends Component {
   }
 
   goToHomeTab () {
-    this.deactiveLoadingModal()
+    // this.deactiveLoadingModal()
+    StatusBar.setHidden(false)
+    NavigationActions.pop()
+  }
+
+  closeModal () {
     StatusBar.setHidden(false)
     NavigationActions.pop()
   }
@@ -88,8 +93,8 @@ class CameraScreen extends Component {
           backdrop={false}
           swipeThreshold={100}
           isOpen
-          onOpened={this.cameraPermissionCheck.bind(this)}
-          onClosed={this.goToHomeTab.bind(this)} >
+          // onOpened={this.cameraPermissionCheck.bind(this)}
+          onClosed={this.closeModal.bind(this)} >
           <View style={{flex: 1, flexDirection: 'column'}}>
             <NativeModal
               animationType={'none'}

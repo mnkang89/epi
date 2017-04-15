@@ -330,6 +330,7 @@ class CameraScreenController extends Component {
       ImageResizer.createResizedImage(this.props.contentPath, 1224, 1632, 'JPEG', 50)
         .then((resizedImageUri) => {
           console.log('리사이징 성공')
+          // this.props.parentThis.deactiveLoadingModal()
           this.props.postContent(this.props.contentType, resizedImageUri, this.props.message)
         }).catch((err) => {
           console.log('리사이징 실패')
@@ -339,6 +340,7 @@ class CameraScreenController extends Component {
       VideoResizer.createResizedVideo(this.props.contentPath)
         .then((resizedVideoUri) => {
           console.log('리사이징 성공')
+          // this.props.parentThis.deactiveLoadingModal()
           this.props.postContent(this.props.contentType, resizedVideoUri, this.props.message)
         })
         .catch((err) => {
