@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { Text, View, Image, TouchableOpacity, Modal, Animated, PanResponder } from 'react-native'
-import CachableImage from '../Common/CachableImage'
+// import CachableImage from '../Common/CachableImage'
 
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import { Colors, Images, Metrics } from '../Themes/'
@@ -133,11 +133,14 @@ class CommentDetail extends Component {
 
   renderProfileImage () {
     const { profileImagePath } = this.props.comment.account
+    const randomTime = new Date().getTime()
+    const uri = `${profileImagePath}?random_number=${randomTime}`
+
     if (profileImagePath) {
       return (
-        <CachableImage
+        <Image
           style={styles.imageStyle}
-          source={{uri: profileImagePath}} />
+          source={{uri: uri}} />
       )
     } else {
       return (
