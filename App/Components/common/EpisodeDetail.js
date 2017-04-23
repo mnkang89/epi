@@ -139,7 +139,11 @@ class EpisodeDetail extends Component {
       // this.contentRefs[this.currentCenterIndex].getWrappedInstance()._root._component.playVideo()
       this.isPlayVideo = true
       setTimeout(() => {
-        if (this.isPlayVideo) { this.contentRefs[this.currentCenterIndex].getWrappedInstance()._root._component.playVideo() }
+        if (this.isPlayVideo) {
+          if (this.contentRefs[this.currentCenterIndex] != null) {
+            this.contentRefs[this.currentCenterIndex].getWrappedInstance()._root._component.playVideo()
+          }
+        }
       }, 400)
     }
   }
