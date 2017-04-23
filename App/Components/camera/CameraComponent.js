@@ -38,16 +38,6 @@ class CameraSection extends Component {
   }
 
   componentDidMount () {
-    Permissions.getPermissionStatus('camera')
-    .then(response => {
-      if (response === 'undetermined') {
-        return
-      } else if (response === 'denied') {
-        this.props.setPermission(false)
-      } else {
-        this.props.setPermission(true)
-      }
-    })
   }
 
   renderMessage () {

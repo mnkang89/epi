@@ -93,7 +93,7 @@ class CameraScreen extends Component {
           backdrop={false}
           swipeThreshold={100}
           isOpen
-          // onOpened={this.cameraPermissionCheck.bind(this)}
+          onOpened={this.cameraPermissionCheck.bind(this)}
           onClosed={this.closeModal.bind(this)} >
           <View style={{flex: 1, flexDirection: 'column'}}>
             <NativeModal

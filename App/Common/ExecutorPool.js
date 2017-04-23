@@ -2,6 +2,7 @@ const poolSize = 4
 const taskQueue = []
 const taskPool = []
 const taskCheckIntervalInMillis = 100
+
 const jobMap = new Map()
 
 export const getExecutor = () => {
