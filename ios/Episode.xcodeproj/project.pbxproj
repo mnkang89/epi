@@ -1380,7 +1380,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = Episode.example.native.reactjs.org;
 				PRODUCT_NAME = Episode;
-				PROVISIONING_PROFILE = "fffea57f-ba09-4314-a29c-9920a1d9f809";
+				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1426,7 +1426,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = Episode.example.native.reactjs.org;
 				PRODUCT_NAME = Episode;
-				PROVISIONING_PROFILE = "fffea57f-ba09-4314-a29c-9920a1d9f809";
+				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				VERSIONING_SYSTEM = "apple-generic";

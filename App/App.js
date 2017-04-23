@@ -4,9 +4,11 @@ import { Provider } from 'react-redux'
 import RootContainer from './Containers/RootContainer'
 import createStore from './Redux'
 import applyConfigSettings from './Config'
+import ExecutorPool from './Common/ExecutorPool'
 
 // Apply config overrides
 applyConfigSettings()
+ExecutorPool()
 
 // create our store
 const store = createStore()
