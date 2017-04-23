@@ -380,7 +380,7 @@ class EpisodeDetail extends Component {
         </View>
         <FlatListE
           debug
-          initialNumToRender={1}
+          initialNumToRender={xPosition}
           windowSize={3}
           ref={this._captureRef}
           scrollsToTop={false}
