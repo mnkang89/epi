@@ -2,15 +2,14 @@
 
 import React, { Component } from 'react'
 import { View, StatusBar } from 'react-native'
-import DebugSettings from '../Config/DebugSettings'
+import DebugSettings from '../Config/DebugConfig'
 import NavigationRouter from '../Navigation/NavigationRouter'
 
 // Styles
-import styles from './Styles/RootContainerStyle'
+import styles from './Styles/RootContainerStyles'
 
 export default class RootContainer extends Component {
   componentDidMount () {
-    // 이 부분에서 api콜 시전되면 될듯?
   }
 
   render () {
@@ -18,11 +17,9 @@ export default class RootContainer extends Component {
     console.disableYellowBox = !DebugSettings.yellowBox
     return (
       <View style={styles.applicationView}>
-        {/* <View style={{height: 20, backgroundColor: 'white'}}> */}
         <StatusBar
           showHideTransition={'slide'}
           barStyle='dark-content' />
-        {/* </View> */}
         <NavigationRouter />
       </View>
     )

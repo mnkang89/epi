@@ -182,7 +182,6 @@ class FeedScreen extends Component {
     return (
       <View style={styles.mainContainer}>
         <FlatListE
-          removeClippedSubviews={false}
           initialNumToRender={1}
           windowSize={5}
           style={{ flex: 1 }}
@@ -199,7 +198,7 @@ class FeedScreen extends Component {
           scrollsToTop={this.state.scrollsToTop}
           onRefresh={this._onRefresh.bind(this)}
           refreshing={this.state.refreshing}
-          onViewableItemsChanged={this._onViewableItemsChanged}
+          // onViewableItemsChanged={this._onViewableItemsChanged}
           shouldItemUpdate={this._shouldItemUpdate.bind(this)}
           onEndReached={this._onEndReached.bind(this)}
           onEndReachedThreshold={0} />

@@ -8,7 +8,7 @@ import {
   Easing,
   PanResponder
 } from 'react-native'
-import Icon from 'react-native-vector-icons/FontAwesome'
+// import Icon from 'react-native-vector-icons/FontAwesome'
 import FollowContainer from '../../Containers/common/FollowContainer'
 
 // 부모 컴포넌트로부터 내려받는 props의 경우 간혹 undefined문제가 발생하고 있음. 데이터 fetching이 되기전에 컴포넌트가 마운트되서 생기는 문제로
@@ -129,10 +129,10 @@ class FollowModal extends Component {
                   this.resetFollowModal()
                 }}
                 style={{flex: 1, paddingTop: 10}} >
-                <Icon
+                {/* <Icon
                   name='chevron-down'
                   size={16}
-                  style={{width: 16, height: 16, alignSelf: 'center', fontWeight: '300'}} />
+                  style={{width: 16, height: 16, alignSelf: 'center', fontWeight: '300'}} /> */}
               </TouchableOpacity>
               <View style={{flex: 10, alignItems: 'center'}}>
                 <Text style={{marginTop: 10, fontSize: 17, fontWeight: 'bold'}} >

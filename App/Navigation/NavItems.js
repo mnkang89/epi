@@ -2,9 +2,9 @@
 
 import React from 'react'
 import { View, TouchableOpacity, Image } from 'react-native'
-import styles from './Styles/NavItemsStyle'
+import styles from './Styles/NavItemsStyles'
 import { Actions as NavigationActions } from 'react-native-router-flux'
-import Icon from 'react-native-vector-icons/FontAwesome'
+// import Icon from 'react-native-vector-icons/FontAwesome'
 import { Colors, Metrics, Images } from '../Themes'
 
 const openDrawer = () => {
@@ -42,11 +42,11 @@ export default {
   hamburgerButton () {
     return (
       <TouchableOpacity onPress={openDrawer}>
-        <Icon name='bars'
+        {/* <Icon name='bars'
           size={Metrics.icons.medium}
           color={Colors.snow}
           style={styles.navButtonLeft}
-        />
+        /> */}
       </TouchableOpacity>
     )
   },
@@ -54,11 +54,11 @@ export default {
   cameraButton () {
     return (
       <TouchableOpacity onPress={() => {}}>
-        <Icon name='camera'
+        {/* <Icon name='camera'
           size={22}
           color={Colors.snow}
           style={styles.navButtonLeft}
-        />
+        /> */}
       </TouchableOpacity>
     )
   },
@@ -66,11 +66,11 @@ export default {
   profileButton () {
     return (
       <TouchableOpacity onPress={() => NavigationActions.profileScreen({ type: 'reset' })}>
-        <Icon name='user'
+        {/* <Icon name='user'
           size={22}
           color={Colors.snow}
           style={styles.navButtonLeft}
-        />
+        /> */}
       </TouchableOpacity>
     )
   },
@@ -78,11 +78,11 @@ export default {
   settingButton () {
     return (
       <TouchableOpacity onPress={() => {}}>
-        <Icon name='cog'
+        {/* <Icon name='cog'
           size={22}
           color={Colors.snow}
           style={styles.navButtonLeft}
-        />
+        /> */}
       </TouchableOpacity>
     )
   },
@@ -90,11 +90,11 @@ export default {
   homeButton () {
     return (
       <TouchableOpacity onPress={() => NavigationActions.feedScreen({ type: 'reset' })}>
-        <Icon name='home'
+        {/* <Icon name='home'
           size={22}
           color={Colors.snow}
           style={styles.navButtonLeft}
-        />
+        /> */}
       </TouchableOpacity>
     )
   },
@@ -102,12 +102,12 @@ export default {
   chevronButton () {
     return (
       <TouchableOpacity onPress={() => NavigationActions.feedScreen({type: 'reset'})}>
-        <Icon
+        {/* <Icon
           name='chevron-down'
           size={20}
           color={Colors.snow}
           style={styles.navButtonLeft}
-        />
+        /> */}
       </TouchableOpacity>
     )
   }

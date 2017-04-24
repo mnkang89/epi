@@ -5,7 +5,7 @@ const renderTexts = (TextArray) => {
   return TextArray.map(text => <Text key={TextArray.indexOf(text)} style={{fontSize: 17}}>{text}</Text>)
 }
 
-const renderConfirm = (confirmStyle = 'confirm', onAccept, onSetting = null, AcceptText = '확인해', SettingText = '설정') => {
+const renderConfirm = (confirmStyle = 'confirm', onAccept, onSetting = null, AcceptText = '확인', SettingText = '설정') => {
   // console.log(AcceptText)
 
   if (confirmStyle === 'confirm') {

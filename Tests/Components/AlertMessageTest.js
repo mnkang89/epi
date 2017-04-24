@@ -1,8 +1,6 @@
-// https://github.com/airbnb/enzyme/blob/master/docs/api/shallow.md
 import test from 'ava'
 import React from 'react'
 import { Text } from 'react-native'
-import Icon from 'react-native-vector-icons/Ionicons'
 import AlertMessage from '../../App/Components/AlertMessage'
 import { shallow } from 'enzyme'
 
@@ -14,26 +12,16 @@ test('component exists', (t) => {
 })
 
 test('component structure', (t) => {
-  t.is(wrapper.name(), 'Animatable.View')
+  t.is(wrapper.name(), 'View')
   t.is(wrapper.children().length, 1) // has 1 child
   t.is(wrapper.children().first().name(), 'View') // that child is View
 
   const subview = wrapper.children().first()
-  // The View should contain the icon and text
-  t.is(subview.children().length, 2) // has 2 children
+  t.is(subview.children().length, 1)
 })
 
 test('Has text and set properly', (t) => {
   t.is(wrapper.containsMatchingElement(<Text>HOWDY</Text>), true)
-})
-
-test('Has Icon and set properly', (t) => {
-  // default
-  t.is(wrapper.containsMatchingElement(<Icon name='ios-alert' />), true)
-
-  // custom
-  const custom = shallow(<AlertMessage onPress={() => {}} title='howdy' icon='test' />)
-  t.is(custom.containsMatchingElement(<Icon name='test' />), true)
 })
 
 test('style props are passed to top view', (t) => {

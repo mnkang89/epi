@@ -447,7 +447,7 @@ class GreetingScreen extends Component {
             ref={(component) => { this.scrollview = component }}
             horizontal
             keyboardDismissMode={'on-drag'}
-            keyboardShouldPersistTaps
+            keyboardShouldPersistTaps='always'
             pagingEnabled
             scrollEnabled={this.state.scrollEnabled}
             onScroll={this.handleScroll.bind(this)}

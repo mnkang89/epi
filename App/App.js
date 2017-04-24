@@ -4,17 +4,23 @@ import { Provider } from 'react-redux'
 import RootContainer from './Containers/RootContainer'
 import createStore from './Redux'
 import applyConfigSettings from './Config'
-import ExecutorPool from './Common/ExecutorPool'
+import { Client } from 'bugsnag-react-native'
+
+const bugsnag = new Client()
+
+// import { Navigation } from 'react-native-navigation'
+// import FeedScreen from './Containers/FeedScreen'
 
 // Apply config overrides
 applyConfigSettings()
-ExecutorPool()
 
 // create our store
 const store = createStore()
 
 class App extends Component {
-
+  componentDidMount () {
+    bugsnag.notify(new Error('Test Error'))
+  }
   render () {
     return (
       <Provider store={store} >

@@ -12,7 +12,7 @@ import {
 } from 'react-native'
 import KeyboardSpacer from 'react-native-keyboard-spacer'
 import {AutoGrowingTextInput} from 'react-native-autogrow-textinput'
-import Icon from 'react-native-vector-icons/FontAwesome'
+// import Icon from 'react-native-vector-icons/FontAwesome'
 // import _ from 'lodash'
 
 import CommentContainer from '../../Containers/common/CommentContainer'
@@ -171,11 +171,11 @@ class CommentModal extends Component {
                     this.resetCommentModal()
                   }}
                   style={{paddingTop: 10, paddingLeft: 16}}>
-                  <Icon
+                  {/* <Icon
                     name='chevron-down'
                     size={16}
                     style={{width: 16, height: 16, alignSelf: 'center', fontWeight: '300'}}
-                  />
+                  /> */}
                 </TouchableOpacity>
                 <Text style={{left: 140, marginTop: 10, fontSize: 17, fontWeight: 'bold'}}>댓글</Text>
               </View>

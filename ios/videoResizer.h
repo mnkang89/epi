@@ -6,7 +6,7 @@
 //  Copyright © 2017년 Facebook. All rights reserved.
 //
 
-#import "RCTBridge.h"
+#import <React/RCTBridge.h>
 
 @interface VideoResizer : NSObject <RCTBridgeModule>
 
