@@ -2,18 +2,15 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<!-- Bugsnag -->
 	<key>BugsnagAPIKey</key>
 	<string>965e00f62b70bf36bf752f948faed81c</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
-	<key>CFBundleIcons</key>
-	<dict/>
-	<key>CFBundleIcons~ipad</key>
-	<dict/>
 	<key>CFBundleIdentifier</key>
-	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<string>org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -25,7 +22,8 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>201704231341</string>
+	<string>1</string>
+	<!-- Export regulation -->
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
@@ -46,8 +44,13 @@
 			</dict>
 		</dict>
 	</dict>
+	<!-- Camera, Location, PhotoLibrary -->
+	<key>NSCameraUsageDescription</key>
+	<string>to take photo</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>to get location of photo</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>to upload photo</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Entypo.ttf</string>
@@ -67,6 +70,7 @@
 	<array>
 		<string>armv7</string>
 	</array>
+	<!-- Orientation -->
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

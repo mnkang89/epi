@@ -8,7 +8,6 @@ import {
 import { connect } from 'react-redux'
 import _ from 'lodash'
 
-// import ExploreList from '../Components/ExploreList'
 import ExploreDetail from '../Components/ExploreDetail'
 import styles from './Styles/FeedScreenStyle'
 import { getObjectDiff } from '../Lib/Utilities'
@@ -225,29 +224,3 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ExploreScreen)
-
-/*
-  render () {
-    return (
-      <View style={styles.mainContainer}>
-        <View style={{backgroundColor: 'black', flex: 1}}>
-          <ScrollView
-            refreshControl={
-              <RefreshControl
-                refreshing={this.state.refreshing}
-                onRefresh={this.onRefresh.bind(this)}
-              />}
-          >
-            <ExploreList
-              token={this.props.token}
-              items={this.props.items}
-              requestBestFeeds={this.props.requestBestFeeds}
-              postFollow={this.props.postFollow}
-              deleteFollow={this.props.deleteFollow} />
-          </ScrollView>
-          <View style={{height: 48.5}} />
-        </View>
-      </View>
-    )
-  }
-*/

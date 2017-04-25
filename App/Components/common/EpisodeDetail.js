@@ -3,20 +3,19 @@ import {
   Text,
   View,
   Image,
+  FlatList,
   TouchableOpacity,
   ActivityIndicator,
   Dimensions
  } from 'react-native'
 import { Actions as NavigationActions } from 'react-native-router-flux'
-// import _ from 'lodash'
 
-import FlatListE from '../../Experimental/FlatList_e'
 import { Colors, Images, Metrics } from '../../Themes/'
 import { convert2TimeDiffString } from '../../Lib/Utilities'
 import { getRealm } from '../../Services/RealmFactory'
 
-// import CachableImage from '../../Common/CachableImage'
 import ContentContainer from '../../Containers/common/ContentContainer'
+import FlatListE from '../../Experimental/FlatList_e'
 
 const windowSize = Dimensions.get('window')
 const realm = getRealm()
@@ -63,46 +62,42 @@ class EpisodeDetail extends Component {
 
   componentDidMount () {
     const centerIndex = this.currentCenterIndex
-    // const episodeId = this.props.episode.id
-    // const liked = this.props.episode.liked
-    // let episode = realm.objects('episode')
-    //   .filtered('id = ' + episodeId)
-    //
-    // // for (let i = 0; i < this.state.contentTypeArray.length; i++) {
-    // //   if (this.state.contentTypeArray[i] === 'Video' &&
-    // //       // i === centerIndex면 중간에 온 비디오 컨텐츠이므로 stop할 필요가 없음.
-    // //       i !== centerIndex &&
-    // //       // undefined일 경우, 아직 contentRefs오브젝트에 추가되지 않은, 즉 아직 렌더링 되지 않은 컨텐츠이다.
-    // //       this.contentRefs[i] !== undefined &&
-    // //       // null일 경우, flatList최적화 기능에 의해 메모리에서 내려간 컨텐츠에 해당한다.
-    // //       this.contentRefs[i] !== null) {
-    // //     this.contentRefs[i].getWrappedInstance()._root._component.stopVideo()
-    // //   }
-    // // }
-    // //
-    // // if (this.state.contentTypeArray[centerIndex] === 'Video' &&
-    // //     this.contentRefs[centerIndex] !== null &&
-    // //     this.contentRefs[centerIndex] !== undefined) {
-    // //   this.contentRefs[centerIndex].getWrappedInstance()._root._component.playVideo()
-    // //   this.currentCenterIndex = centerIndex
-    // // }
-    // //
-    // // if (episode.length === 0) {
-    // //   realm.write(() => {
-    // //     realm.delete(episode)
-    // //     if (liked === undefined) {
-    // //       realm.create('episode', {id: episodeId, like: false})
-    // //     } else {
-    // //       realm.create('episode', {id: episodeId, like: liked})
-    // //     }
-    // //   })
-    // // } else {
-    // //   return
-    // // }
-    let wait = new Promise((resolve) => setTimeout(resolve, 500))  // Smaller number should work
-    wait.then(() => {
-      this._listRef.scrollToIndex({index: centerIndex, animated: false})
-    })
+    const episodeId = this.props.episode.id
+    const liked = this.props.episode.liked
+    let episode = realm.objects('episode')
+      .filtered('id = ' + episodeId)
+
+    for (let i = 0; i < this.state.contentTypeArray.length; i++) {
+      if (this.state.contentTypeArray[i] === 'Video' &&
+          // i === centerIndex면 중간에 온 비디오 컨텐츠이므로 stop할 필요가 없음.
+          i !== centerIndex &&
+          // undefined일 경우, 아직 contentRefs오브젝트에 추가되지 않은, 즉 아직 렌더링 되지 않은 컨텐츠이다.
+          this.contentRefs[i] !== undefined &&
+          // null일 경우, flatList최적화 기능에 의해 메모리에서 내려간 컨텐츠에 해당한다.
+          this.contentRefs[i] !== null) {
+        this.contentRefs[i].getWrappedInstance().ref._component.stopVideo()
+      }
+    }
+
+    if (this.state.contentTypeArray[centerIndex] === 'Video' &&
+        this.contentRefs[centerIndex] !== null &&
+        this.contentRefs[centerIndex] !== undefined) {
+      this.contentRefs[centerIndex].getWrappedInstance().ref._component.playVideo()
+      this.currentCenterIndex = centerIndex
+    }
+
+    if (episode.length === 0) {
+      realm.write(() => {
+        realm.delete(episode)
+        if (liked === undefined) {
+          realm.create('episode', {id: episodeId, like: false})
+        } else {
+          realm.create('episode', {id: episodeId, like: liked})
+        }
+      })
+    } else {
+      return
+    }
   }
 
   componentWillMount () {
@@ -126,26 +121,29 @@ class EpisodeDetail extends Component {
   }
 
   stopEpisodeVideo = () => {
-    // this.isPlayVideo = false
-    // for (let i = 0; i < this.state.contentTypeArray.length; i++) {
-    //   if (this.state.contentTypeArray[i] === 'Video' &&
-    //       // undefined일 경우, 아직 contentRefs오브젝트에 추가되지 않은, 즉 아직 렌더링 되지 않은 컨텐츠이다.
-    //       this.contentRefs[i] !== undefined &&
-    //       // null일 경우, flatList최적화 기능에 의해 메모리에서 내려간 컨텐츠에 해당한다.
-    //       this.contentRefs[i] !== null) {
-    //     this.contentRefs[i].getWrappedInstance()._root._component.stopVideo()
-    //   }
-    // }
+    this.isPlayVideo = false
+    for (let i = 0; i < this.state.contentTypeArray.length; i++) {
+      if (this.state.contentTypeArray[i] === 'Video' &&
+          // undefined일 경우, 아직 contentRefs오브젝트에 추가되지 않은, 즉 아직 렌더링 되지 않은 컨텐츠이다.
+          this.contentRefs[i] !== undefined &&
+          // null일 경우, flatList최적화 기능에 의해 메모리에서 내려간 컨텐츠에 해당한다.
+          this.contentRefs[i] !== null) {
+        this.contentRefs[i].getWrappedInstance().ref._component.stopVideo()
+      }
+    }
   }
 
   playEpisodeVideo = () => {
-    // if (this.state.contentTypeArray[this.currentCenterIndex] === 'Video') {
-    //   // this.contentRefs[this.currentCenterIndex].getWrappedInstance()._root._component.playVideo()
-    //   this.isPlayVideo = true
-    //   setTimeout(() => {
-    //     if (this.isPlayVideo) { this.contentRefs[this.currentCenterIndex].getWrappedInstance()._root._component.playVideo() }
-    //   }, 400)
-    // }
+    if (this.state.contentTypeArray[this.currentCenterIndex] === 'Video') {
+      this.isPlayVideo = true
+      setTimeout(() => {
+        if (this.isPlayVideo) {
+          if (this.contentRefs[this.currentCenterIndex] != null) {
+            this.contentRefs[this.currentCenterIndex].getWrappedInstance().ref._component.playVideo()
+          }
+        }
+      }, 400)
+    }
   }
 
   like () {
@@ -231,7 +229,6 @@ class EpisodeDetail extends Component {
         if (this.props.type === 'other') {
           // this.props.requestNewEpisode(token, this.props.episode.accountId, episode.id)
         } else {
-          console.log('mememe newnew')
           this.props.requestNewEpisode(token, episode.id)
         }
       }
@@ -266,12 +263,12 @@ class EpisodeDetail extends Component {
         this.setState({
           renderLikeHeart: false
         })
-        this.contentRefs[this.currentCenterIndex].getWrappedInstance()._root._component.playUnikeAnimation()
+        this.contentRefs[this.currentCenterIndex].getWrappedInstance().ref._component.playUnikeAnimation()
       } else {
         this.setState({
           renderLikeHeart: true
         })
-        this.contentRefs[this.currentCenterIndex].getWrappedInstance()._root._component.playLikeAnimation()
+        this.contentRefs[this.currentCenterIndex].getWrappedInstance().ref._component.playLikeAnimation()
       }
     }
   }
@@ -379,7 +376,6 @@ class EpisodeDetail extends Component {
           </View>
         </View>
         <FlatListE
-          debug
           initialNumToRender={1}
           windowSize={3}
           ref={this._captureRef}
@@ -489,31 +485,31 @@ class EpisodeDetail extends Component {
       this.horizontalLock은 해당 에피소드가 좌우 스크롤된적이 없을 경우 true이다.
       onMomentumScrollBegin을 이용해 스크롤시 false로 변경한다.
     */
-    // if (info.viewableItems.length === 1 && !this.horizontalLock) {
-    //   const { parentHandler, index } = this.props
-    //   const episodeViewability = parentHandler.viewableItemsArray.includes(index)
-    //   const centerIndex = info.viewableItems[0].index
-    //
-    //   for (let i = 0; i < this.state.contentTypeArray.length; i++) {
-    //     if (this.state.contentTypeArray[i] === 'Video' &&
-    //         // i === centerIndex면 중간에 온 비디오 컨텐츠이므로 stop할 필요가 없음.
-    //         i !== centerIndex &&
-    //         // undefined일 경우, 아직 contentRefs오브젝트에 추가되지 않은, 즉 아직 렌더링 되지 않은 컨텐츠이다.
-    //         this.contentRefs[i] !== undefined &&
-    //         // null일 경우, flatList최적화 기능에 의해 메모리에서 내려간 컨텐츠에 해당한다.
-    //         this.contentRefs[i] !== null) {
-    //       this.contentRefs[i].getWrappedInstance()._root._component.stopVideo()
-    //     }
-    //   }
-    //
-    //   if (episodeViewability &&
-    //       this.state.contentTypeArray[centerIndex] === 'Video' &&
-    //       this.contentRefs[centerIndex] !== null &&
-    //       this.contentRefs[centerIndex] !== undefined) {
-    //     this.contentRefs[centerIndex].getWrappedInstance()._root._component.playVideo()
-    //     this.currentCenterIndex = centerIndex
-    //   }
-    // }
+    if (info.viewableItems.length === 1 && !this.horizontalLock) {
+      const { parentHandler, index } = this.props
+      const episodeViewability = parentHandler.viewableItemsArray.includes(index)
+      const centerIndex = info.viewableItems[0].index
+
+      for (let i = 0; i < this.state.contentTypeArray.length; i++) {
+        if (this.state.contentTypeArray[i] === 'Video' &&
+            // i === centerIndex면 중간에 온 비디오 컨텐츠이므로 stop할 필요가 없음.
+            i !== centerIndex &&
+            // undefined일 경우, 아직 contentRefs오브젝트에 추가되지 않은, 즉 아직 렌더링 되지 않은 컨텐츠이다.
+            this.contentRefs[i] !== undefined &&
+            // null일 경우, flatList최적화 기능에 의해 메모리에서 내려간 컨텐츠에 해당한다.
+            this.contentRefs[i] !== null) {
+          this.contentRefs[i].getWrappedInstance().ref._component.stopVideo()
+        }
+      }
+
+      if (episodeViewability &&
+          this.state.contentTypeArray[centerIndex] === 'Video' &&
+          this.contentRefs[centerIndex] !== null &&
+          this.contentRefs[centerIndex] !== undefined) {
+        this.contentRefs[centerIndex].getWrappedInstance().ref._component.playVideo()
+        this.currentCenterIndex = centerIndex
+      }
+    }
   }
 }
 

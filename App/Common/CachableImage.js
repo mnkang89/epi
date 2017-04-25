@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Image } from 'react-native'
 import { getRealm } from '../Services/RealmFactory'
 import RNFS from 'react-native-fs'
+import { getExecutor, jobDone } from './ExecutorPool'
 
 export const expirePeriodInDay = 7
 const realm = getRealm()
@@ -79,23 +80,28 @@ export default class CachableImage extends Component {
     let date = new Date()
     let dateKey = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getUTCDate()
     const path = RNFS.DocumentDirectoryPath + '/' + dateKey + hashing(url) + '.' + extension
-    const downloadResult = RNFS.downloadFile({fromUrl: url, toFile: path})
-    downloadResult.promise.then((result) => {
-      switch (result.statusCode) {
-        case 200:
-          this.setState({
-            imageLoaded: true,
-            imagePath: path
-          })
-          this.cacheImage(url, path, expirePeriodInDay)
-          break
-        default:
-          this.setState({
-            imageLoaded: false,
-            imagePath: path
-          })
-          break
-      }
+
+    getExecutor().then(() => {
+      const downloadResult = RNFS.downloadFile({fromUrl: url, toFile: path})
+      downloadResult.promise.then((result) => {
+        switch (result.statusCode) {
+          case 200:
+            this.setState({
+              imageLoaded: true,
+              imagePath: path
+            })
+            this.cacheImage(url, path, expirePeriodInDay)
+            jobDone()
+            break
+          default:
+            this.setState({
+              imageLoaded: false,
+              imagePath: path
+            })
+            jobDone()
+            break
+        }
+      })
     })
   }
 

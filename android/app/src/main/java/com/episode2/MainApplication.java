@@ -1,4 +1,4 @@
-package com.episode2;
+package com.episode;
 
 import android.app.Application;
 

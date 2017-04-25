@@ -15,7 +15,6 @@ import {
   getItemLayout
 } from '../Experimental/ListExampleShared_e'
 import FlatListE from '../Experimental/FlatList_e'
-// import NotiList from '../Components/NotiList'
 import NotiDetail from '../Components/NotiDetail'
 import styles from './Styles/FeedScreenStyle'
 
@@ -206,22 +205,3 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(NotiScreen)
-
-/*
-return (
-  <ScrollView
-    refreshControl={
-      <RefreshControl
-        refreshing={this.state.refreshing}
-        onRefresh={this.onRefresh.bind(this)} />
-    }
-  >
-    <NotiList
-      token={this.props.token}
-      noties={this.props.noties}
-      myAccount={this.props.myAccount}
-      openComment={this.props.openComment}
-      getComment={this.props.getComment} />
-  </ScrollView>
-)
-*/

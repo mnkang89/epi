@@ -1,18 +1,17 @@
 import React, { Component } from 'react'
 import { Provider } from 'react-redux'
-// import '../I18n/I18n' // keep before root container
+import { Client } from 'bugsnag-react-native'
+
 import RootContainer from './Containers/RootContainer'
 import createStore from './Redux'
 import applyConfigSettings from './Config'
-import { Client } from 'bugsnag-react-native'
+import ExecutorPool from './Common/ExecutorPool'
 
 const bugsnag = new Client()
 
-// import { Navigation } from 'react-native-navigation'
-// import FeedScreen from './Containers/FeedScreen'
-
 // Apply config overrides
 applyConfigSettings()
+ExecutorPool()
 
 // create our store
 const store = createStore()

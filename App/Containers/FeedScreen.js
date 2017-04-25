@@ -1,13 +1,8 @@
 import React, { Component, PropTypes } from 'react'
 import {
   View,
-  ActivityIndicator
-  // Dimensions,
-  // ListView,
-  // ScrollView,
-  // RefreshControl,
-  // TouchableOpacity,
-  // Text
+  ActivityIndicator,
+  FlatList
 } from 'react-native'
 import { connect } from 'react-redux'
 import _ from 'lodash'
@@ -15,12 +10,10 @@ import _ from 'lodash'
 
 import { getAccountId } from '../Services/Auth'
 import { getObjectDiff, getArrayDiff } from '../Lib/Utilities'
-import FlatListE from '../Experimental/FlatList_e'
+// import FlatListE from '../Experimental/FlatList_e'
 import EpisodeDetail from '../Components/common/EpisodeDetail'
 import CommentModalContainer from './common/CommentModalContainer'
 import styles from './Styles/FeedScreenStyle'
-
-// import ProgressBar from '../Components/camera/newProgressBar'
 
 import AccountActions from '../Redux/AccountRedux'
 import EpisodeActions from '../Redux/EpisodeRedux'
@@ -59,7 +52,6 @@ class FeedScreen extends Component {
       refreshing: false,
       footer: false,
       scrollsToTop: true,
-//
       commentModalVisible: false,
       leftTime: 5
     }
@@ -178,28 +170,26 @@ class FeedScreen extends Component {
   }
 
   render () {
-    console.log('프사업뎃')
     return (
       <View style={styles.mainContainer}>
-        <FlatListE
-          initialNumToRender={1}
-          windowSize={5}
+        <FlatList
+          windowSize={10}
           style={{ flex: 1 }}
-          ref={this._captureRef}
+          renderItem={this._renderItemComponent.bind(this)}
+          FooterComponent={this._renderFooter.bind(this)}
+          data={this.props.items}
+          disableVirtualization={false}
+          getItemLayout={this._getItemLayout}
           key={'vf'}
           keyExtractor={(item, index) => index}
-          disableVirtualization={false}
-          legacyImplementation={false}
-          data={this.props.items}
-          ItemComponent={this._renderItemComponent.bind(this)}
-          FooterComponent={this._renderFooter.bind(this)}
           horizontal={false}
-          getItemLayout={this._getItemLayout}
-          scrollsToTop={this.state.scrollsToTop}
+          legacyImplementation={false}
           onRefresh={this._onRefresh.bind(this)}
+          onViewableItemsChanged={this._onViewableItemsChanged}
+          ref={this._captureRef}
           refreshing={this.state.refreshing}
-          // onViewableItemsChanged={this._onViewableItemsChanged}
           shouldItemUpdate={this._shouldItemUpdate.bind(this)}
+          scrollsToTop={this.state.scrollsToTop}
           onEndReached={this._onEndReached.bind(this)}
           onEndReachedThreshold={0} />
         <View style={{height: 60}} />
@@ -234,7 +224,6 @@ class FeedScreen extends Component {
         popHandler={this._onPopFromUserProfileScreen}
         episode={episode.item.episode}
         account={episode.item.account}
-        // EpisodeDetailContainer만들고 그쪽에서 넘겨주는 로직으로 변경할 예정
         requestNewEpisode={this.props.requestNewEpisode}
         commentModalHandler={this._toggleCommentModal.bind(this)}
         openComment={this.props.openComment}
@@ -346,3 +335,29 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(FeedScreen)
+{/* <FlatList
+  initialNumToRender={1}
+  initialListSize={20}
+  windowSize={3}
+  style={{paddingLeft: 7.5, paddingRight: 7.5, backgroundColor: '#FFFFFF'}}
+  renderItem={this._renderItemComponent.bind(this)}
+  ItemComponent={this._renderItemComponent}
+  data={this.props.episode.contents}
+  disableVirtualization={false}
+  key={'hf'}
+  keyExtractor={(item, index) => index}
+  horizontal
+  ref={this._captureRef}
+  scrollsToTop={false}
+  onScrollBeginDrag={this._onScrollBeginDrag.bind(this)}
+  onScrollEndDrag={this._onScrollEndDrag.bind(this)}
+  onMomentumScrollBegin={this._onMomentumScrollBegin.bind(this)}
+  onMomentumScrollEnd={this._onMomentumScrollEnd.bind(this)}
+  onViewableItemsChanged={this._onViewableItemsChanged}
+  shouldItemUpdate={this._shouldItemUpdate}
+  contentOffset={{x: xPosition, y: 0}}
+  scrollEventThrottle={100}
+  snapToAlignment={'start'}
+  snapToInterval={windowSize.width - 22}
+  showsHorizontalScrollIndicator
+  decelerationRate={'fast'} /> */}
