@@ -335,29 +335,3 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(FeedScreen)
-{/* <FlatList
-  initialNumToRender={1}
-  initialListSize={20}
-  windowSize={3}
-  style={{paddingLeft: 7.5, paddingRight: 7.5, backgroundColor: '#FFFFFF'}}
-  renderItem={this._renderItemComponent.bind(this)}
-  ItemComponent={this._renderItemComponent}
-  data={this.props.episode.contents}
-  disableVirtualization={false}
-  key={'hf'}
-  keyExtractor={(item, index) => index}
-  horizontal
-  ref={this._captureRef}
-  scrollsToTop={false}
-  onScrollBeginDrag={this._onScrollBeginDrag.bind(this)}
-  onScrollEndDrag={this._onScrollEndDrag.bind(this)}
-  onMomentumScrollBegin={this._onMomentumScrollBegin.bind(this)}
-  onMomentumScrollEnd={this._onMomentumScrollEnd.bind(this)}
-  onViewableItemsChanged={this._onViewableItemsChanged}
-  shouldItemUpdate={this._shouldItemUpdate}
-  contentOffset={{x: xPosition, y: 0}}
-  scrollEventThrottle={100}
-  snapToAlignment={'start'}
-  snapToInterval={windowSize.width - 22}
-  showsHorizontalScrollIndicator
-  decelerationRate={'fast'} /> */}
