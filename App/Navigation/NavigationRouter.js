@@ -84,11 +84,11 @@ class NavigationRouter extends Component {
               icon={TabIcon}
               selectedTabIcon='home'
               tabIcon='home'
-              onPress={() => {
-                this.props.tabTouched()
-                this.props.registerScreen('homeTab')
-                Actions.homeTab()
-              }}
+              // onPress={() => {
+              //   this.props.tabTouched()
+              //   this.props.registerScreen('homeTab')
+              //   Actions.homeTab()
+              // }}
               navigationBarStyle={Styles.navBar}
               // leftButtonIconStyle={Styles.leftButton}
               renderTitle={NavItems.episodeLogo}

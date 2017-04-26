@@ -2,7 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<!-- Bugsnag -->
 	<key>BugsnagAPIKey</key>
 	<string>965e00f62b70bf36bf752f948faed81c</string>
 	<key>CFBundleDevelopmentRegion</key>
@@ -22,8 +21,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
-	<!-- Export regulation -->
+	<string>201704261958</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
@@ -44,7 +42,10 @@
 			</dict>
 		</dict>
 	</dict>
-	<!-- Camera, Location, PhotoLibrary -->
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>no needed</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>no needed</string>
 	<key>NSCameraUsageDescription</key>
 	<string>to take photo</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
@@ -70,7 +71,6 @@
 	<array>
 		<string>armv7</string>
 	</array>
-	<!-- Orientation -->
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

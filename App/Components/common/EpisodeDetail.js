@@ -3,7 +3,7 @@ import {
   Text,
   View,
   Image,
-  FlatList,
+  // FlatList,
   TouchableOpacity,
   ActivityIndicator,
   Dimensions
@@ -20,11 +20,11 @@ import FlatListE from '../../Experimental/FlatList_e'
 const windowSize = Dimensions.get('window')
 const realm = getRealm()
 // const ITEM_WIDTH = 367.5
+// React.Pure
 
 class EpisodeDetail extends Component {
 
   static propTypes = {
-    token: PropTypes.string,
     account: PropTypes.object,
     episode: PropTypes.object,
 
@@ -112,7 +112,6 @@ class EpisodeDetail extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    console.log('리시브프랍스인 에피소드디테일')
     if (this.state.footer) {
       this.setState({
         footer: false
@@ -180,16 +179,13 @@ class EpisodeDetail extends Component {
         })
       }
     } else {
-      this.props.pushHandler()
       setTimeout(() => {
         NavigationActions.feedTouserProfileScreen({
           type: 'push',
           id: accountId,
           screen: 'FeedScreen',
           topOfStack: true,
-          popHandler: this.props.popHandler,
           onBack: () => {
-            this.props.popHandler()
             NavigationActions.pop()
           }
         })
@@ -214,7 +210,7 @@ class EpisodeDetail extends Component {
     const active = this.props.episode.active
 
     if (active) {
-      const { token, episode } = this.props
+      const { episode } = this.props
       this.dragEndingOffset = event.nativeEvent.contentOffset.x
 
       // 오른쪽에서 왼쪽컨텐츠로 가면 푸터취소
@@ -227,9 +223,8 @@ class EpisodeDetail extends Component {
           this.dragStartingOffset >= this.lastContentOffset &&
           this.dragStartingOffset - this.dragEndingOffset < 0) {
         if (this.props.type === 'other') {
-          // this.props.requestNewEpisode(token, this.props.episode.accountId, episode.id)
         } else {
-          this.props.requestNewEpisode(token, episode.id)
+          this.props.requestNewEpisode(null, episode.id)
         }
       }
     }
@@ -276,11 +271,10 @@ class EpisodeDetail extends Component {
   _onPressComment () {
     const episodeId = this.props.episode.id
     const contentId = this.props.episode.contents[this.currentCenterIndex].id
-    const token = null
 
     // this.props.openComment(true)
     this.props.commentModalHandler()
-    this.props.getComment(token, episodeId, contentId)
+    this.props.getComment(null, episodeId, contentId)
   }
 
   renderProfileImage () {
@@ -325,6 +319,7 @@ class EpisodeDetail extends Component {
   }
 
   render () {
+    console.log('episodeDetail render')
     const episodeId = this.props.episode.id
     const activeEpisodeLength = this.props.episode.contents.length
     const commentCount = this.props.episode.contents.map(content => content.commentCount).reduce((a, b) => a + b, 0)
@@ -392,7 +387,7 @@ class EpisodeDetail extends Component {
           onScrollEndDrag={this._onScrollEndDrag.bind(this)}
           onMomentumScrollBegin={this._onMomentumScrollBegin.bind(this)}
           onMomentumScrollEnd={this._onMomentumScrollEnd.bind(this)}
-          onViewableItemsChanged={this._onViewableItemsChanged}
+          // onViewableItemsChanged={this._onViewableItemsChanged}
           shouldItemUpdate={this._shouldItemUpdate}
           style={{paddingLeft: 7.5, paddingRight: 7.5, backgroundColor: '#FFFFFF'}}
           contentOffset={{x: xPosition, y: 0}}
@@ -501,7 +496,6 @@ class EpisodeDetail extends Component {
           this.contentRefs[i].getWrappedInstance().ref._component.stopVideo()
         }
       }
-
       if (episodeViewability &&
           this.state.contentTypeArray[centerIndex] === 'Video' &&
           this.contentRefs[centerIndex] !== null &&

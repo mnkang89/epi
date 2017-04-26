@@ -10,7 +10,6 @@ export function * userEpisodes (api, action) {
   console.log('유저 에피소드 사가 진입')
   const { token, accountId, active } = action
   const response = yield call(api.requestUserFeeds, token, accountId, active)
-  console.log(response)
 
   // dispatch successful email checking
   if (response.ok) {
@@ -72,11 +71,8 @@ export function * moreFeeds (api, action) {
   console.log('모어 피드 사가 진입')
   const { token, accountId, withFollowing, before } = action
   const response = yield call(api.requestMoreFeeds, token, accountId, withFollowing, before)
-  console.log(response)
 
   if (response.ok) {
-    console.log('ok')
-    console.log(response)
     const episodes = path(['data', 'items'], response)
 
     yield put(EpisodeActions.moreFeedsSuccess(episodes))
