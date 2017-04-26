@@ -1,34 +1,31 @@
+// TODO
+// 1) 탭버튼 클릭시 초기화 되는 문제해결
+// DONE
+// 1) S2리팩에서 디바이스에 따라 유동적이게 바꾸기
+
 import React, { Component, PropTypes } from 'react'
 import {
   View,
   ActivityIndicator,
-  FlatList
+  FlatList,
+  Dimensions
 } from 'react-native'
 import { connect } from 'react-redux'
-import _ from 'lodash'
-// import { Actions as NavigationActions } from 'react-native-router-flux'
 
 import { getAccountId } from '../Services/Auth'
 import { getObjectDiff, getArrayDiff } from '../Lib/Utilities'
-// import FlatListE from '../Experimental/FlatList_e'
+
+import styles from './Styles/FeedScreenStyle'
 import EpisodeDetail from '../Components/common/EpisodeDetail'
 import CommentModalContainer from './common/CommentModalContainer'
-import styles from './Styles/FeedScreenStyle'
-
-import AccountActions from '../Redux/AccountRedux'
 import EpisodeActions from '../Redux/EpisodeRedux'
 import CommentActions from '../Redux/CommentRedux'
 
-// const windowSize = Dimensions.get('window')
-const ITEM_HEIGHT = 471
+const windowSize = Dimensions.get('window')
+const ITEM_HEIGHT = 56 + (windowSize.width - 30) + 60 + 10
 
 class FeedScreen extends Component {
-
   static propTypes = {
-    token: PropTypes.string,
-    accountId: PropTypes.number,
-
-    episodesRequesting: PropTypes.bool,
     items: PropTypes.array.isRequired,
 
     contentId: PropTypes.number,
@@ -38,12 +35,11 @@ class FeedScreen extends Component {
     comments: PropTypes.array,
     commentPosting: PropTypes.bool,
 
-    requestInfo: PropTypes.func,
     requestUserEpisodes: PropTypes.func,
+    requestMoreFeeds: PropTypes.func,
+    requestNewEpisode: PropTypes.func,
 
-    resetCommentModal: PropTypes.func,
-    getComment: PropTypes.func,
-    postComment: PropTypes.func
+    getComment: PropTypes.func
   }
 
   constructor (props) {
@@ -51,50 +47,39 @@ class FeedScreen extends Component {
     this.state = {
       refreshing: false,
       footer: false,
-      scrollsToTop: true,
-      commentModalVisible: false,
-      leftTime: 5
+      commentModalVisible: false
     }
-    this.before
-    this.episodeRefs = {}
-    this.viewableItemsArray = []
-    this._onPushToUserProfileScreen = this._onPushToUserProfileScreen.bind(this)
-    this._onPopFromUserProfileScreen = this._onPopFromUserProfileScreen.bind(this)
+    this.updatedDateTime
     this.profileModifiedFlag = false
-  }
-
-  componentWillMount () {
-    const token = null
-    const withFollowing = true
-    const accountId = getAccountId()
-
-    this.props.requestUserEpisodes(token, accountId, withFollowing)
-    this.props.requestUserEpisodesWithFalse(token, accountId, false)
+    this.viewableItemsArray = []
+    this.episodeRefs = {}
   }
 
   componentDidMount () {
-    const token = null
     const accountId = getAccountId()
+    const withFollowing = true
 
-    this.props.requestInfo(token, accountId)
+    this.props.requestUserEpisodes(null, accountId, withFollowing)
   }
 
   componentWillReceiveProps (nextProps, nextState) {
-    console.log('리시브프랍스인 피드스크린')
+    console.log('componentWillReceiveProps in FeedScreen')
     console.log(getObjectDiff(this.props, nextProps))
 
     if (nextProps.items.length !== 0) {
-      this.before = nextProps.items[nextProps.items.length - 1].episode.updatedDateTime
+      this.updatedDateTime = nextProps.items[nextProps.items.length - 1].episode.updatedDateTime
     }
 
-    if (nextProps.beforeScreen === 'homeTab') {
-      if (nextProps.beforeScreen === nextProps.pastScreen) {
-        if (this.props.items.length === 0) {
-        } else {
-          this._listRef.scrollToIndex({index: 0})
-        }
-      }
-    }
+    // if (nextProps.beforeScreen === 'homeTab') {
+    //   console.log('홈탭클릭1')
+    //   if (nextProps.beforeScreen === nextProps.pastScreen) {
+    //     if (this.props.items.length === 0) {
+    //     } else {
+    //       console.log('홈탭클릭2')
+    //       this._listRef.scrollToIndex({index: 0})
+    //     }
+    //   }
+    // }
 
     if (this.state.refreshing) {
       this.setState({
@@ -104,134 +89,78 @@ class FeedScreen extends Component {
     }
   }
 
-  shouldComponentUpdate (nextProps, nextState) {
-    if (this.props.profileModified !== nextProps.profileModified) {
-      this.profileModifiedFlag = true
-      return true
-    }
-    // newEpisode콜시에 업뎃안되는 문제가 있음
-    if (this.state.scrollsToTop !== nextState.scrollsToTop) {
-      return true
-    }
-
-    if (this.props.episodesRequesting !== nextProps.episodesRequesting) {
-      return true
-    }
-
-    if (this.state.commentModalVisible !== nextState.commentModalVisible) {
-      return true
-    }
-    if (_.isEqual(this.props.items, nextProps.items) &&
-        !getObjectDiff(this.props, nextProps).includes('newEpisodeRequesting')) {
-      console.log('슈드아이템 폴스')
-      return false
-    } else {
-      console.log('슈드아이템 트루')
-      return true
-    }
-  }
-
-  _onRefresh () {
-    const { token, accountId } = this.props
-    const withFollowing = true
-
-    this.setState({refreshing: true})
-    this.props.requestUserEpisodes(token, accountId, withFollowing)
-  }
-
-  _onEndReached () {
-    console.log('onEndReached fired')
-    this.setState({footer: true})
-    const { token, accountId } = this.props
-    const before = this.before
-    const withFollowing = true
-
-    this.props.requestMoreFeeds(token, accountId, withFollowing, before)
-  }
-
-  _onPushToUserProfileScreen () {
-    this.setState({
-      scrollsToTop: false
-    })
-    // this.topOfStack = false
-  }
-
-  _onPopFromUserProfileScreen () {
-    this.setState({
-      scrollsToTop: true
-    })
-  }
-
-  _toggleCommentModal () {
-    console.log('스테이트 변경함니다')
-    this.setState({
-      commentModalVisible: !this.state.commentModalVisible
-    })
-  }
+  // shouldComponentUpdate (nextProps, nextState) {
+  //   if (this.props.profileModified !== nextProps.profileModified) {
+  //     this.profileModifiedFlag = true
+  //     return true
+  //   }
+  //   if (_.isEqual(this.props.items, nextProps.items) &&
+  //       !getObjectDiff(this.props, nextProps).includes('newEpisodeRequesting')) {
+  //     return false
+  //   } else {
+  //     return true
+  //   }
+  // }
 
   render () {
     return (
       <View style={styles.mainContainer}>
         <FlatList
-          windowSize={10}
-          style={{ flex: 1 }}
-          renderItem={this._renderItemComponent.bind(this)}
-          FooterComponent={this._renderFooter.bind(this)}
-          data={this.props.items}
+          windowSize={7}
+          style={{flex: 1}}
+          renderItem={this._renderItemComponent}
+          FooterComponent={this._renderFooterComponent}
+          data={this.props.items} // state로 받아서 concat하기
           disableVirtualization={false}
           getItemLayout={this._getItemLayout}
           key={'vf'}
           keyExtractor={(item, index) => index}
           horizontal={false}
           legacyImplementation={false}
-          onRefresh={this._onRefresh.bind(this)}
-          onViewableItemsChanged={this._onViewableItemsChanged}
+          onRefresh={this._onRefresh}
+          // onViewableItemsChanged={this._onViewableItemsChanged}
           ref={this._captureRef}
           refreshing={this.state.refreshing}
-          shouldItemUpdate={this._shouldItemUpdate.bind(this)}
-          scrollsToTop={this.state.scrollsToTop}
-          onEndReached={this._onEndReached.bind(this)}
+          shouldItemUpdate={this._shouldItemUpdate}
+          scrollsToTop
+          onEndReached={this._onEndReached}
           onEndReachedThreshold={0} />
         <View style={{height: 60}} />
         <CommentModalContainer
           commentModalVisible={this.state.commentModalVisible}
-          commentModalHandler={this._toggleCommentModal.bind(this)}
-          screen={'FeedScreen'}
-          token={this.props.token}
-          pushHandler={this._onPushToUserProfileScreen}
-          popHandler={this._onPopFromUserProfileScreen} />
+          commentModalHandler={this._toggleCommentModal}
+          screen={'FeedScreen'} />
       </View>
     )
   }
 
-  _captureRef = (ref) => { this._listRef = ref }
+/* FlatList helper method */
+  _captureRef = (ref) => { this._listRef = ref } //
 
-  _renderItemComponent = (episode) => {
-    const index = episode.index
-
+  _renderItemComponent = ({item, index}) => {
+   /* DONE
+    * EpisodeDetail컴포넌트의 PureComponent화를 통한 리렌더링 최소화
+    * shouldItemUpdate옵션은 deprecated될 예정
+    */
     return (
       <EpisodeDetail
+        index={index}
         ref={(component) => {
           if (component !== null) {
             this.episodeRefs[index] = component
           }
         }}
-        key={index}
-        index={index}
-        token={this.props.token}
         parentHandler={this}
-        pushHandler={this._onPushToUserProfileScreen}
-        popHandler={this._onPopFromUserProfileScreen}
-        episode={episode.item.episode}
-        account={episode.item.account}
+        episode={item.episode}
+        account={item.account}
+        commentModalHandler={this._toggleCommentModal}
         requestNewEpisode={this.props.requestNewEpisode}
-        commentModalHandler={this._toggleCommentModal.bind(this)}
         openComment={this.props.openComment}
         getComment={this.props.getComment} />
     )
   }
 
-  _renderFooter () {
+  _renderFooterComponent = () => { //
     if (this.state.footer) {
       return (
         <View>
@@ -252,7 +181,8 @@ class FeedScreen extends Component {
     length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index
   })
 
-  _shouldItemUpdate (prev, next) {
+/* 0.44에서 derpecated될 예정 */
+  _shouldItemUpdate = (prev, next) => {
     if (this.profileModifiedFlag) {
       this.profileModifiedFlag = false
       return true
@@ -301,32 +231,47 @@ class FeedScreen extends Component {
     }
   }
 
+  _toggleCommentModal = () => {
+    this.setState({
+      commentModalVisible: !this.state.commentModalVisible
+    })
+  }
+
+  _onRefresh = () => {
+    const accountId = getAccountId()
+    const withFollowing = true
+
+    this.setState({refreshing: true})
+    this.props.requestUserEpisodes(null, accountId, withFollowing)
+  }
+
+  _onEndReached = () => {
+    const accountId = getAccountId()
+    const withFollowing = true
+    const updatedDateTime = this.updatedDateTime
+
+    this.setState({footer: true})
+    this.props.requestMoreFeeds(null, accountId, withFollowing, updatedDateTime)
+  }
 }
 
 const mapStateToProps = (state) => {
   return {
     profileModified: state.signup.modified,
 
-    token: state.token.token,
-    accountId: state.token.id,
-
-    episodesRequesting: state.episode.episodesRequesting,
     newEpisodeRequesting: state.episode.newEpisodeRequesting,
-    items: state.episode.episodes,
-
-    trigger: state.screen.trigger,
-    beforeScreen: state.screen.beforeScreen,
-    pastScreen: state.screen.pastScreen
+    items: state.episode.episodes
+    // trigger: state.screen.trigger,
+    // beforeScreen: state.screen.beforeScreen,
+    // pastScreen: state.screen.pastScreen
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    requestInfo: (token, accountId) => dispatch(AccountActions.infoRequest(token, accountId)),
     // EpisodeDetailContainer만들고 그쪽에서 넘겨주는 로직으로 변경할 예정
     requestNewEpisode: (token, episodeId) => dispatch(EpisodeActions.newEpisodeRequest(token, episodeId)),
     requestUserEpisodes: (token, accountId, withFollowing) => dispatch(EpisodeActions.userEpisodesRequest(token, accountId, withFollowing)),
-    requestUserEpisodesWithFalse: (token, accountId, withFollowing) => dispatch(EpisodeActions.userEpisodesWithFalseRequest(token, accountId, withFollowing)),
     requestMoreFeeds: (token, accountId, withFollowing, before) => dispatch(EpisodeActions.moreFeedsRequest(token, accountId, withFollowing, before)),
 
     openComment: (visible) => dispatch(CommentActions.openComment(visible)),
