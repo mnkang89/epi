@@ -73,6 +73,11 @@ class ProfileScreen extends Component {
   }
 
   componentDidMount () {
+    const token = null
+    const accountId = getAccountId()
+
+    this.props.requestInfo(token, accountId)
+    this.props.requestUserEpisodesWithFalse(null, accountId, false)
   }
 
   shouldComponentUpdate (nextProps, nextState) {
