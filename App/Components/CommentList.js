@@ -8,7 +8,6 @@ import CommentDetail from './CommentDetail'
 class CommentList extends Component {
 
   static propTypes = {
-    token: PropTypes.string,
     screen: PropTypes.string,
     comments: PropTypes.array.isRequired,
     episodeId: PropTypes.number,
@@ -19,9 +18,7 @@ class CommentList extends Component {
 
     resetCommentModal: PropTypes.func,
     getComment: PropTypes.func,
-    deleteComment: PropTypes.func,
-    popHandler: PropTypes.func,
-    pushHandler: PropTypes.func
+    deleteComment: PropTypes.func
   }
 
   constructor (props) {
@@ -54,10 +51,10 @@ class CommentList extends Component {
   }
 
   onRefresh () {
-    const { token, episodeId, contentId } = this.props
+    const { episodeId, contentId } = this.props
 
     this.setState({refreshing: true})
-    this.props.getComment(token, episodeId, contentId)
+    this.props.getComment(null, episodeId, contentId)
   }
 
   componentWillMount () {
@@ -72,20 +69,16 @@ class CommentList extends Component {
     return sortedComments.map(comment =>
       <CommentDetail
         key={comment.id}
-        token={this.props.token}
         episodeId={this.props.episodeId}
         contentId={this.props.contentId}
         comment={comment}
         screen={this.props.screen}
-        popHandler={this.props.popHandler}
-        pushHandler={this.props.pushHandler}
         resetCommentModal={this.props.resetCommentModal}
         deleteComment={this.props.deleteComment} />
     )
   }
 
   render () {
-    console.log('염병~')
     return (
       <ScrollView
         refreshControl={

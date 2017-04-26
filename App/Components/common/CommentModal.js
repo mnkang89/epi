@@ -22,7 +22,6 @@ const windowSize = Dimensions.get('window')
 class CommentModal extends Component {
 
   static propTypes = {
-    token: PropTypes.string,
     screen: PropTypes.string,
     contentId: PropTypes.number,
     episodeId: PropTypes.number,
@@ -35,10 +34,7 @@ class CommentModal extends Component {
     resetCommentModal: PropTypes.func,
     getComment: PropTypes.func,
     postComment: PropTypes.func,
-    deleteComment: PropTypes.func,
-
-    pushHandler: PropTypes.func,
-    popHandler: PropTypes.func
+    deleteComment: PropTypes.func
   }
 
   constructor (props) {
@@ -59,7 +55,6 @@ class CommentModal extends Component {
   componentWillReceiveProps (nextProps) {
     // if (nextProps.visible) {
     //   const modalVisible = nextProps.visible
-    console.log(nextProps)
     if (nextProps.commentModalVisible) {
       const modalVisible = nextProps.commentModalVisible
       console.log('모달비저블하게윌리시브프랍스')
@@ -117,14 +112,14 @@ class CommentModal extends Component {
   }
 
   onCommentButtonPress () {
-    const { token, episodeId, contentId } = this.props
+    const { episodeId, contentId } = this.props
     const message = this.message
 
     if (message !== '') {
       this.message = ''
       this.refs.commentInput.clear()
 
-      this.props.postComment(token, episodeId, contentId, message)
+      this.props.postComment(null, episodeId, contentId, message)
     } else {
       this.message = ''
       this.refs.commentInput.clear()
@@ -136,9 +131,6 @@ class CommentModal extends Component {
       return (
         <CommentContainer
           screen={this.props.screen}
-          token={this.props.token}
-          popHandler={this.props.popHandler}
-          pushHandler={this.props.pushHandler}
           resetCommentModal={this.resetCommentModal.bind(this)} />
       )
     } else {
