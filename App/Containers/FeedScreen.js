@@ -106,7 +106,7 @@ class FeedScreen extends Component {
     return (
       <View style={styles.mainContainer}>
         <FlatList
-          windowSize={7}
+          windowSize={3}
           style={{flex: 1}}
           renderItem={this._renderItemComponent}
           FooterComponent={this._renderFooterComponent}

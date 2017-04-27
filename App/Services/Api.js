@@ -180,7 +180,7 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
 
     console.tron.log(getTokenHeader())
 
-    return api.get(`/api/feeds?withFollowing=${withFollowing}&size=7`, {}, getTokenHeader())
+    return api.get(`/api/feeds?withFollowing=${withFollowing}&size=6`, {}, getTokenHeader())
   }
 
   const requestOtherFeeds = (token, accountId, withFollowing) => {
@@ -190,7 +190,7 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     // formData.append('accountId', accountId)
     // formData.append('withFollowing', active)
 
-    return api.get(`/api/feeds?accountId=${accountId}&withFollowing=${withFollowing}&size=7`, {}, getTokenHeader())
+    return api.get(`/api/feeds?accountId=${accountId}&withFollowing=${withFollowing}&size=6`, {}, getTokenHeader())
   }
 
   const requestMoreFeeds = (token, accountId, withFollowing, before) => {
@@ -202,7 +202,7 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
 
     console.tron.log(getTokenHeader())
 
-    return api.get(`/api/feeds?withFollowing=${withFollowing}&before=${before}&size=7`, {}, getTokenHeader())
+    return api.get(`/api/feeds?withFollowing=${withFollowing}&before=${before}&size=6`, {}, getTokenHeader())
   }
 
   const requestMoreOtherFeeds = (token, accountId, withFollowing, before) => {
@@ -214,7 +214,7 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
 
     console.tron.log(getTokenHeader())
 
-    return api.get(`/api/feeds?accountId=${accountId}&withFollowing=${withFollowing}&before=${before}&size=7`, {}, getTokenHeader())
+    return api.get(`/api/feeds?accountId=${accountId}&withFollowing=${withFollowing}&before=${before}&size=6`, {}, getTokenHeader())
   }
 
   const postFollow = (token, id) => {
@@ -345,13 +345,13 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
   const getBestFeeds = (token) => {
     console.tron.log('GET bestFeeds api콜 발생')
     console.tron.log(getTokenHeader())
-    return api.get(`/api/feeds/best?size=7`, {}, getTokenHeader())
+    return api.get(`/api/feeds/best?size=6`, {}, getTokenHeader())
   }
 
   const requestMoreBestFeeds = (token, accountId, before) => {
     console.tron.log(getTokenHeader())
 
-    return api.get(`/api/feeds/best?before=${before}&size=7`, {}, getTokenHeader())
+    return api.get(`/api/feeds/best?before=${before}&size=6`, {}, getTokenHeader())
   }
 
   // noties
