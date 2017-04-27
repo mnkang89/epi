@@ -387,7 +387,7 @@ class EpisodeDetail extends Component {
           onScrollEndDrag={this._onScrollEndDrag.bind(this)}
           onMomentumScrollBegin={this._onMomentumScrollBegin.bind(this)}
           onMomentumScrollEnd={this._onMomentumScrollEnd.bind(this)}
-          // onViewableItemsChanged={this._onViewableItemsChanged}
+          onViewableItemsChanged={this._onViewableItemsChanged}
           shouldItemUpdate={this._shouldItemUpdate}
           style={{paddingLeft: 7.5, paddingRight: 7.5, backgroundColor: '#FFFFFF'}}
           contentOffset={{x: xPosition, y: 0}}

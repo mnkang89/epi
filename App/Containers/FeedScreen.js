@@ -118,7 +118,7 @@ class FeedScreen extends Component {
           horizontal={false}
           legacyImplementation={false}
           onRefresh={this._onRefresh}
-          // onViewableItemsChanged={this._onViewableItemsChanged}
+          onViewableItemsChanged={this._onViewableItemsChanged}
           ref={this._captureRef}
           refreshing={this.state.refreshing}
           shouldItemUpdate={this._shouldItemUpdate}
