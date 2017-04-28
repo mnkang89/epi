@@ -214,7 +214,10 @@ class FeedScreen extends Component {
       }
     }
     // 뷰어블한 아이템이 3개이면 중간 아이템만 play
+    console.log('뷰어블 아이템 어레이')
+    console.log(viewableItemsArray)
     if (viewableItemsArray.length === 3) {
+      console.log('뷰어블한 아이템이 3개이면 중간 아이템만 play')
       if (this.episodeRefs[viewableItemsArray[0]] !== null) {
         this.episodeRefs[viewableItemsArray[0]].stopEpisodeVideo()
       }

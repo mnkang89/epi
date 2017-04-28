@@ -53,7 +53,8 @@ class ContentDetailClass extends Component {
       IsAnimationTypeLike: this.props.content.liked,
       disabled: false,
 
-      paused: true
+      paused: true,
+      visible: false
     }
   }
 
@@ -111,14 +112,20 @@ class ContentDetailClass extends Component {
 
   playVideo () {
     console.log('비디오 켜라: ' + this.props.episodeId)
+    // this.setState({
+    //   paused: false
+    // })
     this.setState({
-      paused: false
+      visible: true
     })
   }
 
   stopVideo () {
+    // this.setState({
+    //   paused: true
+    // })
     this.setState({
-      paused: true
+      visible: false
     })
   }
 
@@ -252,6 +259,46 @@ class ContentDetailClass extends Component {
           </TouchableWithoutFeedback>
         </View>
       )
+    } else if (content.type === 'Video' && !this.state.visible) {
+      return (
+        <View style={{backgroundColor: '#FFFFFF', paddingLeft: 8, paddingRight: paddingRight}}>
+          <TouchableWithoutFeedback
+            delayLongPress={350}
+            onPress={this.onDoublePress.bind(this)}
+            onLongPress={this.onLongPress.bind(this)} >
+            <View>
+              <Image
+                imageRef={this.props.playerRef}
+                style={{
+                  alignItems: 'center',
+                  height: windowSize.width - 30,
+                  width: windowSize.width - 30
+                }}
+                // source={{ uri: content.path }}
+                source={{ uri: 'https://facebook.github.io/react/img/logo_og.png' }}
+                >
+                <View style={{flex: 1, marginTop: 90}}>
+                  {this.renderAnimation()}
+                </View>
+                <View style={{flex: 1, justifyContent: 'flex-end', marginBottom: 10, backgroundColor: 'rgba(0,0,0,0)', paddingRight: 15, paddingLeft: 15}}>
+                  <Text
+                    allowFontScaling={false}
+                    style={{
+                      textShadowOffset: {width: 1, height: 2},
+                      textShadowColor: 'rgba(0, 0, 0, 0.5)',
+                      textShadowRadius: 1,
+                      color: 'white',
+                      fontWeight: 'bold',
+                      textAlign: 'center',
+                      fontSize: 20 }} >
+                    {message}
+                  </Text>
+                </View>
+              </Image>
+            </View>
+          </TouchableWithoutFeedback>
+        </View>
+      )
     } else {
       return (
         <View style={{backgroundColor: '#FFFFFF', paddingLeft: 8, paddingRight: paddingRight}}>
@@ -266,7 +313,7 @@ class ContentDetailClass extends Component {
                 // source={Videos.ragu_8}
                 muted
                 videoRef={this.props.playerRef}                             // Store reference
-                paused={this.state.paused}                 // Pauses playback entirely.
+                paused={false}                 // Pauses playback entirely.
                 resizeMode='cover'             // Fill the whole screen at aspect ratio.
                 repeat                         // Repeat forever.
                 playInBackground={false}       // Audio continues to play when app entering background.

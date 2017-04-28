@@ -444,6 +444,7 @@
 		EB6FD93A2C694DD08498D46B /* libz.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		ED55A6D3586C42E69958E171 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		EE2CB1081EA4EB670076F9F4 /* RCTPushNotification.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTPushNotification.xcodeproj; path = "../node_modules/react-native/Libraries/PushNotificationIOS/RCTPushNotification.xcodeproj"; sourceTree = "<group>"; };
+		EE5CB6A61EB20D49003EF6FF /* Episode.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Episode.entitlements; path = Episode/Episode.entitlements; sourceTree = "<group>"; };
 		EE784A611EAB886700C0594C /* RCTCameraRoll.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCameraRoll.xcodeproj; path = "../node_modules/react-native/Libraries/CameraRoll/RCTCameraRoll.xcodeproj"; sourceTree = "<group>"; };
 		EEBBE47B1EA9CDF40069DA0C /* ReactNativeNavigation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeNavigation.xcodeproj; path = "../node_modules/react-native-navigation/ios/ReactNativeNavigation.xcodeproj"; sourceTree = "<group>"; };
 		EEBBE4A91EA9CE240069DA0C /* libRealmJS.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libRealmJS.a; path = "../../Episode/ios/build/Build/Products/Debug-iphonesimulator/libRealmJS.a"; sourceTree = "<group>"; };
@@ -613,6 +614,7 @@
 		13B07FAE1A68108700A75B9A /* Episode */ = {
 			isa = PBXGroup;
 			children = (
+				EE5CB6A61EB20D49003EF6FF /* Episode.entitlements */,
 				EEDC094A1EB0970600DDEF42 /* Episode2.entitlements */,
 				EEDDF58F1EAE3ECB009C112E /* NSMutableDictionary+SDAVAssetExportSession.h */,
 				EEDDF5901EAE3ECB009C112E /* NSMutableDictionary+SDAVAssetExportSession.m */,
@@ -1605,7 +1607,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Episode2.app/Episode2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Episode.app/Episode";
 			};
 			name = Debug;
 		};
@@ -1658,7 +1660,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Episode2.app/Episode2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Episode.app/Episode";
 			};
 			name = Release;
 		};

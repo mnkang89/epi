@@ -382,7 +382,6 @@ class EpisodeDetail extends Component {
           disableVirtualization={false}
           horizontal
           key={'hf'}
-          initialListSize={20}
           onScrollBeginDrag={this._onScrollBeginDrag.bind(this)}
           onScrollEndDrag={this._onScrollEndDrag.bind(this)}
           onMomentumScrollBegin={this._onMomentumScrollBegin.bind(this)}
