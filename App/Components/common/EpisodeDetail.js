@@ -51,7 +51,7 @@ class EpisodeDetail extends Component {
     // 비디오 컴포넌트 ref
     // this.player는 deprecated될 수 있음.
     this.player = []
-    this.currentCenterIndex = 0
+    this.currentCenterIndex = 0 //초기화(ok)
     this.horizontalLock = true
 
     this.lastContentOffset
@@ -61,7 +61,7 @@ class EpisodeDetail extends Component {
   }
 
   componentDidMount () {
-    const centerIndex = this.currentCenterIndex
+    const centerIndex = this.currentCenterIndex // 센터인덱스를 잘못 설정하면 문제 생기는 부분이지만 이곳에서 문제가 생기고 있진 않아.(ok)
     const episodeId = this.props.episode.id
     const liked = this.props.episode.liked
     let episode = realm.objects('episode')
@@ -83,7 +83,7 @@ class EpisodeDetail extends Component {
         this.contentRefs[centerIndex] !== null &&
         this.contentRefs[centerIndex] !== undefined) {
       this.contentRefs[centerIndex].getWrappedInstance().ref._component.playVideo()
-      this.currentCenterIndex = centerIndex
+      this.currentCenterIndex = centerIndex // 이 코드까지 왔다는건 문제없다는 것
     }
 
     if (episode.length === 0) {
@@ -133,6 +133,8 @@ class EpisodeDetail extends Component {
   }
 
   playEpisodeVideo = () => {
+    console.log('플레이에피소드 비디오에서 센터인덱스는?')
+    console.log(this.currentCenterIndex) // 콘솔 출력부(ok)
     if (this.state.contentTypeArray[this.currentCenterIndex] === 'Video') {
       this.isPlayVideo = true
       setTimeout(() => {
@@ -234,17 +236,15 @@ class EpisodeDetail extends Component {
     this.horizontalLock = false
   }
 
+// 이 로직이 아니라 onViewableItemsChanged로직에서 중간 인덱스를 realm에 저장하는 방식이 나아보임
   _onMomentumScrollEnd (event) {
-    const episodeId = this.props.episode.id
-    const offset = event.nativeEvent.contentOffset.x
-    let episode = realm.objects('episode')
-      .filtered('id = ' + episodeId)
-    this.currentCenterIndex = offset / (windowSize.width - 22)
-
-    realm.write(() => {
-      realm.create('episode', {id: episodeId, offset: offset}, true)
-      console.log(episode[0].offset)
-    })
+    // const episodeId = this.props.episode.id
+    // const offset = event.nativeEvent.contentOffset.x
+    // this.currentCenterIndex = offset / (windowSize.width - 22) // 여기서 잘 못 만들면 문제생김(x)
+    //
+    // realm.write(() => {
+    //   realm.create('episode', {id: episodeId, offset: offset}, true)
+    // })
   }
 
   _onPressHeart () {
@@ -272,7 +272,6 @@ class EpisodeDetail extends Component {
     const episodeId = this.props.episode.id
     const contentId = this.props.episode.contents[this.currentCenterIndex].id
 
-    // this.props.openComment(true)
     this.props.commentModalHandler()
     this.props.getComment(null, episodeId, contentId)
   }
@@ -340,10 +339,10 @@ class EpisodeDetail extends Component {
       } else {
         xPosition = episode[0].offset
       }
-      this.currentCenterIndex = xPosition / (windowSize.width - 22)
+      this.currentCenterIndex = xPosition / (windowSize.width - 22) // 여기서도 문제 생길 수 있음(x)
     } else {
+      this.currentCenterIndex = this.props.xPosition / (windowSize.width - 22) // 여기서도 문제 생길 수 있음(x)
       xPosition = this.props.xPosition
-      this.currentCenterIndex = this.props.xPosition / (windowSize.width - 22)
     }
 
     return (
@@ -485,9 +484,19 @@ class EpisodeDetail extends Component {
     */
 
     if (info.viewableItems.length === 1 && !this.horizontalLock) {
+      const episodeId = this.props.episode.id
+      const offset = info.viewableItems[0].index * (windowSize.width - 22)
+
       const { parentHandler, index } = this.props
       const episodeViewability = parentHandler.viewableItemsArray.includes(index)
+
       const centerIndex = info.viewableItems[0].index
+      this.currentCenterIndex = centerIndex
+      // this.currentCenterIndex = offset / (windowSize.width - 22) // 여기서 잘 못 만들면 문제생김(x)
+
+      realm.write(() => {
+        realm.create('episode', {id: episodeId, offset: offset}, true)
+      })
 
       for (let i = 0; i < this.state.contentTypeArray.length; i++) {
         if (this.state.contentTypeArray[i] === 'Video' &&
@@ -505,7 +514,7 @@ class EpisodeDetail extends Component {
           this.contentRefs[centerIndex] !== null &&
           this.contentRefs[centerIndex] !== undefined) {
         this.contentRefs[centerIndex].getWrappedInstance().ref._component.playVideo()
-        this.currentCenterIndex = centerIndex
+        // this.currentCenterIndex = centerIndex // 여기까지 오면 문제없음(ok)
       }
     }
   }
