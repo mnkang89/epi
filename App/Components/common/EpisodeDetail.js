@@ -15,13 +15,13 @@ import { convert2TimeDiffString } from '../../Lib/Utilities'
 import { getRealm } from '../../Services/RealmFactory'
 
 import ContentContainer from '../../Containers/common/ContentContainer'
-import FlatListE from '../../Experimental/FlatList0.44/FlatList_E44'
+import FlatListE from '../../Experimental/FlatList_e'
 
-const realm = getRealm()
 const windowSize = Dimensions.get('window')
-const ITEM_WIDTH = (windowSize.width - 30) + 8
-
+const realm = getRealm()
+// const ITEM_WIDTH = 367.5
 // React.Pure
+
 class EpisodeDetail extends Component {
 
   static propTypes = {
@@ -239,7 +239,7 @@ class EpisodeDetail extends Component {
     const offset = event.nativeEvent.contentOffset.x
     let episode = realm.objects('episode')
       .filtered('id = ' + episodeId)
-    this.currentCenterIndex = Math.floor((offset / (windowSize.width - 22)))
+    this.currentCenterIndex = offset / (windowSize.width - 22)
 
     realm.write(() => {
       realm.create('episode', {id: episodeId, offset: offset}, true)
@@ -340,10 +340,10 @@ class EpisodeDetail extends Component {
       } else {
         xPosition = episode[0].offset
       }
-      this.currentCenterIndex = Math.floor((xPosition / (windowSize.width - 22)))
+      this.currentCenterIndex = xPosition / (windowSize.width - 22)
     } else {
       xPosition = this.props.xPosition
-      this.currentCenterIndex = Math.floor((this.props.xPosition / (windowSize.width - 22)))
+      this.currentCenterIndex = this.props.xPosition / (windowSize.width - 22)
     }
 
     return (
@@ -371,16 +371,13 @@ class EpisodeDetail extends Component {
           </View>
         </View>
         <FlatListE
-          removeClippedSubviews={false}
           initialNumToRender={1}
           windowSize={3}
           ref={this._captureRef}
           scrollsToTop={false}
-          getItemLayout={this._getItemLayout}
           keyExtractor={(item, index) => index}
           data={this.props.episode.contents}
-          renderItem={this._renderItemComponent}
-          // ItemComponent={this._renderItemComponent}
+          ItemComponent={this._renderItemComponent}
           FooterComponent={this._renderFooter.bind(this)}
           disableVirtualization={false}
           horizontal
@@ -392,8 +389,7 @@ class EpisodeDetail extends Component {
           onViewableItemsChanged={this._onViewableItemsChanged}
           shouldItemUpdate={this._shouldItemUpdate}
           style={{paddingLeft: 7.5, paddingRight: 7.5, backgroundColor: '#FFFFFF'}}
-          initialScrollIndex={this.currentCenterIndex}
-          // contentOffset={{x: xPosition, y: 0}}
+          contentOffset={{x: xPosition, y: 0}}
           scrollEventThrottle={100}
           snapToAlignment={'start'}
           snapToInterval={windowSize.width - 22}
@@ -473,9 +469,9 @@ class EpisodeDetail extends Component {
     return prev.item !== next.item
   }
 
-  _getItemLayout = (data: any, index: number) => ({
-    length: ITEM_WIDTH, offset: ITEM_WIDTH * index, index
-  })
+  // _getItemLayout = (data: any, index: number) => ({
+  //   length: ITEM_WIDTH, offset: ITEM_WIDTH * index, index
+  // })
 
   _onViewableItemsChanged = (info: {
       changed: Array<{
