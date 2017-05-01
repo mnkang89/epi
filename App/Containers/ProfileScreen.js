@@ -1,31 +1,31 @@
 import React, { Component, PropTypes } from 'react'
-import { View, ActivityIndicator } from 'react-native'
+import {
+  View,
+  ActivityIndicator,
+  FlatList,
+  Dimensions
+} from 'react-native'
 import { connect } from 'react-redux'
-import _ from 'lodash'
 
 import { getAccountId } from '../Services/Auth'
-import { getObjectDiff, getArrayDiff } from '../Lib/Utilities'
-import FlatListE from '../Experimental/FlatList_e'
+import { getArrayDiff } from '../Lib/Utilities'
+
 import ProfileInfo from '../Components/common/ProfileInfo'
 import EpisodeDetail from '../Components/common/EpisodeDetail'
 import CommentModalContainer from './common/CommentModalContainer'
 import FollowModalContainer from './common/FollowModalContainer'
 
-// Styles
 import styles from './Styles/FeedScreenStyle'
-
 import SignupActions from '../Redux/SignupRedux'
 import EpisodeActions from '../Redux/EpisodeRedux'
 import AccountActions from '../Redux/AccountRedux'
 import CommentActions from '../Redux/CommentRedux'
 
-const ITEM_HEIGHT = 471
+const windowSize = Dimensions.get('window')
+const ITEM_HEIGHT = 56 + (windowSize.width - 30) + 60 + 10
 
 class ProfileScreen extends Component {
   static propTypes = {
-    token: PropTypes.string,
-    accountId: PropTypes.number,
-
     profileImagePath: PropTypes.string,
     nickname: PropTypes.string,
     followerCount: PropTypes.number,
@@ -42,26 +42,35 @@ class ProfileScreen extends Component {
     this.state = {
       refreshing: false,
       footer: false,
-
       commentModalVisible: false
     }
-    this.before
-    this.episodeRefs = {}
-    this.viewableItemsArray = []
+    this.updatedDateTime
     this.profileModifiedFlag = false
+    this.viewableItemsArray = []
+    this.episodeRefs = {}
+  }
+
+  componentDidMount () {
+    const accountId = getAccountId()
+    const withFollowing = false
+
+    this.props.requestInfo(null, accountId)
+    this.props.requestUserEpisodesWithFalse(null, accountId, withFollowing)
   }
 
   componentWillReceiveProps (nextProps) {
-    console.log(getObjectDiff(this.props, nextProps))
+    // console.log(getObjectDiff(this.props, nextProps))
+    // if (nextProps.items.length !== 0) {
+    //   this.updatedDateTime = nextProps.items[nextProps.items.length - 1].episode.updatedDateTime
+    // }
 
+    // if (nextProps.beforeScreen === 'profileTab') {
+    //   if (nextProps.beforeScreen === nextProps.pastScreen) {
+    //     this._listRef.scrollToOffset({y: 0})
+    //   }
+    // }
     if (nextProps.items.length !== 0) {
-      this.before = nextProps.items[nextProps.items.length - 1].episode.updatedDateTime
-    }
-
-    if (nextProps.beforeScreen === 'profileTab') {
-      if (nextProps.beforeScreen === nextProps.pastScreen) {
-        this._listRef.scrollToOffset({y: 0})
-      }
+      this.updatedDateTime = nextProps.items[nextProps.items.length - 1].episode.updatedDateTime
     }
 
     if (this.state.refreshing) {
@@ -72,87 +81,47 @@ class ProfileScreen extends Component {
     }
   }
 
-  componentDidMount () {
-    const token = null
-    const accountId = getAccountId()
-
-    this.props.requestInfo(token, accountId)
-    this.props.requestUserEpisodesWithFalse(null, accountId, false)
-  }
-
-  shouldComponentUpdate (nextProps, nextState) {
-    if (this.props.profileModified !== nextProps.profileModified) {
-      this.profileModifiedFlag = true
-      return true
-    }
-
-    if (this.state.commentModalVisible !== nextState.commentModalVisible) {
-      return true
-    }
-    if (_.isEqual(this.props.items, nextProps.items)) {
-      return false
-    } else {
-      return true
-    }
-  }
-
-  _onRefresh () {
-    const token = null
-    const accountId = getAccountId()
-    this.setState({refreshing: true})
-
-    this.props.requestInfo(token, accountId)
-    this.props.requestUserEpisodesWithFalse(
-      this.props.token,
-      this.props.accountId,
-      false
-    )
-  }
-
-  _onEndReached () {
-    console.log('onEndReached fired')
-    this.setState({footer: true})
-    if (this.props.items.length !== 0) {
-      this.before = this.props.items[this.props.items.length - 1].episode.updatedDateTime
-    }
-
-    const { token, accountId } = this.props
-    const before = this.before
-    const withFollowing = false
-
-    this.props.requestMoreEpisodes(token, accountId, withFollowing, before)
-  }
-
-  _toggleCommentModal () {
-    console.log('스테이트 변경함니다')
-    this.setState({
-      commentModalVisible: !this.state.commentModalVisible
-    })
-  }
+  // shouldComponentUpdate (nextProps, nextState) {
+  //   if (this.props.profileModified !== nextProps.profileModified) {
+  //     this.profileModifiedFlag = true
+  //     return true
+  //   }
+  //
+  //   if (this.state.commentModalVisible !== nextState.commentModalVisible) {
+  //     return true
+  //   }
+  //   if (_.isEqual(this.props.items, nextProps.items)) {
+  //     return false
+  //   } else {
+  //     return true
+  //   }
+  // }
 
   render () {
-    console.log('프사업뎃')
     return (
       <View style={styles.mainContainer}>
-        <FlatListE
-          keyExtractor={(item, index) => index}
-          style={{ flex: 1 }}
-          ref={this._captureRef}
-          HeaderComponent={this._renderHeader.bind(this)}
-          FooterComponent={this._renderFooter.bind(this)}
-          ItemComponent={this._renderItemComponent.bind(this)}
-          disableVirtualization={false}
-          horizontal={false}
+        <FlatList
+          viewabilityConfig={{viewAreaCoveragePercentThreshold: 51}}
+          windowSize={3}
+          style={{flex: 1}}
+          ListHeaderComponent={this._renderHeaderComponent}
+          renderItem={this._renderItemComponent}
+          ListFooterComponent={this._renderFooterComponent}
           data={this.props.items}
+          disableVirtualization={false}
+          getItemLayout={this._getItemLayout}
           key={'vf'}
+          keyExtractor={(item, index) => index}
+          horizontal={false}
           legacyImplementation={false}
           onRefresh={this._onRefresh.bind(this)}
-          refreshing={this.state.refreshing}
           onViewableItemsChanged={this._onViewableItemsChanged}
+          ref={this._captureRef}
+          refreshing={this.state.refreshing}
+          shouldItemUpdate={this._shouldItemUpdate.bind(this)}
+          scrollsToTop
           onEndReached={this._onEndReached.bind(this)}
-          onEndReachedThreshold={0}
-          getItemLayout={this._getItemLayout}
-          shouldItemUpdate={this._shouldItemUpdate.bind(this)} />
+          onEndReachedThreshold={0} />
         <View style={{height: 60}} />
         <CommentModalContainer
           commentModalVisible={this.state.commentModalVisible}
@@ -170,37 +139,32 @@ class ProfileScreen extends Component {
     length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index
   })
 
-  _renderItemComponent = (episode) => {
-    const index = episode.index
-
+  _renderItemComponent = ({item, index}) => {
     return (
       <EpisodeDetail
+        type={'me'}
+        index={index}
         ref={(component) => {
           if (component !== null) {
             this.episodeRefs[index] = component
           }
         }}
-        token={this.props.token}
-        key={index}
-        index={index}
         parentHandler={this}
-        episode={episode.item.episode}
-        account={episode.item.account}
-        type={'me'}
-        // EpisodeDetailContainer만들고 그쪽에서 넘겨주는 로직으로 변경할 예정
-        commentModalHandler={this._toggleCommentModal.bind(this)}
+        episode={item.episode}
+        account={item.account}
+        commentModalHandler={this._toggleCommentModal}
         requestNewEpisode={this.props.requestNewEpisode}
         openComment={this.props.openComment}
         getComment={this.props.getComment} />
     )
   }
 
-  _renderHeader () {
+  _renderHeaderComponent = () => {
     return (
       <ProfileInfo
         type={'me'}
-        token={this.props.token}
-        accountId={this.props.accountId}
+        token={null}
+        accountId={getAccountId()}
 
         profileImagePath={this.props.profileImagePath}
         nickname={this.props.nickname}
@@ -218,13 +182,13 @@ class ProfileScreen extends Component {
     )
   }
 
-  _renderFooter () {
+  _renderFooterComponent = () => {
     if (this.state.footer) {
       return (
         <View>
           <ActivityIndicator
-            color='white'
-            style={{marginBottom: 50}}
+            color='gray'
+            style={{marginBottom: 40}}
             size='large' />
         </View>
       )
@@ -236,7 +200,6 @@ class ProfileScreen extends Component {
   }
 
   _shouldItemUpdate (prev, next) {
-    // console.log('shouldItemUpdate in userProfileScreen.js')
     if (this.profileModifiedFlag) {
       this.profileModifiedFlag = false
       return true
@@ -250,8 +213,6 @@ class ProfileScreen extends Component {
       }>
     }
   ) => {
-    /* info오브젝트에서 뷰어블인 에피소드의 인덱스 추출하고 해당 에피소드를 제외한 에피소드는 모두 stopEpisodeVideo()호출 */
-
     const viewableItemsArray = []
     const episodeRefsArray = Object.keys(this.episodeRefs).map(Number)
 
@@ -260,7 +221,6 @@ class ProfileScreen extends Component {
     }
 
     this.viewableItemsArray = viewableItemsArray
-
     const inViewableItemsArray = getArrayDiff(episodeRefsArray, viewableItemsArray)
 
     for (let i in inViewableItemsArray) {
@@ -268,28 +228,40 @@ class ProfileScreen extends Component {
 
       if (this.episodeRefs[index] !== null) {
         this.episodeRefs[index].stopEpisodeVideo()
-      } else {
-        // console.log('null인놈들')
-        // console.log(index)
       }
     }
-    // 뷰어블한 아이템이 3개이면 중간 아이템만 play
-    if (viewableItemsArray.length === 3) {
-      if (this.episodeRefs[viewableItemsArray[0]] !== null) {
-        this.episodeRefs[viewableItemsArray[0]].stopEpisodeVideo()
-      }
-      if (this.episodeRefs[viewableItemsArray[2]] !== null) {
-        this.episodeRefs[viewableItemsArray[2]].stopEpisodeVideo()
-      }
-    } else {
-      for (let j in viewableItemsArray) {
-        const index = viewableItemsArray[j]
 
-        if (this.episodeRefs[index] !== null) {
-          this.episodeRefs[index].playEpisodeVideo()
-        }
+    for (let j in viewableItemsArray) {
+      const index = viewableItemsArray[j]
+
+      if (this.episodeRefs[index] !== null) {
+        this.episodeRefs[index].playEpisodeVideo()
       }
     }
+  }
+
+  _toggleCommentModal () {
+    this.setState({
+      commentModalVisible: !this.state.commentModalVisible
+    })
+  }
+
+  _onRefresh () {
+    const accountId = getAccountId()
+    const withFollowing = false
+
+    this.setState({refreshing: true})
+    this.props.requestInfo(null, accountId)
+    this.props.requestUserEpisodesWithFalse(null, accountId, withFollowing)
+  }
+
+  _onEndReached () {
+    const accountId = getAccountId()
+    const withFollowing = false
+    const updatedDateTime = this.updatedDateTime
+
+    this.setState({footer: true})
+    this.props.requestMoreEpisodes(null, accountId, withFollowing, updatedDateTime)
   }
 }
 
@@ -305,11 +277,10 @@ const mapStateToProps = (state) => {
     followerCount: state.account.followerCount,
     followingCount: state.account.followingCount,
 
-    items: state.episode.episodesWithFalse,
-
-    trigger: state.screen.trigger,
-    beforeScreen: state.screen.beforeScreen,
-    pastScreen: state.screen.pastScreen
+    items: state.episode.episodesWithFalse
+    // trigger: state.screen.trigger,
+    // beforeScreen: state.screen.beforeScreen,
+    // pastScreen: state.screen.pastScreen
   }
 }
 

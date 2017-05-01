@@ -1,8 +1,5 @@
 // TODO
 // 1) 탭버튼 클릭시 초기화 되는 문제해결
-// DONE
-// 1) S2리팩에서 디바이스에 따라 유동적이게 바꾸기
-
 import React, { Component, PropTypes } from 'react'
 import {
   View,
@@ -110,7 +107,7 @@ class FeedScreen extends Component {
           windowSize={3}
           style={{flex: 1}}
           renderItem={this._renderItemComponent}
-          FooterComponent={this._renderFooterComponent}
+          ListFooterComponent={this._renderFooterComponent}
           data={this.props.items} // state로 받아서 concat하기
           disableVirtualization={false}
           getItemLayout={this._getItemLayout}
@@ -136,7 +133,11 @@ class FeedScreen extends Component {
   }
 
 /* FlatList helper method */
-  _captureRef = (ref) => { this._listRef = ref } //
+  _captureRef = (ref) => { this._listRef = ref }
+
+  _getItemLayout = (data: any, index: number) => ({
+    length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index
+  })
 
   _renderItemComponent = ({item, index}) => {
    /* DONE
@@ -166,7 +167,7 @@ class FeedScreen extends Component {
       return (
         <View>
           <ActivityIndicator
-            color='white'
+            color='gray'
             style={{marginBottom: 50}}
             size='large' />
         </View>
@@ -177,10 +178,6 @@ class FeedScreen extends Component {
       )
     }
   }
-
-  _getItemLayout = (data: any, index: number) => ({
-    length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index
-  })
 
 /* 0.44에서 derpecated될 예정 */
   _shouldItemUpdate = (prev, next) => {
