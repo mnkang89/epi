@@ -54,7 +54,8 @@ class ContentDetailClass extends Component {
       disabled: false,
 
       paused: true,
-      visible: false
+      visible: false,
+      refresh: false
     }
   }
 
@@ -275,8 +276,7 @@ class ContentDetailClass extends Component {
                   width: windowSize.width - 30
                 }}
                 // source={{ uri: content.path }}
-                source={{ uri: 'https://facebook.github.io/react/img/logo_og.png' }}
-                >
+                source={{ uri: 'https://facebook.github.io/react/img/logo_og.png' }} >
                 <View style={{flex: 1, marginTop: 90}}>
                   {this.renderAnimation()}
                 </View>
@@ -312,7 +312,8 @@ class ContentDetailClass extends Component {
                 source={{uri: content.path}}   // Can be a URL or a local file.
                 // source={Videos.ragu_8}
                 muted
-                videoRef={this.props.playerRef}                             // Store reference
+                onError={() => { this.setState({refresh: !this.state.refresh}) }}
+                videoRef={this.props.playerRef}
                 paused={false}                 // Pauses playback entirely.
                 resizeMode='cover'             // Fill the whole screen at aspect ratio.
                 repeat                         // Repeat forever.
