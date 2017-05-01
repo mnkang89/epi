@@ -63,7 +63,7 @@ class FirstScreen extends Component {
             </View>
             <View style={{alignItems: 'center'}}>
               <TouchableOpacity
-                style={{width: windowSize.width - 40, alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.9)', paddingTop: 10, paddingBottom: 10, marginTop: 32}}
+                style={{width: windowSize.width - 40, alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.9)', paddingTop: 10, paddingBottom: 10, marginTop: 32, borderRadius: 2}}
                 onPress={this.onSignUpPress.bind(this)} >
                 <Text style={{color: 'black', fontWeight: 'bold', fontSize: 18}}>회원가입</Text>
               </TouchableOpacity>

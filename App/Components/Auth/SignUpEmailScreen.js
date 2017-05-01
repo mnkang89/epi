@@ -74,7 +74,7 @@ class SignUpEmailScreen extends Component {
             />
           </View>
           <TouchableOpacity
-            style={{width: windowSize.width - 40, alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.9)', paddingTop: 10, paddingBottom: 10, marginTop: 22}}
+            style={{width: windowSize.width - 40, alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.9)', paddingTop: 10, paddingBottom: 10, marginTop: 22, borderRadius: 2}}
             onPress={this.handlePressEmail.bind(this)} >
             <Text style={{color: 'black', fontWeight: 'bold', fontSize: 18}}>다음</Text>
           </TouchableOpacity>

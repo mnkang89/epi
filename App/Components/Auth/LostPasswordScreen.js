@@ -55,7 +55,7 @@ class LostPasswordScreen extends Component {
               style={{fontWeight: 'bold', color: 'white', height: 20}} />
           </View>
           <TouchableOpacity
-            style={{alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.9)', width: windowSize.width - 40, paddingTop: 10, paddingBottom: 10, marginTop: 22}}
+            style={{alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.9)', width: windowSize.width - 40, paddingTop: 10, paddingBottom: 10, marginTop: 22, borderRadius: 2}}
             onPress={this.onPressSend.bind(this)} >
             <Text style={{color: 'black', fontWeight: 'bold', fontSize: 18}}>임시비밀번호 전송</Text>
           </TouchableOpacity>

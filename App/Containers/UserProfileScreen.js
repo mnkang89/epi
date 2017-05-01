@@ -63,8 +63,10 @@ class UserProfileScreen extends Component {
     const { id } = this.props
     const active = false
 
-    this.props.requestOtherInfo(null, id)
-    this.props.requestOtherEpisodes(null, id, active)
+    setTimeout(() => {
+      this.props.requestOtherInfo(null, id)
+      this.props.requestOtherEpisodes(null, id, active)
+    }, 500)
   }
 
   componentWillReceiveProps (nextProps) {

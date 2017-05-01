@@ -124,15 +124,10 @@ shouldComponentUpdate (nextProps, nextState) {
               placeholderTextColor='rgba(255,255,255,0.5)' />
           </View>
           <TouchableOpacity
-            style={{width: windowSize.width - 40, alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.9)', paddingTop: 10, paddingBottom: 10, marginTop: 22}}
+            style={{width: windowSize.width - 40, alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.9)', paddingTop: 10, paddingBottom: 10, marginTop: 22, borderRadius: 2}}
             onPress={this.handlePressLogin.bind(this)} >
             <Text style={{color: 'black', fontWeight: 'bold', fontSize: 18}}>로그인</Text>
           </TouchableOpacity>
-          {/* <TouchableOpacity
-            style={{alignItems: 'center', marginTop: 20, backgroundColor: 'rgba(0,0,0,0)'}}
-            onPress={this.onPressLostPassword.bind(this)} >
-            <Text style={{textDecorationLine: 'underline', color: 'white', fontSize: 15}}>비밀번호를 잊어버렸어요</Text>
-          </TouchableOpacity> */}
         </View>
       </View>
     )

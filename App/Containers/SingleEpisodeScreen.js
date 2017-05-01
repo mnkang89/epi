@@ -40,9 +40,10 @@ class SingleEpisodeScreen extends Component {
   }
 
   componentDidMount () {
-    const { episodeId } = getAccountId()
-
-    this.props.requestSingleEpisode(null, episodeId)
+    const { episodeId } = this.props
+    setTimeout(() => {
+      this.props.requestSingleEpisode(null, episodeId)
+    }, 500)
   }
 
   componentWillReceiveProps (nextProps) {
@@ -61,7 +62,7 @@ class SingleEpisodeScreen extends Component {
     }
   }
 
-  shouldComponentUpdate (nextProps, nextState) {
+  // shouldComponentUpdate (nextProps, nextState) {
     // if (this.state.commentModalVisible !== nextState.commentModalVisible) {
     //   return true
     // }
@@ -70,7 +71,7 @@ class SingleEpisodeScreen extends Component {
     // } else {
     //   return true
     // }
-  }
+  // }
 
   render () {
     return (
@@ -114,7 +115,9 @@ class SingleEpisodeScreen extends Component {
     if (contentId) {
       xPosition = contents.map((content) => { return content.id }).indexOf(contentId) * (windowSize.width - 22)
     }
-
+    console.log('//아이템')
+    console.log(item)
+    console.log('아이템//')
     return (
       <EpisodeDetail
         type={this.props.detailType}

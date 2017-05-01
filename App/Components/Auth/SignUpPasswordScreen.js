@@ -97,7 +97,7 @@ class SignUpPasswordScreen extends Component {
               style={{fontWeight: 'bold', color: 'white', height: 20}} />
           </View>
           <TouchableOpacity
-            style={{alignItems: 'center', width: windowSize.width - 40, backgroundColor: 'rgba(255,255,255,0.9)', paddingTop: 10, paddingBottom: 10, marginTop: 22}}
+            style={{alignItems: 'center', width: windowSize.width - 40, backgroundColor: 'rgba(255,255,255,0.9)', paddingTop: 10, paddingBottom: 10, marginTop: 22, borderRadius: 2}}
             onPress={this.handlePressPassword.bind(this)} >
             <Text style={{color: 'black', fontWeight: 'bold', fontSize: 18}}>다음</Text>
           </TouchableOpacity>
