@@ -6,7 +6,8 @@ import {
   Text,
   TextInput,
   Image,
-  ImagePickerIOS
+  ImagePickerIOS,
+  Linking
 } from 'react-native'
 import Permissions from 'react-native-permissions'
 import ImageResizer from 'react-native-image-resizer'
@@ -15,6 +16,7 @@ import { Images } from '../../Themes'
 import ConfirmError from '../common/ConfirmError'
 
 const windowSize = Dimensions.get('window')
+const URL = 'https://docs.google.com/document/d/13Cc6cYMqZX3xl7J56P3j9XMgtoNJrBb2DcTh5YGuJes/edit'
 
 class SignUpNicknameScreen extends Component {
 
@@ -78,6 +80,16 @@ class SignUpNicknameScreen extends Component {
     })
 
     Permissions.openSettings()
+  }
+
+  handleTextPress = (url) => {
+    Linking.canOpenURL(url).then(supported => {
+      if (!supported) {
+        console.log('Can\'t handle url: ' + url)
+      } else {
+        return Linking.openURL(url)
+      }
+    }).catch(err => console.error('An error occurred', err))
   }
 
   getProfileImage () {
@@ -228,6 +240,9 @@ class SignUpNicknameScreen extends Component {
             onPress={this.handlePressNickname.bind(this)} >
             <Text style={{color: 'black', fontWeight: 'bold', fontSize: 18}}>가입</Text>
           </TouchableOpacity>
+          <View style={{width: windowSize.width - 40, marginTop: 12, alignItems: 'center'}}>
+            <Text style={{fontSize: 10, color: 'white'}}>회원가입시, <Text onPress={() => this.handleTextPress(URL)} style={{fontWeight: 'bold', textDecorationLine: 'underline'}}>이용약관 및 개인정보취급방침</Text>에 동의하는 것으로 간주합니다.</Text>
+          </View>
         </View>
       </View>
     )

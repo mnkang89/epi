@@ -68,7 +68,6 @@ class NavigationRouter extends Component {
           navigationBarStyle={Styles.navBar}
           titleStyle={Styles.title} >
           <Scene
-            initial
             // initial={isLoggedIn()}
             key='Greeting'
             hideNavBar

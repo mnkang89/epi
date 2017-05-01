@@ -41,17 +41,18 @@ class EpisodeDetail extends Component {
     this.state = {
       renderLikeHeart: this.props.episode.liked,
       likeCount: this.props.episode.likeCount,
-      contentTypeArray: [],
+      // contentTypeArray: [],
 
       footer: false
     }
     this._listRef
     // 컨텐츠 컴포넌트 ref
     this.contentRefs = {}
+    this.contentTypeArray = []
     // 비디오 컴포넌트 ref
     // this.player는 deprecated될 수 있음.
     this.player = []
-    this.currentCenterIndex = 0 //초기화(ok)
+    this.currentCenterIndex = 0
     this.horizontalLock = true
 
     this.lastContentOffset
@@ -66,9 +67,32 @@ class EpisodeDetail extends Component {
     const liked = this.props.episode.liked
     let episode = realm.objects('episode')
       .filtered('id = ' + episodeId)
+    const contentTypeArray = []
 
-    for (let i = 0; i < this.state.contentTypeArray.length; i++) {
-      if (this.state.contentTypeArray[i] === 'Video' &&
+    for (let i = 0; i < this.props.episode.contents.length; i++) {
+      contentTypeArray.push(this.props.episode.contents[i].type)
+    }
+
+    // for (let i = 0; i < this.state.contentTypeArray.length; i++) {
+    //   if (this.state.contentTypeArray[i] === 'Video' &&
+    //       // i === centerIndex면 중간에 온 비디오 컨텐츠이므로 stop할 필요가 없음.
+    //       i !== centerIndex &&
+    //       // undefined일 경우, 아직 contentRefs오브젝트에 추가되지 않은, 즉 아직 렌더링 되지 않은 컨텐츠이다.
+    //       this.contentRefs[i] !== undefined &&
+    //       // null일 경우, flatList최적화 기능에 의해 메모리에서 내려간 컨텐츠에 해당한다.
+    //       this.contentRefs[i] !== null) {
+    //     this.contentRefs[i].getWrappedInstance().ref._component.stopVideo()
+    //   }
+    // }
+    //
+    // if (this.state.contentTypeArray[centerIndex] === 'Video' &&
+    //     this.contentRefs[centerIndex] !== null &&
+    //     this.contentRefs[centerIndex] !== undefined) {
+    //   this.contentRefs[centerIndex].getWrappedInstance().ref._component.playVideo()
+    //   this.currentCenterIndex = centerIndex // 이 코드까지 왔다는건 문제없다는 것
+    // }
+    for (let i = 0; i < contentTypeArray.length; i++) {
+      if (contentTypeArray[i] === 'Video' &&
           // i === centerIndex면 중간에 온 비디오 컨텐츠이므로 stop할 필요가 없음.
           i !== centerIndex &&
           // undefined일 경우, 아직 contentRefs오브젝트에 추가되지 않은, 즉 아직 렌더링 되지 않은 컨텐츠이다.
@@ -79,12 +103,17 @@ class EpisodeDetail extends Component {
       }
     }
 
-    if (this.state.contentTypeArray[centerIndex] === 'Video' &&
+    if (contentTypeArray[centerIndex] === 'Video' &&
         this.contentRefs[centerIndex] !== null &&
         this.contentRefs[centerIndex] !== undefined) {
       this.contentRefs[centerIndex].getWrappedInstance().ref._component.playVideo()
       this.currentCenterIndex = centerIndex // 이 코드까지 왔다는건 문제없다는 것
     }
+
+    // this.setState({
+    //   contentTypeArray
+    // })
+    this.contentTypeArray = contentTypeArray
 
     if (episode.length === 0) {
       realm.write(() => {
@@ -100,16 +129,16 @@ class EpisodeDetail extends Component {
     }
   }
 
-  componentWillMount () {
-    const contentTypeArray = []
-
-    for (let i = 0; i < this.props.episode.contents.length; i++) {
-      contentTypeArray.push(this.props.episode.contents[i].type)
-    }
-    this.setState({
-      contentTypeArray
-    })
-  }
+  // componentWillMount () {
+  //   const contentTypeArray = []
+  //
+  //   for (let i = 0; i < this.props.episode.contents.length; i++) {
+  //     contentTypeArray.push(this.props.episode.contents[i].type)
+  //   }
+  //   this.setState({
+  //     contentTypeArray
+  //   })
+  // }
 
   componentWillReceiveProps (nextProps) {
     if (this.state.footer) {
@@ -120,9 +149,19 @@ class EpisodeDetail extends Component {
   }
 
   stopEpisodeVideo = () => {
+    // this.isPlayVideo = false
+    // for (let i = 0; i < this.state.contentTypeArray.length; i++) {
+    //   if (this.state.contentTypeArray[i] === 'Video' &&
+    //       // undefined일 경우, 아직 contentRefs오브젝트에 추가되지 않은, 즉 아직 렌더링 되지 않은 컨텐츠이다.
+    //       this.contentRefs[i] !== undefined &&
+    //       // null일 경우, flatList최적화 기능에 의해 메모리에서 내려간 컨텐츠에 해당한다.
+    //       this.contentRefs[i] !== null) {
+    //     this.contentRefs[i].getWrappedInstance().ref._component.stopVideo()
+    //   }
+    // }
     this.isPlayVideo = false
-    for (let i = 0; i < this.state.contentTypeArray.length; i++) {
-      if (this.state.contentTypeArray[i] === 'Video' &&
+    for (let i = 0; i < this.contentTypeArray.length; i++) {
+      if (this.contentTypeArray[i] === 'Video' &&
           // undefined일 경우, 아직 contentRefs오브젝트에 추가되지 않은, 즉 아직 렌더링 되지 않은 컨텐츠이다.
           this.contentRefs[i] !== undefined &&
           // null일 경우, flatList최적화 기능에 의해 메모리에서 내려간 컨텐츠에 해당한다.
@@ -133,7 +172,17 @@ class EpisodeDetail extends Component {
   }
 
   playEpisodeVideo = () => {
-    if (this.state.contentTypeArray[this.currentCenterIndex] === 'Video') {
+    // if (this.state.contentTypeArray[this.currentCenterIndex] === 'Video') {
+    //   this.isPlayVideo = true
+    //   setTimeout(() => {
+    //     if (this.isPlayVideo) {
+    //       if (this.contentRefs[this.currentCenterIndex] != null) {
+    //         this.contentRefs[this.currentCenterIndex].getWrappedInstance().ref._component.playVideo()
+    //       }
+    //     }
+    //   }, 400)
+    // }
+    if (this.contentTypeArray[this.currentCenterIndex] === 'Video') {
       this.isPlayVideo = true
       setTimeout(() => {
         if (this.isPlayVideo) {
@@ -468,6 +517,40 @@ class EpisodeDetail extends Component {
       onMomentumScrollBegin을 이용해 스크롤시 false로 변경한다.
     */
 
+    // if (info.viewableItems.length === 1 && !this.horizontalLock) {
+    //   const episodeId = this.props.episode.id
+    //   const offset = info.viewableItems[0].index * (windowSize.width - 22)
+    //
+    //   const { parentHandler, index } = this.props
+    //   const episodeViewability = parentHandler.viewableItemsArray.includes(index)
+    //
+    //   const centerIndex = info.viewableItems[0].index
+    //   this.currentCenterIndex = centerIndex
+    //   // this.currentCenterIndex = offset / (windowSize.width - 22) // 여기서 잘 못 만들면 문제생김(x)
+    //
+    //   realm.write(() => {
+    //     realm.create('episode', {id: episodeId, offset: offset}, true)
+    //   })
+    //
+    //   for (let i = 0; i < this.state.contentTypeArray.length; i++) {
+    //     if (this.state.contentTypeArray[i] === 'Video' &&
+    //         // i === centerIndex면 중간에 온 비디오 컨텐츠이므로 stop할 필요가 없음.
+    //         i !== centerIndex &&
+    //         // undefined일 경우, 아직 contentRefs오브젝트에 추가되지 않은, 즉 아직 렌더링 되지 않은 컨텐츠이다.
+    //         this.contentRefs[i] !== undefined &&
+    //         // null일 경우, flatList최적화 기능에 의해 메모리에서 내려간 컨텐츠에 해당한다.
+    //         this.contentRefs[i] !== null) {
+    //       this.contentRefs[i].getWrappedInstance().ref._component.stopVideo()
+    //     }
+    //   }
+    //   if (episodeViewability &&
+    //       this.state.contentTypeArray[centerIndex] === 'Video' &&
+    //       this.contentRefs[centerIndex] !== null &&
+    //       this.contentRefs[centerIndex] !== undefined) {
+    //     this.contentRefs[centerIndex].getWrappedInstance().ref._component.playVideo()
+    //     // this.currentCenterIndex = centerIndex // 여기까지 오면 문제없음(ok)
+    //   }
+    // }
     if (info.viewableItems.length === 1 && !this.horizontalLock) {
       const episodeId = this.props.episode.id
       const offset = info.viewableItems[0].index * (windowSize.width - 22)
@@ -483,8 +566,8 @@ class EpisodeDetail extends Component {
         realm.create('episode', {id: episodeId, offset: offset}, true)
       })
 
-      for (let i = 0; i < this.state.contentTypeArray.length; i++) {
-        if (this.state.contentTypeArray[i] === 'Video' &&
+      for (let i = 0; i < this.contentTypeArray.length; i++) {
+        if (this.contentTypeArray[i] === 'Video' &&
             // i === centerIndex면 중간에 온 비디오 컨텐츠이므로 stop할 필요가 없음.
             i !== centerIndex &&
             // undefined일 경우, 아직 contentRefs오브젝트에 추가되지 않은, 즉 아직 렌더링 되지 않은 컨텐츠이다.
@@ -495,7 +578,7 @@ class EpisodeDetail extends Component {
         }
       }
       if (episodeViewability &&
-          this.state.contentTypeArray[centerIndex] === 'Video' &&
+          this.contentTypeArray[centerIndex] === 'Video' &&
           this.contentRefs[centerIndex] !== null &&
           this.contentRefs[centerIndex] !== undefined) {
         this.contentRefs[centerIndex].getWrappedInstance().ref._component.playVideo()

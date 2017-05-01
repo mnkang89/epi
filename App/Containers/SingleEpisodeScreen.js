@@ -115,9 +115,6 @@ class SingleEpisodeScreen extends Component {
     if (contentId) {
       xPosition = contents.map((content) => { return content.id }).indexOf(contentId) * (windowSize.width - 22)
     }
-    console.log('//아이템')
-    console.log(item)
-    console.log('아이템//')
     return (
       <EpisodeDetail
         type={this.props.detailType}
@@ -169,8 +166,12 @@ class SingleEpisodeScreen extends Component {
 
     for (let j in viewableItemsArray) {
       const index = viewableItemsArray[j]
-
+      console.log('//j출력')
+      console.log(this.episodeRefs)
+      console.log(index)
+      console.log('j출력//')
       if (this.episodeRefs[index] !== null && this.episodeRefs[index] !== undefined) {
+        console.log('플레이 에피소드 비디오')
         this.episodeRefs[index].playEpisodeVideo()
       }
     }

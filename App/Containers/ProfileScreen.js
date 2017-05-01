@@ -103,7 +103,7 @@ class ProfileScreen extends Component {
     return (
       <View style={styles.mainContainer}>
         <FlatList
-          viewabilityConfig={{viewAreaCoveragePercentThreshold: 51}}
+          viewabilityConfig={{viewAreaCoveragePercentThreshold: 30}}
           windowSize={3}
           style={{flex: 1}}
           ListHeaderComponent={this._renderHeaderComponent}
