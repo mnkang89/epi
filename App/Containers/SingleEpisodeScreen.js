@@ -1,29 +1,22 @@
-
 import React, { Component, PropTypes } from 'react'
-import { View, Dimensions } from 'react-native'
+import { View, FlatList, Dimensions } from 'react-native'
 import { connect } from 'react-redux'
-import _ from 'lodash'
 
-import styles from './Styles/FeedScreenStyle'
+import { getAccountId } from '../Services/Auth'
 import { getObjectDiff, getArrayDiff } from '../Lib/Utilities'
 
+import styles from './Styles/FeedScreenStyle'
 import EpisodeDetail from '../Components/common/EpisodeDetail'
 import CommentModalContainer from './common/CommentModalContainer'
-import {
-  getItemLayout
-} from '../Experimental/ListExampleShared_e'
-import FlatListE from '../Experimental/FlatList_e'
-
 import EpisodeActions from '../Redux/EpisodeRedux'
 import CommentActions from '../Redux/CommentRedux'
 
 const windowSize = Dimensions.get('window')
-// contentId받아서 어떻게 할 것인지 정하기
+const ITEM_HEIGHT = 56 + (windowSize.width - 30) + 60 + 10
 
 class SingleEpisodeScreen extends Component {
 
   static propTypes = {
-    token: PropTypes.string,
     items: PropTypes.array,
 
     account: PropTypes.object,
@@ -47,67 +40,53 @@ class SingleEpisodeScreen extends Component {
   }
 
   componentDidMount () {
-    const { token, episodeId } = this.props
+    const { episodeId } = getAccountId()
 
-    this.props.requestSingleEpisode(token, episodeId)
-  }
-
-  componentWillUnmount () {
+    this.props.requestSingleEpisode(null, episodeId)
   }
 
   componentWillReceiveProps (nextProps) {
-    console.log(getObjectDiff(this.props, nextProps))
-    if (_.isEqual(this.props.items, nextProps.items)) {
-      console.log('아이템같음')
-      this.setState({refreshing: false})
-    } else {
-      console.log('아이템다름')
-      if (this.state.refreshing) {
-        this.setState({refreshing: false})
-      }
+    // console.log(getObjectDiff(this.props, nextProps))
+    // if (_.isEqual(this.props.items, nextProps.items)) {
+    //   console.log('아이템같음')
+    //   this.setState({refreshing: false})
+    // } else {
+    //   console.log('아이템다름')
+    //   if (this.state.refreshing) {
+    //     this.setState({refreshing: false})
+    //   }
+    // }
+    if (this.state.refreshing) {
+      this.setState({ refreshing: false })
     }
   }
 
   shouldComponentUpdate (nextProps, nextState) {
-    if (this.state.commentModalVisible !== nextState.commentModalVisible) {
-      return true
-    }
-    if (_.isEqual(this.props.items, nextProps.items)) {
-      return false
-    } else {
-      return true
-    }
-  }
-
-  _onRefresh () {
-    const { token, episodeId } = this.props
-
-    this.setState({refreshing: true})
-    this.props.requestSingleEpisode(token, episodeId)
-  }
-
-  _toggleCommentModal () {
-    console.log('스테이트 변경함니다')
-    this.setState({
-      commentModalVisible: !this.state.commentModalVisible
-    })
+    // if (this.state.commentModalVisible !== nextState.commentModalVisible) {
+    //   return true
+    // }
+    // if (_.isEqual(this.props.items, nextProps.items)) {
+    //   return false
+    // } else {
+    //   return true
+    // }
   }
 
   render () {
-    console.log('데이터길이: ' + this.props.items.length)
     return (
       <View style={styles.mainContainer}>
-        <FlatListE
-          keyExtractor={(item, index) => index}
+        <FlatList
+          viewabilityConfig={{viewAreaCoveragePercentThreshold: 51}}
           style={{ flex: 1 }}
           ref={this._captureRef}
-          ItemComponent={this._renderItemComponent.bind(this)}
-          disableVirtualization={false}
-          horizontal={false}
+          renderItem={this._renderItemComponent}
           data={this.props.items}
+          disableVirtualization={false}
           key={'vf'}
+          keyExtractor={(item, index) => index}
+          horizontal={false}
           legacyImplementation={false}
-          onRefresh={this._onRefresh.bind(this)}
+          onRefresh={this._onRefresh}
           refreshing={this.state.refreshing}
           onViewableItemsChanged={this._onViewableItemsChanged}
           shouldItemUpdate={this._shouldItemUpdate} />
@@ -115,50 +94,43 @@ class SingleEpisodeScreen extends Component {
         <CommentModalContainer
           commentModalVisible={this.state.commentModalVisible}
           commentModalHandler={this._toggleCommentModal.bind(this)}
-          screen={this.props.screen}
-          token={this.props.token}
-          // contentId={this.props.contentId}
-          // episodeId={this.props.episodeId}
-        />
+          screen={this.props.screen} />
       </View>
     )
   }
 
+/* FlatList helper method */
   _captureRef = (ref) => { this._listRef = ref }
 
-  _getItemLayout = (data: any, index: number) => {
-    return getItemLayout(data, index, this.state.horizontal)
-  }
+  _getItemLayout = (data: any, index: number) => ({
+    length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index
+  })
 
-  _renderItemComponent = (episode) => {
-    const index = episode.index
+  _renderItemComponent = ({item, index}) => {
     const { contentId, account } = this.props
     let xPosition = 0
-    let contents = episode.item.contents
+    let contents = item.contents
 
     if (contentId) {
       xPosition = contents.map((content) => { return content.id }).indexOf(contentId) * (windowSize.width - 22)
     }
-    console.log('xPosition: ' + xPosition)
 
     return (
       <EpisodeDetail
+        type={this.props.detailType}
+        singleType={this.props.singleType}
+        xPosition={xPosition}
+        index={index}
         ref={(component) => {
           if (component !== null) {
             this.episodeRefs[index] = component
           }
         }}
-        key={index}
-        index={index}
-        token={this.props.token}
         parentHandler={this}
-        episode={episode.item}
+        episode={item}
         account={account}
-        type={this.props.detailType}
-        singleType={this.props.singleType}
-        xPosition={xPosition}
+        commentModalHandler={this._toggleCommentModal}
         requestNewEpisode={this.props.requestSingleEpisode}
-        commentModalHandler={this._toggleCommentModal.bind(this)}
         openComment={this.props.openComment}
         getComment={this.props.getComment} />
     )
@@ -174,9 +146,6 @@ class SingleEpisodeScreen extends Component {
       }>
     }
   ) => {
-    /* info오브젝트에서 뷰어블인 에피소드의 인덱스 추출하고 해당 에피소드를 제외한 에피소드는 모두 stopEpisodeVideo()호출 */
-    console.log('싱글에피소드 스크린 온뷰어블 아이템스 체인지드')
-
     const viewableItemsArray = []
     const episodeRefsArray = Object.keys(this.episodeRefs).map(Number)
 
@@ -185,7 +154,6 @@ class SingleEpisodeScreen extends Component {
     }
 
     this.viewableItemsArray = viewableItemsArray
-
     const inViewableItemsArray = getArrayDiff(episodeRefsArray, viewableItemsArray)
 
     for (let i in inViewableItemsArray) {
@@ -193,36 +161,35 @@ class SingleEpisodeScreen extends Component {
 
       if (this.episodeRefs[index] !== null) {
         this.episodeRefs[index].stopEpisodeVideo()
-      } else {
-        // console.log('null인놈들')
-        // console.log(index)
       }
     }
-    // 뷰어블한 아이템이 3개이면 중간 아이템만 play
-    if (viewableItemsArray.length === 3) {
-      if (this.episodeRefs[viewableItemsArray[0]] !== null) {
-        this.episodeRefs[viewableItemsArray[0]].stopEpisodeVideo()
-      }
-      if (this.episodeRefs[viewableItemsArray[2]] !== null) {
-        this.episodeRefs[viewableItemsArray[2]].stopEpisodeVideo()
-      }
-    } else {
-      for (let j in viewableItemsArray) {
-        const index = viewableItemsArray[j]
 
-        if (this.episodeRefs[index] !== null && this.episodeRefs[index] !== undefined) {
-          console.log('싱글에피소드스크린 비디오켜라')
-          this.episodeRefs[index].playEpisodeVideo()
-        }
+    for (let j in viewableItemsArray) {
+      const index = viewableItemsArray[j]
+
+      if (this.episodeRefs[index] !== null && this.episodeRefs[index] !== undefined) {
+        this.episodeRefs[index].playEpisodeVideo()
       }
     }
+  }
+
+  _onRefresh = () => {
+    const { episodeId } = this.props
+
+    this.setState({refreshing: true})
+    this.props.requestSingleEpisode(null, episodeId)
+  }
+
+  _toggleCommentModal = () => {
+    this.setState({
+      commentModalVisible: !this.state.commentModalVisible
+    })
   }
 
 }
 
 const mapStateToProps = (state) => {
   return {
-    token: state.token.token,
     items: state.episode.singleEpisode
   }
 }

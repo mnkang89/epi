@@ -1,5 +1,3 @@
-// TODO
-// 1) 탭버튼 클릭시 초기화 되는 문제해결
 import React, { Component, PropTypes } from 'react'
 import {
   View,
