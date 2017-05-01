@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Image } from 'react-native'
+import { View, ActivityIndicator, Image } from 'react-native'
 import { getRealm } from '../Services/RealmFactory'
 import RNFS from 'react-native-fs'
 import { getExecutor, jobDone } from './ExecutorPool'
@@ -121,14 +121,19 @@ export default class CachableImage extends Component {
     } else if (this.state.imageLoaded === true) {
       return this.renderImage()
     } else {
+      console.log('이미지 렌더링 실패' + this.state.imagePath)
       return this.renderFailImage()
     }
   }
 
   renderDefaultImage () {
-    // return false
     return (
-      <Image source={null} style={this.props.style} />
+      <View style={[this.props.style, {backgroundColor: 'rgb(228, 228, 228)', alignItems: 'center', justifyContent: 'center'}]}>
+        <ActivityIndicator
+          animating
+          size='large'
+          color='white' />
+      </View>
     )
   }
 

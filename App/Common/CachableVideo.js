@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Image } from 'react-native'
+import { View, ActivityIndicator } from 'react-native'
 import Video from 'react-native-video'
 import { getRealm } from '../Services/RealmFactory'
 import RNFS from 'react-native-fs'
@@ -124,13 +124,19 @@ export default class CachableVideo extends Component {
     } else if (this.state.videoLoaded === true) {
       return this.renderVideo()
     } else {
+      console.log('영상 렌더링 실패' + this.state.videoPath)
       return this.renderFailVideo()
     }
   }
 
   renderdefaultVideo () {
     return (
-      <Image source={null} style={this.props.style} />
+      <View style={[this.props.style, {backgroundColor: 'rgb(228, 228, 228)', alignItems: 'center', justifyContent: 'center'}]}>
+        <ActivityIndicator
+          animating
+          size='large'
+          color='white' />
+      </View>
     )
   }
 
