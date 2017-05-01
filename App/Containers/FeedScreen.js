@@ -106,6 +106,7 @@ class FeedScreen extends Component {
     return (
       <View style={styles.mainContainer}>
         <FlatList
+          viewabilityConfig={{viewAreaCoveragePercentThreshold: 51}}
           windowSize={3}
           style={{flex: 1}}
           renderItem={this._renderItemComponent}
@@ -160,7 +161,7 @@ class FeedScreen extends Component {
     )
   }
 
-  _renderFooterComponent = () => { //
+  _renderFooterComponent = () => {
     if (this.state.footer) {
       return (
         <View>
@@ -213,23 +214,12 @@ class FeedScreen extends Component {
         this.episodeRefs[index].stopEpisodeVideo()
       }
     }
-    // 뷰어블한 아이템이 3개이면 중간 아이템만 play
-    console.log('뷰어블 아이템 어레이')
-    console.log(viewableItemsArray)
-    if (viewableItemsArray.length === 3) {
-      console.log('뷰어블한 아이템이 3개이면 중간 아이템만 play')
-      if (this.episodeRefs[viewableItemsArray[0]] !== null) {
-        this.episodeRefs[viewableItemsArray[0]].stopEpisodeVideo()
-      }
-      if (this.episodeRefs[viewableItemsArray[2]] !== null) {
-        this.episodeRefs[viewableItemsArray[2]].stopEpisodeVideo()
-      }
-    } else {
-      for (let j in viewableItemsArray) {
-        const index = viewableItemsArray[j]
-        if (this.episodeRefs[index] !== null) {
-          this.episodeRefs[index].playEpisodeVideo()
-        }
+
+    for (let j in viewableItemsArray) {
+      const index = viewableItemsArray[j]
+
+      if (this.episodeRefs[index] !== null) {
+        this.episodeRefs[index].playEpisodeVideo()
       }
     }
   }

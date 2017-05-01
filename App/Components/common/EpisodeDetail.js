@@ -133,8 +133,6 @@ class EpisodeDetail extends Component {
   }
 
   playEpisodeVideo = () => {
-    console.log('플레이에피소드 비디오에서 센터인덱스는?')
-    console.log(this.currentCenterIndex) // 콘솔 출력부(ok)
     if (this.state.contentTypeArray[this.currentCenterIndex] === 'Video') {
       this.isPlayVideo = true
       setTimeout(() => {
@@ -234,17 +232,6 @@ class EpisodeDetail extends Component {
 
   _onMomentumScrollBegin (event) {
     this.horizontalLock = false
-  }
-
-// 이 로직이 아니라 onViewableItemsChanged로직에서 중간 인덱스를 realm에 저장하는 방식이 나아보임
-  _onMomentumScrollEnd (event) {
-    // const episodeId = this.props.episode.id
-    // const offset = event.nativeEvent.contentOffset.x
-    // this.currentCenterIndex = offset / (windowSize.width - 22) // 여기서 잘 못 만들면 문제생김(x)
-    //
-    // realm.write(() => {
-    //   realm.create('episode', {id: episodeId, offset: offset}, true)
-    // })
   }
 
   _onPressHeart () {
@@ -384,7 +371,6 @@ class EpisodeDetail extends Component {
           onScrollBeginDrag={this._onScrollBeginDrag.bind(this)}
           onScrollEndDrag={this._onScrollEndDrag.bind(this)}
           onMomentumScrollBegin={this._onMomentumScrollBegin.bind(this)}
-          onMomentumScrollEnd={this._onMomentumScrollEnd.bind(this)}
           onViewableItemsChanged={this._onViewableItemsChanged}
           shouldItemUpdate={this._shouldItemUpdate}
           style={{paddingLeft: 7.5, paddingRight: 7.5, backgroundColor: '#FFFFFF'}}
@@ -438,7 +424,6 @@ class EpisodeDetail extends Component {
         number={index}
         episodeId={episodeId}
         content={content.item}
-        // episodeLiked={this.state.liked}
         commentModalHandler={this.props.commentModalHandler}
         like={this.like.bind(this)}
         dislike={this.dislike.bind(this)} />
