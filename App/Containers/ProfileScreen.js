@@ -114,18 +114,18 @@ class ProfileScreen extends Component {
           keyExtractor={(item, index) => index}
           horizontal={false}
           legacyImplementation={false}
-          onRefresh={this._onRefresh.bind(this)}
+          onRefresh={this._onRefresh}
           onViewableItemsChanged={this._onViewableItemsChanged}
           ref={this._captureRef}
           refreshing={this.state.refreshing}
           shouldItemUpdate={this._shouldItemUpdate.bind(this)}
           scrollsToTop
-          onEndReached={this._onEndReached.bind(this)}
+          onEndReached={this._onEndReached}
           onEndReachedThreshold={0} />
         <View style={{height: 60}} />
         <CommentModalContainer
           commentModalVisible={this.state.commentModalVisible}
-          commentModalHandler={this._toggleCommentModal.bind(this)}
+          commentModalHandler={this._toggleCommentModal}
           screen={'ProfileScreen'}
           token={this.props.token} />
         <FollowModalContainer token={this.props.token} />
@@ -240,13 +240,13 @@ class ProfileScreen extends Component {
     }
   }
 
-  _toggleCommentModal () {
+  _toggleCommentModal = () => {
     this.setState({
       commentModalVisible: !this.state.commentModalVisible
     })
   }
 
-  _onRefresh () {
+  _onRefresh = () => {
     const accountId = getAccountId()
     const withFollowing = false
 
@@ -255,7 +255,7 @@ class ProfileScreen extends Component {
     this.props.requestUserEpisodesWithFalse(null, accountId, withFollowing)
   }
 
-  _onEndReached () {
+  _onEndReached = () => {
     const accountId = getAccountId()
     const withFollowing = false
     const updatedDateTime = this.updatedDateTime

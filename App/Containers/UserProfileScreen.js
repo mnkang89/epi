@@ -1,28 +1,30 @@
 import React, { Component, PropTypes } from 'react'
-import { View, ActivityIndicator } from 'react-native'
+import {
+  View,
+  ActivityIndicator,
+  FlatList,
+  Dimensions
+} from 'react-native'
 import { connect } from 'react-redux'
-import _ from 'lodash'
 
-import { getObjectDiff, getArrayDiff } from '../Lib/Utilities'
-import FlatListE from '../Experimental/FlatList_e'
+import { getArrayDiff } from '../Lib/Utilities'
+
 import ProfileInfo from '../Components/common/ProfileInfo'
 import EpisodeDetail from '../Components/common/EpisodeDetail'
 import CommentModalContainer from './common/CommentModalContainer'
 import FollowModalContainer from './common/FollowModalContainer'
 
-// Styles
 import styles from './Styles/FeedScreenStyle'
-
 import AccountActions from '../Redux/AccountRedux'
 import EpisodeActions from '../Redux/EpisodeRedux'
 import CommentActions from '../Redux/CommentRedux'
 
-const ITEM_HEIGHT = 471
+const windowSize = Dimensions.get('window')
+const ITEM_HEIGHT = 56 + (windowSize.width - 30) + 60 + 10
 
 class UserProfileScreen extends Component {
 
   static propTypes = {
-    token: PropTypes.string,
     id: PropTypes.number,
 
     profileImagePath: PropTypes.string,
@@ -47,33 +49,26 @@ class UserProfileScreen extends Component {
     this.state = {
       refreshing: false,
       footer: false,
-      scrollsToTop: true,
-
+      // scrollsToTop: true,
       commentModalVisible: false
     }
-    // this.topOfStack = this.props.topOfStack
-    this.before
-    this.episodeRefs = {}
+    this.updatedDateTime
     this.viewableItemsArray = []
+    this.episodeRefs = {}
     this._onPushToUserProfileScreen = this._onPushToUserProfileScreen.bind(this)
     this._onPopFromUserProfileScreen = this._onPopFromUserProfileScreen.bind(this)
   }
 
   componentDidMount () {
-    const { token, id } = this.props
+    const { id } = this.props
     const active = false
 
-    this.props.requestOtherInfo(token, id)
-    this.props.requestOtherEpisodes(token, id, active)
-  }
-
-  componentWillMount () {
+    this.props.requestOtherInfo(null, id)
+    this.props.requestOtherEpisodes(null, id, active)
   }
 
   componentWillReceiveProps (nextProps) {
-    console.log(getObjectDiff(this.props, nextProps))
-    const items = nextProps.itemsObject[this.props.id]
-
+    // console.log(getObjectDiff(this.props, nextProps))
     //
     // if (this.topOfStack) {
     //   this.setState({
@@ -84,10 +79,10 @@ class UserProfileScreen extends Component {
     //     scrollsToTop: false
     //   })
     // }
-    //
+    const items = nextProps.itemsObject[this.props.id]
 
     if (nextProps.itemsObject[this.props.id] !== undefined) {
-      this.before = items[items.length - 1].episode.updatedDateTime
+      this.updatedDateTime = items[items.length - 1].episode.updatedDateTime
     }
 
     if (this.state.refreshing) {
@@ -98,103 +93,61 @@ class UserProfileScreen extends Component {
     }
   }
 
-  shouldComponentUpdate (nextProps, nextState) {
-    if (this.state.commentModalVisible !== nextState.commentModalVisible) {
-      return true
-    }
-    if (this.state.scrollsToTop !== nextState.scrollsToTop) {
-      return true
-    }
-    // otherInfo도 object화하기
-    if (getObjectDiff(this.props, nextProps)[0] === 'otherInfoObject') {
-      if (_.isEqual(this.props.otherInfoObject[this.props.id], nextProps.otherInfoObject[this.props.id])) {
-        return false
-      } else {
-        return true
-      }
-    } else if (getObjectDiff(this.props, nextProps)[0] === 'itemsObject') {
-      if (_.isEqual(this.props.itemsObject[this.props.id], nextProps.itemsObject[this.props.id])) {
-        return false
-      } else {
-        return true
-      }
-    } else if (
-      // refresh했을때 case
-      _.isEqual(this.props.otherInfoObject, nextProps.otherInfoObject) ||
-      _.isEqual(this.props.itemsObject, nextProps.itemsObject)) {
-      return false
-    } else {
-      return true
-    }
-  }
-
-  _onRefresh () {
-    const { token, id } = this.props
-    const active = false
-
-    this.setState({refreshing: true})
-    this.props.requestOtherInfo(token, id)
-    this.props.requestOtherEpisodes(token, id, active)
-  }
-
-  _onEndReached () {
-    console.log('onEndReached fired')
-    const items = this.props.itemsObject[this.props.id]
-    const { token, id } = this.props
-    const before = this.before
-    const withFollowing = false
-
-    this.setState({footer: true})
-
-    if (items.length !== 0) {
-      this.before = items[items.length - 1].episode.updatedDateTime
-    }
-
-    this.props.requestMoreOtherEpisodes(token, id, withFollowing, before)
-  }
-
-  _onPushToUserProfileScreen () {
-    this.setState({
-      scrollsToTop: false
-    })
-    // this.topOfStack = false
-  }
-
-  _onPopFromUserProfileScreen () {
-    this.setState({
-      scrollsToTop: true
-    })
-  }
-
-  _toggleCommentModal () {
-    console.log('스테이트 변경함니다')
-    this.setState({
-      commentModalVisible: !this.state.commentModalVisible
-    })
-  }
+  // shouldComponentUpdate (nextProps, nextState) {
+  //   if (this.state.commentModalVisible !== nextState.commentModalVisible) {
+  //     return true
+  //   }
+  //   if (this.state.scrollsToTop !== nextState.scrollsToTop) {
+  //     return true
+  //   }
+  //   // otherInfo도 object화하기
+  //   if (getObjectDiff(this.props, nextProps)[0] === 'otherInfoObject') {
+  //     if (_.isEqual(this.props.otherInfoObject[this.props.id], nextProps.otherInfoObject[this.props.id])) {
+  //       return false
+  //     } else {
+  //       return true
+  //     }
+  //   } else if (getObjectDiff(this.props, nextProps)[0] === 'itemsObject') {
+  //     if (_.isEqual(this.props.itemsObject[this.props.id], nextProps.itemsObject[this.props.id])) {
+  //       return false
+  //     } else {
+  //       return true
+  //     }
+  //   } else if (
+  //     // refresh했을때 case
+  //     _.isEqual(this.props.otherInfoObject, nextProps.otherInfoObject) ||
+  //     _.isEqual(this.props.itemsObject, nextProps.itemsObject)) {
+  //     return false
+  //   } else {
+  //     return true
+  //   }
+  // }
 
   render () {
     return (
       <View style={styles.mainContainer}>
-        <FlatListE
-          scrollsToTop={this.state.scrollsToTop}
-          keyExtractor={(item, index) => index}
-          style={{ flex: 1 }}
-          ref={this._captureRef}
-          key={'vf'}
-          HeaderComponent={this._renderHeader.bind(this)}
-          ItemComponent={this._renderItemComponent.bind(this)}
-          FooterComponent={this._renderFooter.bind(this)}
-          disableVirtualization={false}
-          horizontal={false}
+        <FlatList
+          // scrollsToTop={this.state.scrollsToTop}
+          viewabilityConfig={{viewAreaCoveragePercentThreshold: 51}}
+          windowSize={3}
+          style={{flex: 1}}
+          ListHeaderComponent={this._renderHeaderComponent}
+          renderItem={this._renderItemComponent}
+          ListFooterComponent={this._renderFooterComponent}
           data={this.props.itemsObject[this.props.id]}
-          legacyImplementation={false}
-          onRefresh={this._onRefresh.bind(this)}
-          refreshing={this.state.refreshing}
-          onViewableItemsChanged={this._onViewableItemsChanged}
+          disableVirtualization={false}
           getItemLayout={this._getItemLayout}
-          shouldItemUpdate={this._shouldItemUpdate}
-          onEndReached={this._onEndReached.bind(this)}
+          key={'vf'}
+          keyExtractor={(item, index) => index}
+          horizontal={false}
+          legacyImplementation={false}
+          onRefresh={this._onRefresh}
+          onViewableItemsChanged={this._onViewableItemsChanged}
+          ref={this._captureRef}
+          refreshing={this.state.refreshing}
+          shouldItemUpdate={this._shouldItemUpdate.bind(this)}
+          scrollsToTop
+          onEndReached={this._onEndReached}
           onEndReachedThreshold={0} />
         <View style={{height: 60}} />
         <CommentModalContainer
@@ -213,32 +166,27 @@ class UserProfileScreen extends Component {
     )
   }
 
+  _captureRef = (ref) => { this._listRef = ref }
+
   _getItemLayout = (data: any, index: number) => ({
     length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index
   })
 
-  _captureRef = (ref) => { this._listRef = ref }
-
-  _renderItemComponent = (episode) => {
-    const index = episode.index
-
+  _renderItemComponent = ({item, index}) => {
     return (
       <EpisodeDetail
+        type={'other'}
+        index={index}
         ref={(component) => {
           if (component !== null) {
             this.episodeRefs[index] = component
           }
         }}
-        key={index}
-        index={index}
-        token={this.props.token}
         parentHandler={this}
         pushHandler={this._onPushToUserProfileScreen}
         popHandler={this._onPopFromUserProfileScreen}
-        episode={episode.item.episode}
-        account={episode.item.account}
-        type={'other'}
-        // EpisodeDetailContainer만들고 그쪽에서 넘겨주는 로직으로 변경할 예정
+        episode={item.episode}
+        account={item.account}
         // requestNewEpisode={this.props.requestNewEpisode}
         commentModalHandler={this._toggleCommentModal.bind(this)}
         openComment={this.props.openComment}
@@ -246,7 +194,7 @@ class UserProfileScreen extends Component {
     )
   }
 
-  _renderHeader () {
+  _renderHeaderComponent = () => {
     if (this.props.otherInfoObject[this.props.id] === undefined) {
       return (
         <View />
@@ -257,7 +205,7 @@ class UserProfileScreen extends Component {
     return (
       <ProfileInfo
         type={'other'}
-        token={this.props.token}
+        token={null}
         id={this.props.id}  // 내아이디 일때는 accountId
 
         profileImagePath={otherProfileImagePath} // props는 현재는 null인 상태에서 들어가는 상황
@@ -275,13 +223,13 @@ class UserProfileScreen extends Component {
     )
   }
 
-  _renderFooter () {
+  _renderFooterComponent = () => {
     if (this.state.footer) {
       return (
         <View>
           <ActivityIndicator
-            color='white'
-            style={{marginBottom: 50}}
+            color='gray'
+            style={{marginBottom: 40}}
             size='large' />
         </View>
       )
@@ -312,7 +260,6 @@ class UserProfileScreen extends Component {
     }
 
     this.viewableItemsArray = viewableItemsArray
-
     const inViewableItemsArray = getArrayDiff(episodeRefsArray, viewableItemsArray)
 
     for (let i in inViewableItemsArray) {
@@ -320,28 +267,56 @@ class UserProfileScreen extends Component {
 
       if (this.episodeRefs[index] !== null) {
         this.episodeRefs[index].stopEpisodeVideo()
-      } else {
-        // console.log('null인놈들')
-        // console.log(index)
       }
     }
-    // 뷰어블한 아이템이 3개이면 중간 아이템만 play
-    if (viewableItemsArray.length === 3) {
-      if (this.episodeRefs[viewableItemsArray[0]] !== null) {
-        this.episodeRefs[viewableItemsArray[0]].stopEpisodeVideo()
-      }
-      if (this.episodeRefs[viewableItemsArray[2]] !== null) {
-        this.episodeRefs[viewableItemsArray[2]].stopEpisodeVideo()
-      }
-    } else {
-      for (let j in viewableItemsArray) {
-        const index = viewableItemsArray[j]
 
-        if (this.episodeRefs[index] !== null) {
-          this.episodeRefs[index].playEpisodeVideo()
-        }
+    for (let j in viewableItemsArray) {
+      const index = viewableItemsArray[j]
+
+      if (this.episodeRefs[index] !== null) {
+        this.episodeRefs[index].playEpisodeVideo()
       }
     }
+  }
+
+  _toggleCommentModal = () => {
+    this.setState({
+      commentModalVisible: !this.state.commentModalVisible
+    })
+  }
+
+  _onRefresh = () => {
+    const { id } = this.props
+    const active = false
+
+    this.setState({refreshing: true})
+    this.props.requestOtherInfo(null, id)
+    this.props.requestOtherEpisodes(null, id, active)
+  }
+
+  _onEndReached = () => {
+    // const items = this.props.itemsObject[this.props.id]
+    const { id } = this.props
+    const updatedDateTime = this.updatedDateTime
+    const withFollowing = false
+
+    this.setState({footer: true})
+    this.props.requestMoreOtherEpisodes(null, id, withFollowing, updatedDateTime)
+    // if (items.length !== 0) {
+    //   this.updatedDateTime = items[items.length - 1].episode.updatedDateTime
+    // }
+  }
+
+  _onPushToUserProfileScreen () {
+    this.setState({
+      scrollsToTop: false
+    })
+  }
+
+  _onPopFromUserProfileScreen () {
+    this.setState({
+      scrollsToTop: true
+    })
   }
 }
 
@@ -350,15 +325,6 @@ const mapStateToProps = (state) => {
     token: state.token.token,
     itemsObject: state.episode.otherEpisodesObject,
     otherInfoObject: state.account.otherInfoObject
-    // newOtherEpisodeRequesting: state.episode.newOtherEpisodeRequesting
-    // following: state.account.otherFollowing,
-
-    // profileImagePath: state.account.otherProfileImagePath,
-    // nickname: state.account.otherNickname,
-    // followerCount: state.account.otherFollowerCount,
-    // followingCount: state.account.otherFollowingCount,
-
-    // items: state.episode.otherEpisodes
   }
 }
 
