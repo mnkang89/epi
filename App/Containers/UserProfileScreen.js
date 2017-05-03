@@ -130,6 +130,7 @@ class UserProfileScreen extends Component {
       <View style={styles.mainContainer}>
         <FlatList
           // scrollsToTop={this.state.scrollsToTop}
+          removeClippedSubviews={false}
           viewabilityConfig={{viewAreaCoveragePercentThreshold: 30}}
           windowSize={3}
           style={{flex: 1}}

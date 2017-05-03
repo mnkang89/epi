@@ -75,6 +75,7 @@ class SingleEpisodeScreen extends Component {
     return (
       <View style={styles.mainContainer}>
         <FlatList
+          removeClippedSubviews={false}
           viewabilityConfig={{viewAreaCoveragePercentThreshold: 51}}
           style={{ flex: 1 }}
           ref={this._captureRef}

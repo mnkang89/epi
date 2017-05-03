@@ -103,6 +103,7 @@ class ProfileScreen extends Component {
     return (
       <View style={styles.mainContainer}>
         <FlatList
+          removeClippedSubviews={false}
           viewabilityConfig={{viewAreaCoveragePercentThreshold: 30}}
           windowSize={3}
           style={{flex: 1}}
