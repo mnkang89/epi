@@ -57,7 +57,7 @@ class ProfileScreen extends Component {
     setTimeout(() => {
       this.props.requestInfo(null, accountId)
       this.props.requestUserEpisodesWithFalse(null, accountId, withFollowing)
-    }, 500)
+    }, 100)
   }
 
   componentWillReceiveProps (nextProps) {

@@ -66,7 +66,7 @@ class UserProfileScreen extends Component {
     setTimeout(() => {
       this.props.requestOtherInfo(null, id)
       this.props.requestOtherEpisodes(null, id, active)
-    }, 500)
+    }, 100)
   }
 
   componentWillReceiveProps (nextProps) {

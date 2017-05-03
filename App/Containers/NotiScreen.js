@@ -21,6 +21,7 @@ import styles from './Styles/FeedScreenStyle'
 
 import NotiActions from '../Redux/NotiRedux'
 import CommentActions from '../Redux/CommentRedux'
+import PushConfig from '../Config/PushConfig'
 
 const windowSize = Dimensions.get('window')
 
@@ -46,6 +47,7 @@ class NotiScreen extends Component {
   }
 
   componentDidMount () {
+    PushConfig()
     this.props.requestNoties(null, 0)
   }
 
