@@ -68,13 +68,13 @@ class NavigationRouter extends Component {
           navigationBarStyle={Styles.navBar}
           titleStyle={Styles.title} >
           <Scene
-            // initial={isLoggedIn()}
+            initial={isLoggedIn()}
             key='Greeting'
             hideNavBar
             hideTabBar
             component={GreetingScreen} />
           <Scene
-            // initial={isLoggedIn()}
+            initial={isLoggedIn()}
             key='tabBar'
             type='reset'
             tabs
@@ -109,11 +109,11 @@ class NavigationRouter extends Component {
               icon={TabIcon}
               selectedTabIcon='bell-o'
               tabIcon='bell'
-              onPress={() => {
-                this.props.tabTouched()
-                this.props.registerScreen('alarmTab')
-                Actions.alarmTab()
-              }}
+              // onPress={() => {
+              //   this.props.tabTouched()
+              //   this.props.registerScreen('alarmTab')
+              //   Actions.alarmTab()
+              // }}
               navigationBarStyle={Styles.navBar}
               renderTitle={NavItems.episodeLogo}
               >
@@ -151,11 +151,11 @@ class NavigationRouter extends Component {
               icon={TabIcon}
               selectedTabIcon='search'
               tabIcon='search'
-              onPress={() => {
-                this.props.tabTouched()
-                this.props.registerScreen('searchTab')
-                Actions.searchTab()
-              }}
+              // onPress={() => {
+              //   this.props.tabTouched()
+              //   this.props.registerScreen('searchTab')
+              //   Actions.searchTab()
+              // }}
               // titleStyle={{color: 'white', fontSize: 20, fontWeight: 'bold'}}
               // leftButtonIconStyle={Styles.leftButton}
               navigationBarStyle={Styles.navBar}
@@ -182,11 +182,11 @@ class NavigationRouter extends Component {
               icon={TabIcon}
               selectedTabIcon='user'
               tabIcon='user'
-              onPress={() => {
-                this.props.tabTouched()
-                this.props.registerScreen('profileTab')
-                Actions.profileTab()
-              }}
+              // onPress={() => {
+              //   this.props.tabTouched()
+              //   this.props.registerScreen('profileTab')
+              //   Actions.profileTab()
+              // }}
               renderTitle={NavItems.profileLogo}
               navigationBarStyle={Styles.navBar}
               leftButtonIconStyle={Styles.leftButton}

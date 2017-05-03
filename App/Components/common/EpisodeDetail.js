@@ -15,11 +15,12 @@ import { convert2TimeDiffString } from '../../Lib/Utilities'
 import { getRealm } from '../../Services/RealmFactory'
 
 import ContentContainer from '../../Containers/common/ContentContainer'
-import FlatListE from '../../Experimental/FlatList_e'
+import FlatListE from '../../Experimental/FlatList0.44/FlatList_E44'
+// import FlatListE from '../../Experimental/FlatList_e'
 
 const windowSize = Dimensions.get('window')
 const realm = getRealm()
-// const ITEM_WIDTH = 367.5
+const ITEM_WIDTH = (windowSize.width - 30) + 8
 // React.Pure
 
 class EpisodeDetail extends Component {
@@ -380,7 +381,6 @@ class EpisodeDetail extends Component {
       this.currentCenterIndex = this.props.xPosition / (windowSize.width - 22) // 여기서도 문제 생길 수 있음(x)
       xPosition = this.props.xPosition
     }
-
     return (
       <View
         style={{flex: 1, marginBottom: 10}}>
@@ -412,18 +412,21 @@ class EpisodeDetail extends Component {
           scrollsToTop={false}
           keyExtractor={(item, index) => index}
           data={this.props.episode.contents}
-          ItemComponent={this._renderItemComponent}
+          renderItem={this._renderItemComponent}
+          // ItemComponent={this._renderItemComponent}
           FooterComponent={this._renderFooter.bind(this)}
           disableVirtualization={false}
           horizontal
+          getItemLayout={this._getItemLayout}
           key={'hf'}
+          initialScrollIndex={this.currentCenterIndex}
           onScrollBeginDrag={this._onScrollBeginDrag.bind(this)}
           onScrollEndDrag={this._onScrollEndDrag.bind(this)}
           onMomentumScrollBegin={this._onMomentumScrollBegin.bind(this)}
           onViewableItemsChanged={this._onViewableItemsChanged}
           shouldItemUpdate={this._shouldItemUpdate}
           style={{paddingLeft: 7.5, paddingRight: 7.5, backgroundColor: '#FFFFFF'}}
-          contentOffset={{x: xPosition, y: 0}}
+          // contentOffset={{x: xPosition, y: 0}}
           scrollEventThrottle={100}
           snapToAlignment={'start'}
           snapToInterval={windowSize.width - 22}
@@ -502,9 +505,9 @@ class EpisodeDetail extends Component {
     return prev.item !== next.item
   }
 
-  // _getItemLayout = (data: any, index: number) => ({
-  //   length: ITEM_WIDTH, offset: ITEM_WIDTH * index, index
-  // })
+  _getItemLayout = (data: any, index: number) => ({
+    length: ITEM_WIDTH, offset: ITEM_WIDTH * index, index
+  })
 
   _onViewableItemsChanged = (info: {
       changed: Array<{

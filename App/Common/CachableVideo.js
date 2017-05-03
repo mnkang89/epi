@@ -124,7 +124,6 @@ export default class CachableVideo extends Component {
     } else if (this.state.videoLoaded === true) {
       return this.renderVideo()
     } else {
-      console.log('영상 렌더링 실패' + this.state.videoPath)
       return this.renderFailVideo()
     }
   }

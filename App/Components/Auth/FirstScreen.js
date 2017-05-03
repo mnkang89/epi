@@ -7,7 +7,7 @@ import {
   Image
 } from 'react-native'
 import { Images } from '../../Themes'
-import PushConfig from '../../Config/PushConfig'
+// import PushConfig from '../../Config/PushConfig'
 
 const windowSize = Dimensions.get('window')
 
@@ -30,7 +30,7 @@ class FirstScreen extends Component {
   }
 
   componentDidMount () {
-    PushConfig()
+    // PushConfig()
   }
 
   onSignInPress () {

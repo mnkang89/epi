@@ -55,18 +55,18 @@ const RegisterNotification = () => {
         console.log('token registered')
       } else {
         api.registerPushToken(token.os, token.token)
-            .then((res) => {
-              console.log('push token api call success')
-              if (res.ok) {
-                const realm = getRealm()
-                realm.write(() => {
-                  const tokens = realm.objects('pushToken')
-                  realm.delete(tokens)
-                  realm.create('pushToken', {token: token.token})
-                })
-                console.log('push token store to realm')
-              }
-            })
+          .then((res) => {
+            console.log('push token api call success')
+            if (res.ok) {
+              const realm = getRealm()
+              realm.write(() => {
+                const tokens = realm.objects('pushToken')
+                realm.delete(tokens)
+                realm.create('pushToken', {token: token.token})
+              })
+              console.log('push token store to realm')
+            }
+          })
       }
     },
 

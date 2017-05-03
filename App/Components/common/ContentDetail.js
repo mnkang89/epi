@@ -112,7 +112,8 @@ class ContentDetailClass extends Component {
   }
 
   playVideo () {
-    console.log('비디오 켜라: ' + this.props.episodeId)
+    // console.log('비디오 켜라: ' + this.props.episodeId)
+    // console.log('컨텐츠id: ' + this.props.content.id)
     // this.setState({
     //   paused: false
     // })
@@ -309,10 +310,20 @@ class ContentDetailClass extends Component {
             onLongPress={this.onLongPress.bind(this)} >
             <View style={{height: windowSize.width - 30, width: windowSize.width - 30}}>
               <CachableVideo
+                onLoadStart={(e) => {
+                  console.log('로드스타트')
+                  console.log(e)
+                  console.log('로드스타트')
+                }}            // Callback when video starts to load
+                onLoad={(e) => {
+                  console.log('로드완료')
+                  console.log(e)
+                  console.log('로드완료')
+                }}
                 source={{uri: content.path}}   // Can be a URL or a local file.
                 // source={Videos.ragu_8}
                 muted
-                onError={() => { this.setState({refresh: !this.state.refresh}) }}
+                onError={() => { console.log('비디오 로딩 실패 실패 실패 실패 실패 실패 실패 실패 실패 실패 실패 실패 실패 실패') }}
                 videoRef={this.props.playerRef}
                 paused={false}                 // Pauses playback entirely.
                 resizeMode='cover'             // Fill the whole screen at aspect ratio.

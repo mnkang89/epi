@@ -1,4 +1,4 @@
-const poolSize = 4
+const poolSize = 10
 const taskQueue = []
 const taskPool = []
 const taskCheckIntervalInMillis = 50
