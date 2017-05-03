@@ -280,10 +280,11 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
   }
 
   // noties
-  const getNoties = (token) => {
+  const getNoties = (token, page) => {
     console.log('GET noties api콜 발생')
+    const size = 11
 
-    return api.get(`/api/notifications`, {}, getTokenHeader())
+    return api.get(`/api/notifications?size=${size}&page=${page}`, {}, getTokenHeader())
   }
 
   const registerPushToken = (os, token) => {

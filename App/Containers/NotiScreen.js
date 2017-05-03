@@ -5,7 +5,8 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
-  RefreshControl
+  RefreshControl,
+  ActivityIndicator
 } from 'react-native'
 import { connect } from 'react-redux'
 import { Actions as NavigationActions } from 'react-native-router-flux'
@@ -25,7 +26,6 @@ const windowSize = Dimensions.get('window')
 
 class NotiScreen extends Component {
   static propTypes = {
-    token: PropTypes.string,
     myAccount: PropTypes.object,
     notiesRequesting: PropTypes.bool,
     noties: PropTypes.array,
@@ -42,14 +42,18 @@ class NotiScreen extends Component {
     }
 
     this.profileModifiedFlag = false
+    this.page = 0
   }
 
   componentDidMount () {
-    const { token } = this.props
-    this.props.requestNoties(token)
+    this.props.requestNoties(null, 0)
   }
 
   componentWillReceiveProps (nextProps) {
+    if (nextProps.noties.length !== 0) {
+      this.page = this.page + 1
+    }
+
     if (_.isEqual(this.props.noties, nextProps.noties)) {
       console.log('노티같음')
     } else {
@@ -59,15 +63,11 @@ class NotiScreen extends Component {
       this.setState({refreshing: false})
     }
 
-    if (nextProps.beforeScreen === 'alarmTab') {
-      if (nextProps.beforeScreen === nextProps.pastScreen) {
-        this._listRef.scrollToIndex({index: 0})
-      }
-    }
-  }
-
-  componentWillUnmount () {
-    // clearInterval(this.autoRefresher)
+    // if (nextProps.beforeScreen === 'alarmTab') {
+    //   if (nextProps.beforeScreen === nextProps.pastScreen) {
+    //     this._listRef.scrollToIndex({index: 0})
+    //   }
+    // }
   }
 
   shouldComponentUpdate (nextProps, nextState) {
@@ -84,10 +84,11 @@ class NotiScreen extends Component {
   }
 
   _onRefresh () {
-    const { token } = this.props
+    // page 초기화
+    this.page = 0
 
     this.setState({refreshing: true})
-    this.props.requestNoties(token)
+    this.props.requestNoties(null, this.page)
   }
 
   renderScrollview (noties) {
@@ -133,7 +134,9 @@ class NotiScreen extends Component {
             legacyImplementation={false}
             onRefresh={this._onRefresh.bind(this)}
             refreshing={this.state.refreshing}
-            shouldItemUpdate={this._shouldItemUpdate.bind(this)} />
+            shouldItemUpdate={this._shouldItemUpdate.bind(this)}
+            onEndReached={this._onEndReached}
+            onEndReachedThreshold={0} />
         )
       }
     }
@@ -150,7 +153,6 @@ class NotiScreen extends Component {
     return (
       <NotiDetail
         key={noti.id}
-        token={this.props.token}
         noti={noti}
         myAccount={this.props.myAccount}
         openComment={this.props.openComment}
@@ -166,8 +168,31 @@ class NotiScreen extends Component {
     return prev.item !== next.item
   }
 
+  _onEndReached = () => {
+    const page = this.page
+
+    this.setState({footer: true})
+    this.props.requestMoreNoties(null, page)
+  }
+
+  _renderFooterComponent = () => {
+    if (this.state.footer) {
+      return (
+        <View>
+          <ActivityIndicator
+            color='gray'
+            style={{marginBottom: 50}}
+            size='small' />
+        </View>
+      )
+    } else {
+      return (
+        <View />
+      )
+    }
+  }
+
   render () {
-    console.log('프사업뎃')
     const { noties } = this.props
 
     return (
@@ -184,8 +209,6 @@ class NotiScreen extends Component {
 const mapStateToProps = (state) => {
   return {
     profileModified: state.signup.modified,
-
-    token: state.token.token,
     myAccount: state.account,
 
     notiesRequesting: state.noti.notiesRequesting,
@@ -195,7 +218,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    requestNoties: (token) => dispatch(NotiActions.notiesRequest(token)),
+    requestNoties: (token, page) => dispatch(NotiActions.notiesRequest(token, page)),
+    requestMoreNoties: (token, page) => dispatch(NotiActions.moreNotiesRequest(token, page)),
 
     openComment: (visible) => dispatch(CommentActions.openComment(visible)),
     getComment: (token, episodeId, contentId) => dispatch(CommentActions.commentGet(token, episodeId, contentId))

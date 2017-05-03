@@ -137,10 +137,6 @@ export function * profileModification (api, action) {
     if (response.ok) {
       console.log(response)
       yield put(SignupActions.profileSuccess(photoSource))
-      // yield put(EpisodeActions.userEpisodesWithFalseRequest(getToken(), getAccountId(), false))
-      // yield put(EpisodeActions.userEpisodesRequest(getToken(), getAccountId(), true))
-      // yield put(FeedActions.bestFeedsRequest(getToken()))
-      // yield put(NotiActions.notiesRequest(getToken()))
     } else {
       console.log(response)
       yield put(SignupActions.profileFailure('UPLOAD_FAIL'))

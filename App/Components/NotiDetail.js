@@ -10,7 +10,6 @@ const windowSize = Dimensions.get('window')
 class NotiDetail extends Component {
 
   static propTypes = {
-    token: PropTypes.string,
     noti: PropTypes.object,
     myAccount: PropTypes.object,
 
@@ -28,13 +27,12 @@ class NotiDetail extends Component {
   onNotiPress () {
     // api에서 notiRelateEntityMeta주면 변경할 예정
     // const { episodeId, contentId } = this.props.noti.notiRelateEntityMeta
-    const { token } = this.props
     const account = this.props.myAccount
 
     if (this.state.type === 'comment') {
       const { episodeId, contentId } = this.props.noti.notiRelateEntityMeta
       this.props.openComment(true)
-      this.props.getComment(token, episodeId, contentId)
+      this.props.getComment(null, episodeId, contentId)
 
       NavigationActions.singleEpisodeScreen({
         type: 'push',

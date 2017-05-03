@@ -26,7 +26,7 @@ import {
 import { postContent, postLike, deleteLike } from './ContentSagas'
 import { postComment, getComment, deleteComment } from './CommentSagas'
 import { getBestFeeds, moreBestFeeds } from './FeedSagas'
-import { getNoties } from './NotiSagas'
+import { getNoties, moreNoties } from './NotiSagas'
 
 /* ------------- API ------------- */
 
@@ -132,6 +132,8 @@ export default function * root () {
 
     /* --- Noti --- */
     // get Noties
-    takeLatest(NotiTypes.NOTIES_REQUEST, getNoties, api)
+    takeLatest(NotiTypes.NOTIES_REQUEST, getNoties, api),
+    // get more Noties
+    takeLatest(NotiTypes.MORE_NOTIES_REQUEST, moreNoties, api)
   ]
 }
