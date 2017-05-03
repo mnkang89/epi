@@ -406,7 +406,7 @@ class EpisodeDetail extends Component {
           </View>
         </View>
         <FlatListE
-          // removeClippedSubviews={false}
+          removeClippedSubviews={false}
           initialNumToRender={1}
           windowSize={3}
           ref={this._captureRef}
@@ -420,7 +420,7 @@ class EpisodeDetail extends Component {
           horizontal
           getItemLayout={this._getItemLayout}
           key={'hf'}
-          initialScrollIndex={this.currentCenterIndex}
+          initialScrollIndex={Math.round(this.currentCenterIndex)}
           onScrollBeginDrag={this._onScrollBeginDrag.bind(this)}
           onScrollEndDrag={this._onScrollEndDrag.bind(this)}
           onMomentumScrollBegin={this._onMomentumScrollBegin.bind(this)}
