@@ -406,6 +406,7 @@ class EpisodeDetail extends Component {
           </View>
         </View>
         <FlatListE
+          // removeClippedSubviews={false}
           initialNumToRender={1}
           windowSize={3}
           ref={this._captureRef}

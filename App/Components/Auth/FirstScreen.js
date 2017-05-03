@@ -7,7 +7,7 @@ import {
   Image
 } from 'react-native'
 import { Images } from '../../Themes'
-// import PushConfig from '../../Config/PushConfig'
+import PushConfig from '../../Config/PushConfig'
 
 const windowSize = Dimensions.get('window')
 
@@ -30,7 +30,7 @@ class FirstScreen extends Component {
   }
 
   componentDidMount () {
-    // PushConfig()
+    PushConfig()
   }
 
   onSignInPress () {
@@ -39,7 +39,6 @@ class FirstScreen extends Component {
     this.props.lostPasswordScreenDispatcher(false)
 
     this.props.scrollViewHandler()
-    // this.scrollview.scrollTo({x: windowSize.width})
   }
 
   onSignUpPress () {
@@ -48,11 +47,9 @@ class FirstScreen extends Component {
     this.props.nicknameScreenDispatcher(false)
 
     this.props.scrollViewHandler()
-    // this.scrollview.scrollTo({x: windowSize.width})
   }
 
   render () {
-    console.log('퍼스트 스크린')
     return (
       <View style={{flex: 1, width: windowSize.width}} >
         <View style={{flex: 1}} >

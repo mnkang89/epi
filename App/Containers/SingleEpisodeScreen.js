@@ -41,9 +41,7 @@ class SingleEpisodeScreen extends Component {
 
   componentDidMount () {
     const { episodeId } = this.props
-    setTimeout(() => {
-      this.props.requestSingleEpisode(null, episodeId)
-    }, 500)
+    this.props.requestSingleEpisode(null, episodeId)
   }
 
   componentWillReceiveProps (nextProps) {

@@ -101,6 +101,7 @@ class FeedScreen extends Component {
     return (
       <View style={styles.mainContainer}>
         <FlatList
+          removeClippedSubviews={false}
           viewabilityConfig={{viewAreaCoveragePercentThreshold: 51}}
           windowSize={3}
           style={{flex: 1}}
