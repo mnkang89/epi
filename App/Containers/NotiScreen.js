@@ -69,18 +69,17 @@ class NotiScreen extends Component {
     // }
   }
 
-  shouldComponentUpdate (nextProps, nextState) {
-    if (this.props.profileModified !== nextProps.profileModified) {
-      this.profileModifiedFlag = true
-      return true
-    }
-
-    if (_.isEqual(this.props.noties, nextProps.noties)) {
-      return false
-    } else {
-      return true
-    }
-  }
+  // shouldComponentUpdate (nextProps, nextState) {
+  //   if (this.props.profileModified !== nextProps.profileModified) {
+  //     this.profileModifiedFlag = true
+  //     return true
+  //   }
+  //   if (_.isEqual(this.props.noties, nextProps.noties)) {
+  //     return false
+  //   } else {
+  //     return true
+  //   }
+  // }
 
   _onRefresh () {
     // page 초기화
