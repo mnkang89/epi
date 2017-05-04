@@ -68,13 +68,13 @@ class NavigationRouter extends Component {
           navigationBarStyle={Styles.navBar}
           titleStyle={Styles.title} >
           <Scene
-            // initial={isLoggedIn()}
+            initial={isLoggedIn()}
             key='Greeting'
             hideNavBar
             hideTabBar
             component={GreetingScreen} />
           <Scene
-            // initial={isLoggedIn()}
+            initial={isLoggedIn()}
             key='tabBar'
             type='reset'
             tabs
