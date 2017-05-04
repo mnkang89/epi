@@ -1,27 +1,25 @@
 import React, { Component, PropTypes } from 'react'
 import {
   View,
-  // ScrollView,
-  // RefreshControl,
-  ActivityIndicator
+  ActivityIndicator,
+  Dimensions,
+  FlatList
 } from 'react-native'
 import { connect } from 'react-redux'
-import _ from 'lodash'
 
-import ExploreDetail from '../Components/ExploreDetail'
-import styles from './Styles/FeedScreenStyle'
 import { getObjectDiff } from '../Lib/Utilities'
-import FlatListE from '../Experimental/FlatList_e'
+import styles from './Styles/FeedScreenStyle'
+import ExploreDetail from '../Components/ExploreDetail'
 
 import FeedActions from '../Redux/FeedRedux'
 import AccountActions from '../Redux/AccountRedux'
 
-const ITEM_HEIGHT = 233.5
+const windowSize = Dimensions.get('window')
+const ITEM_HEIGHT = 57.5 + (windowSize - 220)
 
 class ExploreScreen extends Component {
 
   static propTypes = {
-    token: PropTypes.string,
     items: PropTypes.array.isRequired,
 
     requestBestFeeds: PropTypes.func,
@@ -32,45 +30,37 @@ class ExploreScreen extends Component {
   constructor (props) {
     super(props)
     this.state = {
+      data: [],
       refreshing: false,
       footer: false
     }
-    this.before
+    this.updatedDateTime
     this.profileModifiedFlag = false
   }
 
   componentDidMount () {
-    const { token } = this.props
-
-    this.props.requestBestFeeds(token)
-    // this.autoRefresher = setInterval(() => {
-    //   this.props.requestBestFeeds(token)
-    // }, 60000)
-  }
-
-  componentWillUnmount () {
-    // clearInterval(this.autoRefresher)
+    this.props.requestBestFeeds(null)
   }
 
   componentWillReceiveProps (nextProps) {
     console.log(getObjectDiff(this.props, nextProps))
     // TODO: 결국엔 스테이트를 false로 바꾸는 것이므로 통일하기.
-    const { token } = this.props
-
     if (nextProps.items.length !== 0) {
-      this.before = nextProps.items[nextProps.items.length - 1].episode.updatedDateTime
+      this.updatedDateTime = nextProps.items[nextProps.items.length - 1].episode.updatedDateTime
     }
 
     if ((this.props.followPosting === true && nextProps.followPosting === false) ||
         (this.props.followDeleting === true && nextProps.followDeleting === false)) {
-      this.props.requestBestFeeds(token)
+      this.props.requestBestFeeds(null)
     }
 
-    if (nextProps.beforeScreen === 'searchTab') {
-      if (nextProps.beforeScreen === nextProps.pastScreen) {
-        this._listRef.scrollToIndex({index: 0})
-      }
-    }
+    this.setState({data: nextProps.items})
+
+    // if (nextProps.beforeScreen === 'searchTab') {
+    //   if (nextProps.beforeScreen === nextProps.pastScreen) {
+    //     this._listRef.scrollToIndex({index: 0})
+    //   }
+    // }
 
     if (this.state.refreshing) {
       this.setState({
@@ -80,59 +70,37 @@ class ExploreScreen extends Component {
     }
   }
 
-  shouldComponentUpdate (nextProps, nextState) {
-    if (this.props.profileModified !== nextProps.profileModified) {
-      this.profileModifiedFlag = true
-      return true
-    }
-
-    if (_.isEqual(this.props.items, nextProps.items)) {
-      return false
-    } else {
-      return true
-    }
-  }
-
-  _onRefresh () {
-    const { token } = this.props
-
-    this.setState({refreshing: true})
-    this.props.requestBestFeeds(token)
-  }
-
-  _onEndReached () {
-    console.log('onEndReached fired')
-    this.setState({footer: true})
-    if (this.props.items.length !== 0) {
-      this.before = this.props.items[this.props.items.length - 1].episode.updatedDateTime
-    }
-
-    const { token, id } = this.props
-    const before = this.before
-
-    this.props.requestMoreBestFeeds(token, id, before)
-  }
+  // shouldComponentUpdate (nextProps, nextState) {
+  //   if (this.props.profileModified !== nextProps.profileModified) {
+  //     this.profileModifiedFlag = true
+  //     return true
+  //   }
+  //   if (_.isEqual(this.props.items, nextProps.items)) {
+  //     return false
+  //   } else {
+  //     return true
+  //   }
+  // }
 
   render () {
-    console.log('프사업뎃')
     return (
       <View style={styles.mainContainer}>
-        <FlatListE
+        <FlatList
           keyExtractor={(item, index) => index}
           style={{ flex: 1, backgroundColor: 'rgb(241, 241, 241)' }}
           ref={this._captureRef}
-          HeaderComponent={this._renderHeader.bind(this)}
-          FooterComponent={this._renderFooter.bind(this)}
-          ItemComponent={this._renderItemComponent.bind(this)}
+          ListHeaderComponent={this._renderHeader}
+          ListFooterComponent={this._renderFooter}
+          renderItem={this._renderItemComponent}
           disableVirtualization={false}
           horizontal={false}
-          data={this.props.items}
+          data={this.state.data}
           key={'vf'}
           legacyImplementation={false}
-          onRefresh={this._onRefresh.bind(this)}
+          onRefresh={this._onRefresh}
           refreshing={this.state.refreshing}
           // onViewableItemsChanged={this._onViewableItemsChanged}
-          onEndReached={this._onEndReached.bind(this)}
+          onEndReached={this._onEndReached}
           onEndReachedThreshold={0}
           shouldItemUpdate={this._shouldItemUpdate.bind(this)} />
         <View style={{height: 60}} />
@@ -149,14 +117,12 @@ class ExploreScreen extends Component {
   _renderItemComponent = (noti) => {
     const length = noti.item.episode.contents.length
     const index = noti.index
-    console.log(index)
 
     return (
       <ExploreDetail
         key={noti.item.episode.id}
         length={length}
         number={index}
-        token={this.props.token}
         following={noti.item.following}
         episode={noti.item.episode}
         account={noti.item.account}
@@ -165,13 +131,13 @@ class ExploreScreen extends Component {
     )
   }
 
-  _renderHeader () {
+  _renderHeader = () => {
     return (
       <View style={{height: 10, backgroundColor: 'rgb(241, 241, 241)'}} />
     )
   }
 
-  _renderFooter () {
+  _renderFooter = () => {
     if (this.state.footer) {
       return (
         <View>
@@ -195,21 +161,36 @@ class ExploreScreen extends Component {
     }
     return prev.item !== next.item
   }
+
+  _onRefresh = () => {
+    this.setState({refreshing: true})
+    this.props.requestBestFeeds(null)
+  }
+
+  _onEndReached = () => {
+    console.log('onEndReached fired')
+    this.setState({footer: true})
+    if (this.props.items.length !== 0) {
+      this.updatedDateTime = this.props.items[this.props.items.length - 1].episode.updatedDateTime
+    }
+    const before = this.updatedDateTime
+
+    this.props.requestMoreBestFeeds(null, null, before)
+  }
 }
 
 const mapStateToProps = (state) => {
   return {
     profileModified: state.signup.modified,
 
-    token: state.token.token,
     items: state.feed.bestFeeds,
 
     followPosting: state.account.followPosting,
-    followDeleting: state.account.followDeleting,
+    followDeleting: state.account.followDeleting
 
-    trigger: state.screen.trigger,
-    beforeScreen: state.screen.beforeScreen,
-    pastScreen: state.screen.pastScreen
+    // trigger: state.screen.trigger,
+    // beforeScreen: state.screen.beforeScreen,
+    // pastScreen: state.screen.pastScreen
   }
 }
 

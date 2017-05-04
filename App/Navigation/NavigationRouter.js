@@ -47,7 +47,7 @@ import ProfileScreen from '../Containers/ProfileScreen'
 import UserProfileScreen from '../Containers/UserProfileScreen'
 import SingleEpisodeScreen from '../Containers/SingleEpisodeScreen'
 
-import ScreenActions from '../Redux/ScreenRedux'
+// import ScreenActions from '../Redux/ScreenRedux'
 import { isLoggedIn } from '../Services/Auth'
 
 class NavigationRouter extends Component {
@@ -115,8 +115,7 @@ class NavigationRouter extends Component {
               //   Actions.alarmTab()
               // }}
               navigationBarStyle={Styles.navBar}
-              renderTitle={NavItems.episodeLogo}
-              >
+              renderTitle={NavItems.episodeLogo} >
               <Scene
                 key='notiScreen'
                 panHandlers={null}
@@ -214,14 +213,14 @@ class NavigationRouter extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    beforeScreen: state.screen.beforeScreen
+    // beforeScreen: state.screen.beforeScreen
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    registerScreen: (beforeScreen) => dispatch(ScreenActions.screenRegister(beforeScreen)),
-    tabTouched: () => dispatch(ScreenActions.tabTouched())
+    // registerScreen: (beforeScreen) => dispatch(ScreenActions.screenRegister(beforeScreen)),
+    // tabTouched: () => dispatch(ScreenActions.tabTouched())
   }
 }
 

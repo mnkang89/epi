@@ -40,6 +40,7 @@ class ProfileScreen extends Component {
   constructor (props) {
     super(props)
     this.state = {
+      data: [],
       refreshing: false,
       footer: false,
       commentModalVisible: false
@@ -74,6 +75,8 @@ class ProfileScreen extends Component {
     if (nextProps.items.length !== 0) {
       this.updatedDateTime = nextProps.items[nextProps.items.length - 1].episode.updatedDateTime
     }
+
+    this.setState({data: nextProps.items})
 
     if (this.state.refreshing) {
       this.setState({
@@ -110,7 +113,7 @@ class ProfileScreen extends Component {
           ListHeaderComponent={this._renderHeaderComponent}
           renderItem={this._renderItemComponent}
           ListFooterComponent={this._renderFooterComponent}
-          data={this.props.items}
+          data={this.state.data}
           disableVirtualization={false}
           getItemLayout={this._getItemLayout}
           key={'vf'}
@@ -281,6 +284,7 @@ const mapStateToProps = (state) => {
     followingCount: state.account.followingCount,
 
     items: state.episode.episodesWithFalse
+
     // trigger: state.screen.trigger,
     // beforeScreen: state.screen.beforeScreen,
     // pastScreen: state.screen.pastScreen

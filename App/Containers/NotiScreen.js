@@ -39,6 +39,7 @@ class NotiScreen extends Component {
   constructor (props) {
     super(props)
     this.state = {
+      data: [],
       refreshing: false
     }
 
@@ -56,15 +57,11 @@ class NotiScreen extends Component {
       this.page = this.page + 1
     }
 
-    if (_.isEqual(this.props.noties, nextProps.noties)) {
-      console.log('노티같음')
-    } else {
-      console.log('노티다름')
-    }
     if (this.state.refreshing) {
       this.setState({refreshing: false})
     }
 
+    this.setState({ data: nextProps.noties })
     // if (nextProps.beforeScreen === 'alarmTab') {
     //   if (nextProps.beforeScreen === nextProps.pastScreen) {
     //     this._listRef.scrollToIndex({index: 0})
@@ -131,7 +128,7 @@ class NotiScreen extends Component {
             ItemComponent={this._renderItemComponent.bind(this)}
             disableVirtualization={false}
             horizontal={false}
-            data={this.props.noties}
+            data={this.state.data}
             key={'vf'}
             legacyImplementation={false}
             onRefresh={this._onRefresh.bind(this)}

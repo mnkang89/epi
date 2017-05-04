@@ -42,7 +42,8 @@ class FeedScreen extends Component {
     this.state = {
       refreshing: false,
       footer: false,
-      commentModalVisible: false
+      commentModalVisible: false,
+      data: []
     }
     this.updatedDateTime
     this.profileModifiedFlag = false
@@ -65,6 +66,8 @@ class FeedScreen extends Component {
       this.updatedDateTime = nextProps.items[nextProps.items.length - 1].episode.updatedDateTime
     }
 
+    this.setState({data: nextProps.items})
+
     // if (nextProps.beforeScreen === 'homeTab') {
     //   console.log('홈탭클릭1')
     //   if (nextProps.beforeScreen === nextProps.pastScreen) {
@@ -85,12 +88,11 @@ class FeedScreen extends Component {
   }
 
   // shouldComponentUpdate (nextProps, nextState) {
-  //   if (this.props.profileModified !== nextProps.profileModified) {
-  //     this.profileModifiedFlag = true
-  //     return true
-  //   }
-  //   if (_.isEqual(this.props.items, nextProps.items) &&
-  //       !getObjectDiff(this.props, nextProps).includes('newEpisodeRequesting')) {
+  //   // if (this.props.profileModified !== nextProps.profileModified) {
+  //   //   this.profileModifiedFlag = true
+  //   //   return true
+  //   // }
+  //   if (this.props.items === nextProps.items) {
   //     return false
   //   } else {
   //     return true
@@ -98,6 +100,8 @@ class FeedScreen extends Component {
   // }
 
   render () {
+    console.log('피드리렌더링')
+    // console.log(this.props.items)
     return (
       <View style={styles.mainContainer}>
         <FlatList
@@ -107,7 +111,7 @@ class FeedScreen extends Component {
           style={{flex: 1}}
           renderItem={this._renderItemComponent}
           ListFooterComponent={this._renderFooterComponent}
-          data={this.props.items} // state로 받아서 concat하기
+          data={this.state.data} // state로 받아서 concat하기
           disableVirtualization={false}
           getItemLayout={this._getItemLayout}
           key={'vf'}
@@ -250,6 +254,7 @@ const mapStateToProps = (state) => {
 
     newEpisodeRequesting: state.episode.newEpisodeRequesting,
     items: state.episode.episodes
+
     // trigger: state.screen.trigger,
     // beforeScreen: state.screen.beforeScreen,
     // pastScreen: state.screen.pastScreen

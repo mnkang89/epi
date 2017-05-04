@@ -17,7 +17,6 @@ const paddingCard = scrollViewWidth * 0.02
 class ExploreDetail extends Component {
 
   static propTypes = {
-    token: PropTypes.string,
     following: PropTypes.bool.isRequired,
 
     account: PropTypes.object.isRequired,
@@ -43,14 +42,13 @@ class ExploreDetail extends Component {
   }
 
   onFollowPress () {
-    const { token } = this.props
     const id = this.props.episode.accountId
 
     if (this.state.follow) {
-      this.props.deleteFollow(token, id)
+      this.props.deleteFollow(null, id)
       this.setState({follow: false})
     } else {
-      this.props.postFollow(token, id)
+      this.props.postFollow(null, id)
       this.setState({follow: true})
     }
   }
@@ -171,8 +169,6 @@ class ExploreDetail extends Component {
   }
 
   render () {
-    console.tron.log('팔로잉여부')
-    console.log(this.props.following)
     const { userTextStyle } = styles
 
     return (
