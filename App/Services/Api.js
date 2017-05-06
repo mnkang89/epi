@@ -77,9 +77,6 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
 
   // Account
   const requestAccount = (token, accountId) => {
-    console.log('POST userAccount api콜 발생')
-    console.log(accountId)
-
     return api.get(`/api/accounts/${accountId}/summary`, {}, getTokenHeader())
   }
 

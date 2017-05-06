@@ -55,8 +55,8 @@ class ProfileScreen extends Component {
     const accountId = getAccountId()
     const withFollowing = false
 
+    this.props.requestInfo(null, accountId)
     setTimeout(() => {
-      this.props.requestInfo(null, accountId)
       this.props.requestUserEpisodesWithFalse(null, accountId, withFollowing)
     }, 100)
   }
@@ -166,6 +166,8 @@ class ProfileScreen extends Component {
   }
 
   _renderHeaderComponent = () => {
+    console.log('렌더해더')
+    console.log(this.props.profileImagePath)
     return (
       <ProfileInfo
         type={'me'}

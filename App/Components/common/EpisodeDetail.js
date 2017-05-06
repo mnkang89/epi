@@ -3,6 +3,9 @@ import {
   Text,
   View,
   Image,
+  Modal,
+  Animated,
+  PanResponder,
   // FlatList,
   TouchableOpacity,
   ActivityIndicator,
@@ -44,7 +47,9 @@ class EpisodeDetail extends Component {
       likeCount: this.props.episode.likeCount,
       // contentTypeArray: [],
 
-      footer: false
+      footer: false,
+      hide: false,
+      settingModal: false
     }
     this._listRef
     // 컨텐츠 컴포넌트 ref
@@ -60,6 +65,42 @@ class EpisodeDetail extends Component {
     this.dragStartingOffset
     this.dragEndingOffset
     this.isPlayVideo = false
+    this.animatedValue = new Animated.Value(-200)
+    this._wrapperPanResponder = {}
+  }
+
+  componentWillMount () {
+    this._wrapperPanResponder = PanResponder.create({
+      onStartShouldSetPanResponder: (e, g) => {
+        return true
+      },
+      onPanResponderGrant: () => {
+        this.cancelPress()
+      }
+    })
+  }
+
+  commentSetting () {
+    this.setState({
+      settingModal: true
+    }, () => {
+      Animated.timing(this.animatedValue, {
+        toValue: 10,
+        duration: 150
+      }).start()
+    })
+  }
+
+  cancelPress () {
+    Animated.timing(this.animatedValue, {
+      toValue: -200,
+      duration: 150
+    }).start()
+    setTimeout(() => {
+      this.setState({
+        settingModal: false
+      })
+    }, 200)
   }
 
   componentDidMount () {
@@ -313,6 +354,16 @@ class EpisodeDetail extends Component {
     this.props.getComment(null, episodeId, contentId)
   }
 
+  _onPressRemove () {
+    // this.setState({
+    //   hide: true
+    // })
+    const { parentHandler, episode } = this.props
+
+    parentHandler.removeEpisodeFromData(episode)
+    this.cancelPress()
+  }
+
   renderProfileImage () {
     const randomTime = new Date().getTime()
     const uri = `${this.props.account.profileImagePath}?random_number=${randomTime}`
@@ -355,108 +406,149 @@ class EpisodeDetail extends Component {
   }
 
   render () {
-    console.log('episodeDetail render')
-    const episodeId = this.props.episode.id
-    const activeEpisodeLength = this.props.episode.contents.length
-    const commentCount = this.props.episode.contents.map(content => content.commentCount).reduce((a, b) => a + b, 0)
-    const timeDiffString = convert2TimeDiffString(
-      this.props.episode.updatedDateTime || this.props.episode.createDateTime)
-    const {
-      headerContentStyle
-    } = styles
+    if (!this.state.hide) {
+      const episodeId = this.props.episode.id
+      const activeEpisodeLength = this.props.episode.contents.length
+      const commentCount = this.props.episode.contents.map(content => content.commentCount).reduce((a, b) => a + b, 0)
+      const timeDiffString = convert2TimeDiffString(
+        this.props.episode.updatedDateTime || this.props.episode.createDateTime)
+      const {
+        headerContentStyle
+      } = styles
 
-    let episode = realm.objects('episode').filtered('id = ' + episodeId)
-    let xPosition = 0
+      let episode = realm.objects('episode').filtered('id = ' + episodeId)
+      let xPosition = 0
 
-    this.lastContentOffset = (activeEpisodeLength - 1) * (windowSize.width - 22)
+      this.lastContentOffset = (activeEpisodeLength - 1) * (windowSize.width - 22)
 
-    if (this.props.xPosition === undefined) {
-      if (episode[0] === undefined) {
-        xPosition = 0
+      if (this.props.xPosition === undefined) {
+        if (episode[0] === undefined) {
+          xPosition = 0
+        } else {
+          xPosition = episode[0].offset
+        }
+        this.currentCenterIndex = xPosition / (windowSize.width - 22) // 여기서도 문제 생길 수 있음(x)
       } else {
-        xPosition = episode[0].offset
+        this.currentCenterIndex = this.props.xPosition / (windowSize.width - 22) // 여기서도 문제 생길 수 있음(x)
+        xPosition = this.props.xPosition
       }
-      this.currentCenterIndex = xPosition / (windowSize.width - 22) // 여기서도 문제 생길 수 있음(x)
-    } else {
-      this.currentCenterIndex = this.props.xPosition / (windowSize.width - 22) // 여기서도 문제 생길 수 있음(x)
-      xPosition = this.props.xPosition
-    }
-    return (
-      <View
-        style={{flex: 1, marginBottom: 10}}>
-        <View style={headerContentStyle}>
-          <View style={{width: windowSize.width - 30, marginTop: 10, marginBottom: 10}}>
-            <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-              <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
-                <View>
-                  {this.renderActiveRed()}
-                  <TouchableOpacity
-                    onPress={this.onPressProfile.bind(this)}>
-                    {this.renderProfileImage()}
+      return (
+        <View
+          style={{flex: 1, marginBottom: 10}}>
+          <View style={headerContentStyle}>
+            <View style={{width: windowSize.width - 30, marginTop: 10, marginBottom: 10}}>
+              <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+                <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
+                  <View>
+                    {this.renderActiveRed()}
+                    <TouchableOpacity
+                      onPress={this.onPressProfile.bind(this)}>
+                      {this.renderProfileImage()}
+                    </TouchableOpacity>
+                  </View>
+                  <View style={{justifyContent: 'flex-start', paddingLeft: 5}}>
+                    <Text style={{color: '#626262', fontWeight: 'bold'}}>{this.props.account.nickname}</Text>
+                  </View>
+                </View>
+                <View style={{flexDirection: 'row'}}>
+                  <Text style={{color: '#B2B2B2', fontSize: 13}}>{timeDiffString}</Text>
+                  <TouchableOpacity onPress={this.commentSetting.bind(this)}>
+                    <View style={{marginLeft: 16}}>
+                      <View style={{width: 3, height: 3, marginTop: 2, backgroundColor: 'rgb(178,178,178)'}} />
+                      <View style={{width: 3, height: 3, marginTop: 2, backgroundColor: 'rgb(178,178,178)'}} />
+                      <View style={{width: 3, height: 3, marginTop: 2, backgroundColor: 'rgb(178,178,178)'}} />
+                    </View>
                   </TouchableOpacity>
                 </View>
-                <View style={{justifyContent: 'flex-start', paddingLeft: 5}}>
-                  <Text style={{color: '#626262', fontWeight: 'bold'}}>{this.props.account.nickname}</Text>
+              </View>
+            </View>
+          </View>
+          <FlatListE
+            removeClippedSubviews={false}
+            initialNumToRender={1}
+            windowSize={3}
+            ref={this._captureRef}
+            scrollsToTop={false}
+            keyExtractor={(item, index) => index}
+            data={this.props.episode.contents}
+            renderItem={this._renderItemComponent}
+            // ItemComponent={this._renderItemComponent}
+            FooterComponent={this._renderFooter.bind(this)}
+            disableVirtualization={false}
+            horizontal
+            getItemLayout={this._getItemLayout}
+            key={'hf'}
+            initialScrollIndex={Math.round(this.currentCenterIndex)}
+            onScrollBeginDrag={this._onScrollBeginDrag.bind(this)}
+            onScrollEndDrag={this._onScrollEndDrag.bind(this)}
+            onMomentumScrollBegin={this._onMomentumScrollBegin.bind(this)}
+            onViewableItemsChanged={this._onViewableItemsChanged}
+            shouldItemUpdate={this._shouldItemUpdate}
+            style={{paddingLeft: 7.5, paddingRight: 7.5, backgroundColor: '#FFFFFF'}}
+            // contentOffset={{x: xPosition, y: 0}}
+            scrollEventThrottle={100}
+            snapToAlignment={'start'}
+            snapToInterval={windowSize.width - 22}
+            showsHorizontalScrollIndicator
+            decelerationRate={'fast'} />
+          <View style={{width: windowSize.width, backgroundColor: '#FFFFFF', paddingTop: 20, paddingBottom: 20}}>
+            <View style={{flexDirection: 'row'}}>
+              <View style={{flex: 1, flexDirection: 'row'}}>
+                <View style={{marginLeft: 15, justifyContent: 'center'}}>
+                  <Image style={{width: 12, height: 10}} source={Images.likeCount} />
                 </View>
+                <Text style={{fontSize: 13, paddingLeft: 9, color: '#909090'}}>{this.state.likeCount}</Text>
+                <View style={{marginLeft: 21, justifyContent: 'center'}}>
+                  <Image style={{width: 11, height: 10}} source={Images.commentCount} />
+                </View>
+                <Text style={{fontSize: 13, paddingLeft: 9, color: '#909090'}}>{commentCount}</Text>
               </View>
-              <View>
-                <Text style={{color: '#B2B2B2', fontSize: 13}}>{timeDiffString}</Text>
+              <View style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-end', marginRight: 24}}>
+                <TouchableOpacity onPress={this._onPressHeart.bind(this)} >
+                  {this.renderLikeHeart()}
+                </TouchableOpacity>
+                <TouchableOpacity style={{marginLeft: 24}} onPress={this._onPressComment.bind(this)}>
+                  <Image source={Images.episodeComment} style={{width: 22, height: 20}} />
+                </TouchableOpacity>
               </View>
             </View>
           </View>
-        </View>
-        <FlatListE
-          removeClippedSubviews={false}
-          initialNumToRender={1}
-          windowSize={3}
-          ref={this._captureRef}
-          scrollsToTop={false}
-          keyExtractor={(item, index) => index}
-          data={this.props.episode.contents}
-          renderItem={this._renderItemComponent}
-          // ItemComponent={this._renderItemComponent}
-          FooterComponent={this._renderFooter.bind(this)}
-          disableVirtualization={false}
-          horizontal
-          getItemLayout={this._getItemLayout}
-          key={'hf'}
-          initialScrollIndex={Math.round(this.currentCenterIndex)}
-          onScrollBeginDrag={this._onScrollBeginDrag.bind(this)}
-          onScrollEndDrag={this._onScrollEndDrag.bind(this)}
-          onMomentumScrollBegin={this._onMomentumScrollBegin.bind(this)}
-          onViewableItemsChanged={this._onViewableItemsChanged}
-          shouldItemUpdate={this._shouldItemUpdate}
-          style={{paddingLeft: 7.5, paddingRight: 7.5, backgroundColor: '#FFFFFF'}}
-          // contentOffset={{x: xPosition, y: 0}}
-          scrollEventThrottle={100}
-          snapToAlignment={'start'}
-          snapToInterval={windowSize.width - 22}
-          showsHorizontalScrollIndicator
-          decelerationRate={'fast'} />
-        <View style={{width: windowSize.width, backgroundColor: '#FFFFFF', paddingTop: 20, paddingBottom: 20}}>
-          <View style={{flexDirection: 'row'}}>
-            <View style={{flex: 1, flexDirection: 'row'}}>
-              <View style={{marginLeft: 15, justifyContent: 'center'}}>
-                <Image style={{width: 12, height: 10}} source={Images.likeCount} />
-              </View>
-              <Text style={{fontSize: 13, paddingLeft: 9, color: '#909090'}}>{this.state.likeCount}</Text>
-              <View style={{marginLeft: 21, justifyContent: 'center'}}>
-                <Image style={{width: 11, height: 10}} source={Images.commentCount} />
-              </View>
-              <Text style={{fontSize: 13, paddingLeft: 9, color: '#909090'}}>{commentCount}</Text>
+          <Modal
+            animationType={'fade'}
+            transparent
+            visible={this.state.settingModal}>
+            <View style={{flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.7)'}} >
+              <View
+                style={{flex: 82}}
+                {...this._wrapperPanResponder.panHandlers} />
+              <Animated.View
+                style={{
+                  flex: 18,
+                  width: 355,
+                  marginBottom: this.animatedValue,
+                  alignSelf: 'center',
+                  backgroundColor: 'rgba(252,252,252,0.8)',
+                  borderRadius: 12}} >
+                <TouchableOpacity onPress={this._onPressRemove.bind(this)}>
+                  <View style={{height: 60, justifyContent: 'center', alignItems: 'center', borderBottomWidth: 0.5, borderBottomColor: 'rgba(255,255,255,0.5)'}}>
+                    <Text style={{fontSize: 20, color: 'rgb(254,56,36)'}}>이 에피소드 신고하기</Text>
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={this.cancelPress.bind(this)}>
+                  <View style={{height: 60, justifyContent: 'center', alignItems: 'center'}}>
+                    <Text style={{fontSize: 20, color: 'rgb(0,118,255)'}}>Cancel</Text>
+                  </View>
+                </TouchableOpacity>
+              </Animated.View>
             </View>
-            <View style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-end', marginRight: 24}}>
-              <TouchableOpacity onPress={this._onPressHeart.bind(this)} >
-                {this.renderLikeHeart()}
-              </TouchableOpacity>
-              <TouchableOpacity style={{marginLeft: 24}} onPress={this._onPressComment.bind(this)}>
-                <Image source={Images.episodeComment} style={{width: 22, height: 20}} />
-              </TouchableOpacity>
-            </View>
-          </View>
+          </Modal>
         </View>
-      </View>
-    )
+      )
+    } else {
+      return (
+        <View style={{width: 0, height: 0}} />
+      )
+    }
   }
 
   _renderItemComponent = (content) => {
@@ -521,40 +613,6 @@ class EpisodeDetail extends Component {
       onMomentumScrollBegin을 이용해 스크롤시 false로 변경한다.
     */
 
-    // if (info.viewableItems.length === 1 && !this.horizontalLock) {
-    //   const episodeId = this.props.episode.id
-    //   const offset = info.viewableItems[0].index * (windowSize.width - 22)
-    //
-    //   const { parentHandler, index } = this.props
-    //   const episodeViewability = parentHandler.viewableItemsArray.includes(index)
-    //
-    //   const centerIndex = info.viewableItems[0].index
-    //   this.currentCenterIndex = centerIndex
-    //   // this.currentCenterIndex = offset / (windowSize.width - 22) // 여기서 잘 못 만들면 문제생김(x)
-    //
-    //   realm.write(() => {
-    //     realm.create('episode', {id: episodeId, offset: offset}, true)
-    //   })
-    //
-    //   for (let i = 0; i < this.state.contentTypeArray.length; i++) {
-    //     if (this.state.contentTypeArray[i] === 'Video' &&
-    //         // i === centerIndex면 중간에 온 비디오 컨텐츠이므로 stop할 필요가 없음.
-    //         i !== centerIndex &&
-    //         // undefined일 경우, 아직 contentRefs오브젝트에 추가되지 않은, 즉 아직 렌더링 되지 않은 컨텐츠이다.
-    //         this.contentRefs[i] !== undefined &&
-    //         // null일 경우, flatList최적화 기능에 의해 메모리에서 내려간 컨텐츠에 해당한다.
-    //         this.contentRefs[i] !== null) {
-    //       this.contentRefs[i].getWrappedInstance().ref._component.stopVideo()
-    //     }
-    //   }
-    //   if (episodeViewability &&
-    //       this.state.contentTypeArray[centerIndex] === 'Video' &&
-    //       this.contentRefs[centerIndex] !== null &&
-    //       this.contentRefs[centerIndex] !== undefined) {
-    //     this.contentRefs[centerIndex].getWrappedInstance().ref._component.playVideo()
-    //     // this.currentCenterIndex = centerIndex // 여기까지 오면 문제없음(ok)
-    //   }
-    // }
     if (info.viewableItems.length === 1 && !this.horizontalLock) {
       const episodeId = this.props.episode.id
       const offset = info.viewableItems[0].index * (windowSize.width - 22)

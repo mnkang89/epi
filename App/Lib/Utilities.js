@@ -67,3 +67,7 @@ export const getArrayDiff = (arr1, arr2) => {
 
   return result
 }
+
+export const removeFromArray = (...forDeletion) => {
+  return this.filter(item => !forDeletion.includes(item))
+}

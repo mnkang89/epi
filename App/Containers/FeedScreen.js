@@ -43,7 +43,8 @@ class FeedScreen extends Component {
       refreshing: false,
       footer: false,
       commentModalVisible: false,
-      data: []
+      data: [],
+      hide: []
     }
     this.updatedDateTime
     this.profileModifiedFlag = false
@@ -66,18 +67,9 @@ class FeedScreen extends Component {
       this.updatedDateTime = nextProps.items[nextProps.items.length - 1].episode.updatedDateTime
     }
 
-    this.setState({data: nextProps.items})
+    const data = nextProps.items.filter(item => !this.state.hide.includes(item.episode))
 
-    // if (nextProps.beforeScreen === 'homeTab') {
-    //   console.log('홈탭클릭1')
-    //   if (nextProps.beforeScreen === nextProps.pastScreen) {
-    //     if (this.props.items.length === 0) {
-    //     } else {
-    //       console.log('홈탭클릭2')
-    //       this._listRef.scrollToIndex({index: 0})
-    //     }
-    //   }
-    // }
+    this.setState({data: data})
 
     if (this.state.refreshing) {
       this.setState({
@@ -85,6 +77,11 @@ class FeedScreen extends Component {
         footer: false
       })
     }
+  }
+
+  componentWillUpdate (nextProps, nextState) {
+    console.log('윌업데이트')
+    console.log(nextState.data)
   }
 
   // shouldComponentUpdate (nextProps, nextState) {
@@ -100,8 +97,6 @@ class FeedScreen extends Component {
   // }
 
   render () {
-    console.log('피드리렌더링')
-    // console.log(this.props.items)
     return (
       <View style={styles.mainContainer}>
         <FlatList
@@ -147,6 +142,7 @@ class FeedScreen extends Component {
     * EpisodeDetail컴포넌트의 PureComponent화를 통한 리렌더링 최소화
     * shouldItemUpdate옵션은 deprecated될 예정
     */
+    console.log(index)
     return (
       <EpisodeDetail
         index={index}
@@ -222,6 +218,13 @@ class FeedScreen extends Component {
         this.episodeRefs[index].playEpisodeVideo()
       }
     }
+  }
+
+  removeEpisodeFromData = (episode) => {
+    this.setState({
+      data: this.state.data.filter(item => item.episode !== episode),
+      hide: [...this.state.hide, episode]
+    })
   }
 
   _toggleCommentModal = () => {
