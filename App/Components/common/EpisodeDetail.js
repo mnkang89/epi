@@ -355,13 +355,15 @@ class EpisodeDetail extends Component {
   }
 
   _onPressRemove () {
-    // this.setState({
-    //   hide: true
-    // })
-    const { parentHandler, episode } = this.props
+    this.setState({
+      hide: true
+    })
 
-    parentHandler.removeEpisodeFromData(episode)
-    this.cancelPress()
+    // data변경 방식
+    // const { parentHandler, episode } = this.props
+    //
+    // parentHandler.removeEpisodeFromData(episode)
+    // this.cancelPress()
   }
 
   renderProfileImage () {
@@ -452,8 +454,8 @@ class EpisodeDetail extends Component {
                 </View>
                 <View style={{flexDirection: 'row'}}>
                   <Text style={{color: '#B2B2B2', fontSize: 13}}>{timeDiffString}</Text>
-                  <TouchableOpacity onPress={this.commentSetting.bind(this)}>
-                    <View style={{marginLeft: 16}}>
+                  <TouchableOpacity style={{alignItems: 'flex-end', width: 20}} onPress={this.commentSetting.bind(this)}>
+                    <View>
                       <View style={{width: 3, height: 3, marginTop: 2, backgroundColor: 'rgb(178,178,178)'}} />
                       <View style={{width: 3, height: 3, marginTop: 2, backgroundColor: 'rgb(178,178,178)'}} />
                       <View style={{width: 3, height: 3, marginTop: 2, backgroundColor: 'rgb(178,178,178)'}} />

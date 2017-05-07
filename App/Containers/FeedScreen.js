@@ -15,6 +15,7 @@ import EpisodeDetail from '../Components/common/EpisodeDetail'
 import CommentModalContainer from './common/CommentModalContainer'
 import EpisodeActions from '../Redux/EpisodeRedux'
 import CommentActions from '../Redux/CommentRedux'
+import AccountActions from '../Redux/AccountRedux'
 
 const windowSize = Dimensions.get('window')
 const ITEM_HEIGHT = 56 + (windowSize.width - 30) + 60 + 10
@@ -43,13 +44,13 @@ class FeedScreen extends Component {
       refreshing: false,
       footer: false,
       commentModalVisible: false,
-      data: [],
-      hide: []
+      data: []
     }
     this.updatedDateTime
     this.profileModifiedFlag = false
     this.viewableItemsArray = []
     this.episodeRefs = {}
+    this.hide = []
   }
 
   componentDidMount () {
@@ -57,6 +58,7 @@ class FeedScreen extends Component {
     const withFollowing = true
 
     this.props.requestUserEpisodes(null, accountId, withFollowing)
+    this.props.requestInfo(null, accountId)
   }
 
   componentWillReceiveProps (nextProps, nextState) {
@@ -66,8 +68,9 @@ class FeedScreen extends Component {
     if (nextProps.items.length !== 0) {
       this.updatedDateTime = nextProps.items[nextProps.items.length - 1].episode.updatedDateTime
     }
-
-    const data = nextProps.items.filter(item => !this.state.hide.includes(item.episode))
+    const data = nextProps.items.filter(item => {
+      return !this.hide.includes(item.episode.id)
+    })
 
     this.setState({data: data})
 
@@ -97,6 +100,7 @@ class FeedScreen extends Component {
   // }
 
   render () {
+    console.log('피드리렌더')
     return (
       <View style={styles.mainContainer}>
         <FlatList
@@ -108,7 +112,8 @@ class FeedScreen extends Component {
           ListFooterComponent={this._renderFooterComponent}
           data={this.state.data} // state로 받아서 concat하기
           disableVirtualization={false}
-          getItemLayout={this._getItemLayout}
+          getItemLayout={undefined}
+          // getItemLayout={this._getItemLayout}
           key={'vf'}
           keyExtractor={(item, index) => index}
           horizontal={false}
@@ -221,10 +226,16 @@ class FeedScreen extends Component {
   }
 
   removeEpisodeFromData = (episode) => {
-    this.setState({
-      data: this.state.data.filter(item => item.episode !== episode),
-      hide: [...this.state.hide, episode]
-    })
+    // this.setState({
+    //   // data: this.state.data.filter(item => item.episode !== episode),
+    //   hide: [...this.state.hide, episode]
+    // })
+    // this.hide = [...this.hide, episode.id]
+    this.hide = [...this.hide, episode.id]
+    // const accountId = getAccountId()
+    // const withFollowing = true
+    //
+    // this.props.requestUserEpisodes(null, accountId, withFollowing)
   }
 
   _toggleCommentModal = () => {
@@ -267,6 +278,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     // EpisodeDetailContainer만들고 그쪽에서 넘겨주는 로직으로 변경할 예정
+    requestInfo: (token, accountId) => dispatch(AccountActions.infoRequest(token, accountId)),
     requestNewEpisode: (token, episodeId) => dispatch(EpisodeActions.newEpisodeRequest(token, episodeId)),
     requestUserEpisodes: (token, accountId, withFollowing) => dispatch(EpisodeActions.userEpisodesRequest(token, accountId, withFollowing)),
     requestMoreFeeds: (token, accountId, withFollowing, before) => dispatch(EpisodeActions.moreFeedsRequest(token, accountId, withFollowing, before)),
