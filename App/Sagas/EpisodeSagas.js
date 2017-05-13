@@ -71,6 +71,9 @@ export function * moreFeeds (api, action) {
   console.log('모어 피드 사가 진입')
   const { token, accountId, withFollowing, before } = action
   const response = yield call(api.requestMoreFeeds, token, accountId, withFollowing, before)
+  // console.log('비포')
+  // console.log(before)
+  // console.log('비포')
 
   if (response.ok) {
     const episodes = path(['data', 'items'], response)

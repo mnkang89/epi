@@ -454,13 +454,15 @@ class EpisodeDetail extends Component {
                 </View>
                 <View style={{flexDirection: 'row'}}>
                   <Text style={{color: '#B2B2B2', fontSize: 13}}>{timeDiffString}</Text>
-                  <TouchableOpacity style={{alignItems: 'flex-end', width: 20}} onPress={this.commentSetting.bind(this)}>
-                    <View>
-                      <View style={{width: 3, height: 3, marginTop: 2, backgroundColor: 'rgb(178,178,178)'}} />
-                      <View style={{width: 3, height: 3, marginTop: 2, backgroundColor: 'rgb(178,178,178)'}} />
-                      <View style={{width: 3, height: 3, marginTop: 2, backgroundColor: 'rgb(178,178,178)'}} />
-                    </View>
-                  </TouchableOpacity>
+                  {this.props.type === 'me' ? null
+                    : <TouchableOpacity style={{alignItems: 'flex-end', width: 20}} onPress={this.commentSetting.bind(this)}>
+                      <View>
+                        <View style={{width: 3, height: 3, marginTop: 2, backgroundColor: 'rgb(178,178,178)'}} />
+                        <View style={{width: 3, height: 3, marginTop: 2, backgroundColor: 'rgb(178,178,178)'}} />
+                        <View style={{width: 3, height: 3, marginTop: 2, backgroundColor: 'rgb(178,178,178)'}} />
+                      </View>
+                    </TouchableOpacity>
+                  }
                 </View>
               </View>
             </View>

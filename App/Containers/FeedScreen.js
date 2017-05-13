@@ -66,7 +66,11 @@ class FeedScreen extends Component {
     console.log(getObjectDiff(this.props, nextProps))
 
     if (nextProps.items.length !== 0) {
-      this.updatedDateTime = nextProps.items[nextProps.items.length - 1].episode.updatedDateTime
+      if (nextProps.items[nextProps.items.length - 1].episode.updatedDateTime !== undefined) {
+        this.updatedDateTime = nextProps.items[nextProps.items.length - 1].episode.updatedDateTime
+      } else {
+        this.updatedDateTime = nextProps.items[nextProps.items.length - 1].episode.createDateTime
+      }
     }
     const data = nextProps.items.filter(item => {
       return !this.hide.includes(item.episode.id)
@@ -80,11 +84,6 @@ class FeedScreen extends Component {
         footer: false
       })
     }
-  }
-
-  componentWillUpdate (nextProps, nextState) {
-    console.log('윌업데이트')
-    console.log(nextState.data)
   }
 
   // shouldComponentUpdate (nextProps, nextState) {
@@ -256,6 +255,9 @@ class FeedScreen extends Component {
     const accountId = getAccountId()
     const withFollowing = true
     const updatedDateTime = this.updatedDateTime
+    console.log('업데이티드 타임')
+    console.log(updatedDateTime)
+    console.log('업데이티드 타임')
 
     this.setState({footer: true})
     this.props.requestMoreFeeds(null, accountId, withFollowing, updatedDateTime)

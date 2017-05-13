@@ -59,6 +59,12 @@ class ContentDetailClass extends Component {
     }
   }
 
+  // componentDidMount () {
+    // if (this.videoRef) {
+    //   this.videoRef.seek(0)
+    // }
+  // }
+
   onDoublePress () {
     const delta = new Date().getTime() - this.state.lastPress
     const { token, episodeId } = this.props
@@ -276,7 +282,6 @@ class ContentDetailClass extends Component {
                   height: windowSize.width - 30,
                   width: windowSize.width - 30
                 }}
-                // source={{ uri: content.path }}
                 source={{ uri: 'https://facebook.github.io/react/img/logo_og.png' }} >
                 <View style={{flex: 1, marginTop: 90}}>
                   {this.renderAnimation()}
@@ -310,21 +315,13 @@ class ContentDetailClass extends Component {
             onLongPress={this.onLongPress.bind(this)} >
             <View style={{height: windowSize.width - 30, width: windowSize.width - 30}}>
               <CachableVideo
-                onLoadStart={(e) => {
-                  console.log('로드스타트')
-                  console.log(e)
-                  console.log('로드스타트')
-                }}            // Callback when video starts to load
-                onLoad={(e) => {
-                  console.log('로드완료')
-                  console.log(e)
-                  console.log('로드완료')
-                }}
                 source={{uri: content.path}}   // Can be a URL or a local file.
-                // source={Videos.ragu_8}
                 muted
-                onError={() => { console.log('비디오 로딩 실패 실패 실패 실패 실패 실패 실패 실패 실패 실패 실패 실패 실패 실패') }}
-                videoRef={this.props.playerRef}
+                videoRef={(ref) => {
+                  this.videoRef = ref
+                  this.props.playerRef = ref
+                }}
+                // videoRef={this.props.playerRef}
                 paused={false}                 // Pauses playback entirely.
                 resizeMode='cover'             // Fill the whole screen at aspect ratio.
                 repeat                         // Repeat forever.

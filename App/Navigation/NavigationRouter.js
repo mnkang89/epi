@@ -162,7 +162,8 @@ class NavigationRouter extends Component {
               <Scene
                 key='exploreScreen'
                 panHandlers={null}
-                component={ExploreScreen}
+                component={ProfileScreen}
+                // component={ExploreScreen}
                 title='우연한 발견' />
               <Scene
                 renderTitle={NavItems.profileLogo}

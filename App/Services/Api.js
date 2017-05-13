@@ -2,12 +2,14 @@ import apisauce from 'apisauce'
 import { getToken, getAccountId } from './Auth'
 
 const getTokenHeader = () => {
-  const token = getToken()
-  return {headers: {'x-auth': token}}
+  // const token = getToken()
+  // return {headers: {'x-auth': token}}
+  return {headers: {'x-auth': '$2a$10$HU8r/mQwB0lDHdfO/0isbO0wM.qTVq/AdXKktq4y71f25apxkEqC2'}}
 }
 
 // our "constructor"
 const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstalk.com/') => {
+  // console.log(getToken())
   const api = apisauce.create({
     // base URL is read from the "constructor"
     baseURL,
