@@ -81,8 +81,6 @@ const styles = StyleSheet.create({
   }
 })
 
-
-
 // 구 프로그래스바
 // import React, { Component } from 'react'
 // import {

@@ -7,6 +7,7 @@ import CachableVideo from '../Common/CachableVideo'
 // import { Videos } from '../Themes'
 // import Video from 'react-native-video'
 import { Colors, Images, Metrics } from '../Themes/'
+import FlatListE from '../Experimental/FlatList0.44/FlatList_E44'
 
 const windowSize = Dimensions.get('window')
 const screenWidth = Dimensions.get('window').width
@@ -100,6 +101,52 @@ class ExploreDetail extends Component {
     }
   }
 
+  _renderItemComponent = ({item, index}) => {
+    const marginLeft = index === 0 ? 15 : 0
+
+    if (item.type === 'Image') {
+      return (
+        <TouchableOpacity key={index} onPress={this.onEpisodePress.bind(this, item.id)} >
+          <View style={{marginLeft: marginLeft, marginRight: 10}} >
+            <CachableImage style={{width: windowSize.width - 220.4, height: windowSize.width - 220.4}} source={{ uri: item.path }} />
+          </View>
+        </TouchableOpacity>
+      )
+    } else {
+      const uri = item.thumbnailPath === undefined ? 'https://facebook.github.io/react/img/logo_og.png' : item.thumbnailPath
+      return (
+        <TouchableOpacity key={index} onPress={this.onEpisodePress.bind(this, item.id)} >
+          <View style={{marginLeft: marginLeft, marginRight: 10}}>
+            <View style={{width: windowSize.width - 220.4, height: windowSize.width - 220.4}}>
+              <CachableImage style={{width: windowSize.width - 220.4, height: windowSize.width - 220.4}} source={{ uri: uri }}>
+                <View style={{marginLeft: 5, marginTop: 5, backgroundColor: 'transparent'}}>
+                  <Image style={{width: 19, height: 19}} source={Images.videoIndicator} />
+                </View>
+              </CachableImage>
+            </View>
+          </View>
+        </TouchableOpacity>
+      )
+    }
+    // return (
+    //   <ContentContainer
+    //     ref={(component) => {
+    //       this.contentRefs[index] = component
+    //     }}
+    //     playerRef={(player) => {
+    //       this.player[index] = player
+    //     }}
+    //     key={index}
+    //     length={length}
+    //     number={index}
+    //     episodeId={episodeId}
+    //     content={content.item}
+    //     commentModalHandler={this.props.commentModalHandler}
+    //     like={this.like.bind(this)}
+    //     dislike={this.dislike.bind(this)} />
+    // )
+  }
+
   renderContents () {
     const contents = this.props.episode.contents
     return contents.map(content => {
@@ -115,40 +162,22 @@ class ExploreDetail extends Component {
           </TouchableOpacity>
         )
       } else {
+        const uri = content.thumbnailPath === undefined ? 'https://facebook.github.io/react/img/logo_og.png' : content.thumbnailPath
         return (
           <TouchableOpacity key={contents.indexOf(content)} onPress={this.onEpisodePress.bind(this, content.id)} >
             <View style={{marginLeft: marginLeft, marginRight: 10}}>
               <View style={{width: windowSize.width - 220.4, height: windowSize.width - 220.4}}>
-                <CachableVideo
-                  // source={Videos.ragu_8}
-                  source={{uri: content.path}}   // Can be a URL or a local file.
-                  muted
-                  videoRef={(ref) => {
-                    this.player = ref
-                  }}                             // Store reference
-                  paused
-                  resizeMode='cover'             // Fill the whole screen at aspect ratio.
-                  repeat={false}                         // Repeat forever.
-                  playInBackground={false}       // Audio continues to play when app entering background.
-                  playWhenInactive              // [iOS] Video continues to play when control or notification center are shown.
-                  progressUpdateInterval={250.0} // [iOS] Interval to fire onProgress (default to ~250ms)
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0
-                  }} />
-                <View style={{marginLeft: 5, marginTop: 5, backgroundColor: 'transparent'}}>
-                  <Image style={{width: 19, height: 19}} source={Images.videoIndicator} />
-                </View>
+                <CachableImage style={{width: windowSize.width - 220.4, height: windowSize.width - 220.4}} source={{ uri: uri }}>
+                  <View style={{marginLeft: 5, marginTop: 5, backgroundColor: 'transparent'}}>
+                    <Image style={{width: 19, height: 19}} source={Images.videoIndicator} />
+                  </View>
+                </CachableImage>
               </View>
             </View>
           </TouchableOpacity>
         )
       }
-    }
-    )
+    })
   }
 
   renderProfileImage () {
@@ -187,7 +216,26 @@ class ExploreDetail extends Component {
           </View>
         </View>
         <View style={{height: windowSize.width - 200}}>
-          <ScrollView
+          <FlatListE
+            removeClippedSubviews={false}
+            initialNumToRender={1}
+            windowSize={3}
+            ref={this._captureRef}
+            scrollsToTop={false}
+            keyExtractor={(item, index) => index}
+            data={this.props.episode.contents}
+            renderItem={this._renderItemComponent}
+            disableVirtualization={false}
+            horizontal
+            key={'hf'}
+            // shouldItemUpdate={this._shouldItemUpdate}
+            style={{backgroundColor: '#FFFFFF'}}
+            scrollEventThrottle={100}
+            snapToAlignment={'center'}
+            snapToInterval={cardWidth + paddingCard + paddingCard + 1}
+            showsHorizontalScrollIndicator
+            decelerationRate={'fast'} />
+          {/* <ScrollView
             scrollsToTop={false}
             style={{backgroundColor: '#FFFFFF'}}
             snapToAlignment={'center'}
@@ -198,7 +246,7 @@ class ExploreDetail extends Component {
             showsHorizontalScrollIndicator
             horizontal >
             {this.renderContents()}
-          </ScrollView>
+          </ScrollView> */}
         </View>
       </View>
     )

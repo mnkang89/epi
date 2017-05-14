@@ -317,6 +317,7 @@ class ContentDetailClass extends Component {
             onLongPress={this.onLongPress.bind(this)} >
             <View style={{height: windowSize.width - 30, width: windowSize.width - 30}}>
               <CachableVideo
+                thumbnail={content.thumbnailPath}
                 source={{uri: content.path}}   // Can be a URL or a local file.
                 muted
                 videoRef={(ref) => {

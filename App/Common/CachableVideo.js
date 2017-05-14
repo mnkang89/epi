@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, ActivityIndicator } from 'react-native'
+import { View, ActivityIndicator, Dimensions, Image } from 'react-native'
 import Video from 'react-native-video'
 import { getRealm } from '../Services/RealmFactory'
 import RNFS from 'react-native-fs'
@@ -7,6 +7,7 @@ import { getExecutor, jobDone } from './ExecutorPool'
 
 export const expirePeriodInDay = 7
 
+const windowSize = Dimensions.get('window')
 const realm = getRealm()
 
 const hashing = (string) => {
@@ -122,6 +123,7 @@ export default class CachableVideo extends Component {
     if (this.state.videoLoaded == null) {
       return this.renderdefaultVideo()
     } else if (this.state.videoLoaded === true) {
+      // return this.renderdefaultVideo()
       return this.renderVideo()
     } else {
       return this.renderFailVideo()
@@ -129,14 +131,27 @@ export default class CachableVideo extends Component {
   }
 
   renderdefaultVideo () {
-    return (
-      <View style={[this.props.style, {backgroundColor: 'rgb(228, 228, 228)', alignItems: 'center', justifyContent: 'center'}]}>
-        <ActivityIndicator
-          animating
-          size='large'
-          color='white' />
-      </View>
-    )
+    if (this.props.thumbnail === undefined) {
+      return (
+        <View style={[this.props.style, {backgroundColor: 'rgb(228, 228, 228)', alignItems: 'center', justifyContent: 'center'}]}>
+          <ActivityIndicator
+            animating
+            size='large'
+            color='white' />
+        </View>
+      )
+    } else {
+      return (
+        <View style={[this.props.style, {backgroundColor: 'rgb(228, 228, 228)', alignItems: 'center', justifyContent: 'center'}]}>
+          <Image source={{uri: this.props.thumbnail}} style={{width: windowSize.width - 30, height: windowSize.height - 30, justifyContent: 'center', alignItems: 'center'}}>
+            <ActivityIndicator
+              animating
+              size='large'
+              color='white' />
+          </Image>
+        </View>
+      )
+    }
   }
 
   renderVideo () {
