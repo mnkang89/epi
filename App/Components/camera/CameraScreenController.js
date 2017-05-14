@@ -8,21 +8,22 @@ import {
   TextInput,
   CameraRoll
 } from 'react-native'
-import { Images } from '../../Themes'
-// import Icon from 'react-native-vector-icons/FontAwesome'
 import { connect } from 'react-redux'
-import CameraScreenAction from '../../Redux/CameraScreenRedux'
 import Camera from 'react-native-camera'
+import ImageResizer from 'react-native-image-resizer'
+import _ from 'lodash'
+// import ImageEditor from 'ImageEditor'
+
+import { Images } from '../../Themes'
+import CameraScreenAction from '../../Redux/CameraScreenRedux'
 import EpisodeControllerButton from './EpisodeControllerButton'
 // import ProgressBar from './Progress-Bar'
 import ProgressBar from './newProgressBar'
 import ConfirmError from '../common/ConfirmError'
 import ContentType from './ContentTypeEnum'
-// import ImageEditor from 'ImageEditor'
-import ImageResizer from 'react-native-image-resizer'
+
 import VideoResizer from './VideoResizer'
 import VideoThumbnail from './VideoThumbnail'
-import _ from 'lodash'
 
 class CameraScreenController extends Component {
 
@@ -300,17 +301,16 @@ class CameraScreenController extends Component {
     if (_.isEqual(this.props.contentType, ContentType.Image)) {
       ImageResizer.createResizedImage(this.props.contentPath, 1224, 1632, 'JPEG', 50)
         .then((resizedImageUri) => {
-          this.props.postContent(this.props.contentType, resizedImageUri, this.props.message)
+          this.props.postContent(this.props.contentType, resizedImageUri, '', this.props.message)
         }).catch((err) => {
           console.log(err)
         })
     } else if (_.isEqual(this.props.contentType, ContentType.Video)) {
       VideoThumbnail.createThumbnail(this.props.contentPath)
         .then((thumbnail) => {
-          CameraRoll.saveToCameraRoll(thumbnail)
           VideoResizer.createResizedVideo(this.props.contentPath)
             .then((resizedVideoUri) => {
-              this.props.postContent(this.props.contentType, resizedVideoUri, this.props.message)
+              this.props.postContent(this.props.contentType, resizedVideoUri, thumbnail, this.props.message)
             })
             .catch((err) => {
               console.log(err)
@@ -419,7 +419,7 @@ const mapToDispatch = (dispatch) => {
     backToReadyToTakeContent: () => dispatch(CameraScreenAction.backToReadyToTakeContent()),
     backButtonPressed: () => dispatch(CameraScreenAction.backButtonPressed()),
     registerContentText: (message) => dispatch(CameraScreenAction.registerContentText(message)),
-    postContent: (contentType, contentPath, message) => dispatch(CameraScreenAction.postContent(contentType, contentPath, message)),
+    postContent: (contentType, contentPath, thumbnailPath, message) => dispatch(CameraScreenAction.postContent(contentType, contentPath, thumbnailPath, message)),
     toggleMessageWriteAble: () => dispatch(CameraScreenAction.toggleMessageWriteAble()),
     changeCameraType: () => dispatch(CameraScreenAction.changeCameraType())
   }

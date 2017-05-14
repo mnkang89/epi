@@ -198,7 +198,7 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
   }
 
   // content
-  const postContent = (token, episodeId, fileType, file, message) => {
+  const postContent = (token, episodeId, fileType, file, thumbnail, message) => {
     console.log('POST content api콜 발생')
     console.tron.log(fileType)
     const formData = new FormData()
@@ -211,9 +211,18 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
       name: savedName
     }
 
+    const thumb = {
+      uri: thumbnail,
+      type: 'image/jpeg',
+      name: 'thumbnail.jpg'
+    }
+
     formData.append('episodeId', episodeId)
     formData.append('type', fileType)
     formData.append('file', photo)
+    if (thumbnail !== '') {
+      formData.append('thumbnail', thumb)
+    }
     if (message !== null) {
       formData.append('message', message)
     }

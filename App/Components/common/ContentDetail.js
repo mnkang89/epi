@@ -268,6 +268,8 @@ class ContentDetailClass extends Component {
         </View>
       )
     } else if (content.type === 'Video' && !this.state.visible) {
+      const uri = content.thumbnailPath === undefined ? 'https://facebook.github.io/react/img/logo_og.png' : content.thumbnailPath
+
       return (
         <View style={{backgroundColor: '#FFFFFF', paddingLeft: 8, paddingRight: paddingRight}}>
           <TouchableWithoutFeedback
@@ -282,7 +284,7 @@ class ContentDetailClass extends Component {
                   height: windowSize.width - 30,
                   width: windowSize.width - 30
                 }}
-                source={{ uri: 'https://facebook.github.io/react/img/logo_og.png' }} >
+                source={{ uri: uri }} >
                 <View style={{flex: 1, marginTop: 90}}>
                   {this.renderAnimation()}
                 </View>

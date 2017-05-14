@@ -25,6 +25,7 @@ const { Types, Creators } = createActions({
   postContent: [
     'contentType',
     'contentPath',
+    'thumbnailPath',
     'message'
   ],
   endCameraScreen: [],
@@ -111,7 +112,7 @@ export const toggleMessageWriteAble = (state : Object) => {
   })
 }
 
-export const postContent = (state : Object, { contentType, contentPath, message }) => {
+export const postContent = (state : Object, { contentType, contentPath, thumbnailPath, message }) => {
   return state.merge({ postImage: true })
 }
 

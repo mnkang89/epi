@@ -57,7 +57,7 @@ class ExploreScreen extends Component {
     this.setState({data: nextProps.items})
 
     // if (nextProps.beforeScreen === 'searchTab') {
-    //   if (nextProps.beforeScreen === nextProps.pastScreen) {
+    //   if (nextProps.beforeScreen !== nextProps.pastScreen) {
     //     this._listRef.scrollToIndex({index: 0})
     //   }
     // }

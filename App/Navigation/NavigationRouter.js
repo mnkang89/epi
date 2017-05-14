@@ -47,7 +47,7 @@ import ProfileScreen from '../Containers/ProfileScreen'
 import UserProfileScreen from '../Containers/UserProfileScreen'
 import SingleEpisodeScreen from '../Containers/SingleEpisodeScreen'
 
-// import ScreenActions from '../Redux/ScreenRedux'
+import ScreenActions from '../Redux/ScreenRedux'
 import { isLoggedIn } from '../Services/Auth'
 
 class NavigationRouter extends Component {
@@ -162,8 +162,8 @@ class NavigationRouter extends Component {
               <Scene
                 key='exploreScreen'
                 panHandlers={null}
-                component={ProfileScreen}
-                // component={ExploreScreen}
+                // component={ProfileScreen}
+                component={ExploreScreen}
                 title='우연한 발견' />
               <Scene
                 renderTitle={NavItems.profileLogo}
@@ -220,8 +220,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    // registerScreen: (beforeScreen) => dispatch(ScreenActions.screenRegister(beforeScreen)),
-    // tabTouched: () => dispatch(ScreenActions.tabTouched())
+    registerScreen: (beforeScreen) => dispatch(ScreenActions.screenRegister(beforeScreen)),
+    tabTouched: () => dispatch(ScreenActions.tabTouched())
   }
 }
 

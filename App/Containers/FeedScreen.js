@@ -84,6 +84,19 @@ class FeedScreen extends Component {
         footer: false
       })
     }
+
+    if (nextProps.beforeScreen === 'feedTab') {
+      if (nextProps.beforeScreen !== nextProps.pastScreen) {
+        for (let i in this.viewableItemsArray) {
+          const index = this.viewableItemsArray[i]
+          if (index !== undefined) {
+            if (this.episodeRefs[index] !== null) {
+              this.episodeRefs[index].stopEpisodeVideo()
+            }
+          }
+        }
+      }
+    }
   }
 
   // shouldComponentUpdate (nextProps, nextState) {
@@ -145,7 +158,6 @@ class FeedScreen extends Component {
     * EpisodeDetail컴포넌트의 PureComponent화를 통한 리렌더링 최소화
     * shouldItemUpdate옵션은 deprecated될 예정
     */
-    console.log(index)
     return (
       <EpisodeDetail
         index={index}
@@ -224,16 +236,7 @@ class FeedScreen extends Component {
   }
 
   removeEpisodeFromData = (episode) => {
-    // this.setState({
-    //   // data: this.state.data.filter(item => item.episode !== episode),
-    //   hide: [...this.state.hide, episode]
-    // })
-    // this.hide = [...this.hide, episode.id]
     this.hide = [...this.hide, episode.id]
-    // const accountId = getAccountId()
-    // const withFollowing = true
-    //
-    // this.props.requestUserEpisodes(null, accountId, withFollowing)
   }
 
   _toggleCommentModal = () => {
@@ -265,11 +268,11 @@ const mapStateToProps = (state) => {
     profileModified: state.signup.modified,
 
     newEpisodeRequesting: state.episode.newEpisodeRequesting,
-    items: state.episode.episodes
+    items: state.episode.episodes,
 
     // trigger: state.screen.trigger,
-    // beforeScreen: state.screen.beforeScreen,
-    // pastScreen: state.screen.pastScreen
+    beforeScreen: state.screen.beforeScreen,
+    pastScreen: state.screen.pastScreen
   }
 }
 

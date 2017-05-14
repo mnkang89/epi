@@ -10,11 +10,11 @@ export function * postContent (api, action) {
   console.tron.log('post content saga')
   const token = yield getToken()
   console.tron.log('get token success')
-  const { contentType, contentPath, message } = action
+  const { contentType, contentPath, thumbnailPath, message } = action
   const episodeId = yield getActiveEpisodeIdOrCreateNewEpisode(api, token)
   if (episodeId != null) {
     // dispatch successful email checking
-    const state = yield postContentToEpisode(api, token, episodeId, contentType, contentPath, message)
+    const state = yield postContentToEpisode(api, token, episodeId, contentType, contentPath, thumbnailPath, message)
     console.tron.log('state of postContentToEpisode ' + state)
     if (state) {
       yield put(CameraScreenActions.endCameraScreen())
@@ -27,8 +27,8 @@ export function * postContent (api, action) {
   }
 }
 
-export function * postContentToEpisode (api, token, episodeId, contentType, contentPath, message) {
-  const response = yield call(api.postContent, token, episodeId, contentType.value, contentPath, message)
+export function * postContentToEpisode (api, token, episodeId, contentType, contentPath, thumbnailPath, message) {
+  const response = yield call(api.postContent, token, episodeId, contentType.value, contentPath, thumbnailPath, message)
   if (response.ok) {
     return true
   } else {
