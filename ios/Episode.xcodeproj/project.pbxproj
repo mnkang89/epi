@@ -61,6 +61,7 @@
 		CBB799F5E7F84AAF8E521F9E /* libjschelpers.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FDD2FAD0F1845CCAFB87845 /* libjschelpers.a */; };
 		EE2CB1111EA4EB7B0076F9F4 /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EE2CB10E1EA4EB670076F9F4 /* libRCTPushNotification.a */; };
 		EE784A671EAB88A100C0594C /* libRCTCameraRoll.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EE784A661EAB886700C0594C /* libRCTCameraRoll.a */; };
+		EEB6DAAA1EC7337B00A9746F /* RNVideoThumbnailManager.m in Sources */ = {isa = PBXBuildFile; fileRef = EEB6DAA91EC7337B00A9746F /* RNVideoThumbnailManager.m */; };
 		EEBBE4A81EA9CE090069DA0C /* libReactNativeNavigation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EEBBE4A01EA9CDF40069DA0C /* libReactNativeNavigation.a */; };
 		EEBBE4AA1EA9CE240069DA0C /* libRealmJS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EEBBE4A91EA9CE240069DA0C /* libRealmJS.a */; };
 		EEDDF5951EAE3ECB009C112E /* NSMutableDictionary+SDAVAssetExportSession.m in Sources */ = {isa = PBXBuildFile; fileRef = EEDDF5901EAE3ECB009C112E /* NSMutableDictionary+SDAVAssetExportSession.m */; };
@@ -446,6 +447,8 @@
 		EE2CB1081EA4EB670076F9F4 /* RCTPushNotification.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTPushNotification.xcodeproj; path = "../node_modules/react-native/Libraries/PushNotificationIOS/RCTPushNotification.xcodeproj"; sourceTree = "<group>"; };
 		EE5CB6A61EB20D49003EF6FF /* Episode.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Episode.entitlements; path = Episode/Episode.entitlements; sourceTree = "<group>"; };
 		EE784A611EAB886700C0594C /* RCTCameraRoll.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCameraRoll.xcodeproj; path = "../node_modules/react-native/Libraries/CameraRoll/RCTCameraRoll.xcodeproj"; sourceTree = "<group>"; };
+		EEB6DA7E1EC7334200A9746F /* RNVideoThumbnailManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNVideoThumbnailManager.h; sourceTree = "<group>"; };
+		EEB6DAA91EC7337B00A9746F /* RNVideoThumbnailManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNVideoThumbnailManager.m; sourceTree = "<group>"; };
 		EEBBE47B1EA9CDF40069DA0C /* ReactNativeNavigation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeNavigation.xcodeproj; path = "../node_modules/react-native-navigation/ios/ReactNativeNavigation.xcodeproj"; sourceTree = "<group>"; };
 		EEBBE4A91EA9CE240069DA0C /* libRealmJS.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libRealmJS.a; path = "../../Episode/ios/build/Build/Products/Debug-iphonesimulator/libRealmJS.a"; sourceTree = "<group>"; };
 		EEDC094A1EB0970600DDEF42 /* Episode2.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Episode2.entitlements; path = Episode/Episode2.entitlements; sourceTree = "<group>"; };
@@ -629,6 +632,8 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				EEB6DA7E1EC7334200A9746F /* RNVideoThumbnailManager.h */,
+				EEB6DAA91EC7337B00A9746F /* RNVideoThumbnailManager.m */,
 			);
 			name = Episode;
 			sourceTree = "<group>";
@@ -1507,6 +1512,7 @@
 				EEDDF5951EAE3ECB009C112E /* NSMutableDictionary+SDAVAssetExportSession.m in Sources */,
 				EEDDF5971EAE3ECB009C112E /* videoResizer.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				EEB6DAAA1EC7337B00A9746F /* RNVideoThumbnailManager.m in Sources */,
 				EEDDF5961EAE3ECB009C112E /* SDAVAssetExportSession.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -99,7 +99,6 @@ class FeedScreen extends Component {
   // }
 
   render () {
-    console.log('피드리렌더')
     return (
       <View style={styles.mainContainer}>
         <FlatList
@@ -255,9 +254,6 @@ class FeedScreen extends Component {
     const accountId = getAccountId()
     const withFollowing = true
     const updatedDateTime = this.updatedDateTime
-    console.log('업데이티드 타임')
-    console.log(updatedDateTime)
-    console.log('업데이티드 타임')
 
     this.setState({footer: true})
     this.props.requestMoreFeeds(null, accountId, withFollowing, updatedDateTime)

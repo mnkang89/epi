@@ -21,6 +21,7 @@ import ContentType from './ContentTypeEnum'
 // import ImageEditor from 'ImageEditor'
 import ImageResizer from 'react-native-image-resizer'
 import VideoResizer from './VideoResizer'
+import VideoThumbnail from './VideoThumbnail'
 import _ from 'lodash'
 
 class CameraScreenController extends Component {
@@ -151,21 +152,10 @@ class CameraScreenController extends Component {
     })
     .then((data) => {
       console.log(data)
-      console.tron.log('video capture done')
       CameraRoll.saveToCameraRoll(data.path)
       this.props.takeContent(ContentType.Video, data.path)
-      // VideoResizer.createResizedVideo(data.path)
-      //   .then((resizedVideoUri) => {
-      //     console.log('리사이징 성공')
-      //     CameraRoll.saveToCameraRoll(resizedVideoUri)
-      //   })
-      //   .catch((err) => {
-      //     console.log('리사이징 실패')
-      //     console.log(err)
-      //   })
     })
     .catch(err => {
-      console.tron.log('video capture err')
       console.log(err)
     })
 
@@ -184,23 +174,6 @@ class CameraScreenController extends Component {
         })
       }
     }, 1000)
-
-    // this.interval = setInterval(() => {
-    //   if (this.state.leftTime <= 0) {
-    //     console.tron.log('leftTime done')
-    //     this.props.cameraHandler.getCamera().stopCapture()
-    //     this.stopProgress()
-    //     this.initializeProgress()
-    //     this.setState({
-    //       timer: false
-    //     })
-    //   } else {
-    //     this.setState({
-    //       leftTime: this.state.leftTime - 1,
-    //       progress: this.state.progress + 3750 * 2
-    //     })
-    //   }
-    // }, 1000)
   }
 
   onPressOpenTextInput () {
@@ -209,8 +182,6 @@ class CameraScreenController extends Component {
 
   renderCommentArea () {
     this.margin = this.state.componentWidth - (this.state.componentWidth / 10)
-    console.log(this.state.componentWidth)
-    console.log(this.margin)
     return (
       <View style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.59)'}}>
         <TouchableWithoutFeedback
@@ -329,22 +300,23 @@ class CameraScreenController extends Component {
     if (_.isEqual(this.props.contentType, ContentType.Image)) {
       ImageResizer.createResizedImage(this.props.contentPath, 1224, 1632, 'JPEG', 50)
         .then((resizedImageUri) => {
-          console.log('리사이징 성공')
-          // this.props.parentThis.deactiveLoadingModal()
           this.props.postContent(this.props.contentType, resizedImageUri, this.props.message)
         }).catch((err) => {
-          console.log('리사이징 실패')
           console.log(err)
         })
     } else if (_.isEqual(this.props.contentType, ContentType.Video)) {
-      VideoResizer.createResizedVideo(this.props.contentPath)
-        .then((resizedVideoUri) => {
-          console.log('리사이징 성공')
-          // this.props.parentThis.deactiveLoadingModal()
-          this.props.postContent(this.props.contentType, resizedVideoUri, this.props.message)
+      VideoThumbnail.createThumbnail(this.props.contentPath)
+        .then((thumbnail) => {
+          CameraRoll.saveToCameraRoll(thumbnail)
+          VideoResizer.createResizedVideo(this.props.contentPath)
+            .then((resizedVideoUri) => {
+              this.props.postContent(this.props.contentType, resizedVideoUri, this.props.message)
+            })
+            .catch((err) => {
+              console.log(err)
+            })
         })
         .catch((err) => {
-          console.log('리사이징 실패')
           console.log(err)
         })
     } else {
