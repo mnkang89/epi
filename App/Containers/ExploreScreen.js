@@ -46,7 +46,16 @@ class ExploreScreen extends Component {
     console.log(getObjectDiff(this.props, nextProps))
     // TODO: 결국엔 스테이트를 false로 바꾸는 것이므로 통일하기.
     if (nextProps.items.length !== 0) {
-      this.updatedDateTime = nextProps.items[nextProps.items.length - 1].episode.updatedDateTime
+      console.log(nextProps.items[nextProps.items.length - 1].episode)
+      if (nextProps.items[nextProps.items.length - 1].episode.updatedDateTime !== undefined) {
+        console.log('업데이티드')
+        console.log(nextProps.items[nextProps.items.length - 1].episode.updatedDateTime)
+        this.updatedDateTime = nextProps.items[nextProps.items.length - 1].episode.updatedDateTime
+      } else {
+        console.log('크리에이트')
+        console.log(nextProps.items[nextProps.items.length - 1].episode.createDateTime)
+        this.updatedDateTime = nextProps.items[nextProps.items.length - 1].episode.createDateTime
+      }
     }
 
     if ((this.props.followPosting === true && nextProps.followPosting === false) ||
@@ -169,13 +178,10 @@ class ExploreScreen extends Component {
 
   _onEndReached = () => {
     console.log('onEndReached fired')
+    const updatedDateTime = this.updatedDateTime
     this.setState({footer: true})
-    if (this.props.items.length !== 0) {
-      this.updatedDateTime = this.props.items[this.props.items.length - 1].episode.updatedDateTime
-    }
-    const before = this.updatedDateTime
 
-    this.props.requestMoreBestFeeds(null, null, before)
+    this.props.requestMoreBestFeeds(null, null, updatedDateTime)
   }
 }
 

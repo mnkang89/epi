@@ -159,7 +159,9 @@ export default class CachableVideo extends Component {
       <Video
         source={{uri: this.state.videoPath}}   // Can be a URL or a local file.
         muted={this.props.muted}
-        ref={this.props.videoRef}                             // Store reference
+        ref={(ref) => {
+          this.player = ref
+        }}
         paused={this.props.paused}                 // Pauses playback entirely.
         resizeMode={this.props.resizeMode}             // Fill the whole screen at aspect ratio.
         repeat={this.props.repeat}                         // Repeat forever.

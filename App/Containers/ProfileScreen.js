@@ -73,7 +73,11 @@ class ProfileScreen extends Component {
     //   }
     // }
     if (nextProps.items.length !== 0) {
-      this.updatedDateTime = nextProps.items[nextProps.items.length - 1].episode.updatedDateTime
+      if (nextProps.items[nextProps.items.length - 1].episode.updatedDateTime !== undefined) {
+        this.updatedDateTime = nextProps.items[nextProps.items.length - 1].episode.updatedDateTime
+      } else {
+        this.updatedDateTime = nextProps.items[nextProps.items.length - 1].episode.createDateTime
+      }
     }
 
     this.setState({data: nextProps.items})

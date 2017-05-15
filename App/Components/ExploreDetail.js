@@ -56,7 +56,7 @@ class ExploreDetail extends Component {
 
   onProfileImagePress () {
     const accountId = this.props.account.id
-    console.log(accountId)
+
     NavigationActions.searchTouserProfileScreen({
       type: 'push',
       screen: 'SearchScreen',

@@ -152,9 +152,6 @@ class EpisodeDetail extends Component {
       this.currentCenterIndex = centerIndex // 이 코드까지 왔다는건 문제없다는 것
     }
 
-    // this.setState({
-    //   contentTypeArray
-    // })
     this.contentTypeArray = contentTypeArray
 
     if (episode.length === 0) {
@@ -170,17 +167,6 @@ class EpisodeDetail extends Component {
       return
     }
   }
-
-  // componentWillMount () {
-  //   const contentTypeArray = []
-  //
-  //   for (let i = 0; i < this.props.episode.contents.length; i++) {
-  //     contentTypeArray.push(this.props.episode.contents[i].type)
-  //   }
-  //   this.setState({
-  //     contentTypeArray
-  //   })
-  // }
 
   componentWillReceiveProps (nextProps) {
     if (this.state.footer) {
@@ -214,16 +200,6 @@ class EpisodeDetail extends Component {
   }
 
   playEpisodeVideo = () => {
-    // if (this.state.contentTypeArray[this.currentCenterIndex] === 'Video') {
-    //   this.isPlayVideo = true
-    //   setTimeout(() => {
-    //     if (this.isPlayVideo) {
-    //       if (this.contentRefs[this.currentCenterIndex] != null) {
-    //         this.contentRefs[this.currentCenterIndex].getWrappedInstance().ref._component.playVideo()
-    //       }
-    //     }
-    //   }, 400)
-    // }
     if (this.contentTypeArray[this.currentCenterIndex] === 'Video') {
       this.isPlayVideo = true
       setTimeout(() => {
@@ -489,7 +465,6 @@ class EpisodeDetail extends Component {
             onViewableItemsChanged={this._onViewableItemsChanged}
             shouldItemUpdate={this._shouldItemUpdate}
             style={{paddingLeft: 7.5, paddingRight: 7.5, backgroundColor: '#FFFFFF'}}
-            // contentOffset={{x: xPosition, y: 0}}
             scrollEventThrottle={100}
             snapToAlignment={'start'}
             snapToInterval={windowSize.width - 22}
@@ -626,7 +601,6 @@ class EpisodeDetail extends Component {
 
       const centerIndex = info.viewableItems[0].index
       this.currentCenterIndex = centerIndex
-      // this.currentCenterIndex = offset / (windowSize.width - 22) // 여기서 잘 못 만들면 문제생김(x)
 
       realm.write(() => {
         realm.create('episode', {id: episodeId, offset: offset}, true)
@@ -648,7 +622,6 @@ class EpisodeDetail extends Component {
           this.contentRefs[centerIndex] !== null &&
           this.contentRefs[centerIndex] !== undefined) {
         this.contentRefs[centerIndex].getWrappedInstance().ref._component.playVideo()
-        // this.currentCenterIndex = centerIndex // 여기까지 오면 문제없음(ok)
       }
     }
   }

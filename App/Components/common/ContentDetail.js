@@ -59,11 +59,8 @@ class ContentDetailClass extends Component {
     }
   }
 
-  // componentDidMount () {
-    // if (this.videoRef) {
-    //   this.videoRef.seek(0)
-    // }
-  // }
+  componentDidMount () {
+  }
 
   onDoublePress () {
     const delta = new Date().getTime() - this.state.lastPress
@@ -320,11 +317,12 @@ class ContentDetailClass extends Component {
                 thumbnail={content.thumbnailPath}
                 source={{uri: content.path}}   // Can be a URL or a local file.
                 muted
-                videoRef={(ref) => {
-                  this.videoRef = ref
-                  this.props.playerRef = ref
-                }}
+                // videoRef={(ref) => {
+                //   this.videoRef = ref
+                //   this.props.playerRef = ref
+                // }}
                 // videoRef={this.props.playerRef}
+                videoRef={this.videoRef}
                 paused={false}                 // Pauses playback entirely.
                 resizeMode='cover'             // Fill the whole screen at aspect ratio.
                 repeat                         // Repeat forever.

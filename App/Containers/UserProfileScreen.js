@@ -63,28 +63,19 @@ class UserProfileScreen extends Component {
     const { id } = this.props
     const active = false
 
-    setTimeout(() => {
-      this.props.requestOtherInfo(null, id)
-      this.props.requestOtherEpisodes(null, id, active)
-    }, 100)
+    this.props.requestOtherInfo(null, id)
+    this.props.requestOtherEpisodes(null, id, active)
   }
 
   componentWillReceiveProps (nextProps) {
-    // console.log(getObjectDiff(this.props, nextProps))
-    //
-    // if (this.topOfStack) {
-    //   this.setState({
-    //     scrollsToTop: true
-    //   })
-    // } else {
-    //   this.setState({
-    //     scrollsToTop: false
-    //   })
-    // }
     const items = nextProps.itemsObject[this.props.id]
 
     if (nextProps.itemsObject[this.props.id] !== undefined) {
-      this.updatedDateTime = items[items.length - 1].episode.updatedDateTime
+      if (items[items.length - 1].episode.updatedDateTime !== undefined) {
+        this.updatedDateTime = items[items.length - 1].episode.updatedDateTime
+      } else {
+        this.updatedDateTime = items[items.length - 1].episode.createDateTime
+      }
     }
 
     if (this.state.refreshing) {
@@ -298,16 +289,12 @@ class UserProfileScreen extends Component {
   }
 
   _onEndReached = () => {
-    // const items = this.props.itemsObject[this.props.id]
     const { id } = this.props
-    const updatedDateTime = this.updatedDateTime
     const withFollowing = false
+    const updatedDateTime = this.updatedDateTime
 
     this.setState({footer: true})
     this.props.requestMoreOtherEpisodes(null, id, withFollowing, updatedDateTime)
-    // if (items.length !== 0) {
-    //   this.updatedDateTime = items[items.length - 1].episode.updatedDateTime
-    // }
   }
 
   _onPushToUserProfileScreen () {
