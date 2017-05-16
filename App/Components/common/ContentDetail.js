@@ -4,7 +4,8 @@ import {
   View,
   TouchableWithoutFeedback,
   Image,
-  Dimensions
+  Dimensions,
+  Animated
  } from 'react-native'
 import * as Animatable from 'react-native-animatable'
 
@@ -59,6 +60,7 @@ class ContentDetailClass extends Component {
 
       videoWidth: 0
     }
+    this.hiddenOpacity = new Animated.Value(0)
   }
 
   componentDidMount () {
@@ -124,10 +126,14 @@ class ContentDetailClass extends Component {
       visible: true
     }, () => {
       setTimeout(() => {
-        this.setState({
-          videoWidth: windowSize.width - 30
-        })
-      }, 100)
+        // this.setState({
+        //   videoWidth: windowSize.width - 30
+        // })
+        Animated.timing(
+          this.hiddenOpacity,
+          { toValue: 1, duration: 0 }
+        ).start()
+      }, 150)
     })
   }
 
@@ -139,10 +145,14 @@ class ContentDetailClass extends Component {
       visible: false
     }, () => {
       setTimeout(() => {
-        this.setState({
-          videoWidth: 0
-        })
-      }, 100)
+        // this.setState({
+        //   videoWidth: 0
+        // })
+        Animated.timing(
+          this.hiddenOpacity,
+          { toValue: 0, duration: 0 }
+        ).start()
+      }, 150)
     })
   }
 
@@ -182,7 +192,7 @@ class ContentDetailClass extends Component {
   renderContentOverlayVideo (content, message) {
     if (this.state.visible) {
       return (
-        <View style={{height: this.state.videoWidth, width: windowSize.width - 30, position: 'absolute'}} >
+        <Animated.View style={{height: windowSize.width - 30, width: windowSize.width - 30, position: 'absolute', opacity: this.hiddenOpacity}} >
           <CachableVideo
             thumbnail={content.thumbnailPath}
             source={{uri: content.path}}   // Can be a URL or a local file.
@@ -233,7 +243,7 @@ class ContentDetailClass extends Component {
               </Text>
             </View>
           </View>
-        </View>
+        </Animated.View>
       )
     } else {
       return

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, ActivityIndicator, Dimensions, Image } from 'react-native'
+import { View, ActivityIndicator, Dimensions, Image, Text } from 'react-native'
 import Video from 'react-native-video'
 import { getRealm } from '../Services/RealmFactory'
 import RNFS from 'react-native-fs'
@@ -133,7 +133,7 @@ export default class CachableVideo extends Component {
   renderdefaultVideo () {
     if (this.props.thumbnail === undefined) {
       return (
-        <View style={[this.props.style, {backgroundColor: 'rgb(228, 228, 228)', alignItems: 'center', justifyContent: 'center'}]} >
+        <View style={[this.props.style, {backgroundColor: 'transparent', alignItems: 'center', justifyContent: 'center'}]} >
           {/* <ActivityIndicator
             animating
             size='large'
@@ -142,13 +142,8 @@ export default class CachableVideo extends Component {
       )
     } else {
       return (
-        <View style={[this.props.style, {backgroundColor: 'rgb(228, 228, 228)', alignItems: 'center', justifyContent: 'center'}]} >
-          <Image source={{uri: this.props.thumbnail}} style={{width: windowSize.width - 30, height: windowSize.height - 30, justifyContent: 'center', alignItems: 'center'}}>
-            {/* <ActivityIndicator
-              animating
-              size='large'
-              color='white' /> */}
-          </Image>
+        <View style={[this.props.style, {backgroundColor: 'transparent', alignItems: 'center', justifyContent: 'center'}]} >
+          {/* <Image source={{uri: this.props.thumbnail}} style={{width: windowSize.width - 30, height: windowSize.height - 30, justifyContent: 'center', alignItems: 'center'}} /> */}
         </View>
       )
     }
@@ -156,7 +151,7 @@ export default class CachableVideo extends Component {
 
   renderVideo () {
     return (
-      <View style={[this.props.style, {backgroundColor: 'rgb(228, 228, 228)', alignItems: 'center', justifyContent: 'center'}]}>
+      <View style={[this.props.style, {backgroundColor: 'transparent', alignItems: 'center', justifyContent: 'center'}]}>
         <Video
           source={{uri: this.state.videoPath}}   // Can be a URL or a local file.
           muted={this.props.muted}
