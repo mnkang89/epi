@@ -407,8 +407,9 @@ class EpisodeDetail extends Component {
         }
         this.currentCenterIndex = xPosition / (windowSize.width - 22) // 여기서도 문제 생길 수 있음(x)
       } else {
-        this.currentCenterIndex = this.props.xPosition / (windowSize.width - 22) // 여기서도 문제 생길 수 있음(x)
-        xPosition = this.props.xPosition
+        // this.currentCenterIndex = this.props.xPosition / (windowSize.width - 22) // 여기서도 문제 생길 수 있음(x)
+        // xPosition = this.props.xPosition
+        this.currentCenterIndex = xPosition
       }
       return (
         <View

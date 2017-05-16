@@ -77,11 +77,13 @@ class SingleEpisodeScreen extends Component {
         <FlatList
           removeClippedSubviews={false}
           viewabilityConfig={{viewAreaCoveragePercentThreshold: 51}}
+          windowSize={3}
           style={{ flex: 1 }}
           ref={this._captureRef}
           renderItem={this._renderItemComponent}
           data={this.props.items}
           disableVirtualization={false}
+          getItemLayout={undefined}
           key={'vf'}
           keyExtractor={(item, index) => index}
           horizontal={false}
@@ -108,17 +110,18 @@ class SingleEpisodeScreen extends Component {
 
   _renderItemComponent = ({item, index}) => {
     const { contentId, account } = this.props
-    let xPosition = 0
-    let contents = item.contents
+    // let xPosition = 0
+    // let contents = item.contents
 
-    if (contentId) {
-      xPosition = contents.map((content) => { return content.id }).indexOf(contentId) * (windowSize.width - 22)
-    }
+    // if (contentId) {
+    //   xPosition = contents.map((content) => { return content.id }).indexOf(contentId) * (windowSize.width - 22)
+    // }
     return (
       <EpisodeDetail
         type={this.props.detailType}
         singleType={this.props.singleType}
-        xPosition={xPosition}
+        xPosition={index}
+        // xPosition={xPosition}
         index={index}
         ref={(component) => {
           if (component !== null) {

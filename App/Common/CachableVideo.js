@@ -133,21 +133,21 @@ export default class CachableVideo extends Component {
   renderdefaultVideo () {
     if (this.props.thumbnail === undefined) {
       return (
-        <View style={[this.props.style, {backgroundColor: 'rgb(228, 228, 228)', alignItems: 'center', justifyContent: 'center'}]}>
-          <ActivityIndicator
+        <View style={[this.props.style, {backgroundColor: 'rgb(228, 228, 228)', alignItems: 'center', justifyContent: 'center'}]} >
+          {/* <ActivityIndicator
             animating
             size='large'
-            color='white' />
+            color='white' /> */}
         </View>
       )
     } else {
       return (
-        <View style={[this.props.style, {backgroundColor: 'rgb(228, 228, 228)', alignItems: 'center', justifyContent: 'center'}]}>
+        <View style={[this.props.style, {backgroundColor: 'rgb(228, 228, 228)', alignItems: 'center', justifyContent: 'center'}]} >
           <Image source={{uri: this.props.thumbnail}} style={{width: windowSize.width - 30, height: windowSize.height - 30, justifyContent: 'center', alignItems: 'center'}}>
-            <ActivityIndicator
+            {/* <ActivityIndicator
               animating
               size='large'
-              color='white' />
+              color='white' /> */}
           </Image>
         </View>
       )
@@ -156,21 +156,23 @@ export default class CachableVideo extends Component {
 
   renderVideo () {
     return (
-      <Video
-        source={{uri: this.state.videoPath}}   // Can be a URL or a local file.
-        muted={this.props.muted}
-        ref={(ref) => {
-          this.player = ref
-        }}
-        paused={this.props.paused}                 // Pauses playback entirely.
-        resizeMode={this.props.resizeMode}             // Fill the whole screen at aspect ratio.
-        repeat={this.props.repeat}                         // Repeat forever.
-        playInBackground={this.props.playInBackground}       // Audio continues to play when app entering background.
-        playWhenInactive={this.props.playWhenInactive}              // [iOS] Video continues to play when control or notification center are shown.
-        progressUpdateInterval={this.props.progressUpdateInterval} // [iOS] Interval to fire onProgress (default to ~250ms)
-        style={this.props.style} >
-        {this.props.children}
-      </Video>
+      <View style={[this.props.style, {backgroundColor: 'rgb(228, 228, 228)', alignItems: 'center', justifyContent: 'center'}]}>
+        <Video
+          source={{uri: this.state.videoPath}}   // Can be a URL or a local file.
+          muted={this.props.muted}
+          ref={(ref) => {
+            this.player = ref
+          }}
+          paused={this.props.paused}                 // Pauses playback entirely.
+          resizeMode={this.props.resizeMode}             // Fill the whole screen at aspect ratio.
+          repeat={this.props.repeat}                         // Repeat forever.
+          playInBackground={this.props.playInBackground}       // Audio continues to play when app entering background.
+          playWhenInactive={this.props.playWhenInactive}              // [iOS] Video continues to play when control or notification center are shown.
+          progressUpdateInterval={this.props.progressUpdateInterval} // [iOS] Interval to fire onProgress (default to ~250ms)
+          style={this.props.style} >
+          {this.props.children}
+        </Video>
+      </View>
     )
   }
 

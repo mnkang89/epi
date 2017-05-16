@@ -55,7 +55,9 @@ class ContentDetailClass extends Component {
 
       paused: true,
       visible: false,
-      refresh: false
+      refresh: false,
+
+      videoWidth: 0
     }
   }
 
@@ -115,13 +117,17 @@ class ContentDetailClass extends Component {
   }
 
   playVideo () {
-    // console.log('비디오 켜라: ' + this.props.episodeId)
-    // console.log('컨텐츠id: ' + this.props.content.id)
     // this.setState({
     //   paused: false
     // })
     this.setState({
       visible: true
+    }, () => {
+      setTimeout(() => {
+        this.setState({
+          videoWidth: windowSize.width - 30
+        })
+      }, 100)
     })
   }
 
@@ -131,6 +137,12 @@ class ContentDetailClass extends Component {
     // })
     this.setState({
       visible: false
+    }, () => {
+      setTimeout(() => {
+        this.setState({
+          videoWidth: 0
+        })
+      }, 100)
     })
   }
 
@@ -165,6 +177,67 @@ class ContentDetailClass extends Component {
     })
     this.props.dislike()
     this.props.deleteLike(token, episodeId)
+  }
+
+  renderContentOverlayVideo (content, message) {
+    if (this.state.visible) {
+      return (
+        <View style={{height: this.state.videoWidth, width: windowSize.width - 30, position: 'absolute'}} >
+          <CachableVideo
+            thumbnail={content.thumbnailPath}
+            source={{uri: content.path}}   // Can be a URL or a local file.
+            muted
+            // videoRef={(ref) => {
+            //   this.videoRef = ref
+            //   this.props.playerRef = ref
+            // }}
+            // videoRef={this.props.playerRef}
+            videoRef={this.videoRef}
+            paused={false}                 // Pauses playback entirely.
+            resizeMode='cover'             // Fill the whole screen at aspect ratio.
+            repeat                         // Repeat forever.
+            playInBackground={false}       // Audio continues to play when app entering background.
+            playWhenInactive              // [iOS] Video continues to play when control or notification center are shown.
+            progressUpdateInterval={250.0} // [iOS] Interval to fire onProgress (default to ~250ms)
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0
+            }} />
+          <View style={{flex: 1, alignItems: 'center'}} >
+            <View style={{flex: 1}} />
+            <View style={{flex: 1}} >
+              {this.renderAnimation()}
+            </View>
+            <View style={{
+              flex: 1,
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+              paddingRight: 15,
+              paddingLeft: 15,
+              marginBottom: 10,
+              backgroundColor: 'rgba(0,0,0,0)'}}>
+              <Text
+                allowFontScaling={false}
+                style={{
+                  textShadowOffset: {width: 1, height: 2},
+                  textShadowColor: 'rgba(0, 0, 0, 0.5)',
+                  textShadowRadius: 1,
+                  color: 'white',
+                  fontWeight: 'bold',
+                  textAlign: 'center',
+                  fontSize: 20 }} >
+                {message}
+              </Text>
+            </View>
+          </View>
+        </View>
+      )
+    } else {
+      return
+    }
   }
 
   renderAnimation () {
@@ -264,7 +337,8 @@ class ContentDetailClass extends Component {
           </TouchableWithoutFeedback>
         </View>
       )
-    } else if (content.type === 'Video' && !this.state.visible) {
+    // } else if (content.type === 'Video' && !this.state.visible) {
+    } else if (content.type === 'Video') {
       const uri = content.thumbnailPath === undefined ? 'https://facebook.github.io/react/img/logo_og.png' : content.thumbnailPath
 
       return (
@@ -300,6 +374,7 @@ class ContentDetailClass extends Component {
                   </Text>
                 </View>
               </Image>
+              {this.renderContentOverlayVideo(content, message)}
             </View>
           </TouchableWithoutFeedback>
         </View>
@@ -312,7 +387,7 @@ class ContentDetailClass extends Component {
             delayLongPress={800}
             onPress={this.onDoublePress.bind(this)}
             onLongPress={this.onLongPress.bind(this)} >
-            <View style={{height: windowSize.width - 30, width: windowSize.width - 30}}>
+            <View style={{height: windowSize.width - 30, width: windowSize.width - 30}} >
               <CachableVideo
                 thumbnail={content.thumbnailPath}
                 source={{uri: content.path}}   // Can be a URL or a local file.
