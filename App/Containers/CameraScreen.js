@@ -65,9 +65,13 @@ class CameraScreen extends Component {
   }
 
   goToHomeTab () {
-    // this.deactiveLoadingModal()
-    StatusBar.setHidden(false)
-    NavigationActions.pop()
+    this.setState({loadingModal: false}, () => {
+      StatusBar.setHidden(false)
+      NavigationActions.pop()
+      setTimeout(() => {
+        NavigationActions.homeTab()
+      }, 300)
+    })
   }
 
   closeModal () {

@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import {
   View,
+  Animated,
   ActivityIndicator,
   FlatList,
   Dimensions
@@ -8,7 +9,8 @@ import {
 import { connect } from 'react-redux'
 
 import { getAccountId } from '../Services/Auth'
-import { getObjectDiff, getArrayDiff } from '../Lib/Utilities'
+// import { getObjectDiff, getArrayDiff } from '../Lib/Utilities'
+import { getArrayDiff } from '../Lib/Utilities'
 
 import styles from './Styles/FeedScreenStyle'
 import EpisodeDetail from '../Components/common/EpisodeDetail'
@@ -46,6 +48,7 @@ class FeedScreen extends Component {
       commentModalVisible: false,
       data: []
     }
+    this.viewOpacity = new Animated.Value(0)
     this.updatedDateTime
     this.profileModifiedFlag = false
     this.viewableItemsArray = []
@@ -59,12 +62,16 @@ class FeedScreen extends Component {
 
     this.props.requestUserEpisodes(null, accountId, withFollowing)
     this.props.requestInfo(null, accountId)
+
+    setTimeout(() => {
+      Animated.timing(this.viewOpacity, {
+        toValue: 1
+      }).start()
+    }, 1800)
   }
 
   componentWillReceiveProps (nextProps, nextState) {
-    console.log('componentWillReceiveProps in FeedScreen')
-    console.log(getObjectDiff(this.props, nextProps))
-
+    // NavigationActions.homeTab()
     if (nextProps.items.length !== 0) {
       if (nextProps.items[nextProps.items.length - 1].episode.updatedDateTime !== undefined) {
         this.updatedDateTime = nextProps.items[nextProps.items.length - 1].episode.updatedDateTime
@@ -113,7 +120,7 @@ class FeedScreen extends Component {
 
   render () {
     return (
-      <View style={styles.mainContainer}>
+      <Animated.View style={[styles.mainContainer, {'opacity': this.viewOpacity}]}>
         <FlatList
           removeClippedSubviews={false}
           viewabilityConfig={{viewAreaCoveragePercentThreshold: 51}}
@@ -142,7 +149,7 @@ class FeedScreen extends Component {
           commentModalVisible={this.state.commentModalVisible}
           commentModalHandler={this._toggleCommentModal}
           screen={'FeedScreen'} />
-      </View>
+      </Animated.View>
     )
   }
 

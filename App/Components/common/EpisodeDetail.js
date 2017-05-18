@@ -6,7 +6,7 @@ import {
   Modal,
   Animated,
   PanResponder,
-  // FlatList,
+  FlatList,
   TouchableOpacity,
   ActivityIndicator,
   Dimensions
@@ -18,7 +18,7 @@ import { convert2TimeDiffString } from '../../Lib/Utilities'
 import { getRealm } from '../../Services/RealmFactory'
 
 import ContentContainer from '../../Containers/common/ContentContainer'
-import FlatListE from '../../Experimental/FlatList0.44/FlatList_E44'
+// import FlatListE from '../../Experimental/FlatList0.44/FlatList_E44'
 // import FlatListE from '../../Experimental/FlatList_e'
 
 const windowSize = Dimensions.get('window')
@@ -26,7 +26,7 @@ const realm = getRealm()
 const ITEM_WIDTH = (windowSize.width - 30) + 8
 // React.Pure
 
-class EpisodeDetail extends Component {
+class EpisodeDetail extends React.PureComponent {
 
   static propTypes = {
     account: PropTypes.object,
@@ -177,16 +177,6 @@ class EpisodeDetail extends Component {
   }
 
   stopEpisodeVideo = () => {
-    // this.isPlayVideo = false
-    // for (let i = 0; i < this.state.contentTypeArray.length; i++) {
-    //   if (this.state.contentTypeArray[i] === 'Video' &&
-    //       // undefined일 경우, 아직 contentRefs오브젝트에 추가되지 않은, 즉 아직 렌더링 되지 않은 컨텐츠이다.
-    //       this.contentRefs[i] !== undefined &&
-    //       // null일 경우, flatList최적화 기능에 의해 메모리에서 내려간 컨텐츠에 해당한다.
-    //       this.contentRefs[i] !== null) {
-    //     this.contentRefs[i].getWrappedInstance().ref._component.stopVideo()
-    //   }
-    // }
     this.isPlayVideo = false
     for (let i = 0; i < this.contentTypeArray.length; i++) {
       if (this.contentTypeArray[i] === 'Video' &&
@@ -444,9 +434,32 @@ class EpisodeDetail extends Component {
               </View>
             </View>
           </View>
-          <FlatListE
+          {/* <FlatList
             removeClippedSubviews={false}
-            initialNumToRender={1}
+            viewabilityConfig={{viewAreaCoveragePercentThreshold: 51}}
+            windowSize={3}
+            style={{flex: 1}}
+            renderItem={this._renderItemComponent}
+            ListFooterComponent={this._renderFooterComponent}
+            data={this.state.data} // state로 받아서 concat하기
+            disableVirtualization={false}
+            getItemLayout={undefined}
+            // getItemLayout={this._getItemLayout}
+            key={'vf'}
+            keyExtractor={(item, index) => index}
+            horizontal={false}
+            legacyImplementation={false}
+            onRefresh={this._onRefresh}
+            onViewableItemsChanged={this._onViewableItemsChanged}
+            ref={this._captureRef}
+            refreshing={this.state.refreshing}
+            shouldItemUpdate={this._shouldItemUpdate}
+            scrollsToTop
+            onEndReached={this._onEndReached}
+            onEndReachedThreshold={0} /> */}
+          <FlatList
+            removeClippedSubviews={false}
+            // initialNumToRender={1}
             windowSize={3}
             ref={this._captureRef}
             scrollsToTop={false}
@@ -454,22 +467,22 @@ class EpisodeDetail extends Component {
             data={this.props.episode.contents}
             renderItem={this._renderItemComponent}
             // ItemComponent={this._renderItemComponent}
-            FooterComponent={this._renderFooter.bind(this)}
+            ListFooterComponent={this._renderFooter.bind(this)}
             disableVirtualization={false}
             horizontal
-            getItemLayout={this._getItemLayout}
+            // getItemLayout={this._getItemLayout}
             key={'hf'}
             initialScrollIndex={Math.round(this.currentCenterIndex)}
             onScrollBeginDrag={this._onScrollBeginDrag.bind(this)}
             onScrollEndDrag={this._onScrollEndDrag.bind(this)}
             onMomentumScrollBegin={this._onMomentumScrollBegin.bind(this)}
-            onViewableItemsChanged={this._onViewableItemsChanged}
-            shouldItemUpdate={this._shouldItemUpdate}
-            style={{paddingLeft: 7.5, paddingRight: 7.5, backgroundColor: '#FFFFFF'}}
+            // onViewableItemsChanged={this._onViewableItemsChanged}
+            // shouldItemUpdate={this._shouldItemUpdate}
+            style={{paddingLeft: 7.5, backgroundColor: '#FFFFFF'}}
             scrollEventThrottle={100}
             snapToAlignment={'start'}
             snapToInterval={windowSize.width - 22}
-            showsHorizontalScrollIndicator
+            // showsHorizontalScrollIndicator
             decelerationRate={'fast'} />
           <View style={{width: windowSize.width, backgroundColor: '#FFFFFF', paddingTop: 20, paddingBottom: 20}}>
             <View style={{flexDirection: 'row'}}>

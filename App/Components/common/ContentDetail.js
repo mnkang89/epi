@@ -19,7 +19,7 @@ import { getRealm } from '../../Services/RealmFactory'
 const realm = getRealm()
 const windowSize = Dimensions.get('window')
 
-class ContentDetailClass extends Component {
+class ContentDetailClass extends React.PureComponent {
 
   static propTypes = {
     // 내려온 props
@@ -44,7 +44,7 @@ class ContentDetailClass extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      paddingRight: this.props.number + 1 === this.props.length ? 14.5 : 0,
+      // paddingRight: this.props.number + 1 === this.props.length ? 14.5 : 0,
       lastPress: 0,
       animation: false,
       textList: [ '😀', '😀', '😀', '😀', '😀', '😀', '😀', '😀', '😀', '😀' ],
@@ -64,6 +64,12 @@ class ContentDetailClass extends Component {
   }
 
   componentDidMount () {
+  }
+
+  componentWillReceiveProps (nextProps) {
+    console.log(nextProps.content)
+    console.log(nextProps.number)
+    console.log(nextProps.length)
   }
 
   onDoublePress () {
@@ -304,7 +310,9 @@ class ContentDetailClass extends Component {
 
   renderContent (content) {
     // const { imageStyle } = styles
-    const paddingRight = this.state.paddingRight
+    // paddingRight: this.props.number + 1 === this.props.length ? 14.5 : 0,
+    // const paddingRight = this.state.paddingRight
+    const paddingRight = this.props.number + 1 === this.props.length ? 15.5 : 0
     const message = content.message === 'undefined' ? '' : content.message
 
     if (content.type === 'Image') {
@@ -391,7 +399,8 @@ class ContentDetailClass extends Component {
       )
     } else {
       return (
-        <View style={{backgroundColor: '#FFFFFF', paddingLeft: 8, paddingRight: paddingRight}}>
+        // , paddingRight: paddingRight
+        <View style={{backgroundColor: '#FFFFFF', paddingLeft: 8}}>
           <TouchableWithoutFeedback
             disabled={this.state.disabled}
             delayLongPress={800}
@@ -457,9 +466,11 @@ class ContentDetailClass extends Component {
 
   render () {
     const content = this.props.content
+    console.log('렌더컨텐츠')
+    console.log(content.id)
 
     return (
-      <View style={{overflow: 'hidden'}}>
+      <View>
         {this.renderContent(content)}
       </View>
     )
