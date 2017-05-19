@@ -458,6 +458,7 @@ class EpisodeDetail extends React.PureComponent {
             onEndReached={this._onEndReached}
             onEndReachedThreshold={0} /> */}
           <FlatList
+            extraData={this.props}
             removeClippedSubviews={false}
             // initialNumToRender={1}
             windowSize={3}

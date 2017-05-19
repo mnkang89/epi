@@ -3,7 +3,7 @@ import { path } from 'ramda'
 import EpisodeActions from '../Redux/EpisodeRedux'
 import ContentActions from '../Redux/ContentRedux'
 import CameraScreenActions from '../Redux/CameraScreenRedux'
-import { getToken } from '../Services/Auth'
+import { getToken, getAccountId } from '../Services/Auth'
 
 // attempts to get episodes
 export function * userEpisodes (api, action) {
@@ -183,6 +183,7 @@ export function * deactivateEpisode (api, action) {
 
   if (response.ok) {
     yield put(CameraScreenActions.setActiveEpisode(null))
+    yield put(EpisodeActions.userEpisodesRequest(null, getAccountId(), true))
   } else {
     console.log('fail to deactivate episode')
   }

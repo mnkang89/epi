@@ -9,6 +9,7 @@ import {
   ActivityIndicator
 } from 'react-native'
 
+import { getAccountId } from '../Services/Auth'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import Modal from 'react-native-modalbox'
 import CameraComponent from '../Components/camera/CameraComponent'
@@ -67,10 +68,11 @@ class CameraScreen extends Component {
   goToHomeTab () {
     this.setState({loadingModal: false}, () => {
       StatusBar.setHidden(false)
-      NavigationActions.pop()
+      // NavigationActions.pop()
       setTimeout(() => {
-        NavigationActions.homeTab()
-      }, 300)
+        NavigationActions.pop()
+        // NavigationActions.homeTab()
+      }, 100)
     })
   }
 

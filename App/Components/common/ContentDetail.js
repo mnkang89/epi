@@ -44,7 +44,6 @@ class ContentDetailClass extends React.PureComponent {
   constructor (props) {
     super(props)
     this.state = {
-      // paddingRight: this.props.number + 1 === this.props.length ? 14.5 : 0,
       lastPress: 0,
       animation: false,
       textList: [ '😀', '😀', '😀', '😀', '😀', '😀', '😀', '😀', '😀', '😀' ],
@@ -64,12 +63,6 @@ class ContentDetailClass extends React.PureComponent {
   }
 
   componentDidMount () {
-  }
-
-  componentWillReceiveProps (nextProps) {
-    console.log(nextProps.content)
-    console.log(nextProps.number)
-    console.log(nextProps.length)
   }
 
   onDoublePress () {
@@ -309,9 +302,6 @@ class ContentDetailClass extends React.PureComponent {
   }
 
   renderContent (content) {
-    // const { imageStyle } = styles
-    // paddingRight: this.props.number + 1 === this.props.length ? 14.5 : 0,
-    // const paddingRight = this.state.paddingRight
     const paddingRight = this.props.number + 1 === this.props.length ? 15.5 : 0
     const message = content.message === 'undefined' ? '' : content.message
 
@@ -323,7 +313,7 @@ class ContentDetailClass extends React.PureComponent {
             onPress={this.onDoublePress.bind(this)}
             onLongPress={this.onLongPress.bind(this)} >
             <View>
-              <CachableImage
+              <Image
                 imageRef={this.props.playerRef}
                 style={{
                   alignItems: 'center',
@@ -350,7 +340,7 @@ class ContentDetailClass extends React.PureComponent {
                     {message}
                   </Text>
                 </View>
-              </CachableImage>
+              </Image>
             </View>
           </TouchableWithoutFeedback>
         </View>

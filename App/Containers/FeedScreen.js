@@ -122,6 +122,7 @@ class FeedScreen extends Component {
     return (
       <Animated.View style={[styles.mainContainer, {'opacity': this.viewOpacity}]}>
         <FlatList
+          extraData={this.state}
           removeClippedSubviews={false}
           viewabilityConfig={{viewAreaCoveragePercentThreshold: 51}}
           windowSize={3}
