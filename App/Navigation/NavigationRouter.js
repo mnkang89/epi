@@ -196,6 +196,12 @@ class NavigationRouter extends Component {
                 panHandlers={null}
                 component={ProfileScreen}
                 title='내 프로필' />
+              <Scene
+                renderTitle={NavItems.profileLogo}
+                backButtonImage={Images.backButton}
+                key='profileTouserProfileScreen'
+                component={UserProfileScreen}
+                title='프로필' />
             </Scene>
           </Scene>
           <Scene

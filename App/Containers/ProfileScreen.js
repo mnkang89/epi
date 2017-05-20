@@ -62,16 +62,6 @@ class ProfileScreen extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    // console.log(getObjectDiff(this.props, nextProps))
-    // if (nextProps.items.length !== 0) {
-    //   this.updatedDateTime = nextProps.items[nextProps.items.length - 1].episode.updatedDateTime
-    // }
-
-    // if (nextProps.beforeScreen === 'profileTab') {
-    //   if (nextProps.beforeScreen === nextProps.pastScreen) {
-    //     this._listRef.scrollToOffset({y: 0})
-    //   }
-    // }
     if (nextProps.items.length !== 0) {
       if (nextProps.items[nextProps.items.length - 1].episode.updatedDateTime !== undefined) {
         this.updatedDateTime = nextProps.items[nextProps.items.length - 1].episode.updatedDateTime
@@ -89,22 +79,6 @@ class ProfileScreen extends Component {
       })
     }
   }
-
-  // shouldComponentUpdate (nextProps, nextState) {
-  //   if (this.props.profileModified !== nextProps.profileModified) {
-  //     this.profileModifiedFlag = true
-  //     return true
-  //   }
-  //
-  //   if (this.state.commentModalVisible !== nextState.commentModalVisible) {
-  //     return true
-  //   }
-  //   if (_.isEqual(this.props.items, nextProps.items)) {
-  //     return false
-  //   } else {
-  //     return true
-  //   }
-  // }
 
   render () {
     return (
@@ -138,7 +112,9 @@ class ProfileScreen extends Component {
           commentModalHandler={this._toggleCommentModal}
           screen={'ProfileScreen'}
           token={this.props.token} />
-        <FollowModalContainer token={this.props.token} />
+        <FollowModalContainer
+          screen={'ProfileScreen'}
+          token={this.props.token} />
       </View>
     )
   }
