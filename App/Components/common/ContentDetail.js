@@ -456,8 +456,6 @@ class ContentDetailClass extends React.PureComponent {
 
   render () {
     const content = this.props.content
-    console.log('렌더컨텐츠')
-    console.log(content.id)
 
     return (
       <View>

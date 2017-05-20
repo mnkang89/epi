@@ -72,7 +72,7 @@ class CameraScreen extends Component {
       setTimeout(() => {
         NavigationActions.pop()
         // NavigationActions.homeTab()
-      }, 100)
+      }, 500)
     })
   }
 

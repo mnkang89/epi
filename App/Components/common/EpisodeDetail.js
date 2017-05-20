@@ -6,7 +6,7 @@ import {
   Modal,
   Animated,
   PanResponder,
-  FlatList,
+  // FlatList,
   TouchableOpacity,
   ActivityIndicator,
   Dimensions
@@ -18,7 +18,7 @@ import { convert2TimeDiffString } from '../../Lib/Utilities'
 import { getRealm } from '../../Services/RealmFactory'
 
 import ContentContainer from '../../Containers/common/ContentContainer'
-// import FlatListE from '../../Experimental/FlatList0.44/FlatList_E44'
+import FlatListE from '../../Experimental/FlatList0.44/FlatList_E44'
 // import FlatListE from '../../Experimental/FlatList_e'
 
 const windowSize = Dimensions.get('window')
@@ -255,9 +255,10 @@ class EpisodeDetail extends React.PureComponent {
 
     if (active) {
       this.dragStartingOffset = event.nativeEvent.contentOffset.x
-      const dragStartingOffset = event.nativeEvent.contentOffset.x
 
-      if (dragStartingOffset >= this.lastContentOffset) {
+      console.log(this.dragStartingOffset)
+      // this.lastContentOffset - (windowSize.width - 22)
+      if (this.dragStartingOffset >= this.lastContentOffset - (windowSize.width - 22)) {
         this.setState({footer: true})
       }
     }
@@ -273,16 +274,15 @@ class EpisodeDetail extends React.PureComponent {
       // 오른쪽에서 왼쪽컨텐츠로 가면 푸터취소
       if (this.dragStartingOffset - this.dragEndingOffset > 0) {
         // 푸터가 활성상태일때만 취소
+        console.log('폴폴폴?')
         if (this.state.footer) {
           this.setState({footer: false})
         }
       } else if (
-          this.dragStartingOffset >= this.lastContentOffset &&
-          this.dragStartingOffset - this.dragEndingOffset < 0) {
-        if (this.props.type === 'other') {
-        } else {
-          this.props.requestNewEpisode(null, episode.id)
-        }
+        this.dragStartingOffset >= this.lastContentOffset - (windowSize.width - 22) &&
+        this.dragStartingOffset - this.dragEndingOffset < 0 &&
+        this.props.type !== 'other') {
+        this.props.requestNewEpisode(null, episode.id)
       }
     }
   }
@@ -457,7 +457,7 @@ class EpisodeDetail extends React.PureComponent {
             scrollsToTop
             onEndReached={this._onEndReached}
             onEndReachedThreshold={0} /> */}
-          <FlatList
+          <FlatListE
             extraData={this.props}
             removeClippedSubviews={false}
             // initialNumToRender={1}
@@ -471,13 +471,13 @@ class EpisodeDetail extends React.PureComponent {
             ListFooterComponent={this._renderFooter.bind(this)}
             disableVirtualization={false}
             horizontal
-            // getItemLayout={this._getItemLayout}
+            getItemLayout={this._getItemLayout}
             key={'hf'}
             initialScrollIndex={Math.round(this.currentCenterIndex)}
             onScrollBeginDrag={this._onScrollBeginDrag.bind(this)}
             onScrollEndDrag={this._onScrollEndDrag.bind(this)}
             onMomentumScrollBegin={this._onMomentumScrollBegin.bind(this)}
-            // onViewableItemsChanged={this._onViewableItemsChanged}
+            onViewableItemsChanged={this._onViewableItemsChanged}
             // shouldItemUpdate={this._shouldItemUpdate}
             style={{paddingLeft: 7.5, backgroundColor: '#FFFFFF'}}
             scrollEventThrottle={100}
