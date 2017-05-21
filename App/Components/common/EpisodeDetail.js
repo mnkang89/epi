@@ -12,6 +12,7 @@ import {
   Dimensions
  } from 'react-native'
 import { Actions as NavigationActions } from 'react-native-router-flux'
+import { StackNavigator } from 'react-navigation'
 
 import { Colors, Images, Metrics } from '../../Themes/'
 import { convert2TimeDiffString } from '../../Lib/Utilities'
@@ -19,6 +20,8 @@ import { getRealm } from '../../Services/RealmFactory'
 
 import ContentContainer from '../../Containers/common/ContentContainer'
 import FlatListE from '../../Experimental/FlatList0.44/FlatList_E44'
+import FeedScreen from '../../Containers/FeedScreen'
+import ProfileScreen from '../../Containers/ProfileScreen'
 // import FlatListE from '../../Experimental/FlatList_e'
 
 const windowSize = Dimensions.get('window')
@@ -236,17 +239,16 @@ class EpisodeDetail extends React.PureComponent {
         })
       }
     } else {
-      setTimeout(() => {
-        NavigationActions.feedTouserProfileScreen({
-          type: 'push',
-          id: accountId,
-          screen: 'FeedScreen',
-          topOfStack: true,
-          onBack: () => {
-            NavigationActions.pop()
-          }
-        })
-      }, 500)
+      NavigationActions.feedTouserProfileScreen({
+        type: 'push',
+        id: accountId,
+        screen: 'FeedScreen',
+        topOfStack: true,
+        onBack: () => {
+          NavigationActions.pop()
+        }
+      })
+      // this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'FeedScreen'})
     }
   }
 
@@ -321,9 +323,12 @@ class EpisodeDetail extends React.PureComponent {
   }
 
   _onPressRemove () {
+    const episodeId = this.props.episode.id
+
     this.setState({
       hide: true
     })
+    this.props.reportEpisode(episodeId)
 
     // data변경 방식
     // const { parentHandler, episode } = this.props
@@ -375,6 +380,7 @@ class EpisodeDetail extends React.PureComponent {
 
   render () {
     if (!this.state.hide) {
+      console.log('episode hide false')
       const episodeId = this.props.episode.id
       const activeEpisodeLength = this.props.episode.contents.length
       const commentCount = this.props.episode.contents.map(content => content.commentCount).reduce((a, b) => a + b, 0)
@@ -460,7 +466,7 @@ class EpisodeDetail extends React.PureComponent {
           <FlatListE
             extraData={this.props}
             removeClippedSubviews={false}
-            // initialNumToRender={1}
+            initialNumToRender={1}
             windowSize={3}
             ref={this._captureRef}
             scrollsToTop={false}
@@ -539,6 +545,7 @@ class EpisodeDetail extends React.PureComponent {
         </View>
       )
     } else {
+      console.log('episode hide true')
       return (
         <View style={{width: 0, height: 0}} />
       )
@@ -641,6 +648,13 @@ class EpisodeDetail extends React.PureComponent {
     }
   }
 }
+//
+// const ModalStack = StackNavigator({
+//   Profile: {
+//     screen: ProfileScreen,
+//   },
+// })
+
 
 EpisodeDetail.defaultProps = {
   type: null,

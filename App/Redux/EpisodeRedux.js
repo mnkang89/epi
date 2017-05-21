@@ -157,7 +157,15 @@ const { Types, Creators } = createActions({
   ],
   moreOtherEpisodesFailure: [
     'moreOtherEpisodesError'
-  ]
+  ],
+
+  reportEpisode: [
+    'episodeId'
+  ],
+  reportEpisodeSuccess: [
+  ],
+  reportEpisodeFailure: [
+  ],
 })
 
 export const EpisodeTypes = Types
@@ -421,6 +429,14 @@ export const moreOtherEpisodesSuccess = (state: Object, { otherId, moreOtherEpis
 export const moreOtherEpisodesFailure = (state: Object, { moreOtherEpisodesError }: Object) =>
   state.merge({ moreOtherEpisodesRequesting: false, moreOtherEpisodesError })
 
+export const reportEpisode = (state: Object) =>
+  state.merge({ reportEpisodeRequesting: true })
+
+export const reportEpisodeSuccess = (state: Object) =>
+  state.merge({ reportEpisodeRequesting: false })
+
+export const reportEpisodeFailure = (state: Object) =>
+  state.merge({ reportEpisodeRequesting: false })
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
@@ -473,5 +489,9 @@ export const reducer = createReducer(INITIAL_STATE, {
 
   [Types.MORE_OTHER_EPISODES_REQUEST]: moreOtherEpisodesRequest,
   [Types.MORE_OTHER_EPISODES_SUCCESS]: moreOtherEpisodesSuccess,
-  [Types.MORE_OTHER_EPISODES_FAILURE]: moreOtherEpisodesFailure
+  [Types.MORE_OTHER_EPISODES_FAILURE]: moreOtherEpisodesFailure,
+
+  [Types.REPORT_EPISODE]: reportEpisode,
+  [Types.REPORT_EPISODE_SUCCESS]: reportEpisodeSuccess,
+  [Types.REPORT_EPISODE_FAILURE]: reportEpisodeFailure
 })

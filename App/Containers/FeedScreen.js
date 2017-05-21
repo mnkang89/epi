@@ -3,7 +3,7 @@ import {
   View,
   Animated,
   ActivityIndicator,
-  FlatList,
+  // FlatList,
   Dimensions
 } from 'react-native'
 import { connect } from 'react-redux'
@@ -11,6 +11,7 @@ import { connect } from 'react-redux'
 import { getAccountId } from '../Services/Auth'
 // import { getObjectDiff, getArrayDiff } from '../Lib/Utilities'
 import { getArrayDiff } from '../Lib/Utilities'
+import FlatListE from '../Experimental/FlatList0.44/FlatList_E44'
 
 import styles from './Styles/FeedScreenStyle'
 import EpisodeDetail from '../Components/common/EpisodeDetail'
@@ -121,7 +122,7 @@ class FeedScreen extends Component {
   render () {
     return (
       <Animated.View style={[styles.mainContainer, {'opacity': this.viewOpacity}]}>
-        <FlatList
+        <FlatListE
           extraData={this.state}
           removeClippedSubviews={false}
           viewabilityConfig={{viewAreaCoveragePercentThreshold: 51}}
@@ -141,7 +142,7 @@ class FeedScreen extends Component {
           onViewableItemsChanged={this._onViewableItemsChanged}
           ref={this._captureRef}
           refreshing={this.state.refreshing}
-          shouldItemUpdate={this._shouldItemUpdate}
+          // shouldItemUpdate={this._shouldItemUpdate}
           scrollsToTop
           onEndReached={this._onEndReached}
           onEndReachedThreshold={0} />
@@ -168,6 +169,7 @@ class FeedScreen extends Component {
     */
     return (
       <EpisodeDetail
+        // navigation={this.props.navigation}
         index={index}
         ref={(component) => {
           if (component !== null) {
@@ -178,6 +180,7 @@ class FeedScreen extends Component {
         episode={item.episode}
         account={item.account}
         commentModalHandler={this._toggleCommentModal}
+        reportEpisode={this.props.reportEpisode}
         requestNewEpisode={this.props.requestNewEpisode}
         openComment={this.props.openComment}
         getComment={this.props.getComment} />
@@ -293,7 +296,9 @@ const mapDispatchToProps = (dispatch) => {
     requestMoreFeeds: (token, accountId, withFollowing, before) => dispatch(EpisodeActions.moreFeedsRequest(token, accountId, withFollowing, before)),
 
     openComment: (visible) => dispatch(CommentActions.openComment(visible)),
-    getComment: (token, episodeId, contentId) => dispatch(CommentActions.commentGet(token, episodeId, contentId))
+    getComment: (token, episodeId, contentId) => dispatch(CommentActions.commentGet(token, episodeId, contentId)),
+
+    reportEpisode: (episodeId) => dispatch(EpisodeActions.reportEpisode(episodeId))
   }
 }
 
