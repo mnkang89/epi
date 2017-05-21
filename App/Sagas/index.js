@@ -22,7 +22,7 @@ import { email, password, nickname, profile, profileModification, signup } from 
 import { account, otherInfo, getActiveUserEpisode, postFollow, deleteFollow, getFollowing, getFollower } from './AccountSagas'
 import {
   userEpisodes, userEpisodesWithFalse, otherEpisodes, postEpisode, putEpisode, singleEpisode, newEpisode,
-  newEpisodeWithFalse, newOtherEpisode, deactivateEpisode, moreFeeds, moreEpisodes, moreOtherEpisodes } from './EpisodeSagas'
+  newEpisodeWithFalse, newOtherEpisode, deactivateEpisode, moreFeeds, moreEpisodes, moreOtherEpisodes, reportEpisode } from './EpisodeSagas'
 import { postContent, postLike, deleteLike } from './ContentSagas'
 import { postComment, getComment, deleteComment } from './CommentSagas'
 import { getBestFeeds, moreBestFeeds } from './FeedSagas'
@@ -107,6 +107,8 @@ export default function * root () {
     takeLatest(EpisodeTypes.MORE_EPISODES_REQUEST, moreEpisodes, api),
     // get more other episodes
     takeLatest(EpisodeTypes.MORE_OTHER_EPISODES_REQUEST, moreOtherEpisodes, api),
+    // report episode
+    takeLatest(EpisodeTypes.REPORT_EPISODE, reportEpisode, api),
 
     /* --- Content --- */
     // post content

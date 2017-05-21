@@ -264,3 +264,20 @@ export function * newOtherEpisode (api, action) {
     yield put(EpisodeActions.newOtherEpisodeFailure('WRONG'))
   }
 }
+
+export function * reportEpisode (api, action) {
+  console.log('리포트 에피소드 사가 진입')
+  const { episodeId } = action
+  const response = yield call(api.reportEpisode, episodeId)
+
+  if (response.ok) {
+    console.log('ok')
+    console.log(response)
+
+    yield put(EpisodeActions.reportEpisodeSuccess())
+  } else {
+    console.log('error')
+    console.log(response)
+    yield put(EpisodeActions.reportEpisodeFailure())
+  }
+}

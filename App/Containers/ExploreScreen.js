@@ -95,6 +95,7 @@ class ExploreScreen extends Component {
     return (
       <View style={styles.mainContainer}>
         <FlatList
+          removeClippedSubviews={false}
           keyExtractor={(item, index) => index}
           style={{ flex: 1, backgroundColor: 'rgb(241, 241, 241)' }}
           ref={this._captureRef}
@@ -129,6 +130,7 @@ class ExploreScreen extends Component {
 
     return (
       <ExploreDetail
+        navigation={this.props.navigation}
         key={noti.item.episode.id}
         length={length}
         number={index}

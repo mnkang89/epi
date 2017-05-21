@@ -114,7 +114,8 @@ class ProfileScreen extends Component {
           token={this.props.token} />
         <FollowModalContainer
           screen={'ProfileScreen'}
-          token={this.props.token} />
+          token={this.props.token}
+          navigation={this.props.navigation} />
       </View>
     )
   }
@@ -128,6 +129,7 @@ class ProfileScreen extends Component {
   _renderItemComponent = ({item, index}) => {
     return (
       <EpisodeDetail
+        navigation={this.props.navigation}
         type={'me'}
         index={index}
         ref={(component) => {

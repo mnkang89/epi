@@ -3,12 +3,13 @@ import {
   View,
   ActivityIndicator,
   FlatList,
-  Dimensions
+  Dimensions,
+  Button
 } from 'react-native'
 import { connect } from 'react-redux'
 
 import { getArrayDiff } from '../Lib/Utilities'
-
+import { NavigationActions } from 'react-navigation'
 import ProfileInfo from '../Components/common/ProfileInfo'
 import EpisodeDetail from '../Components/common/EpisodeDetail'
 import CommentModalContainer from './common/CommentModalContainer'
@@ -50,7 +51,8 @@ class UserProfileScreen extends Component {
       refreshing: false,
       footer: false,
       // scrollsToTop: true,
-      commentModalVisible: false
+      commentModalVisible: false,
+      data: []
     }
     this.updatedDateTime
     this.viewableItemsArray = []
@@ -60,17 +62,36 @@ class UserProfileScreen extends Component {
   }
 
   componentDidMount () {
-    const { id } = this.props
+    console.log('아이디')
+    const { id } = this.props.navigation.state.params
+    console.log(id)
+    console.log('아이디')
+    // const { id } = this.props
     const active = false
 
     this.props.requestOtherInfo(null, id)
-    this.props.requestOtherEpisodes(null, id, active)
+    setTimeout(() => {
+      this.props.requestOtherEpisodes(null, id, active)
+    }, 500)
+    // this.props.requestOtherInfo(null, id)
+    // this.props.requestOtherEpisodes(null, id, active)
   }
 
-  componentWillReceiveProps (nextProps) {
-    const items = nextProps.itemsObject[this.props.id]
+  // componentWillUnmount () {
+  //   this.props.initOtherInfo()
+  // }
 
-    if (nextProps.itemsObject[this.props.id] !== undefined) {
+  componentWillReceiveProps (nextProps) {
+    const { id } = this.props.navigation.state.params
+    const items = nextProps.itemsObject[id]
+    console.log(items)
+    this.setState({
+      data: items
+    })
+    // const items = nextProps.itemsObject[this.props.id]
+
+    // if (nextProps.itemsObject[this.props.id] !== undefined) {
+    if (nextProps.itemsObject[id] !== undefined) {
       if (items[items.length - 1].episode.updatedDateTime !== undefined) {
         this.updatedDateTime = items[items.length - 1].episode.updatedDateTime
       } else {
@@ -79,6 +100,7 @@ class UserProfileScreen extends Component {
     }
 
     if (this.state.refreshing) {
+      console.log('리프레시?')
       this.setState({
         refreshing: false,
         footer: false
@@ -117,10 +139,11 @@ class UserProfileScreen extends Component {
   // }
 
   render () {
+    const { screen } = this.props.navigation.state.params
+
     return (
       <View style={styles.mainContainer}>
         <FlatList
-          // scrollsToTop={this.state.scrollsToTop}
           removeClippedSubviews={false}
           viewabilityConfig={{viewAreaCoveragePercentThreshold: 30}}
           windowSize={3}
@@ -128,7 +151,9 @@ class UserProfileScreen extends Component {
           ListHeaderComponent={this._renderHeaderComponent}
           renderItem={this._renderItemComponent}
           ListFooterComponent={this._renderFooterComponent}
-          data={this.props.itemsObject[this.props.id]}
+          // data={this.props.itemsObject[this.props.id]}
+          // data={this.props.itemsObject[id]}
+          data={this.state.data}
           disableVirtualization={false}
           getItemLayout={this._getItemLayout}
           key={'vf'}
@@ -147,13 +172,14 @@ class UserProfileScreen extends Component {
         <CommentModalContainer
           commentModalVisible={this.state.commentModalVisible}
           commentModalHandler={this._toggleCommentModal.bind(this)}
-          screen={this.props.screen}
+          screen={screen}
           token={this.props.token}
           pushHandler={this._onPushToUserProfileScreen}
           popHandler={this._onPopFromUserProfileScreen} />
         <FollowModalContainer
-          screen={this.props.screen}
+          screen={screen}
           token={this.props.token}
+          navigation={this.props.navigation}
           pushHandler={this._onPushToUserProfileScreen}
           popHandler={this._onPopFromUserProfileScreen} />
       </View>
@@ -189,18 +215,22 @@ class UserProfileScreen extends Component {
   }
 
   _renderHeaderComponent = () => {
-    if (this.props.otherInfoObject[this.props.id] === undefined) {
+    const { id } = this.props.navigation.state.params
+    // if (this.props.otherInfoObject[this.props.id] === undefined) {
+    if (this.props.otherInfoObject[id] === undefined) {
       return (
         <View />
       )
     }
-    const { otherProfileImagePath, otherNickname, otherFollowerCount, otherFollowingCount, otherFollowing } = this.props.otherInfoObject[this.props.id]
+    // const { otherProfileImagePath, otherNickname, otherFollowerCount, otherFollowingCount, otherFollowing } = this.props.otherInfoObject[this.props.id]
+    const { otherProfileImagePath, otherNickname, otherFollowerCount, otherFollowingCount, otherFollowing } = this.props.otherInfoObject[id]
 
     return (
       <ProfileInfo
         type={'other'}
         token={null}
-        id={this.props.id}  // 내아이디 일때는 accountId
+        // id={this.props.id}  // 내아이디 일때는 accountId
+        id={id}
 
         profileImagePath={otherProfileImagePath} // props는 현재는 null인 상태에서 들어가는 상황
         nickname={otherNickname}
@@ -280,7 +310,8 @@ class UserProfileScreen extends Component {
   }
 
   _onRefresh = () => {
-    const { id } = this.props
+    // const { id } = this.props
+    const { id } = this.props.navigation.state.params
     const active = false
 
     this.setState({refreshing: true})
@@ -320,6 +351,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    initOtherInfo: () => dispatch(AccountActions.initOtherInfo()),
     requestOtherInfo: (token, accountId) => dispatch(AccountActions.otherInfoRequest(token, accountId)),
     requestOtherEpisodes: (token, accountId, active) => dispatch(EpisodeActions.otherEpisodesRequest(token, accountId, active)),
     requestMoreOtherEpisodes: (token, accountId, withFollowing, before) => dispatch(EpisodeActions.moreOtherEpisodesRequest(token, accountId, withFollowing, before)),

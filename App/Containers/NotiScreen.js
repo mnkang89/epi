@@ -150,6 +150,7 @@ class NotiScreen extends Component {
     const noti = item
     return (
       <NotiDetail
+        navigation={this.props.navigation}
         key={noti.id}
         noti={noti}
         myAccount={this.props.myAccount}

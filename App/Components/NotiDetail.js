@@ -59,39 +59,39 @@ class NotiDetail extends Component {
       })
     } else if (this.state.type === 'follow') {
       const accountId = this.props.noti.notiCreateAccount.id
-
-      NavigationActions.notiTouserProfileScreen({
-        type: 'push',
-        screen: 'NotiScreen',
-        id: accountId
-      })
+      this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'NotiScreen'})
+      // NavigationActions.notiTouserProfileScreen({
+      //   type: 'push',
+      //   screen: 'NotiScreen',
+      //   id: accountId
+      // })
     } else if (this.state.type === 'newContent') {
       const accountId = this.props.noti.notiCreateAccount.id
-
-      NavigationActions.notiTouserProfileScreen({
-        type: 'push',
-        screen: 'NotiScreen',
-        id: accountId
-      })
+      this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'NotiScreen'})
+      // NavigationActions.notiTouserProfileScreen({
+      //   type: 'push',
+      //   screen: 'NotiScreen',
+      //   id: accountId
+      // })
     } else if (this.state.type === 'newEpisode') {
       const accountId = this.props.noti.notiCreateAccount.id
-
-      NavigationActions.notiTouserProfileScreen({
-        type: 'push',
-        screen: 'NotiScreen',
-        id: accountId
-      })
+      this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'NotiScreen'})
+      // NavigationActions.notiTouserProfileScreen({
+      //   type: 'push',
+      //   screen: 'NotiScreen',
+      //   id: accountId
+      // })
     }
   }
 
   onProfilePress () {
     const accountId = this.props.noti.notiCreateAccount.id
-
-    NavigationActions.notiTouserProfileScreen({
-      type: 'push',
-      screen: 'NotiScreen',
-      id: accountId
-    })
+    this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'NotiScreen'})
+    // NavigationActions.notiTouserProfileScreen({
+    //   type: 'push',
+    //   screen: 'NotiScreen',
+    //   id: accountId
+    // })
   }
 
   renderProfileImage () {

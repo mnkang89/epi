@@ -19,7 +19,7 @@ import { getRealm } from '../../Services/RealmFactory'
 const realm = getRealm()
 const windowSize = Dimensions.get('window')
 
-class ContentDetailClass extends React.PureComponent {
+class ContentDetailClass extends Component {
 
   static propTypes = {
     // 내려온 props
@@ -121,6 +121,7 @@ class ContentDetailClass extends React.PureComponent {
     // this.setState({
     //   paused: false
     // })
+    console.log('플레이비도')
     this.setState({
       visible: true
     }, () => {
