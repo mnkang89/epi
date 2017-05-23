@@ -37,7 +37,7 @@ export default Creators
 
 export const INITIAL_STATE = Immutable({
   bestFeeds: [],
-  bestFeedsRequesting: true,
+  bestFeedsRequesting: false,
   bestFeedsError: null,
 
   moreBestFeeds: [],

@@ -469,7 +469,7 @@ class EpisodeDetail extends React.PureComponent {
             extraData={this.props}
             removeClippedSubviews={false}
             initialNumToRender={1}
-            windowSize={3}
+            windowSize={2}
             ref={this._captureRef}
             scrollsToTop={false}
             keyExtractor={(item, index) => index}

@@ -60,6 +60,7 @@ class ExploreScreen extends Component {
   constructor (props) {
     super(props)
     this.state = {
+      spinner: false,
       data: [],
       refreshing: false,
       footer: false
@@ -69,21 +70,25 @@ class ExploreScreen extends Component {
   }
 
   componentDidMount () {
+    // setTimeout(() => {
+    //   this.props.requestBestFeeds(null)
+    // }, 300)
     this.props.requestBestFeeds(null)
   }
 
   componentWillReceiveProps (nextProps) {
-    console.log(getObjectDiff(this.props, nextProps))
-    // TODO: 결국엔 스테이트를 false로 바꾸는 것이므로 통일하기.
+    if (nextProps.feedRequesting && !this.state.refreshing) {
+      this.setState({spinner: true})
+    } else {
+      this.setState({
+        spinner: false
+      })
+    }
+
     if (nextProps.items.length !== 0) {
-      console.log(nextProps.items[nextProps.items.length - 1].episode)
       if (nextProps.items[nextProps.items.length - 1].episode.updatedDateTime !== undefined) {
-        console.log('업데이티드')
-        console.log(nextProps.items[nextProps.items.length - 1].episode.updatedDateTime)
         this.updatedDateTime = nextProps.items[nextProps.items.length - 1].episode.updatedDateTime
       } else {
-        console.log('크리에이트')
-        console.log(nextProps.items[nextProps.items.length - 1].episode.createDateTime)
         this.updatedDateTime = nextProps.items[nextProps.items.length - 1].episode.createDateTime
       }
     }
@@ -94,12 +99,6 @@ class ExploreScreen extends Component {
     }
 
     this.setState({data: nextProps.items})
-
-    // if (nextProps.beforeScreen === 'searchTab') {
-    //   if (nextProps.beforeScreen !== nextProps.pastScreen) {
-    //     this._listRef.scrollToIndex({index: 0})
-    //   }
-    // }
 
     if (this.state.refreshing) {
       this.setState({
@@ -122,30 +121,39 @@ class ExploreScreen extends Component {
   // }
 
   render () {
-    return (
-      <View style={styles.mainContainer}>
-        <FlatList
-          removeClippedSubviews={false}
-          keyExtractor={(item, index) => index}
-          style={{ flex: 1, backgroundColor: 'rgb(241, 241, 241)' }}
-          ref={this._captureRef}
-          ListHeaderComponent={this._renderHeader}
-          ListFooterComponent={this._renderFooter}
-          renderItem={this._renderItemComponent}
-          disableVirtualization={false}
-          horizontal={false}
-          data={this.state.data}
-          key={'vf'}
-          legacyImplementation={false}
-          onRefresh={this._onRefresh}
-          refreshing={this.state.refreshing}
-          // onViewableItemsChanged={this._onViewableItemsChanged}
-          onEndReached={this._onEndReached}
-          onEndReachedThreshold={0}
-          shouldItemUpdate={this._shouldItemUpdate.bind(this)} />
-        {/* <View style={{height: 60}} /> */}
-      </View>
-    )
+    if (this.state.spinner) {
+      return (
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <ActivityIndicator
+            color='gray'
+            size='small' />
+        </View>
+      )
+    } else {
+      return (
+        <View style={styles.mainContainer}>
+          <FlatList
+            removeClippedSubviews={false}
+            keyExtractor={(item, index) => index}
+            style={{ flex: 1, backgroundColor: 'rgb(241, 241, 241)' }}
+            ref={this._captureRef}
+            ListHeaderComponent={this._renderHeader}
+            ListFooterComponent={this._renderFooter}
+            renderItem={this._renderItemComponent}
+            disableVirtualization={false}
+            horizontal={false}
+            data={this.state.data}
+            key={'vf'}
+            legacyImplementation={false}
+            onRefresh={this._onRefresh}
+            refreshing={this.state.refreshing}
+            // onViewableItemsChanged={this._onViewableItemsChanged}
+            onEndReached={this._onEndReached}
+            onEndReachedThreshold={0}
+            shouldItemUpdate={this._shouldItemUpdate.bind(this)} />
+        </View>
+      )
+    }
   }
 
   _captureRef = (ref) => { this._listRef = ref }
@@ -204,22 +212,22 @@ class ExploreScreen extends Component {
   }
 
   _onRefresh = () => {
-    this.setState({refreshing: true})
-    this.props.requestBestFeeds(null)
+    this.setState({refreshing: true}, () => {
+      this.props.requestBestFeeds(null)
+    })
   }
 
   _onEndReached = () => {
-    console.log('onEndReached fired')
     const updatedDateTime = this.updatedDateTime
-    this.setState({footer: true})
 
+    this.setState({footer: true})
     this.props.requestMoreBestFeeds(null, null, updatedDateTime)
   }
 }
 
 const mapStateToProps = (state) => {
   return {
-    profileModified: state.signup.modified,
+    feedRequesting: state.feed.bestFeedsRequesting,
 
     items: state.feed.bestFeeds,
 

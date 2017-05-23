@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react'
-import { View, TouchableOpacity, Image, FlatList, Dimensions } from 'react-native'
+import { View, TouchableOpacity, ActivityIndicator, Image, FlatList, Dimensions } from 'react-native'
 import { connect } from 'react-redux'
 
 import { getAccountId } from '../Services/Auth'
@@ -53,6 +53,7 @@ class SingleEpisodeScreen extends Component {
   constructor (props) {
     super(props)
     this.state = {
+      spinner: false,
       refreshing: false,
       commentModalVisible: false
     }
@@ -61,26 +62,21 @@ class SingleEpisodeScreen extends Component {
   }
 
   componentDidMount () {
-    /*
-      RNRF
-      const { episodeId } = this.props
-    */
+    // const { episodeId } = this.props
     const { episodeId } = this.props.navigation.state.params
 
-    this.props.requestSingleEpisode(null, episodeId)
+    setTimeout(() => { this.props.requestSingleEpisode(null, episodeId) }, 300)
   }
 
   componentWillReceiveProps (nextProps) {
-    // console.log(getObjectDiff(this.props, nextProps))
-    // if (_.isEqual(this.props.items, nextProps.items)) {
-    //   console.log('아이템같음')
-    //   this.setState({refreshing: false})
-    // } else {
-    //   console.log('아이템다름')
-    //   if (this.state.refreshing) {
-    //     this.setState({refreshing: false})
-    //   }
-    // }
+    if (nextProps.singleEpisodeRequesting && !this.state.refreshing) {
+      this.setState({spinner: true})
+    } else {
+      this.setState({
+        spinner: false
+      })
+    }
+
     if (this.state.refreshing) {
       this.setState({ refreshing: false })
     }
@@ -99,35 +95,46 @@ class SingleEpisodeScreen extends Component {
 
   render () {
     const { screen } = this.props.navigation.state.params
-    return (
-      <View style={styles.mainContainer}>
-        <View style={{height: 1}} />
-        <FlatList
-          removeClippedSubviews={false}
-          viewabilityConfig={{viewAreaCoveragePercentThreshold: 51}}
-          windowSize={3}
-          style={{ flex: 1 }}
-          ref={this._captureRef}
-          renderItem={this._renderItemComponent}
-          data={this.props.items}
-          disableVirtualization={false}
-          getItemLayout={undefined}
-          key={'vf'}
-          keyExtractor={(item, index) => index}
-          horizontal={false}
-          legacyImplementation={false}
-          onRefresh={this._onRefresh}
-          refreshing={this.state.refreshing}
-          onViewableItemsChanged={this._onViewableItemsChanged}
-          shouldItemUpdate={this._shouldItemUpdate} />
-        <View style={{height: 48.5}} />
-        <CommentModalContainer
-          navigation={this.props.navigation}
-          commentModalVisible={this.state.commentModalVisible}
-          commentModalHandler={this._toggleCommentModal.bind(this)}
-          screen={screen} />
-      </View>
-    )
+
+    if (this.state.spinner) {
+      return (
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <ActivityIndicator
+            color='gray'
+            size='small' />
+        </View>
+      )
+    } else {
+      return (
+        <View style={styles.mainContainer}>
+          <View style={{height: 1}} />
+          <FlatList
+            removeClippedSubviews={false}
+            viewabilityConfig={{viewAreaCoveragePercentThreshold: 51}}
+            windowSize={3}
+            style={{ flex: 1 }}
+            ref={this._captureRef}
+            renderItem={this._renderItemComponent}
+            data={this.props.items}
+            disableVirtualization={false}
+            getItemLayout={undefined}
+            key={'vf'}
+            keyExtractor={(item, index) => index}
+            horizontal={false}
+            legacyImplementation={false}
+            onRefresh={this._onRefresh}
+            refreshing={this.state.refreshing}
+            onViewableItemsChanged={this._onViewableItemsChanged}
+            shouldItemUpdate={this._shouldItemUpdate} />
+          <View style={{height: 48.5}} />
+          <CommentModalContainer
+            navigation={this.props.navigation}
+            commentModalVisible={this.state.commentModalVisible}
+            commentModalHandler={this._toggleCommentModal.bind(this)}
+            screen={screen} />
+        </View>
+      )
+    }
   }
 
 /* FlatList helper method */
@@ -218,6 +225,7 @@ class SingleEpisodeScreen extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    singleEpisodeRequesting: state.episode.singleEpisodeRequesting,
     items: state.episode.singleEpisode
   }
 }

@@ -70,6 +70,7 @@ class NotiScreen extends React.PureComponent {
   constructor (props) {
     super(props)
     this.state = {
+      spinner: false,
       data: [],
       refreshing: false
     }
@@ -84,6 +85,22 @@ class NotiScreen extends React.PureComponent {
   }
 
   componentWillReceiveProps (nextProps) {
+    if (nextProps.notiesRequesting && !this.state.refreshing) {
+      this.setState({spinner: true})
+    } else {
+      if (nextProps.noties.length === 0) {
+        this.setState({
+          nothing: true,
+          spinner: false
+        })
+      } else {
+        this.setState({
+          nothing: false,
+          spinner: false
+        })
+      }
+    }
+
     if (nextProps.noties.length !== 0) {
       this.page = this.page + 1
     }
@@ -93,11 +110,6 @@ class NotiScreen extends React.PureComponent {
     }
 
     this.setState({ data: nextProps.noties })
-    // if (nextProps.beforeScreen === 'alarmTab') {
-    //   if (nextProps.beforeScreen === nextProps.pastScreen) {
-    //     this._listRef.scrollToIndex({index: 0})
-    //   }
-    // }
   }
 
   // shouldComponentUpdate (nextProps, nextState) {
@@ -112,66 +124,52 @@ class NotiScreen extends React.PureComponent {
   //   }
   // }
 
-  _onRefresh () {
-    // page 초기화
-    this.page = 0
-
-    this.setState({refreshing: true})
-    this.props.requestNoties(null, this.page)
-  }
-
   renderScrollview (noties) {
-    if (this.props.notiesRequesting) {
-      console.log('노티 리퀘스팅중')
-      return
-    } else {
-      if (noties.length === 0) {
-        console.log('노티 없음')
-        return (
-          <View style={styles.mainContainer}>
-            <View style={{height: 1}} />
-            <ScrollView
-              style={{flex: 1, backgroundColor: 'white'}}
-              refreshControl={
-                <RefreshControl
-                  refreshing={this.state.refreshing}
-                  onRefresh={this._onRefresh.bind(this)} />
-                } >
-              <View>
-                <View style={{justifyContent: 'center', alignItems: 'center', marginTop: windowSize.height - 410}}>
-                  <Text style={{fontSize: 16, color: '#626262'}} >아직은 전해드릴 소식이 없네요.</Text>
-                  <Text style={{fontSize: 16, color: '#626262'}} >에피소드를 공유하고 소식을 받아보세요:)</Text>
-                </View>
-                <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 18}}>
-                  <TouchableOpacity onPress={() => this.props.navigation.navigate('Camera')}>
-                    <View style={{paddingTop: 5, paddingBottom: 5, paddingLeft: 7, paddingRight: 7, borderRadius: 4, borderWidth: 1, borderColor: '#626262'}}>
-                      <Text style={{fontSize: 16, color: '#626262'}}>에피소드 공유</Text>
-                    </View>
-                  </TouchableOpacity>
-                </View>
+    if (noties.length === 0) {
+      return (
+        <View style={styles.mainContainer}>
+          <View style={{height: 1}} />
+          <ScrollView
+            style={{flex: 1, backgroundColor: 'white'}}
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this._onRefresh.bind(this)} />
+              } >
+            <View>
+              <View style={{justifyContent: 'center', alignItems: 'center', marginTop: windowSize.height - 410}}>
+                <Text style={{fontSize: 16, color: '#626262'}} >아직은 전해드릴 소식이 없네요.</Text>
+                <Text style={{fontSize: 16, color: '#626262'}} >에피소드를 공유하고 소식을 받아보세요:)</Text>
               </View>
-            </ScrollView>
-          </View>
-        )
-      } else {
-        return (
-          <FlatListE
-            keyExtractor={(item, index) => index}
-            style={{ flex: 1, backgroundColor: 'rgb(241, 241, 241)', paddingTop: 10 }}
-            ref={this._captureRef}
-            ItemComponent={this._renderItemComponent.bind(this)}
-            disableVirtualization={false}
-            horizontal={false}
-            data={this.state.data}
-            key={'vf'}
-            legacyImplementation={false}
-            onRefresh={this._onRefresh.bind(this)}
-            refreshing={this.state.refreshing}
-            shouldItemUpdate={this._shouldItemUpdate.bind(this)}
-            onEndReached={this._onEndReached}
-            onEndReachedThreshold={0} />
-        )
-      }
+              <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 18}}>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('Camera')}>
+                  <View style={{paddingTop: 5, paddingBottom: 5, paddingLeft: 7, paddingRight: 7, borderRadius: 4, borderWidth: 1, borderColor: '#626262'}}>
+                    <Text style={{fontSize: 16, color: '#626262'}}>에피소드 공유</Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </ScrollView>
+        </View>
+      )
+    } else {
+      return (
+        <FlatListE
+          keyExtractor={(item, index) => index}
+          style={{ flex: 1, backgroundColor: 'rgb(241, 241, 241)', paddingTop: 10 }}
+          ref={this._captureRef}
+          ItemComponent={this._renderItemComponent.bind(this)}
+          disableVirtualization={false}
+          horizontal={false}
+          data={this.state.data}
+          key={'vf'}
+          legacyImplementation={false}
+          refreshing={this.state.refreshing}
+          onRefresh={this._onRefresh}
+          // shouldItemUpdate={this._shouldItemUpdate.bind(this)}
+          onEndReached={this._onEndReached}
+          onEndReachedThreshold={0} />
+      )
     }
   }
 
@@ -199,12 +197,20 @@ class NotiScreen extends React.PureComponent {
     )
   }
 
-  _shouldItemUpdate (prev, next) {
-    if (this.profileModifiedFlag) {
-      this.profileModifiedFlag = false
-      return true
-    }
-    return prev.item !== next.item
+  // _shouldItemUpdate (prev, next) {
+  //   if (this.profileModifiedFlag) {
+  //     this.profileModifiedFlag = false
+  //     return true
+  //   }
+  //   return prev.item !== next.item
+  // }
+
+  _onRefresh = () => {
+    this.page = 0
+
+    this.setState({refreshing: true}, () => {
+      this.props.requestNoties(null, this.page)
+    })
   }
 
   _onEndReached = () => {
@@ -232,16 +238,64 @@ class NotiScreen extends React.PureComponent {
   }
 
   render () {
-    const { noties } = this.props
-
-    return (
-      <View style={styles.mainContainer}>
-        <View style={{backgroundColor: '#FFFFFF', flex: 1}}>
-          {this.renderScrollview(noties)}
-          {/* <View style={{height: 60}} /> */}
+    if (this.state.spinner) {
+      return (
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <ActivityIndicator
+            color='gray'
+            size='small' />
         </View>
-      </View>
-    )
+      )
+    } else if (this.state.nothing) {
+      return (
+        <View style={styles.mainContainer}>
+          <View style={{height: 1}} />
+          <ScrollView
+            style={{flex: 1, backgroundColor: 'white'}}
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this._onRefresh.bind(this)} />
+              } >
+            <View>
+              <View style={{justifyContent: 'center', alignItems: 'center', marginTop: windowSize.height - 410}}>
+                <Text style={{fontSize: 16, color: '#626262'}} >아직은 전해드릴 소식이 없네요.</Text>
+                <Text style={{fontSize: 16, color: '#626262'}} >에피소드를 공유하고 소식을 받아보세요:)</Text>
+              </View>
+              <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 18}}>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('Camera')}>
+                  <View style={{paddingTop: 5, paddingBottom: 5, paddingLeft: 7, paddingRight: 7, borderRadius: 4, borderWidth: 1, borderColor: '#626262'}}>
+                    <Text style={{fontSize: 16, color: '#626262'}}>에피소드 공유</Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </ScrollView>
+        </View>
+      )
+    } else {
+      return (
+        <View style={styles.mainContainer}>
+          <View style={{backgroundColor: '#FFFFFF', flex: 1}}>
+            <FlatListE
+              keyExtractor={(item, index) => index}
+              style={{ flex: 1, backgroundColor: 'rgb(241, 241, 241)', paddingTop: 10 }}
+              ref={this._captureRef}
+              ItemComponent={this._renderItemComponent.bind(this)}
+              disableVirtualization={false}
+              horizontal={false}
+              data={this.state.data}
+              key={'vf'}
+              legacyImplementation={false}
+              refreshing={this.state.refreshing}
+              onRefresh={this._onRefresh}
+              // shouldItemUpdate={this._shouldItemUpdate.bind(this)}
+              onEndReached={this._onEndReached}
+              onEndReachedThreshold={0} />
+          </View>
+        </View>
+      )
+    }
   }
 }
 
