@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import {
   View,
+  Image,
   ActivityIndicator,
   Dimensions,
   FlatList
@@ -13,11 +14,40 @@ import ExploreDetail from '../Components/ExploreDetail'
 
 import FeedActions from '../Redux/FeedRedux'
 import AccountActions from '../Redux/AccountRedux'
+import { Images } from '../Themes'
 
 const windowSize = Dimensions.get('window')
 const ITEM_HEIGHT = 57.5 + (windowSize - 220)
 
 class ExploreScreen extends Component {
+  static navigationOptions = {
+    // Note: By default the icon is only shown on iOS. Search the showIcon option below.
+    header: () => (
+      <View style={{alignItems: 'center', justifyContent: 'center', backgroundColor: 'white', height: 60, paddingTop: 10}}>
+        <Image
+          source={Images.episodeLogo}
+          style={{
+            width: 82,
+            height: 16}} />
+      </View>
+    ),
+    tabBarIcon: ({focused}) => {
+      if (focused) {
+        return (
+          <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+            <Image style={{width: 23, height: 23}} source={Images.tabFind} />
+            <View style={{position: 'absolute', left: 0, right: 0, bottom: 0, alignItems: 'center'}}>
+              <View style={{width: 37, height: 3, backgroundColor: '#F85032'}} />
+            </View>
+          </View>
+        )
+      } else {
+        return (
+          <Image style={{width: 23, height: 23}} source={Images.tabFind} />
+        )
+      }
+    }
+  }
 
   static propTypes = {
     items: PropTypes.array.isRequired,
@@ -92,6 +122,7 @@ class ExploreScreen extends Component {
   // }
 
   render () {
+    console.log('익스플로어스크린 렌더렌더렌더렌더렌더렌더렌더렌더렌더')
     return (
       <View style={styles.mainContainer}>
         <FlatList
@@ -113,7 +144,7 @@ class ExploreScreen extends Component {
           onEndReached={this._onEndReached}
           onEndReachedThreshold={0}
           shouldItemUpdate={this._shouldItemUpdate.bind(this)} />
-        <View style={{height: 60}} />
+        {/* <View style={{height: 60}} /> */}
       </View>
     )
   }

@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import {
   View,
+  Image,
   ActivityIndicator,
   FlatList,
   Dimensions
@@ -20,11 +21,41 @@ import SignupActions from '../Redux/SignupRedux'
 import EpisodeActions from '../Redux/EpisodeRedux'
 import AccountActions from '../Redux/AccountRedux'
 import CommentActions from '../Redux/CommentRedux'
+import { Images } from '../Themes'
 
 const windowSize = Dimensions.get('window')
 const ITEM_HEIGHT = 56 + (windowSize.width - 30) + 60 + 10
 
 class ProfileScreen extends Component {
+  static navigationOptions = {
+    // Note: By default the icon is only shown on iOS. Search the showIcon option below.
+    header: () => (
+      <View style={{alignItems: 'center', justifyContent: 'center', backgroundColor: 'white', height: 60, paddingTop: 10}}>
+        <Image
+          source={Images.profileLogo}
+          style={{
+            width: 82,
+            height: 16}} />
+      </View>
+    ),
+    tabBarIcon: ({focused}) => {
+      if (focused) {
+        return (
+          <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+            <Image style={{width: 23, height: 25}} source={Images.tabUser} />
+            <View style={{position: 'absolute', left: 0, right: 0, bottom: 0, alignItems: 'center'}}>
+              <View style={{width: 37, height: 3, backgroundColor: '#F85032'}} />
+            </View>
+          </View>
+        )
+      } else {
+        return (
+          <Image style={{width: 23, height: 25}} source={Images.tabUser} />
+        )
+      }
+    }
+  }
+
   static propTypes = {
     profileImagePath: PropTypes.string,
     nickname: PropTypes.string,
@@ -81,8 +112,10 @@ class ProfileScreen extends Component {
   }
 
   render () {
+    console.log('프로필스크린 렌더렌더렌더렌더렌더렌더렌더렌더렌더')
     return (
       <View style={styles.mainContainer}>
+        <View style={{height: 1}} />
         <FlatList
           removeClippedSubviews={false}
           viewabilityConfig={{viewAreaCoveragePercentThreshold: 30}}
@@ -106,8 +139,9 @@ class ProfileScreen extends Component {
           scrollsToTop
           onEndReached={this._onEndReached}
           onEndReachedThreshold={0} />
-        <View style={{height: 60}} />
+        {/* <View style={{height: 60}} /> */}
         <CommentModalContainer
+          navigation={this.props.navigation}
           commentModalVisible={this.state.commentModalVisible}
           commentModalHandler={this._toggleCommentModal}
           screen={'ProfileScreen'}

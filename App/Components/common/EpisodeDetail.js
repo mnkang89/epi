@@ -226,17 +226,19 @@ class EpisodeDetail extends React.PureComponent {
         this.props.type === 'other') {
     } else if (this.props.type === 'single') {
       if (this.props.singleType === 'noti') {
-        NavigationActions.notiTouserProfileScreen({
-          type: 'push',
-          id: accountId,
-          screen: 'NotiScreen'
-        })
+        // NavigationActions.notiTouserProfileScreen({
+        //   type: 'push',
+        //   id: accountId,
+        //   screen: 'NotiScreen'
+        // })
+        this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'NotiScreen'})
       } else {
-        NavigationActions.searchTouserProfileScreen({
-          type: 'push',
-          id: accountId,
-          screen: 'SearchScreen'
-        })
+        // NavigationActions.searchTouserProfileScreen({
+        //   type: 'push',
+        //   id: accountId,
+        //   screen: 'SearchScreen'
+        // })
+        this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'SearchScreen'})
       }
     } else {
       // NavigationActions.feedTouserProfileScreen({

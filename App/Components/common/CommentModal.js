@@ -130,6 +130,7 @@ class CommentModal extends Component {
     if (this.state.commentContainerRender) {
       return (
         <CommentContainer
+          navigation={this.props.navigation}
           screen={this.props.screen}
           resetCommentModal={this.resetCommentModal.bind(this)} />
       )

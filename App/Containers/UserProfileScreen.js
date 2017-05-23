@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react'
 import {
   View,
+  TouchableOpacity,
+  Image,
   ActivityIndicator,
   FlatList,
   Dimensions,
@@ -19,11 +21,32 @@ import styles from './Styles/FeedScreenStyle'
 import AccountActions from '../Redux/AccountRedux'
 import EpisodeActions from '../Redux/EpisodeRedux'
 import CommentActions from '../Redux/CommentRedux'
+import { Images } from '../Themes'
 
 const windowSize = Dimensions.get('window')
 const ITEM_HEIGHT = 56 + (windowSize.width - 30) + 60 + 10
 
 class UserProfileScreen extends Component {
+  static navigationOptions = {
+    // Note: By default the icon is only shown on iOS. Search the showIcon option below.
+    header: ({ navigation }) => {
+      return (
+        <View style={{flexDirection: 'row', backgroundColor: 'white', height: 60}}>
+          <View style={{flex: 1, justifyContent: 'center', paddingLeft: 10, paddingTop: 10}}>
+            <TouchableOpacity onPress={() => { navigation.goBack(null) }} >
+              <Image style={{width: 16, height: 20}} source={Images.backChevron} />
+            </TouchableOpacity>
+          </View>
+          <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', paddingTop: 10}} >
+            <Image
+              source={Images.profileLogo}
+              style={{width: 82, height: 16}} />
+          </View>
+          <View style={{flex: 1}} />
+        </View>
+      )
+    }
+  }
 
   static propTypes = {
     id: PropTypes.number,
@@ -62,11 +85,7 @@ class UserProfileScreen extends Component {
   }
 
   componentDidMount () {
-    console.log('아이디')
     const { id } = this.props.navigation.state.params
-    console.log(id)
-    console.log('아이디')
-    // const { id } = this.props
     const active = false
 
     this.props.requestOtherInfo(null, id)
@@ -77,17 +96,16 @@ class UserProfileScreen extends Component {
     // this.props.requestOtherEpisodes(null, id, active)
   }
 
-  // componentWillUnmount () {
-  //   this.props.initOtherInfo()
-  // }
-
   componentWillReceiveProps (nextProps) {
     const { id } = this.props.navigation.state.params
     const items = nextProps.itemsObject[id]
-    console.log(items)
+    // console.log(items)
     this.setState({
       data: items
     })
+    // console.log('크리에이티드')
+    // console.log(items[items.length - 1].episode.createDateTime)
+    // console.log('크리에이티드')
     // const items = nextProps.itemsObject[this.props.id]
 
     // if (nextProps.itemsObject[this.props.id] !== undefined) {
@@ -139,10 +157,12 @@ class UserProfileScreen extends Component {
   // }
 
   render () {
+    console.log('유저프로스크린 렌더렌더렌더렌더렌더렌더렌더렌더렌더')
     const { screen } = this.props.navigation.state.params
 
     return (
       <View style={styles.mainContainer}>
+        <View style={{height: 1}} />
         <FlatList
           removeClippedSubviews={false}
           viewabilityConfig={{viewAreaCoveragePercentThreshold: 30}}
@@ -168,8 +188,9 @@ class UserProfileScreen extends Component {
           scrollsToTop
           onEndReached={this._onEndReached}
           onEndReachedThreshold={0} />
-        <View style={{height: 60}} />
+        {/* <View style={{height: 60}} /> */}
         <CommentModalContainer
+          navigation={this.props.navigation}
           commentModalVisible={this.state.commentModalVisible}
           commentModalHandler={this._toggleCommentModal.bind(this)}
           screen={screen}
@@ -177,9 +198,9 @@ class UserProfileScreen extends Component {
           pushHandler={this._onPushToUserProfileScreen}
           popHandler={this._onPopFromUserProfileScreen} />
         <FollowModalContainer
+          navigation={this.props.navigation}
           screen={screen}
           token={this.props.token}
-          navigation={this.props.navigation}
           pushHandler={this._onPushToUserProfileScreen}
           popHandler={this._onPopFromUserProfileScreen} />
       </View>
@@ -320,7 +341,8 @@ class UserProfileScreen extends Component {
   }
 
   _onEndReached = () => {
-    const { id } = this.props
+    // const { id } = this.props
+    const { id } = this.props.navigation.state.params
     const withFollowing = false
     const updatedDateTime = this.updatedDateTime
 

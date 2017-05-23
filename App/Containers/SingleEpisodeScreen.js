@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react'
-import { View, FlatList, Dimensions } from 'react-native'
+import { View, TouchableOpacity, Image, FlatList, Dimensions } from 'react-native'
 import { connect } from 'react-redux'
 
 import { getAccountId } from '../Services/Auth'
@@ -10,11 +10,32 @@ import EpisodeDetail from '../Components/common/EpisodeDetail'
 import CommentModalContainer from './common/CommentModalContainer'
 import EpisodeActions from '../Redux/EpisodeRedux'
 import CommentActions from '../Redux/CommentRedux'
+import { Images } from '../Themes'
 
 const windowSize = Dimensions.get('window')
 const ITEM_HEIGHT = 56 + (windowSize.width - 30) + 60 + 10
 
 class SingleEpisodeScreen extends Component {
+  static navigationOptions = {
+    // Note: By default the icon is only shown on iOS. Search the showIcon option below.
+    header: ({ navigation }) => {
+      return (
+        <View style={{flexDirection: 'row', backgroundColor: 'white', height: 60}}>
+          <View style={{flex: 1, justifyContent: 'center', paddingLeft: 10, paddingTop: 10}}>
+            <TouchableOpacity onPress={() => { navigation.goBack(null) }} >
+              <Image style={{width: 16, height: 20}} source={Images.backChevron} />
+            </TouchableOpacity>
+          </View>
+          <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', paddingTop: 10}} >
+            <Image
+              source={Images.episodeLogo}
+              style={{width: 82, height: 16}} />
+          </View>
+          <View style={{flex: 1}} />
+        </View>
+      )
+    }
+  }
 
   static propTypes = {
     items: PropTypes.array,
@@ -40,7 +61,12 @@ class SingleEpisodeScreen extends Component {
   }
 
   componentDidMount () {
-    const { episodeId } = this.props
+    /*
+      RNRF
+      const { episodeId } = this.props
+    */
+    const { episodeId } = this.props.navigation.state.params
+
     this.props.requestSingleEpisode(null, episodeId)
   }
 
@@ -72,8 +98,11 @@ class SingleEpisodeScreen extends Component {
   // }
 
   render () {
+    console.log('싱글에피스크린 렌더렌더렌더렌더렌더렌더렌더렌더렌더')
+    const { screen } = this.props.navigation.state.params
     return (
       <View style={styles.mainContainer}>
+        <View style={{height: 1}} />
         <FlatList
           removeClippedSubviews={false}
           viewabilityConfig={{viewAreaCoveragePercentThreshold: 51}}
@@ -94,9 +123,10 @@ class SingleEpisodeScreen extends Component {
           shouldItemUpdate={this._shouldItemUpdate} />
         <View style={{height: 48.5}} />
         <CommentModalContainer
+          navigation={this.props.navigation}
           commentModalVisible={this.state.commentModalVisible}
           commentModalHandler={this._toggleCommentModal.bind(this)}
-          screen={this.props.screen} />
+          screen={screen} />
       </View>
     )
   }
@@ -109,19 +139,15 @@ class SingleEpisodeScreen extends Component {
   })
 
   _renderItemComponent = ({item, index}) => {
-    const { contentId, account } = this.props
-    // let xPosition = 0
-    // let contents = item.contents
+    const { account, detailType, singleType } = this.props.navigation.state.params
+    // const { contentId, account, detailType, singleType } = this.props
 
-    // if (contentId) {
-    //   xPosition = contents.map((content) => { return content.id }).indexOf(contentId) * (windowSize.width - 22)
-    // }
     return (
       <EpisodeDetail
-        type={this.props.detailType}
-        singleType={this.props.singleType}
+        navigation={this.props.navigation}
+        type={detailType}
+        singleType={singleType}
         xPosition={index}
-        // xPosition={xPosition}
         index={index}
         ref={(component) => {
           if (component !== null) {
@@ -168,19 +194,16 @@ class SingleEpisodeScreen extends Component {
 
     for (let j in viewableItemsArray) {
       const index = viewableItemsArray[j]
-      console.log('//j출력')
-      console.log(this.episodeRefs)
-      console.log(index)
-      console.log('j출력//')
+
       if (this.episodeRefs[index] !== null && this.episodeRefs[index] !== undefined) {
-        console.log('플레이 에피소드 비디오')
         this.episodeRefs[index].playEpisodeVideo()
       }
     }
   }
 
   _onRefresh = () => {
-    const { episodeId } = this.props
+    const { episodeId } = this.props.navigation.state.params
+    // const { episodeId } = this.props
 
     this.setState({refreshing: true})
     this.props.requestSingleEpisode(null, episodeId)

@@ -9,8 +9,7 @@ const { Types, Creators } = createActions({
   screenRegister: [
     'beforeScreen'
   ],
-  tabTouched: [
-    'trigger'
+  feedTabTouched: [
   ]
 })
 
@@ -22,7 +21,7 @@ export default Creators
 export const INITIAL_STATE = Immutable({
   beforeScreen: 'homeTab',
   pastScreen: '',
-  trigger: false
+  feedTrigger: false
 })
 
 /* ------------- Reducers ------------- */
@@ -30,12 +29,12 @@ export const INITIAL_STATE = Immutable({
 export const registerScreen = (state: Object, { beforeScreen }: Object) =>
   state.merge({ beforeScreen, pastScreen: state.beforeScreen })
 
-export const touchedTab = (state: Object) =>
-  state.merge({ trigger: !state.trigger })
+export const touchedFeedTab = (state: Object) =>
+  state.merge({ feedTrigger: !state.feedTrigger })
 
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
   [Types.SCREEN_REGISTER]: registerScreen,
-  [Types.TAB_TOUCHED]: touchedTab
+  [Types.FEED_TAB_TOUCHED]: touchedFeedTab
 })

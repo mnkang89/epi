@@ -98,30 +98,40 @@ class CommentDetail extends Component {
 
     if (this.props.screen === 'FeedScreen') {
       setTimeout(() => {
-        NavigationActions.feedTouserProfileScreen({
-          type: 'push',
-          id: accountId,
-          screen: 'FeedScreen',
-          onBack: () => {
-            NavigationActions.pop()
-          }
-        })
+        this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'FeedScreen'})
       }, 500)
+      // NavigationActions.feedTouserProfileScreen({
+      //   type: 'push',
+      //   id: accountId,
+      //   screen: 'FeedScreen',
+      //   onBack: () => {
+      //     NavigationActions.pop()
+      //   }
+      // })
     } else if (this.props.screen === 'NotiScreen') {
-      NavigationActions.notiTouserProfileScreen({
-        type: 'push',
-        id: accountId
-      })
+      setTimeout(() => {
+        this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'NotiScreen'})
+      }, 500)
+      // NavigationActions.notiTouserProfileScreen({
+      //   type: 'push',
+      //   id: accountId
+      // })
     } else if (this.props.screen === 'SearchScreen') {
-      NavigationActions.searchTouserProfileScreen({
-        type: 'push',
-        id: accountId
-      })
+      setTimeout(() => {
+        this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'SearchScreen'})
+      }, 500)
+      // NavigationActions.searchTouserProfileScreen({
+      //   type: 'push',
+      //   id: accountId
+      // })
     } else if (this.props.screen === 'ProfileScreen') {
-      NavigationActions.profileTouserProfileScreen({
-        type: 'push',
-        id: accountId
-      })
+      setTimeout(() => {
+        this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'ProfileScreen'})
+      }, 500)
+      // NavigationActions.profileTouserProfileScreen({
+      //   type: 'push',
+      //   id: accountId
+      // })
     }
   }
 

@@ -34,8 +34,16 @@ class NotiDetail extends Component {
       this.props.openComment(true)
       this.props.getComment(null, episodeId, contentId)
 
-      NavigationActions.singleEpisodeScreen({
-        type: 'push',
+      // NavigationActions.singleEpisodeScreen({
+      //   type: 'push',
+      //   screen: 'NotiScreen',
+      //   detailType: 'single',
+      //   singleType: 'noti',
+      //   account,
+      //   episodeId,
+      //   contentId: null
+      // })
+      this.props.navigation.navigate('SingleEpisode', {
         screen: 'NotiScreen',
         detailType: 'single',
         singleType: 'noti',
@@ -48,8 +56,16 @@ class NotiDetail extends Component {
       // TODO: openComment는 deprecated될 수 있음
       this.props.openComment(false)
 
-      NavigationActions.singleEpisodeScreen({
-        type: 'push',
+      // NavigationActions.singleEpisodeScreen({
+      //   type: 'push',
+      //   screen: 'NotiScreen',
+      //   detailType: 'single',
+      //   singleType: 'noti',
+      //   account,
+      //   episodeId,
+      //   contentId
+      // })
+      this.props.navigation.navigate('SingleEpisode', {
         screen: 'NotiScreen',
         detailType: 'single',
         singleType: 'noti',

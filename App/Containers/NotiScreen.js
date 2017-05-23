@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import {
   View,
+  Image,
   Dimensions,
   Text,
   TouchableOpacity,
@@ -10,7 +11,6 @@ import {
 } from 'react-native'
 import { connect } from 'react-redux'
 import { Actions as NavigationActions } from 'react-native-router-flux'
-import _ from 'lodash'
 
 import {
   getItemLayout
@@ -22,10 +22,41 @@ import styles from './Styles/FeedScreenStyle'
 import NotiActions from '../Redux/NotiRedux'
 import CommentActions from '../Redux/CommentRedux'
 import PushConfig from '../Config/PushConfig'
+import { Images } from '../Themes'
+import { getObjectDiff } from '../Lib/Utilities'
 
 const windowSize = Dimensions.get('window')
 
-class NotiScreen extends Component {
+class NotiScreen extends React.PureComponent {
+  static navigationOptions = {
+    // Note: By default the icon is only shown on iOS. Search the showIcon option below.
+    header: () => (
+      <View style={{alignItems: 'center', justifyContent: 'center', backgroundColor: 'white', height: 60, paddingTop: 10}}>
+        <Image
+          source={Images.episodeLogo}
+          style={{
+            width: 82,
+            height: 16}} />
+      </View>
+    ),
+    tabBarIcon: ({focused}) => {
+      if (focused) {
+        return (
+          <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+            <Image style={{width: 22, height: 25}} source={Images.tabAlarm} />
+            <View style={{position: 'absolute', left: 0, right: 0, bottom: 0, alignItems: 'center'}}>
+              <View style={{width: 37, height: 3, backgroundColor: '#F85032'}} />
+            </View>
+          </View>
+        )
+      } else {
+        return (
+          <Image style={{width: 22, height: 25}} source={Images.tabAlarm} />
+        )
+      }
+    }
+  }
+
   static propTypes = {
     myAccount: PropTypes.object,
     notiesRequesting: PropTypes.bool,
@@ -53,6 +84,10 @@ class NotiScreen extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
+    console.log('노티윌리시브프랍스')
+    console.log(getObjectDiff(this.props, nextProps))
+    console.log('노티윌리시브프랍스')
+
     if (nextProps.noties.length !== 0) {
       this.page = this.page + 1
     }
@@ -148,12 +183,17 @@ class NotiScreen extends Component {
 
   _renderItemComponent = ({item}) => {
     const noti = item
+    const account = {
+      profileImagePath: this.props.myProfileImagePath,
+      nickname: this.props.myNickname
+    }
+
     return (
       <NotiDetail
         navigation={this.props.navigation}
         key={noti.id}
         noti={noti}
-        myAccount={this.props.myAccount}
+        myAccount={account}
         openComment={this.props.openComment}
         getComment={this.props.getComment} />
     )
@@ -192,13 +232,14 @@ class NotiScreen extends Component {
   }
 
   render () {
+    console.log('노티스크린 렌더렌더렌더렌더렌더렌더렌더렌더렌더')
     const { noties } = this.props
 
     return (
       <View style={styles.mainContainer}>
         <View style={{backgroundColor: '#FFFFFF', flex: 1}}>
           {this.renderScrollview(noties)}
-          <View style={{height: 60}} />
+          {/* <View style={{height: 60}} /> */}
         </View>
       </View>
     )
@@ -207,8 +248,9 @@ class NotiScreen extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    profileModified: state.signup.modified,
-    myAccount: state.account,
+    // profileModified: state.signup.modified,
+    myProfileImagePath: state.account.profileImagePath,
+    myNickname: state.account.nickname,
 
     notiesRequesting: state.noti.notiesRequesting,
     noties: state.noti.noties

@@ -3,6 +3,7 @@
 import React, { Component, PropTypes } from 'react'
 import {
   View,
+  Image,
   Dimensions,
   StatusBar,
   Modal as NativeModal,
@@ -20,11 +21,20 @@ import CameraScreenActions from '../Redux/CameraScreenRedux'
 import EpisodeActions from '../Redux/EpisodeRedux'
 import Permissions from 'react-native-permissions'
 
+import { Images } from '../Themes'
+
 const { height, width } = Dimensions.get('window')
 const cameraHeightAsFlex = Math.ceil(width / height * 100)
 const cameraControllerHeightAsFlex = Math.ceil((height - width) / height * 100)
 
 class CameraScreen extends Component {
+  static navigationOptions = {
+    // Note: By default the icon is only shown on iOS. Search the showIcon option below.
+    tabBarIcon: () => (
+      <Image style={{width: 51, height: 51}} source={Images.tabPhoto} />
+    )
+  }
+
   static PropTypes = {
     endScreen: PropTypes.bool,
     initializeCameraScreenProps: PropTypes.func
@@ -35,8 +45,18 @@ class CameraScreen extends Component {
     this.state = {
       cameraHandler: new CameraHandler(),
       type: 'back',
-      loadingModal: false
+      loadingModal: false,
+
+      preparingCamera: true
     }
+  }
+
+  componentDidMount () {
+    setTimeout(() => {
+      this.setState({
+        preparingCamera: false
+      })
+    }, 500)
   }
 
   componentDidUpdate () {
@@ -70,7 +90,8 @@ class CameraScreen extends Component {
       StatusBar.setHidden(false)
       // NavigationActions.pop()
       setTimeout(() => {
-        NavigationActions.pop()
+        this.props.navigation.goBack(null)
+        // NavigationActions.pop()
         // NavigationActions.homeTab()
       }, 500)
     })
@@ -78,7 +99,8 @@ class CameraScreen extends Component {
 
   closeModal () {
     StatusBar.setHidden(false)
-    NavigationActions.pop()
+    this.props.navigation.goBack(null)
+    // NavigationActions.pop()
   }
 
   activeLoadingModal () {
@@ -89,7 +111,20 @@ class CameraScreen extends Component {
     this.setState({loadingModal: false})
   }
 
+  renderCameraComponent () {
+    if (this.state.preparingCamera) {
+      return (
+        <View style={{flex: 1, backgroundColor: 'black'}} />
+      )
+    } else {
+      return (
+        <CameraComponent type={this.state.type} cameraHandler={this.state.cameraHandler} />
+      )
+    }
+  }
+
   render () {
+    console.log('카메라스크린 렌더렌더렌더렌더렌더렌더렌더렌더렌더')
     return (
       <View style={{flex: 1, backgroundColor: 'transparent'}}>
         <Modal
@@ -99,7 +134,7 @@ class CameraScreen extends Component {
           backdrop={false}
           swipeThreshold={100}
           isOpen
-          // onOpened={this.cameraPermissionCheck.bind(this)}
+          onOpened={this.cameraPermissionCheck.bind(this)}
           onClosed={this.closeModal.bind(this)} >
           <View style={{flex: 1, flexDirection: 'column'}}>
             <NativeModal
@@ -113,7 +148,7 @@ class CameraScreen extends Component {
               </View>
             </NativeModal>
             <View style={{flex: cameraHeightAsFlex}}>
-              <CameraComponent type={this.state.type} cameraHandler={this.state.cameraHandler} />
+              {this.renderCameraComponent()}
             </View>
             <View style={{flex: cameraControllerHeightAsFlex}}>
               <CameraController parentThis={this} cameraHandler={this.state.cameraHandler} />
