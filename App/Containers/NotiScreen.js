@@ -128,26 +128,30 @@ class NotiScreen extends React.PureComponent {
       if (noties.length === 0) {
         console.log('노티 없음')
         return (
-          <ScrollView
-            refreshControl={
-              <RefreshControl
-                refreshing={this.state.refreshing}
-                onRefresh={this._onRefresh.bind(this)} />
-              } >
-            <View>
-              <View style={{justifyContent: 'center', alignItems: 'center', marginTop: windowSize.height - 410}}>
-                <Text style={{fontSize: 16, color: '#626262'}} >아직은 전해드릴 소식이 없네요.</Text>
-                <Text style={{fontSize: 16, color: '#626262'}} >에피소드를 공유하고 소식을 받아보세요:)</Text>
+          <View style={styles.mainContainer}>
+            <View style={{height: 1}} />
+            <ScrollView
+              style={{flex: 1, backgroundColor: 'white'}}
+              refreshControl={
+                <RefreshControl
+                  refreshing={this.state.refreshing}
+                  onRefresh={this._onRefresh.bind(this)} />
+                } >
+              <View>
+                <View style={{justifyContent: 'center', alignItems: 'center', marginTop: windowSize.height - 410}}>
+                  <Text style={{fontSize: 16, color: '#626262'}} >아직은 전해드릴 소식이 없네요.</Text>
+                  <Text style={{fontSize: 16, color: '#626262'}} >에피소드를 공유하고 소식을 받아보세요:)</Text>
+                </View>
+                <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 18}}>
+                  <TouchableOpacity onPress={() => this.props.navigation.navigate('Camera')}>
+                    <View style={{paddingTop: 5, paddingBottom: 5, paddingLeft: 7, paddingRight: 7, borderRadius: 4, borderWidth: 1, borderColor: '#626262'}}>
+                      <Text style={{fontSize: 16, color: '#626262'}}>에피소드 공유</Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
               </View>
-              <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 18}}>
-                <TouchableOpacity onPress={NavigationActions.cameraTab}>
-                  <View style={{paddingTop: 5, paddingBottom: 5, paddingLeft: 7, paddingRight: 7, borderRadius: 4, borderWidth: 1, borderColor: '#626262'}}>
-                    <Text style={{fontSize: 16, color: '#626262'}}>에피소드 공유</Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </ScrollView>
+            </ScrollView>
+          </View>
         )
       } else {
         return (

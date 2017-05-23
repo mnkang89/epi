@@ -73,7 +73,6 @@ class UserProfileScreen extends Component {
     this.state = {
       refreshing: false,
       footer: false,
-      // scrollsToTop: true,
       commentModalVisible: false,
       data: []
     }
@@ -92,23 +91,16 @@ class UserProfileScreen extends Component {
     setTimeout(() => {
       this.props.requestOtherEpisodes(null, id, active)
     }, 500)
-    // this.props.requestOtherInfo(null, id)
-    // this.props.requestOtherEpisodes(null, id, active)
   }
 
   componentWillReceiveProps (nextProps) {
     const { id } = this.props.navigation.state.params
     const items = nextProps.itemsObject[id]
-    // console.log(items)
+
     this.setState({
       data: items
     })
-    // console.log('크리에이티드')
-    // console.log(items[items.length - 1].episode.createDateTime)
-    // console.log('크리에이티드')
-    // const items = nextProps.itemsObject[this.props.id]
 
-    // if (nextProps.itemsObject[this.props.id] !== undefined) {
     if (nextProps.itemsObject[id] !== undefined) {
       if (items[items.length - 1].episode.updatedDateTime !== undefined) {
         this.updatedDateTime = items[items.length - 1].episode.updatedDateTime

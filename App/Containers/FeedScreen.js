@@ -1,9 +1,13 @@
 import React, { Component, PropTypes } from 'react'
 import {
   View,
+  Text,
+  TouchableOpacity,
   Image,
   Animated,
   ActivityIndicator,
+  ScrollView,
+  RefreshControl,
   // FlatList,
   Dimensions
 } from 'react-native'
@@ -107,7 +111,17 @@ class FeedScreen extends Component {
     if (nextProps.episodesRequesting && !this.state.refreshing) {
       this.setState({spinner: true})
     } else {
-      this.setState({spinner: false})
+      if (nextProps.items.length === 0) {
+        this.setState({
+          nothing: true,
+          spinner: false
+        })
+      } else {
+        this.setState({
+          nothing: false,
+          spinner: false
+        })
+      }
     }
 
     if (nextProps.items.length !== 0) {
@@ -163,6 +177,37 @@ class FeedScreen extends Component {
           <ActivityIndicator
             color='gray'
             size='small' />
+        </View>
+      )
+    } else if (this.state.nothing) {
+      return (
+        <View style={styles.mainContainer}>
+          <View style={{height: 1}} />
+          <ScrollView
+            style={{flex: 1, backgroundColor: 'white'}}
+            refreshControl={
+              <RefreshControl
+                colors={['#ff0000', '#00ff00', '#0000ff']}
+                refreshing={this.state.refreshing}
+                onRefresh={this._onRefresh} />
+              } >
+            <View>
+              <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 100}}>
+                <Text style={{fontSize: 60, fontWeight: 'bold', color: 'gray'}}>안녕하세요!</Text>
+              </View>
+              <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 80}}>
+                <Text style={{fontSize: 16, color: 'gray'}}>다른 사람들의 에피소드를 구경하고</Text>
+                <Text style={{fontSize: 16, color: 'gray'}}>팔로우 해보세요!</Text>
+              </View>
+              <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 18}}>
+                <TouchableOpacity onPress={() => { this.props.navigation.navigate('Explore') }}>
+                  <View style={{paddingTop: 5, paddingBottom: 5, paddingLeft: 7, paddingRight: 7, borderRadius: 4, borderWidth: 1, borderColor: 'gray'}}>
+                    <Text style={{fontSize: 16, color: 'gray'}}>에피소드 탐색</Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </ScrollView>
         </View>
       )
     } else {
