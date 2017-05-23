@@ -8,6 +8,7 @@ class FollowList extends Component {
   static propTypes = {
     follows: PropTypes.array,
     screen: PropTypes.string,
+    navigation: PropTypes.object,
 
     postFollow: PropTypes.func,
     deleteFollow: PropTypes.func,
@@ -27,6 +28,7 @@ class FollowList extends Component {
       <FollowDetail
         key={follow.id}
         screen={this.props.screen}
+        navigation={this.props.navigation}
         follow={follow}
         resetFollowModal={this.props.resetFollowModal}
         postFollow={this.props.postFollow}

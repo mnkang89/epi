@@ -19,6 +19,7 @@ class FollowModal extends Component {
   static propTypes = {
     token: PropTypes.string,
     screen: PropTypes.string,
+    navigation: PropTypes.object,
 
     showType: PropTypes.string,
     followVisible: PropTypes.bool,
@@ -38,7 +39,8 @@ class FollowModal extends Component {
       text: '',
       height: 5,
       inputBottom: 40,
-      followVisible: this.props.followVisible === undefined ? false : this.props.followVisible,
+      // followVisible: this.props.followVisible === undefined ? false : this.props.followVisible,
+      followVisible: false,
       followContainerRender: false
     }
 
@@ -101,6 +103,7 @@ class FollowModal extends Component {
       return (
         <FollowContainer
           screen={this.props.screen}
+          navigation={this.props.navigation}
           resetFollowModal={this.resetFollowModal.bind(this)}
           pushHandler={this.props.pushHandler}
           popHandler={this.props.popHandler} />

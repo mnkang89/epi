@@ -174,8 +174,10 @@ export const otherInfoFailure = (state: Object, { error }: Object) =>
   state.merge({ attempting: false, error })
 
 // init other info
-export const otherInfoInit = (state: Object) =>
-  state.merge({
+export const otherInfoInit = (state: Object) => {
+  console.log('otherinfoinit')
+  return state.merge({
+    otherInfoObject: {},
     otherAccountId: null,
     otherEmail: null,
     otherNickname: null,
@@ -184,6 +186,7 @@ export const otherInfoInit = (state: Object) =>
     otherFollowingCount: null,
     otherFollowing: null
   })
+}
 
 export const otherInfoObjectAdd = (state: Object, { otherAccountId, otherNickname, otherProfileImagePath, otherFollowerCount, otherFollowingCount, otherFollowing }: Object) =>
   state.merge({ otherInfoObject: {...state.otherInfoObject, [otherAccountId]: {otherNickname, otherProfileImagePath, otherFollowerCount, otherFollowingCount, otherFollowing}} })

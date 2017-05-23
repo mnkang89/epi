@@ -165,7 +165,7 @@ const { Types, Creators } = createActions({
   reportEpisodeSuccess: [
   ],
   reportEpisodeFailure: [
-  ],
+  ]
 })
 
 export const EpisodeTypes = Types

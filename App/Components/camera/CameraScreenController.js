@@ -179,6 +179,9 @@ class CameraScreenController extends Component {
 
   onPressOpenTextInput () {
     this.props.toggleMessageWriteAble()
+    setTimeout(() => {
+      this._textInput.focus()
+    }, 200)
   }
 
   renderCommentArea () {
@@ -208,21 +211,22 @@ class CameraScreenController extends Component {
                   paddingLeft: 15,
                   paddingRight: 15,
                   marginBottom: 10 }}
+                ref={(ref) => {
+                  this._textInput = ref
+                }}
                 maxLength={300}
-                multiline
                 placeholder='코멘트 쓰기..'
                 returnKeyType='done'
                 autoCapitalize='none'
                 autoCorrect={false}
                 enablesReturnKeyAutomatically
                 editable
+                autofocus
                 onSubmitEditing={() => {
-                  console.tron.log('controller state message ' + this.state.message)
+                  console.log('겜셋')
                   this.props.registerContentText(this.state.message)
                   this.props.toggleMessageWriteAble()
-                  return
                 }}
-                autofocus
                 onChangeText={(text) => this.setState({message: text})} />
             </View>
           </View>

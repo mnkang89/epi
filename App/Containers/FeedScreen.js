@@ -1,16 +1,15 @@
 import React, { Component, PropTypes } from 'react'
 import {
   View,
+  Image,
   Animated,
   ActivityIndicator,
   // FlatList,
   Dimensions
 } from 'react-native'
 import { connect } from 'react-redux'
-
-import { getAccountId } from '../Services/Auth'
-// import { getObjectDiff, getArrayDiff } from '../Lib/Utilities'
-import { getArrayDiff } from '../Lib/Utilities'
+import { getAccountId, getToken } from '../Services/Auth'
+import { getObjectDiff, getArrayDiff } from '../Lib/Utilities'
 import FlatListE from '../Experimental/FlatList0.44/FlatList_E44'
 
 import styles from './Styles/FeedScreenStyle'
@@ -19,11 +18,43 @@ import CommentModalContainer from './common/CommentModalContainer'
 import EpisodeActions from '../Redux/EpisodeRedux'
 import CommentActions from '../Redux/CommentRedux'
 import AccountActions from '../Redux/AccountRedux'
+import { Images } from '../Themes'
 
 const windowSize = Dimensions.get('window')
 const ITEM_HEIGHT = 56 + (windowSize.width - 30) + 60 + 10
 
 class FeedScreen extends Component {
+  static navigationOptions = ({ navigation, screenProps, navigationOptions }) => {
+    return ({
+      // title: 'hi',
+      // Note: By default the icon is only shown on iOS. Search the showIcon option below.
+      header: () => (
+        <View style={{alignItems: 'center', justifyContent: 'center', backgroundColor: 'white', height: 60, paddingTop: 10}}>
+          <Image
+            source={Images.episodeLogo}
+            style={{
+              width: 82,
+              height: 16}} />
+        </View>
+      ),
+      tabBarIcon: ({focused}) => {
+        if (focused) {
+          return (
+            <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+              <Image style={{width: 22, height: 23}} source={Images.tabHome} />
+              <View style={{position: 'absolute', left: 0, right: 0, bottom: 0, alignItems: 'center'}}>
+                <View style={{width: 37, height: 3, backgroundColor: '#F85032'}} />
+              </View>
+            </View>
+          )
+        } else {
+          return (
+            <Image style={{width: 22, height: 23}} source={Images.tabHome} />
+          )
+        }
+      }
+    })
+  }
   static propTypes = {
     items: PropTypes.array.isRequired,
 
@@ -49,7 +80,7 @@ class FeedScreen extends Component {
       commentModalVisible: false,
       data: []
     }
-    this.viewOpacity = new Animated.Value(0)
+    this.viewOpacity = new Animated.Value(0.3)
     this.updatedDateTime
     this.profileModifiedFlag = false
     this.viewableItemsArray = []
@@ -58,6 +89,7 @@ class FeedScreen extends Component {
   }
 
   componentDidMount () {
+    console.log(getToken())
     const accountId = getAccountId()
     const withFollowing = true
 
@@ -68,11 +100,16 @@ class FeedScreen extends Component {
       Animated.timing(this.viewOpacity, {
         toValue: 1
       }).start()
-    }, 1800)
+    }, 0)
   }
 
-  componentWillReceiveProps (nextProps, nextState) {
-    // NavigationActions.homeTab()
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.episodesRequesting && !this.state.refreshing) {
+      this.setState({spinner: true})
+    } else {
+      this.setState({spinner: false})
+    }
+
     if (nextProps.items.length !== 0) {
       if (nextProps.items[nextProps.items.length - 1].episode.updatedDateTime !== undefined) {
         this.updatedDateTime = nextProps.items[nextProps.items.length - 1].episode.updatedDateTime
@@ -120,39 +157,51 @@ class FeedScreen extends Component {
   // }
 
   render () {
-    return (
-      <Animated.View style={[styles.mainContainer, {'opacity': this.viewOpacity}]}>
-        <FlatListE
-          extraData={this.state}
-          removeClippedSubviews={false}
-          viewabilityConfig={{viewAreaCoveragePercentThreshold: 51}}
-          windowSize={3}
-          style={{flex: 1}}
-          renderItem={this._renderItemComponent}
-          ListFooterComponent={this._renderFooterComponent}
-          data={this.state.data} // state로 받아서 concat하기
-          disableVirtualization={false}
-          getItemLayout={undefined}
-          // getItemLayout={this._getItemLayout}
-          key={'vf'}
-          keyExtractor={(item, index) => index}
-          horizontal={false}
-          legacyImplementation={false}
-          onRefresh={this._onRefresh}
-          onViewableItemsChanged={this._onViewableItemsChanged}
-          ref={this._captureRef}
-          refreshing={this.state.refreshing}
-          // shouldItemUpdate={this._shouldItemUpdate}
-          scrollsToTop
-          onEndReached={this._onEndReached}
-          onEndReachedThreshold={0} />
-        <View style={{height: 60}} />
-        <CommentModalContainer
-          commentModalVisible={this.state.commentModalVisible}
-          commentModalHandler={this._toggleCommentModal}
-          screen={'FeedScreen'} />
-      </Animated.View>
-    )
+    if (this.state.spinner) {
+      return (
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <ActivityIndicator
+            color='gray'
+            size='small' />
+        </View>
+      )
+    } else {
+      return (
+        <Animated.View style={[styles.mainContainer, {'opacity': this.viewOpacity}]}>
+          <View style={{height: 1}} />
+          <FlatListE
+            extraData={this.state}
+            removeClippedSubviews={false}
+            viewabilityConfig={{viewAreaCoveragePercentThreshold: 51}}
+            windowSize={3}
+            style={{flex: 1}}
+            renderItem={this._renderItemComponent}
+            ListFooterComponent={this._renderFooterComponent}
+            data={this.state.data} // state로 받아서 concat하기
+            disableVirtualization={false}
+            getItemLayout={undefined}
+            // getItemLayout={this._getItemLayout}
+            key={'vf'}
+            keyExtractor={(item, index) => index}
+            horizontal={false}
+            legacyImplementation={false}
+            onRefresh={this._onRefresh}
+            onViewableItemsChanged={this._onViewableItemsChanged}
+            ref={this._captureRef}
+            refreshing={this.state.refreshing}
+            // shouldItemUpdate={this._shouldItemUpdate}
+            scrollsToTop
+            onEndReached={this._onEndReached}
+            onEndReachedThreshold={0} />
+          {/* <View style={{height: 60}} /> */}
+          <CommentModalContainer
+            navigation={this.props.navigation}
+            commentModalVisible={this.state.commentModalVisible}
+            commentModalHandler={this._toggleCommentModal}
+            screen={'FeedScreen'} />
+        </Animated.View>
+      )
+    }
   }
 
 /* FlatList helper method */
@@ -169,7 +218,7 @@ class FeedScreen extends Component {
     */
     return (
       <EpisodeDetail
-        // navigation={this.props.navigation}
+        navigation={this.props.navigation}
         index={index}
         ref={(component) => {
           if (component !== null) {
@@ -260,8 +309,9 @@ class FeedScreen extends Component {
     const accountId = getAccountId()
     const withFollowing = true
 
-    this.setState({refreshing: true})
-    this.props.requestUserEpisodes(null, accountId, withFollowing)
+    this.setState({refreshing: true}, () => {
+      this.props.requestUserEpisodes(null, accountId, withFollowing)
+    })
   }
 
   _onEndReached = () => {
@@ -278,12 +328,14 @@ const mapStateToProps = (state) => {
   return {
     profileModified: state.signup.modified,
 
+    episodesRequesting: state.episode.episodesRequesting,
     newEpisodeRequesting: state.episode.newEpisodeRequesting,
     items: state.episode.episodes,
 
     // trigger: state.screen.trigger,
     beforeScreen: state.screen.beforeScreen,
-    pastScreen: state.screen.pastScreen
+    pastScreen: state.screen.pastScreen,
+    feedTrigger: state.screen.feedTrigger
   }
 }
 

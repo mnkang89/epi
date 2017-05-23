@@ -57,25 +57,35 @@ class ExploreDetail extends Component {
   onProfileImagePress () {
     const accountId = this.props.account.id
 
-    NavigationActions.searchTouserProfileScreen({
-      type: 'push',
-      screen: 'SearchScreen',
-      id: accountId
-    })
+    // NavigationActions.searchTouserProfileScreen({
+    //   type: 'push',
+    //   screen: 'SearchScreen',
+    //   id: accountId
+    // })
+    this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'SearchScreen'})
   }
 
   onEpisodePress (contentId) {
     const episodeId = this.props.episode.id
     const account = this.props.account
-    NavigationActions.searchTosingleEpisodeScreen({
-      type: 'push',
+    // NavigationActions.searchTosingleEpisodeScreen({
+    //   type: 'push',
+    //   screen: 'SearchScreen',
+    //   detailType: 'single',
+    //   singleType: 'search',
+    //   modal: false,
+    //   episodeId,
+    //   contentId,
+    //   account
+    // })
+    this.props.navigation.navigate('SingleEpisode', {
       screen: 'SearchScreen',
       detailType: 'single',
       singleType: 'search',
       modal: false,
+      account,
       episodeId,
-      contentId,
-      account
+      contentId
     })
   }
 

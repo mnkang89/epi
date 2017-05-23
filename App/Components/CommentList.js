@@ -68,6 +68,7 @@ class CommentList extends Component {
 
     return sortedComments.map(comment =>
       <CommentDetail
+        navigation={this.props.navigation}
         key={comment.id}
         episodeId={this.props.episodeId}
         contentId={this.props.contentId}

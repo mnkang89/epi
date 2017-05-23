@@ -44,38 +44,38 @@ class FollowDetail extends Component {
     this.props.resetFollowModal()
 
     if (this.props.screen === 'FeedScreen') {
-      this.props.pushHandler()
       setTimeout(() => {
-        NavigationActions.feedTouserProfileScreen({
-          type: 'push',
-          id: accountId,
-          screen: 'FeedScreen',
-          popHandler: this.props.popHandler,
-          topOfStack: true,
-          onBack: () => {
-            this.props.popHandler()
-            NavigationActions.pop()
-          }
-        })
+        this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'FeedScreen'})
+        // NavigationActions.feedTouserProfileScreen({
+        //   type: 'push',
+        //   id: accountId,
+        //   screen: 'FeedScreen',
+        // })
       }, 500)
     } else if (this.props.screen === 'NotiScreen') {
-      console.log('notiscreen 인 팔로우')
-      NavigationActions.notiTouserProfileScreen({
-        type: 'push',
-        id: accountId
-      })
+      setTimeout(() => {
+        this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'NotiScreen'})
+      }, 500)
+      // NavigationActions.notiTouserProfileScreen({
+      //   type: 'push',
+      //   id: accountId
+      // })
     } else if (this.props.screen === 'SearchScreen') {
-      console.log('searchscreen 인 팔로우')
-      NavigationActions.searchTouserProfileScreen({
-        type: 'push',
-        id: accountId
-      })
+      setTimeout(() => {
+        this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'SearchScreen'})
+      }, 500)
+      // NavigationActions.searchTouserProfileScreen({
+      //   type: 'push',
+      //   id: accountId
+      // })
     } else if (this.props.screen === 'ProfileScreen') {
-      console.log('profilescreen 인 팔로우')
-      NavigationActions.profileTouserProfileScreen({
-        type: 'push',
-        id: accountId
-      })
+      setTimeout(() => {
+        this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'ProfileScreen'})
+      }, 500)
+      // NavigationActions.profileTouserProfileScreen({
+      //   type: 'push',
+      //   id: accountId
+      // })
     }
   }
 

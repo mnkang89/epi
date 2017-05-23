@@ -34,8 +34,16 @@ class NotiDetail extends Component {
       this.props.openComment(true)
       this.props.getComment(null, episodeId, contentId)
 
-      NavigationActions.singleEpisodeScreen({
-        type: 'push',
+      // NavigationActions.singleEpisodeScreen({
+      //   type: 'push',
+      //   screen: 'NotiScreen',
+      //   detailType: 'single',
+      //   singleType: 'noti',
+      //   account,
+      //   episodeId,
+      //   contentId: null
+      // })
+      this.props.navigation.navigate('SingleEpisode', {
         screen: 'NotiScreen',
         detailType: 'single',
         singleType: 'noti',
@@ -48,8 +56,16 @@ class NotiDetail extends Component {
       // TODO: openComment는 deprecated될 수 있음
       this.props.openComment(false)
 
-      NavigationActions.singleEpisodeScreen({
-        type: 'push',
+      // NavigationActions.singleEpisodeScreen({
+      //   type: 'push',
+      //   screen: 'NotiScreen',
+      //   detailType: 'single',
+      //   singleType: 'noti',
+      //   account,
+      //   episodeId,
+      //   contentId
+      // })
+      this.props.navigation.navigate('SingleEpisode', {
         screen: 'NotiScreen',
         detailType: 'single',
         singleType: 'noti',
@@ -59,39 +75,39 @@ class NotiDetail extends Component {
       })
     } else if (this.state.type === 'follow') {
       const accountId = this.props.noti.notiCreateAccount.id
-
-      NavigationActions.notiTouserProfileScreen({
-        type: 'push',
-        screen: 'NotiScreen',
-        id: accountId
-      })
+      this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'NotiScreen'})
+      // NavigationActions.notiTouserProfileScreen({
+      //   type: 'push',
+      //   screen: 'NotiScreen',
+      //   id: accountId
+      // })
     } else if (this.state.type === 'newContent') {
       const accountId = this.props.noti.notiCreateAccount.id
-
-      NavigationActions.notiTouserProfileScreen({
-        type: 'push',
-        screen: 'NotiScreen',
-        id: accountId
-      })
+      this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'NotiScreen'})
+      // NavigationActions.notiTouserProfileScreen({
+      //   type: 'push',
+      //   screen: 'NotiScreen',
+      //   id: accountId
+      // })
     } else if (this.state.type === 'newEpisode') {
       const accountId = this.props.noti.notiCreateAccount.id
-
-      NavigationActions.notiTouserProfileScreen({
-        type: 'push',
-        screen: 'NotiScreen',
-        id: accountId
-      })
+      this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'NotiScreen'})
+      // NavigationActions.notiTouserProfileScreen({
+      //   type: 'push',
+      //   screen: 'NotiScreen',
+      //   id: accountId
+      // })
     }
   }
 
   onProfilePress () {
     const accountId = this.props.noti.notiCreateAccount.id
-
-    NavigationActions.notiTouserProfileScreen({
-      type: 'push',
-      screen: 'NotiScreen',
-      id: accountId
-    })
+    this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'NotiScreen'})
+    // NavigationActions.notiTouserProfileScreen({
+    //   type: 'push',
+    //   screen: 'NotiScreen',
+    //   id: accountId
+    // })
   }
 
   renderProfileImage () {

@@ -7,7 +7,8 @@ import {
   findNodeHandle
 } from 'react-native'
 import { connect } from 'react-redux'
-import { Actions as NavigationActions, ActionConst } from 'react-native-router-flux'
+// import { Actions as NavigationActions, ActionConst } from 'react-native-router-flux'
+import { NavigationActions } from 'react-navigation'
 import Video from 'react-native-video'
 
 import { Videos } from '../../Themes'
@@ -27,6 +28,12 @@ import EpisodeActions from '../../Redux/EpisodeRedux'
 import LoginActions from '../../Redux/LoginRedux'
 
 const windowSize = Dimensions.get('window')
+const resetAction = NavigationActions.reset({
+  index: 0,
+  actions: [
+    NavigationActions.navigate({ routeName: 'Home' })
+  ]
+})
 
 class GreetingScreen extends Component {
   constructor (props) {
@@ -145,8 +152,8 @@ class GreetingScreen extends Component {
       if (!newProps.signUpChecking && newProps.signUpError === null) {
         console.log('유효한 닉네임')
         this.handleSignUpNicknameChecking()
-        NavigationActions.tabBar({type: ActionConst.RESET})
-        // NavigationActions.cameraTab()
+        this.props.navigation.dispatch(resetAction)
+        // NavigationActions.tabBar({type: ActionConst.RESET})
       } else if (!newProps.signUpChecking && newProps.signUpError === 'VACANT') {
         console.log('유효하지 않은 닉네임(공백)')
         this.handleSignUpNicknameChecking()
@@ -180,7 +187,8 @@ class GreetingScreen extends Component {
 
         // this.props.requestUserEpisodes(token, accountId, true)
         // this.props.requestUserEpisodesWithFalse(token, accountId, false)
-        NavigationActions.tabBar({type: ActionConst.RESET})
+        this.props.navigation.dispatch(resetAction)
+        // NavigationActions.tabBar({type: ActionConst.RESET})
       } else if (!newProps.fetching && newProps.signInError === 'INVALID_FORMAT') {
         console.log('유효하지 않은 형식')
         this.handleSignInAttempting()

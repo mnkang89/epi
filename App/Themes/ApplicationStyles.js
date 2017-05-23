@@ -92,7 +92,7 @@ const ApplicationStyles = {
   screen: {
     mainContainer: {
       flex: 1,
-      marginTop: Metrics.navBarHeight,
+      // marginTop: Metrics.navBarHeight,
       backgroundColor: 'rgb(241, 241, 241)'
     },
     noNavBarContainer: {
