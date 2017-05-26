@@ -74,6 +74,11 @@ class ExploreScreen extends Component {
     //   this.props.requestBestFeeds(null)
     // }, 300)
     this.props.requestBestFeeds(null)
+    setTimeout(() => {
+      this.props.navigation.setParams({
+        function: this.scrollsToTop
+      })
+    }, 1000)
   }
 
   componentWillReceiveProps (nextProps) {
@@ -119,6 +124,9 @@ class ExploreScreen extends Component {
   //     return true
   //   }
   // }
+  scrollsToTop = () => {
+    this._listRef.scrollToOffset({x: 0, y: 0})
+  }
 
   render () {
     if (this.state.spinner) {

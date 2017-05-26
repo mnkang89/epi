@@ -19,6 +19,7 @@ import UserProfileScreen from '../Containers/UserProfileScreen'
 import SingleEpisodeScreen from '../Containers/SingleEpisodeScreen'
 import GreetingScreen from '../Containers/Auth/GreetingScreen'
 
+import { enhance } from '../NavigationAddon'
 // Styles
 import styles from './Styles/RootContainerStyles'
 import { Images } from '../Themes'
@@ -37,7 +38,6 @@ const FeedStack = StackNavigator({
     }
   },{
     navigationOptions: {
-      title: 'hi',
       headerMode: 'screen',
       headerLeft : (
         <Image
@@ -178,7 +178,9 @@ const Tab = TabNavigator({
         <TabBarBottom
           {...props}
           jumpToIndex={index => {
+            // console.log('hihi')
             const { dispatch, state } = props.navigation
+            console.log(props.navigation)
 
             if (index === 2) {
               navigation.navigate('Camera')
@@ -199,6 +201,7 @@ const Tab = TabNavigator({
                 }))
               }
             } else {
+              console.log('쩜프투 인덱스' + index)
               jumpToIndex(index)
             }
           }} />
@@ -250,8 +253,10 @@ class RootContainer extends Component {
         {/* <NavigationRouter /> */}
         <AppNavigator
           onNavigationStateChange={(prevState, currentState) => {
-            return
+            // return
             // console.log('온네비게이션 스테이트 체인지')
+            // console.log(prevState)
+            // console.log(currentState)
           }}
         />
       </View>

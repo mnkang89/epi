@@ -21,41 +21,52 @@ import styles from './Styles/FeedScreenStyle'
 
 import NotiActions from '../Redux/NotiRedux'
 import CommentActions from '../Redux/CommentRedux'
-import PushConfig from '../Config/PushConfig'
+// import PushConfig from '../Config/PushConfig'
 import { Images } from '../Themes'
 import { getObjectDiff } from '../Lib/Utilities'
 
 const windowSize = Dimensions.get('window')
 
 class NotiScreen extends React.PureComponent {
-  static navigationOptions = {
-    // Note: By default the icon is only shown on iOS. Search the showIcon option below.
-    header: () => (
-      <View style={{alignItems: 'center', justifyContent: 'center', backgroundColor: 'white', height: 60, paddingTop: 10}}>
-        <Image
-          source={Images.episodeLogo}
-          style={{
-            width: 82,
-            height: 16}} />
-      </View>
-    ),
-    tabBarIcon: ({focused}) => {
-      if (focused) {
-        return (
-          <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-            <Image style={{width: 22, height: 25}} source={Images.tabAlarm} />
-            <View style={{position: 'absolute', left: 0, right: 0, bottom: 0, alignItems: 'center'}}>
-              <View style={{width: 37, height: 3, backgroundColor: '#F85032'}} />
-            </View>
+  static navigationOptions = ({ ...props, navigation, screenProps }) => {
+    return (
+      {
+        header: () => (
+          <View style={{alignItems: 'center', justifyContent: 'center', backgroundColor: 'white', height: 60, paddingTop: 10}}>
+            <Image
+              source={Images.episodeLogo}
+              style={{
+                width: 82,
+                height: 16}} />
           </View>
-        )
-      } else {
-        return (
-          <Image style={{width: 22, height: 25}} source={Images.tabAlarm} />
-        )
+        ),
+        tabBarOnPress: (scene, jumpToIndex) => {
+          if (scene.focused) {
+            navigation.state.params.function()
+          } else {
+            jumpToIndex(scene.index)
+          }
+        },
+        tabBarIcon: ({focused}) => {
+          if (focused) {
+            return (
+              <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+                <Image style={{width: 22, height: 25}} source={Images.tabAlarm} />
+                <View style={{position: 'absolute', left: 0, right: 0, bottom: 0, alignItems: 'center'}}>
+                  <View style={{width: 37, height: 3, backgroundColor: '#F85032'}} />
+                </View>
+              </View>
+            )
+          } else {
+            return (
+              <Image style={{width: 22, height: 25}} source={Images.tabAlarm} />
+            )
+          }
+        }
       }
-    }
+    )
   }
+    // Note: By default the icon is only shown on iOS. Search the showIcon option below.
 
   static propTypes = {
     myAccount: PropTypes.object,
@@ -79,9 +90,17 @@ class NotiScreen extends React.PureComponent {
     this.page = 0
   }
 
+  scrollsToTop = () => {
+    this._listRef.scrollToOffset({x: 0, y: 0})
+  }
+
   componentDidMount () {
-    PushConfig()
     this.props.requestNoties(null, 0)
+    setTimeout(() => {
+      this.props.navigation.setParams({
+        function: this.scrollsToTop
+      })
+    }, 1000)
   }
 
   componentWillReceiveProps (nextProps) {
@@ -238,6 +257,7 @@ class NotiScreen extends React.PureComponent {
   }
 
   render () {
+    console.log('노티스크린렌더')
     if (this.state.spinner) {
       return (
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>

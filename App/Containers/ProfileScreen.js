@@ -204,7 +204,6 @@ class ProfileScreen extends Component {
         followingCount={this.props.followingCount}
 
         requestProfileImage={this.props.requestProfileImage}
-        requestInfo={this.props.requestInfo}
 
         postFollow={this.props.postFollow}
         deleteFollow={this.props.deleteFollow}
