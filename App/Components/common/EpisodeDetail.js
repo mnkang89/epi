@@ -256,8 +256,9 @@ class EpisodeDetail extends React.PureComponent {
 
   _onScrollBeginDrag (event) {
     const active = this.props.episode.active
+    const type = this.props.type
 
-    if (active) {
+    if (active && type !== 'single') {
       this.dragStartingOffset = event.nativeEvent.contentOffset.x
 
       console.log(this.dragStartingOffset)
@@ -270,8 +271,9 @@ class EpisodeDetail extends React.PureComponent {
 
   _onScrollEndDrag (event) {
     const active = this.props.episode.active
+    const type = this.props.type
 
-    if (active) {
+    if (active && type !== 'single') {
       const { episode } = this.props
       this.dragEndingOffset = event.nativeEvent.contentOffset.x
 
