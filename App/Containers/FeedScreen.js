@@ -15,6 +15,7 @@ import { connect } from 'react-redux'
 import { getAccountId, getToken } from '../Services/Auth'
 import { getObjectDiff, getArrayDiff } from '../Lib/Utilities'
 import FlatListE from '../Experimental/FlatList0.44/FlatList_E44'
+import PushConfig from '../Config/PushConfig'
 
 import styles from './Styles/FeedScreenStyle'
 import EpisodeDetail from '../Components/common/EpisodeDetail'
@@ -28,19 +29,25 @@ const windowSize = Dimensions.get('window')
 const ITEM_HEIGHT = 56 + (windowSize.width - 30) + 60 + 10
 
 class FeedScreen extends Component {
-  static navigationOptions = ({ navigation, screenProps, navigationOptions }) => {
+  static navigationOptions = ({ ...props, navigation, screenProps }) => {
     return ({
-      // title: 'hi',
-      // Note: By default the icon is only shown on iOS. Search the showIcon option below.
       header: () => (
         <View style={{alignItems: 'center', justifyContent: 'center', backgroundColor: 'white', height: 60, paddingTop: 10}}>
-          <Image
-            source={Images.episodeLogo}
-            style={{
-              width: 82,
-              height: 16}} />
+          <Image source={Images.episodeLogo} style={{width: 82, height: 16}} />
         </View>
       ),
+      tabBarOnPress: (scene, jumpToIndex) => {
+        if (scene.focused) {
+          if (navigation.state.params === undefined) {
+            console.log('언디파인드언디파인드언디파인드언디파인드언디파인드언디파인드언디파인드언디파인드언디파인드언디파인드언디파인드언디파인드언디파인드언디파인드언디파인드언디파인드언디파인드언디파인드언디파인드언디파인드언디파인드언디파인드언디파인드언디파인드ㅍ')
+            return
+          } else {
+            // navigation.state.params.function()
+          }
+        } else {
+          jumpToIndex(scene.index)
+        }
+      },
       tabBarIcon: ({focused}) => {
         if (focused) {
           return (
@@ -92,8 +99,15 @@ class FeedScreen extends Component {
     this.hide = []
   }
 
+  componentWillMount () {
+    // this.props.navigation.setParams({
+    //   function: this.scrollsToTop
+    // })
+  }
+
   componentDidMount () {
-    console.log(getToken())
+    PushConfig()
+
     const accountId = getAccountId()
     const withFollowing = true
 
@@ -101,10 +115,14 @@ class FeedScreen extends Component {
     this.props.requestInfo(null, accountId)
 
     setTimeout(() => {
-      Animated.timing(this.viewOpacity, {
-        toValue: 1
-      }).start()
+      Animated.timing(this.viewOpacity, { toValue: 1 }).start()
     }, 0)
+
+    // setTimeout(() => {
+    //   this.props.navigation.setParams({
+    //     function: this.scrollsToTop
+    //   })
+    // }, 1000)
   }
 
   componentWillReceiveProps (nextProps) {
@@ -169,6 +187,10 @@ class FeedScreen extends Component {
   //     return true
   //   }
   // }
+
+  scrollsToTop = () => {
+    this._listRef.scrollToOffset({x: 0, y: 0})
+  }
 
   render () {
     if (this.state.spinner) {
