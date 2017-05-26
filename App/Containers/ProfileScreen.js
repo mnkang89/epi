@@ -90,6 +90,11 @@ class ProfileScreen extends Component {
     setTimeout(() => {
       this.props.requestUserEpisodesWithFalse(null, accountId, withFollowing)
     }, 100)
+    setTimeout(() => {
+      this.props.navigation.setParams({
+        function: this.scrollsToTop
+      })
+    }, 1000)
   }
 
   componentWillReceiveProps (nextProps) {
@@ -109,6 +114,10 @@ class ProfileScreen extends Component {
         footer: false
       })
     }
+  }
+
+  scrollsToTop = () => {
+    this._listRef.scrollToOffset({x: 0, y: 0})
   }
 
   render () {
@@ -195,6 +204,7 @@ class ProfileScreen extends Component {
         followingCount={this.props.followingCount}
 
         requestProfileImage={this.props.requestProfileImage}
+        requestInfo={this.props.requestInfo}
 
         postFollow={this.props.postFollow}
         deleteFollow={this.props.deleteFollow}

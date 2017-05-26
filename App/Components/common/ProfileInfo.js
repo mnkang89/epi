@@ -53,6 +53,10 @@ class ProfileInfo extends Component {
     // console.log(this.props)
   }
 
+  componentWillReceiveProps (nextProps) {
+    this.setState({ photoSource: nextProps.profileImagePath })
+  }
+
   onProfileImagePress () {
     const { token } = this.props
     const accountId = getAccountId()
@@ -63,7 +67,31 @@ class ProfileInfo extends Component {
         // response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
         if (response === 'undetermined') {
           Permissions.requestPermission('photo').then(response => {
-            Permissions.openSettings()
+            if (response === 'authorized') {
+              ImagePickerIOS.openSelectDialog(
+                { },
+                (data) => {
+                  console.log('사진선택')
+                  ImageResizer.createResizedImage(data, 150, 150, 'JPEG', 100)
+                    .then((resizedImageUri) => {
+                      console.log('리사이징 성공')
+                      this.setState({
+                        photoSource: resizedImageUri
+                      })
+                      this.props.requestProfileImage(resizedImageUri, token, accountId)
+                      // setTimeout(() => {
+                      //   this.props.requestInfo(null, accountId)
+                      // }, 500)
+                    }).catch((err) => {
+                      console.log('리사이징 실패')
+                      console.log(err)
+                    })
+                },
+                () => {
+                  console.log('에러')
+                }
+              )
+            }
           })
         } else if (response === 'denied') {
           this.setState({
@@ -79,9 +107,9 @@ class ProfileInfo extends Component {
               ImageResizer.createResizedImage(data, 150, 150, 'JPEG', 100)
                 .then((resizedImageUri) => {
                   console.log('리사이징 성공')
-                  // this.setState({
-                  //   photoSource: resizedImageUri
-                  // })
+                  this.setState({
+                    photoSource: resizedImageUri
+                  })
                   this.props.requestProfileImage(resizedImageUri, token, accountId)
                 }).catch((err) => {
                   console.log('리사이징 실패')
@@ -170,11 +198,8 @@ class ProfileInfo extends Component {
   renderProfileImage () {
     if (this.props.type === 'me') {
       if (this.state.photoSource) {
-        console.log('프사바꿧따')
-        console.tron.log(this.state.photoSource)
         const randomTime = new Date().getTime()
         const uri = `${this.state.photoSource}?random_number=${randomTime}`
-        // const uri = this.state.photoSource
 
         return (
           <Image
@@ -298,19 +323,3 @@ class ProfileInfo extends Component {
 }
 
 export default ProfileInfo
-
-// <Modal
-//   animationType={'fade'}
-//   visible={this.state.photoViewerVisible}>
-//   <View style={{flex: 1, justifyContent: 'center', backgroundColor: 'black'}}>
-//     <View style={{flex: 1, justifyContent: 'center'}}>
-//       <TouchableOpacity onPress={this._onPressViewerExit.bind(this)}>
-//         <View style={{left: 10, top: 5, width: 20, height: 20, borderRadius: 10, backgroundColor: 'white'}} />
-//       </TouchableOpacity>
-//     </View>
-//     <View style={{flex: 10, justifyContent: 'center'}}>
-//       <CachableImage source={{uri: this.props.profileImagePath}} style={{width: windowSize.width, height: windowSize.height - 200}} />
-//     </View>
-//     <View style={{flex: 1}} />
-//   </View>
-// </Modal>
