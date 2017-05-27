@@ -211,8 +211,9 @@ class SingleEpisodeScreen extends Component {
     const { episodeId } = this.props.navigation.state.params
     // const { episodeId } = this.props
 
-    this.setState({refreshing: true})
-    this.props.requestSingleEpisode(null, episodeId)
+    this.setState({refreshing: true}, () => {
+      this.props.requestSingleEpisode(null, episodeId)
+    })
   }
 
   _toggleCommentModal = () => {

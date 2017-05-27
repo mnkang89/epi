@@ -201,7 +201,7 @@ class ExploreScreen extends Component {
           <ActivityIndicator
             color='white'
             style={{marginBottom: 50}}
-            size='large' />
+            size='small' />
         </View>
       )
     } else {

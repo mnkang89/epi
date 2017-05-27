@@ -74,9 +74,11 @@ class ProfileScreen extends Component {
       data: [],
       refreshing: false,
       footer: false,
-      commentModalVisible: false
+      commentModalVisible: false,
+      stopOnEndReached: false
     }
     this.updatedDateTime
+    this.beforeUpdatedDateTime
     this.profileModifiedFlag = false
     this.viewableItemsArray = []
     this.episodeRefs = {}
@@ -98,11 +100,22 @@ class ProfileScreen extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
+    this.beforeUpdatedDateTime = this.updatedDateTime
     if (nextProps.items.length !== 0) {
       if (nextProps.items[nextProps.items.length - 1].episode.updatedDateTime !== undefined) {
         this.updatedDateTime = nextProps.items[nextProps.items.length - 1].episode.updatedDateTime
       } else {
         this.updatedDateTime = nextProps.items[nextProps.items.length - 1].episode.createDateTime
+      }
+    }
+
+    if (this.beforeUpdatedDateTime === this.updatedDateTime) {
+      if (this.beforeUpdatedDateTime !== undefined &&
+          this.updatedDateTime !== undefined) {
+        this.setState({
+          stopOnEndReached: true,
+          footer: false
+        })
       }
     }
 
@@ -221,7 +234,7 @@ class ProfileScreen extends Component {
           <ActivityIndicator
             color='gray'
             style={{marginBottom: 40}}
-            size='large' />
+            size='small' />
         </View>
       )
     } else {
@@ -288,12 +301,17 @@ class ProfileScreen extends Component {
   }
 
   _onEndReached = () => {
-    const accountId = getAccountId()
-    const withFollowing = false
-    const updatedDateTime = this.updatedDateTime
+    if (this.state.stopOnEndReached) {
+      console.log('엔드리치드 겜셋')
+      return
+    } else {
+      const accountId = getAccountId()
+      const withFollowing = false
+      const updatedDateTime = this.updatedDateTime
 
-    this.setState({footer: true})
-    this.props.requestMoreEpisodes(null, accountId, withFollowing, updatedDateTime)
+      this.setState({footer: true})
+      this.props.requestMoreEpisodes(null, accountId, withFollowing, updatedDateTime)
+    }
   }
 }
 

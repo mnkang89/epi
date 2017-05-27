@@ -25,6 +25,8 @@ import CommentActions from '../Redux/CommentRedux'
 import AccountActions from '../Redux/AccountRedux'
 import { Images } from '../Themes'
 
+import _ from 'lodash'
+
 const windowSize = Dimensions.get('window')
 const ITEM_HEIGHT = 56 + (windowSize.width - 30) + 60 + 10
 
@@ -39,10 +41,9 @@ class FeedScreen extends Component {
       tabBarOnPress: (scene, jumpToIndex) => {
         if (scene.focused) {
           if (navigation.state.params === undefined) {
-            console.log('언디파인드언디파인드언디파인드언디파인드언디파인드언디파인드언디파인드언디파인드언디파인드언디파인드언디파인드언디파인드언디파인드언디파인드언디파인드언디파인드언디파인드언디파인드언디파인드언디파인드언디파인드언디파인드언디파인드언디파인드ㅍ')
             return
           } else {
-            // navigation.state.params.function()
+            navigation.state.params.function()
           }
         } else {
           jumpToIndex(scene.index)
@@ -89,9 +90,10 @@ class FeedScreen extends Component {
       refreshing: false,
       footer: false,
       commentModalVisible: false,
-      data: []
+      data: [],
+      stopOnEndReached: false
     }
-    this.viewOpacity = new Animated.Value(0.3)
+    this.viewOpacity = new Animated.Value(0)
     this.updatedDateTime
     this.profileModifiedFlag = false
     this.viewableItemsArray = []
@@ -106,7 +108,9 @@ class FeedScreen extends Component {
   }
 
   componentDidMount () {
-    PushConfig()
+    setTimeout(() => {
+      PushConfig()
+    }, 1000)
 
     const accountId = getAccountId()
     const withFollowing = true
@@ -117,12 +121,9 @@ class FeedScreen extends Component {
     setTimeout(() => {
       Animated.timing(this.viewOpacity, { toValue: 1 }).start()
     }, 0)
-
-    // setTimeout(() => {
-    //   this.props.navigation.setParams({
-    //     function: this.scrollsToTop
-    //   })
-    // }, 1000)
+    // this.props.navigation.setParams({
+    //   params: { function: this.scrollsToTop }
+    // })
   }
 
   componentWillReceiveProps (nextProps) {
@@ -143,17 +144,31 @@ class FeedScreen extends Component {
     }
 
     if (nextProps.items.length !== 0) {
+      this.beforeUpdatedDateTime = this.updatedDateTime
       if (nextProps.items[nextProps.items.length - 1].episode.updatedDateTime !== undefined) {
         this.updatedDateTime = nextProps.items[nextProps.items.length - 1].episode.updatedDateTime
       } else {
         this.updatedDateTime = nextProps.items[nextProps.items.length - 1].episode.createDateTime
       }
     }
+
+    if (this.beforeUpdatedDateTime === this.updatedDateTime) {
+      if (this.beforeUpdatedDateTime !== undefined &&
+          this.updatedDateTime !== undefined) {
+        this.setState({
+          stopOnEndReached: true,
+          footer: false
+        })
+      }
+    }
+
     const data = nextProps.items.filter(item => {
       return !this.hide.includes(item.episode.id)
     })
 
-    this.setState({data: data})
+    this.setState({
+      data: data
+    })
 
     if (this.state.refreshing) {
       this.setState({
@@ -310,7 +325,7 @@ class FeedScreen extends Component {
           <ActivityIndicator
             color='gray'
             style={{marginBottom: 50}}
-            size='large' />
+            size='small' />
         </View>
       )
     } else {
@@ -382,12 +397,17 @@ class FeedScreen extends Component {
   }
 
   _onEndReached = () => {
-    const accountId = getAccountId()
-    const withFollowing = true
-    const updatedDateTime = this.updatedDateTime
+    if (this.state.stopOnEndReached) {
+      console.log('엔드리치드 겜셋')
+      return
+    } else {
+      const accountId = getAccountId()
+      const withFollowing = true
+      const updatedDateTime = this.updatedDateTime
 
-    this.setState({footer: true})
-    this.props.requestMoreFeeds(null, accountId, withFollowing, updatedDateTime)
+      this.setState({footer: true})
+      this.props.requestMoreFeeds(null, accountId, withFollowing, updatedDateTime)
+    }
   }
 }
 

@@ -74,9 +74,11 @@ class UserProfileScreen extends Component {
       refreshing: false,
       footer: false,
       commentModalVisible: false,
-      data: []
+      data: [],
+      stopOnEndReached: false
     }
     this.updatedDateTime
+    this.beforeUpdatedDateTime
     this.viewableItemsArray = []
     this.episodeRefs = {}
     this._onPushToUserProfileScreen = this._onPushToUserProfileScreen.bind(this)
@@ -102,10 +104,21 @@ class UserProfileScreen extends Component {
     })
 
     if (nextProps.itemsObject[id] !== undefined) {
+      this.beforeUpdatedDateTime = this.updatedDateTime
       if (items[items.length - 1].episode.updatedDateTime !== undefined) {
         this.updatedDateTime = items[items.length - 1].episode.updatedDateTime
       } else {
         this.updatedDateTime = items[items.length - 1].episode.createDateTime
+      }
+    }
+
+    if (this.beforeUpdatedDateTime === this.updatedDateTime) {
+      if (this.beforeUpdatedDateTime !== undefined &&
+          this.updatedDateTime !== undefined) {
+        this.setState({
+          stopOnEndReached: true,
+          footer: false
+        })
       }
     }
 
@@ -266,7 +279,7 @@ class UserProfileScreen extends Component {
           <ActivityIndicator
             color='gray'
             style={{marginBottom: 40}}
-            size='large' />
+            size='small' />
         </View>
       )
     } else {
@@ -332,13 +345,17 @@ class UserProfileScreen extends Component {
   }
 
   _onEndReached = () => {
-    // const { id } = this.props
-    const { id } = this.props.navigation.state.params
-    const withFollowing = false
-    const updatedDateTime = this.updatedDateTime
+    if (this.state.stopOnEndReached) {
+      console.log('엔드리치드 겜셋')
+      return
+    } else {
+      const { id } = this.props.navigation.state.params
+      const withFollowing = false
+      const updatedDateTime = this.updatedDateTime
 
-    this.setState({footer: true})
-    this.props.requestMoreOtherEpisodes(null, id, withFollowing, updatedDateTime)
+      this.setState({footer: true})
+      this.props.requestMoreOtherEpisodes(null, id, withFollowing, updatedDateTime)
+    }
   }
 
   _onPushToUserProfileScreen () {

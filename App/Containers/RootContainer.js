@@ -38,6 +38,7 @@ const FeedStack = StackNavigator({
     }
   },{
     navigationOptions: {
+      title: '',
       headerMode: 'screen',
       headerLeft : (
         <Image
@@ -73,6 +74,7 @@ const NotiStack = StackNavigator({
   SingleEpisode: { screen: SingleEpisodeScreen }},
   {
     navigationOptions: {
+      function: '',
       tabBarIcon: ({focused}) => {
         if (focused) {
           return (
@@ -106,6 +108,7 @@ const ExploreStack = StackNavigator({
   },
   {
     navigationOptions: {
+      function: '',
       tabBarIcon: ({focused}) => {
         if (focused) {
           return (
@@ -136,6 +139,7 @@ const ProfileStack = StackNavigator({
   },
   {
     navigationOptions: {
+      function: '',
       tabBarIcon: ({focused}) => {
         if (focused) {
           return (
@@ -253,7 +257,7 @@ class RootContainer extends Component {
         {/* <NavigationRouter /> */}
         <AppNavigator
           onNavigationStateChange={(prevState, currentState) => {
-            // return
+            return
             // console.log('온네비게이션 스테이트 체인지')
             // console.log(prevState)
             // console.log(currentState)
