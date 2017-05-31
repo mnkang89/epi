@@ -117,8 +117,8 @@ class FeedScreen extends Component {
     const accountId = getAccountId()
     const withFollowing = true
 
-    // this.props.requestUserEpisodes(null, accountId, withFollowing)
-    this.props.requestUserEpisodesTest(null, accountId, withFollowing)
+    this.props.requestUserEpisodes(null, accountId, withFollowing)
+    // this.props.requestUserEpisodesTest(null, accountId, withFollowing)
     this.props.requestInfo(null, accountId)
   }
 

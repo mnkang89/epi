@@ -83,11 +83,9 @@ class ExploreScreen extends Component {
 
   componentWillReceiveProps (nextProps) {
     if (nextProps.feedRequesting && !this.state.refreshing) {
-      this.setState({spinner: true})
+      this.setState({spinner: false})
     } else {
-      this.setState({
-        spinner: false
-      })
+      this.setState({ spinner: false })
     }
 
     if (nextProps.items.length !== 0) {
