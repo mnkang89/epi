@@ -46,14 +46,12 @@ class EpisodeDetail extends React.PureComponent {
   constructor (props) {
     super(props)
     this.state = {
-      // renderLikeHeart: false,
-      // likeCount: 0,
       renderLikeHeart: this.props.episode.liked,
       likeCount: this.props.episode.likeCount,
-      data: this.props.episode.contents,
-      episode: this.props.episode,
-      parentHandler: this.props.parentHandler,
-      index: this.props.index,
+      // data: this.props.episode.contents,
+      // episode: this.props.episode,
+      // parentHandler: this.props.parentHandler,
+      // index: this.props.index,
 
       footer: false,
       hide: false,
@@ -126,8 +124,7 @@ class EpisodeDetail extends React.PureComponent {
     // const liked = this.state.episode.liked
     const episodeId = this.props.episode.id
     const liked = this.props.episode.liked
-    let episode = realm.objects('episode')
-      .filtered('id = ' + episodeId)
+    let episode = realm.objects('episode').filtered('id = ' + episodeId)
     const contentTypeArray = []
 
     // for (let i = 0; i < this.state.episode.contents.length; i++) {
@@ -203,62 +200,72 @@ class EpisodeDetail extends React.PureComponent {
   // }
 
   componentDidUpdate (prevProps, prevState) {
-    const centerIndex = this.currentCenterIndex // 센터인덱스를 잘못 설정하면 문제 생기는 부분이지만 이곳에서 문제가 생기고 있진 않아.(ok)
-    // const episodeId = this.state.episode.id
-    // const liked = this.state.episode.liked
-    const index = this.props.index
-    const episodeId = this.props.episode.id
-    const liked = this.props.episode.liked
-    let episode = realm.objects('episode')
-      .filtered('id = ' + episodeId)
-    const contentTypeArray = []
-
-    setTimeout(() => { this._listRef.scrollToIndex({animated: false, index: centerIndex}) }, 15)
-
-    // for (let i = 0; i < this.state.episode.contents.length; i++) {
-    //   contentTypeArray.push(this.state.episode.contents[i].type)
-    // }
-    for (let i = 0; i < this.props.episode.contents.length; i++) {
-      contentTypeArray.push(this.props.episode.contents[i].type)
-    }
-
-    for (let i = 0; i < contentTypeArray.length; i++) {
-      if (contentTypeArray[i] === 'Video' &&
-          // i === centerIndex면 중간에 온 비디오 컨텐츠이므로 stop할 필요가 없음.
-          i !== centerIndex &&
-          // undefined일 경우, 아직 contentRefs오브젝트에 추가되지 않은, 즉 아직 렌더링 되지 않은 컨텐츠이다.
-          this.contentRefs[i] !== undefined &&
-          // null일 경우, flatList최적화 기능에 의해 메모리에서 내려간 컨텐츠에 해당한다.
-          this.contentRefs[i] !== null) {
-        this.contentRefs[i].getWrappedInstance().ref._component.stopVideo()
-      }
-    }
-
-    if (contentTypeArray[centerIndex] === 'Video' &&
-        this.contentRefs[centerIndex] !== null &&
-        this.contentRefs[centerIndex] !== undefined) {
-      if (index === 0) {
-        this.contentRefs[centerIndex].getWrappedInstance().ref._component.playVideo()
-      } else {
-        this.contentRefs[centerIndex].getWrappedInstance().ref._component.stopVideo()
-      }
-      this.currentCenterIndex = centerIndex
-    }
-
-    this.contentTypeArray = contentTypeArray
-
-    if (episode.length === 0) {
-      realm.write(() => {
-        realm.delete(episode)
-        if (liked === undefined) {
-          realm.create('episode', {id: episodeId, like: false})
-        } else {
-          realm.create('episode', {id: episodeId, like: liked})
-        }
+    if (prevProps.episode !== this.props.episode) {
+      this.setState({
+        renderLikeHeart: this.props.episode.liked,
+        likeCount: this.props.episode.likeCount
       })
-    } else {
-      return
+      const centerIndex = this.currentCenterIndex // 센터인덱스를 잘못 설정하면 문제 생기는 부분이지만 이곳에서 문제가 생기고 있진 않아.(ok)
+      // const episodeId = this.state.episode.id
+      // const liked = this.state.episode.liked
+      const index = this.props.index
+      const episodeId = this.props.episode.id
+      const liked = this.props.episode.liked
+      let episode = realm.objects('episode').filtered('id = ' + episodeId)
+      const contentTypeArray = []
+
+      setTimeout(() => { this._listRef.scrollToIndex({animated: false, index: centerIndex}) }, 15)
+
+      // for (let i = 0; i < this.state.episode.contents.length; i++) {
+      //   contentTypeArray.push(this.state.episode.contents[i].type)
+      // }
+      for (let i = 0; i < this.props.episode.contents.length; i++) {
+        contentTypeArray.push(this.props.episode.contents[i].type)
+      }
+
+      for (let i = 0; i < contentTypeArray.length; i++) {
+        if (contentTypeArray[i] === 'Video' &&
+            // i === centerIndex면 중간에 온 비디오 컨텐츠이므로 stop할 필요가 없음.
+            i !== centerIndex &&
+            // undefined일 경우, 아직 contentRefs오브젝트에 추가되지 않은, 즉 아직 렌더링 되지 않은 컨텐츠이다.
+            this.contentRefs[i] !== undefined &&
+            // null일 경우, flatList최적화 기능에 의해 메모리에서 내려간 컨텐츠에 해당한다.
+            this.contentRefs[i] !== null) {
+          this.contentRefs[i].getWrappedInstance().ref._component.stopVideo()
+        }
+      }
+
+      if (contentTypeArray[centerIndex] === 'Video' &&
+          this.contentRefs[centerIndex] !== null &&
+          this.contentRefs[centerIndex] !== undefined) {
+        if (index === 0) {
+          this.contentRefs[centerIndex].getWrappedInstance().ref._component.playVideo()
+        } else {
+          this.contentRefs[centerIndex].getWrappedInstance().ref._component.stopVideo()
+        }
+        this.currentCenterIndex = centerIndex
+      }
+
+      this.contentTypeArray = contentTypeArray
+
+      if (episode.length === 0) {
+        realm.write(() => {
+          realm.delete(episode)
+          if (liked === undefined) {
+            realm.create('episode', {id: episodeId, like: false})
+          } else {
+            realm.create('episode', {id: episodeId, like: liked})
+          }
+        })
+      } else {
+        return
+      }
     }
+    // this.setState({
+    //   renderLikeHeart: this.props.episode.liked,
+    //   likeCount: this.props.episode.likeCount,
+    //   parentHandler: this.props.parentHandler
+    // })
   }
 
   stopEpisodeVideo = () => {
@@ -382,20 +389,15 @@ class EpisodeDetail extends React.PureComponent {
   _onPressHeart () {
     const episodeId = this.props.episode.id
     // const episodeId = this.state.episode.id
-    let episode = realm.objects('episode')
-      .filtered('id = ' + episodeId)
+    let episode = realm.objects('episode').filtered('id = ' + episodeId)
 
     if (this.contentRefs[this.currentCenterIndex] !== null &&
         this.contentRefs[this.currentCenterIndex] !== undefined) {
       if (episode[0].like) {
-        this.setState({
-          renderLikeHeart: false
-        })
+        this.setState({ renderLikeHeart: false })
         this.contentRefs[this.currentCenterIndex].getWrappedInstance().ref._component.playUnikeAnimation()
       } else {
-        this.setState({
-          renderLikeHeart: true
-        })
+        this.setState({ renderLikeHeart: true })
         this.contentRefs[this.currentCenterIndex].getWrappedInstance().ref._component.playLikeAnimation()
       }
     }
@@ -458,14 +460,38 @@ class EpisodeDetail extends React.PureComponent {
   }
 
   renderLikeHeart () {
-    // if (this.state.renderLikeHeart) {
-    if (this.props.renderLikeHeart) {
+    console.log('라이크하트리렌더맨')
+    if (this.state.renderLikeHeart) {
+    // if (this.props.renderLikeHeart) {
+      console.log('라이크')
       return (
         <Image style={{width: 24, height: 20}} source={Images.likeHeart} />
       )
     } else {
+      console.log('언라이크')
       return (
         <Image style={{width: 24, height: 20}} source={Images.unlikeHeart} />
+      )
+    }
+  }
+
+  renderReportOrDelete () {
+    if (this.props.episode.accountId === getAccountId()) {
+    // if (this.state.episode.accountId === getAccountId()) {
+      return (
+        <TouchableOpacity onPress={this._onPressRemove.bind(this)}>
+          <View style={{height: 60, justifyContent: 'center', alignItems: 'center', borderBottomWidth: 0.5, borderBottomColor: 'rgba(255,255,255,0.5)'}}>
+            <Text style={{fontSize: 20, color: 'rgb(254,56,36)'}}>이 에피소드 삭제하기</Text>
+          </View>
+        </TouchableOpacity>
+      )
+    } else {
+      return (
+        <TouchableOpacity onPress={this._onPressReport.bind(this)}>
+          <View style={{height: 60, justifyContent: 'center', alignItems: 'center', borderBottomWidth: 0.5, borderBottomColor: 'rgba(255,255,255,0.5)'}}>
+            <Text style={{fontSize: 20, color: 'rgb(254,56,36)'}}>이 에피소드 신고하기</Text>
+          </View>
+        </TouchableOpacity>
       )
     }
   }
@@ -613,26 +639,6 @@ class EpisodeDetail extends React.PureComponent {
     } else {
       return (
         <View style={{width: 0, height: 0}} />
-      )
-    }
-  }
-  renderReportOrDelete () {
-    if (this.props.episode.accountId === getAccountId()) {
-    // if (this.state.episode.accountId === getAccountId()) {
-      return (
-        <TouchableOpacity onPress={this._onPressRemove.bind(this)}>
-          <View style={{height: 60, justifyContent: 'center', alignItems: 'center', borderBottomWidth: 0.5, borderBottomColor: 'rgba(255,255,255,0.5)'}}>
-            <Text style={{fontSize: 20, color: 'rgb(254,56,36)'}}>이 에피소드 삭제하기</Text>
-          </View>
-        </TouchableOpacity>
-      )
-    } else {
-      return (
-        <TouchableOpacity onPress={this._onPressReport.bind(this)}>
-          <View style={{height: 60, justifyContent: 'center', alignItems: 'center', borderBottomWidth: 0.5, borderBottomColor: 'rgba(255,255,255,0.5)'}}>
-            <Text style={{fontSize: 20, color: 'rgb(254,56,36)'}}>이 에피소드 신고하기</Text>
-          </View>
-        </TouchableOpacity>
       )
     }
   }

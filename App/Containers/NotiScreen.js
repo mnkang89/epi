@@ -40,13 +40,13 @@ class NotiScreen extends React.PureComponent {
                 height: 16}} />
           </View>
         ),
-        tabBarOnPress: (scene, jumpToIndex) => {
-          if (scene.focused) {
-            navigation.state.params.function()
-          } else {
-            jumpToIndex(scene.index)
-          }
-        },
+        // tabBarOnPress: (scene, jumpToIndex) => {
+        //   if (scene.focused) {
+        //     navigation.state.params.function()
+        //   } else {
+        //     jumpToIndex(scene.index)
+        //   }
+        // },
         tabBarIcon: ({focused}) => {
           if (focused) {
             return (
@@ -96,11 +96,11 @@ class NotiScreen extends React.PureComponent {
 
   componentDidMount () {
     this.props.requestNoties(null, 0)
-    setTimeout(() => {
-      this.props.navigation.setParams({
-        function: this.scrollsToTop
-      })
-    }, 1000)
+    // setTimeout(() => {
+    //   this.props.navigation.setParams({
+    //     function: this.scrollsToTop
+    //   })
+    // }, 1000)
   }
 
   componentWillReceiveProps (nextProps) {

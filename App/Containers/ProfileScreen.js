@@ -92,11 +92,11 @@ class ProfileScreen extends Component {
     setTimeout(() => {
       this.props.requestUserEpisodesWithFalse(null, accountId, withFollowing)
     }, 100)
-    setTimeout(() => {
-      this.props.navigation.setParams({
-        function: this.scrollsToTop
-      })
-    }, 1000)
+    // setTimeout(() => {
+    //   this.props.navigation.setParams({
+    //     function: this.scrollsToTop
+    //   })
+    // }, 1000)
   }
 
   componentWillReceiveProps (nextProps) {

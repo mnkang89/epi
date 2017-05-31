@@ -39,17 +39,17 @@ class FeedScreen extends Component {
           <Image source={Images.episodeLogo} style={{width: 82, height: 16}} />
         </View>
       ),
-      tabBarOnPress: (scene, jumpToIndex) => {
-        if (scene.focused) {
-          if (navigation.state.params === undefined) {
-            return
-          } else {
-            navigation.state.params.function()
-          }
-        } else {
-          jumpToIndex(scene.index)
-        }
-      },
+      // tabBarOnPress: (scene, jumpToIndex) => {
+      //   if (scene.focused) {
+      //     if (navigation.state.params === undefined) {
+      //       return
+      //     } else {
+      //       navigation.state.params.function()
+      //     }
+      //   } else {
+      //     jumpToIndex(scene.index)
+      //   }
+      // },
       tabBarIcon: ({focused}) => {
         if (focused) {
           return (
@@ -120,16 +120,9 @@ class FeedScreen extends Component {
     // this.props.requestUserEpisodes(null, accountId, withFollowing)
     this.props.requestUserEpisodesTest(null, accountId, withFollowing)
     this.props.requestInfo(null, accountId)
-
-    // this.props.navigation.setParams({
-    //   params: { function: this.scrollsToTop }
-    // })
   }
 
   componentWillReceiveProps (nextProps) {
-    console.log('아이템스 디프')
-    console.log(getObjectDiff(nextProps.items, this.props.items))
-    console.log('아이템스 디프')
     if (nextProps.episodesRequesting && !this.state.refreshing) {
       this.setState({spinner: true})
     } else {
@@ -399,9 +392,6 @@ class FeedScreen extends Component {
         this.episodeRefs[index].playEpisodeVideo()
       }
     }
-
-    console.log('온뷰어블')
-    console.log(this.episodeRefs)
   }
 
   removeEpisodeFromData = (episode) => {
@@ -419,8 +409,6 @@ class FeedScreen extends Component {
     const withFollowing = true
 
     this.episodeRefs = {}
-    // console.log('에피소드레프')
-    // console.log(this.episodeRefs)
     this.setState({refreshing: true}, () => {
       this.props.requestUserEpisodes(null, accountId, withFollowing)
     })
@@ -434,7 +422,6 @@ class FeedScreen extends Component {
     this.setState({footer: true})
     this.props.requestMoreFeeds(null, accountId, withFollowing, updatedDateTime)
     // if (this.state.stopOnEndReached) {
-    //   console.log('엔드리치드 겜셋')
     //   return
     // } else {
     //   const accountId = getAccountId()
