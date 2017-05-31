@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, PureComponent } from 'react'
 import { View, ActivityIndicator, Dimensions, Image, Text } from 'react-native'
 import Video from 'react-native-video'
 import { getRealm } from '../Services/RealmFactory'
@@ -25,7 +25,7 @@ const hashing = (string) => {
 }
 
 // this component only support URL Pattern Image
-export default class CachableVideo extends Component {
+export default class CachableVideo extends PureComponent {
   constructor (props) {
     super(props)
     this.state = {
@@ -37,7 +37,21 @@ export default class CachableVideo extends Component {
   }
 
   componentDidMount () {
-    let cachedVideo = this.findcachedVideo(this.props.source.uri)
+    this.setupContent(this.props)
+  }
+
+  componentWillReceiveProps (nextProps) {
+    this.setState({
+      videoLoaded: null,
+      cacheVideoAvailable: false,
+      defaultVideo: '',
+      videoPath: null
+    })
+    this.setupContent(nextProps)
+  }
+
+  setupContent (props) {
+    let cachedVideo = this.findcachedVideo(props.source.uri)
     if (cachedVideo != null) {
       console.tron.log('cached video called : ' + cachedVideo.path)
       RNFS.exists(cachedVideo.path)
@@ -46,13 +60,13 @@ export default class CachableVideo extends Component {
           this.useCacheVideo(cachedVideo)
         } else {
           console.tron.log('file not exist at path : ' + cachedVideo.path)
-          console.tron.log('download video called : ' + this.props.source.uri)
-          this.downloadAndCacheVideo(this.props.source.uri)
+          console.tron.log('download video called : ' + props.source.uri)
+          this.downloadAndCacheVideo(props.source.uri)
         }
       })
     } else {
-      console.tron.log('download video called : ' + this.props.source.uri)
-      this.downloadAndCacheVideo(this.props.source.uri)
+      console.tron.log('download video called : ' + props.source.uri)
+      this.downloadAndCacheVideo(props.source.uri)
     }
   }
 

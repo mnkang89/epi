@@ -26,21 +26,21 @@ import { Images } from '../Themes'
 import { isLoggedIn } from '../Services/Auth'
 
 const FeedStack = StackNavigator({
-    Feed: {
-      screen: FeedScreen,
-      params: {
-        title: 'hi',
-        scroll: ''
-      }
-    },
-    UserProfile: {
-      screen: UserProfileScreen
+  Feed: {
+    screen: FeedScreen,
+    params: {
+      title: 'hi',
+      scroll: ''
     }
-  },{
+  },
+  UserProfile: {
+    screen: UserProfileScreen
+  }},
+  {
     navigationOptions: {
       title: '',
       headerMode: 'screen',
-      headerLeft : (
+      headerLeft: (
         <Image
           source={Images.profileLogo}
           style={{
@@ -96,16 +96,15 @@ const NotiStack = StackNavigator({
 )
 
 const ExploreStack = StackNavigator({
-    Explore: {
-      screen: ExploreScreen
-    },
-    UserProfile: {
-      screen: UserProfileScreen
-    },
-    SingleEpisode: {
-      screen: SingleEpisodeScreen
-    }
+  Explore: {
+    screen: ExploreScreen
   },
+  UserProfile: {
+    screen: UserProfileScreen
+  },
+  SingleEpisode: {
+    screen: SingleEpisodeScreen
+  }},
   {
     navigationOptions: {
       function: '',
@@ -130,13 +129,12 @@ const ExploreStack = StackNavigator({
 )
 
 const ProfileStack = StackNavigator({
-    Profile: {
-      screen: ProfileScreen
-    },
-    UserProfile: {
-      screen: UserProfileScreen
-    }
+  Profile: {
+    screen: ProfileScreen
   },
+  UserProfile: {
+    screen: UserProfileScreen
+  }},
   {
     navigationOptions: {
       function: '',
@@ -258,9 +256,6 @@ class RootContainer extends Component {
         <AppNavigator
           onNavigationStateChange={(prevState, currentState) => {
             return
-            // console.log('온네비게이션 스테이트 체인지')
-            // console.log(prevState)
-            // console.log(currentState)
           }}
         />
       </View>

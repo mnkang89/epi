@@ -133,6 +133,7 @@ class ExploreScreen extends Component {
       return (
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
           <ActivityIndicator
+            style={{marginTop: 20, marginBottom: 30}}
             color='gray'
             size='small' />
         </View>
@@ -197,10 +198,9 @@ class ExploreScreen extends Component {
   _renderFooter = () => {
     if (this.state.footer) {
       return (
-        <View>
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', height: 60}}>
           <ActivityIndicator
-            color='white'
-            style={{marginBottom: 50}}
+            color='gray'
             size='small' />
         </View>
       )

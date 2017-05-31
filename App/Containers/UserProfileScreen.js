@@ -275,10 +275,9 @@ class UserProfileScreen extends Component {
   _renderFooterComponent = () => {
     if (this.state.footer) {
       return (
-        <View>
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', height: 60}}>
           <ActivityIndicator
             color='gray'
-            style={{marginBottom: 40}}
             size='small' />
         </View>
       )

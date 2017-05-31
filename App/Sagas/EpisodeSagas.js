@@ -25,6 +25,26 @@ export function * userEpisodes (api, action) {
   }
 }
 
+export function * userEpisodesTest (api, action) {
+  console.log('유저 에피소드 리퀘스트 테스트 사가 진입')
+  const { token, accountId, active } = action
+  const response = yield call(api.requestUserFeeds, token, accountId, active)
+
+  // dispatch successful email checking
+  if (response.ok) {
+    console.log('ok')
+    console.log(response)
+    const episodes = path(['data', 'items'], response)
+    const episodesTest = episodes.splice(1, 5)
+
+    yield put(EpisodeActions.userEpisodesTestSuccess(episodesTest))
+  } else {
+    console.log('error')
+    console.log(response)
+    yield put(EpisodeActions.userEpisodesTestFailure('WRONG'))
+  }
+}
+
 // attempts to get episodes with false
 export function * userEpisodesWithFalse (api, action) {
   console.log('유저 에피소드 위드 폴스 사가 진입')
@@ -279,5 +299,22 @@ export function * reportEpisode (api, action) {
     console.log('error')
     console.log(response)
     yield put(EpisodeActions.reportEpisodeFailure())
+  }
+}
+
+export function * removeEpisode (api, action) {
+  console.log('리무브 에피소드 사가 진입')
+  const { episodeId } = action
+  const response = yield call(api.removeEpisode, episodeId)
+
+  if (response.ok) {
+    console.log('ok')
+    console.log(response)
+
+    yield put(EpisodeActions.removeEpisodeSuccess())
+  } else {
+    console.log('error')
+    console.log(response)
+    yield put(EpisodeActions.removeEpisodeFailure())
   }
 }

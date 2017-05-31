@@ -323,7 +323,9 @@ class VirtualizedList_E44 extends React.PureComponent<OptionalProps, Props, Stat
   componentDidMount() {
     if (this.props.initialScrollIndex) {
       this._initialScrollIndexTimeout = setTimeout(
-        () => this.scrollToIndex({animated: false, index: this.props.initialScrollIndex}),
+        () => {
+          this.scrollToIndex({animated: false, index: this.props.initialScrollIndex})
+        },
         200,
       );
     }

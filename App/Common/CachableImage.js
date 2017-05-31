@@ -52,6 +52,35 @@ export default class CachableImage extends Component {
     }
   }
 
+  componentWillReceiveProps (nextProps) {
+    this.setState({
+      imageLoaded: null,
+      cacheImageVailable: false,
+      defaultImage: '',
+      imagePath: null
+    })
+    this.setupContent(nextProps)
+  }
+
+  setupContent (props) {
+    let cachedImage = this.findCachedImage(props.source.uri)
+    if (cachedImage != null) {
+      console.tron.log('cached image called : ' + cachedImage.path)
+      RNFS.exists(cachedImage.path)
+      .then((result) => {
+        if (result) {
+          this.useCacheImage(cachedImage)
+        } else {
+          console.tron.log('file not exist at path : ' + cachedImage.path)
+          console.tron.log('download image called : ' + props.source.uri)
+          this.downloadAndCacheImage(props.source.uri)
+        }
+      })
+    } else {
+      this.downloadAndCacheImage(props.source.uri)
+    }
+  }
+
   useCacheImage (cachedImage) {
     this.setState({
       imageLoaded: true,

@@ -242,10 +242,9 @@ class NotiScreen extends React.PureComponent {
   _renderFooterComponent = () => {
     if (this.state.footer) {
       return (
-        <View>
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', height: 60}}>
           <ActivityIndicator
             color='gray'
-            style={{marginBottom: 50}}
             size='small' />
         </View>
       )

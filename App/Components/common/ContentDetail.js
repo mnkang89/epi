@@ -62,7 +62,7 @@ class ContentDetailClass extends Component {
     this.hiddenOpacity = new Animated.Value(0)
   }
 
-  componentDidMount () {
+  componentWillReceiveProps () {
   }
 
   onDoublePress () {
@@ -384,70 +384,6 @@ class ContentDetailClass extends Component {
                 </View>
               </Image>
               {this.renderContentOverlayVideo(content, message)}
-            </View>
-          </TouchableWithoutFeedback>
-        </View>
-      )
-    } else {
-      return (
-        // , paddingRight: paddingRight
-        <View style={{backgroundColor: '#FFFFFF', paddingLeft: 8}}>
-          <TouchableWithoutFeedback
-            disabled={this.state.disabled}
-            delayLongPress={800}
-            onPress={this.onDoublePress.bind(this)}
-            onLongPress={this.onLongPress.bind(this)} >
-            <View style={{height: windowSize.width - 30, width: windowSize.width - 30}} >
-              <CachableVideo
-                thumbnail={content.thumbnailPath}
-                source={{uri: content.path}}   // Can be a URL or a local file.
-                muted
-                // videoRef={(ref) => {
-                //   this.videoRef = ref
-                //   this.props.playerRef = ref
-                // }}
-                // videoRef={this.props.playerRef}
-                videoRef={this.videoRef}
-                paused={false}                 // Pauses playback entirely.
-                resizeMode='cover'             // Fill the whole screen at aspect ratio.
-                repeat                         // Repeat forever.
-                playInBackground={false}       // Audio continues to play when app entering background.
-                playWhenInactive              // [iOS] Video continues to play when control or notification center are shown.
-                progressUpdateInterval={250.0} // [iOS] Interval to fire onProgress (default to ~250ms)
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0
-                }} />
-              <View style={{flex: 1, alignItems: 'center'}} >
-                <View style={{flex: 1}} />
-                <View style={{flex: 1}} >
-                  {this.renderAnimation()}
-                </View>
-                <View style={{
-                  flex: 1,
-                  justifyContent: 'flex-end',
-                  alignItems: 'center',
-                  paddingRight: 15,
-                  paddingLeft: 15,
-                  marginBottom: 10,
-                  backgroundColor: 'rgba(0,0,0,0)'}}>
-                  <Text
-                    allowFontScaling={false}
-                    style={{
-                      textShadowOffset: {width: 1, height: 2},
-                      textShadowColor: 'rgba(0, 0, 0, 0.5)',
-                      textShadowRadius: 1,
-                      color: 'white',
-                      fontWeight: 'bold',
-                      textAlign: 'center',
-                      fontSize: 20 }} >
-                    {message}
-                  </Text>
-                </View>
-              </View>
             </View>
           </TouchableWithoutFeedback>
         </View>

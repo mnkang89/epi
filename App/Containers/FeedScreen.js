@@ -4,7 +4,6 @@ import {
   Text,
   TouchableOpacity,
   Image,
-  Animated,
   ActivityIndicator,
   ScrollView,
   RefreshControl,
@@ -24,10 +23,12 @@ import EpisodeActions from '../Redux/EpisodeRedux'
 import CommentActions from '../Redux/CommentRedux'
 import AccountActions from '../Redux/AccountRedux'
 import { Images } from '../Themes'
+import { getRealm } from '../Services/RealmFactory'
 
 import _ from 'lodash'
 
 const windowSize = Dimensions.get('window')
+const realm = getRealm()
 const ITEM_HEIGHT = 56 + (windowSize.width - 30) + 60 + 10
 
 class FeedScreen extends Component {
@@ -93,8 +94,9 @@ class FeedScreen extends Component {
       data: [],
       stopOnEndReached: false
     }
-    this.viewOpacity = new Animated.Value(0)
+
     this.updatedDateTime
+    this.beforeUpdatedDateTime
     this.profileModifiedFlag = false
     this.viewableItemsArray = []
     this.episodeRefs = {}
@@ -115,18 +117,19 @@ class FeedScreen extends Component {
     const accountId = getAccountId()
     const withFollowing = true
 
-    this.props.requestUserEpisodes(null, accountId, withFollowing)
+    // this.props.requestUserEpisodes(null, accountId, withFollowing)
+    this.props.requestUserEpisodesTest(null, accountId, withFollowing)
     this.props.requestInfo(null, accountId)
 
-    setTimeout(() => {
-      Animated.timing(this.viewOpacity, { toValue: 1 }).start()
-    }, 0)
     // this.props.navigation.setParams({
     //   params: { function: this.scrollsToTop }
     // })
   }
 
   componentWillReceiveProps (nextProps) {
+    console.log('아이템스 디프')
+    console.log(getObjectDiff(nextProps.items, this.props.items))
+    console.log('아이템스 디프')
     if (nextProps.episodesRequesting && !this.state.refreshing) {
       this.setState({spinner: true})
     } else {
@@ -142,19 +145,28 @@ class FeedScreen extends Component {
         })
       }
     }
-
-    if (nextProps.items.length !== 0) {
-      this.beforeUpdatedDateTime = this.updatedDateTime
+/* 새로들어오는 props의 아이템과 기존 props의 아이템을 비교하여 업데이트 시간을 저장함 */
+    if (nextProps.items.length !== 0 &&
+        getObjectDiff(this.props, nextProps).includes('items')) {
       if (nextProps.items[nextProps.items.length - 1].episode.updatedDateTime !== undefined) {
+        this.beforeUpdatedDateTime = this.updatedDateTime
         this.updatedDateTime = nextProps.items[nextProps.items.length - 1].episode.updatedDateTime
       } else {
+        this.beforeUpdatedDateTime = this.updatedDateTime
         this.updatedDateTime = nextProps.items[nextProps.items.length - 1].episode.createDateTime
       }
     }
+/*
+  TODO: 서버단에서 피드의 끝임을 알려주는 플래그데이터가 포함되서 오면 더욱 좋아보임.
+  더 이상 업데이트할 것이 없을때는 기존 props의 아이템과 newProps의 아이템이 동일하므로 getObjectDiff의 결과는 아무것도 없는 어레이가 됨
+*/
+    if (getObjectDiff(this.props, nextProps).length === 0) {
+      this.beforeUpdatedDateTime = this.updatedDateTime
+    }
 
-    if (this.beforeUpdatedDateTime === this.updatedDateTime) {
-      if (this.beforeUpdatedDateTime !== undefined &&
-          this.updatedDateTime !== undefined) {
+    if (this.beforeUpdatedDateTime !== undefined &&
+        this.updatedDateTime !== undefined) {
+      if (this.beforeUpdatedDateTime === this.updatedDateTime) {
         this.setState({
           stopOnEndReached: true,
           footer: false
@@ -165,7 +177,6 @@ class FeedScreen extends Component {
     const data = nextProps.items.filter(item => {
       return !this.hide.includes(item.episode.id)
     })
-
     this.setState({
       data: data
     })
@@ -249,10 +260,9 @@ class FeedScreen extends Component {
       )
     } else {
       return (
-        <Animated.View style={[styles.mainContainer, {'opacity': this.viewOpacity}]}>
+        <View style={styles.mainContainer}>
           <View style={{height: 1}} />
           <FlatListE
-            extraData={this.state}
             removeClippedSubviews={false}
             viewabilityConfig={{viewAreaCoveragePercentThreshold: 51}}
             windowSize={3}
@@ -281,7 +291,7 @@ class FeedScreen extends Component {
             commentModalVisible={this.state.commentModalVisible}
             commentModalHandler={this._toggleCommentModal}
             screen={'FeedScreen'} />
-        </Animated.View>
+        </View>
       )
     }
   }
@@ -298,20 +308,34 @@ class FeedScreen extends Component {
     * EpisodeDetail컴포넌트의 PureComponent화를 통한 리렌더링 최소화
     * shouldItemUpdate옵션은 deprecated될 예정
     */
+    // const contentTypeArray = []
+    //
+    // for (let i = 0; i < item.episode.contents.length; i++) {
+    //   contentTypeArray.push(item.episode.contents[i].type)
+    // }
+    let episode = realm.objects('episode').filtered('id = ' + item.episode.id)
+    let xPosition = 0
+
+    if (episode[0] === undefined) {
+      xPosition = 0
+    } else {
+      xPosition = episode[0].offset
+    }
+    const currentCenterIndex = xPosition / (windowSize.width - 22) // 여기서도 문제 생길 수 있음(x)
+
     return (
       <EpisodeDetail
         navigation={this.props.navigation}
         index={index}
-        ref={(component) => {
-          if (component !== null) {
-            this.episodeRefs[index] = component
-          }
-        }}
+        currentCenterIndex={currentCenterIndex}
+        ref={(ref) => { this.episodeRefs[index] = ref }}
         parentHandler={this}
         episode={item.episode}
         account={item.account}
+        // contentTypeArray={contentTypeArray}
         commentModalHandler={this._toggleCommentModal}
         reportEpisode={this.props.reportEpisode}
+        removeEpisode={this.props.removeEpisode}
         requestNewEpisode={this.props.requestNewEpisode}
         openComment={this.props.openComment}
         getComment={this.props.getComment} />
@@ -321,10 +345,9 @@ class FeedScreen extends Component {
   _renderFooterComponent = () => {
     if (this.state.footer) {
       return (
-        <View>
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', height: 60}}>
           <ActivityIndicator
             color='gray'
-            style={{marginBottom: 50}}
             size='small' />
         </View>
       )
@@ -337,11 +360,12 @@ class FeedScreen extends Component {
 
 /* 0.44에서 derpecated될 예정 */
   _shouldItemUpdate = (prev, next) => {
-    if (this.profileModifiedFlag) {
-      this.profileModifiedFlag = false
-      return true
-    }
-    return prev.item !== next.item
+    // if (this.profileModifiedFlag) {
+    //   this.profileModifiedFlag = false
+    //   return true
+    // }
+    // return prev.item !== next.item
+    // return true
   }
 
   _onViewableItemsChanged = (info: {
@@ -375,6 +399,9 @@ class FeedScreen extends Component {
         this.episodeRefs[index].playEpisodeVideo()
       }
     }
+
+    console.log('온뷰어블')
+    console.log(this.episodeRefs)
   }
 
   removeEpisodeFromData = (episode) => {
@@ -391,23 +418,32 @@ class FeedScreen extends Component {
     const accountId = getAccountId()
     const withFollowing = true
 
+    this.episodeRefs = {}
+    // console.log('에피소드레프')
+    // console.log(this.episodeRefs)
     this.setState({refreshing: true}, () => {
       this.props.requestUserEpisodes(null, accountId, withFollowing)
     })
   }
 
   _onEndReached = () => {
-    if (this.state.stopOnEndReached) {
-      console.log('엔드리치드 겜셋')
-      return
-    } else {
-      const accountId = getAccountId()
-      const withFollowing = true
-      const updatedDateTime = this.updatedDateTime
+    const accountId = getAccountId()
+    const withFollowing = true
+    const updatedDateTime = this.updatedDateTime
 
-      this.setState({footer: true})
-      this.props.requestMoreFeeds(null, accountId, withFollowing, updatedDateTime)
-    }
+    this.setState({footer: true})
+    this.props.requestMoreFeeds(null, accountId, withFollowing, updatedDateTime)
+    // if (this.state.stopOnEndReached) {
+    //   console.log('엔드리치드 겜셋')
+    //   return
+    // } else {
+    //   const accountId = getAccountId()
+    //   const withFollowing = true
+    //   const updatedDateTime = this.updatedDateTime
+    //
+    //   this.setState({footer: true})
+    //   this.props.requestMoreFeeds(null, accountId, withFollowing, updatedDateTime)
+    // }
   }
 }
 
@@ -431,13 +467,15 @@ const mapDispatchToProps = (dispatch) => {
     // EpisodeDetailContainer만들고 그쪽에서 넘겨주는 로직으로 변경할 예정
     requestInfo: (token, accountId) => dispatch(AccountActions.infoRequest(token, accountId)),
     requestNewEpisode: (token, episodeId) => dispatch(EpisodeActions.newEpisodeRequest(token, episodeId)),
+    requestUserEpisodesTest: (token, accountId, withFollowing) => dispatch(EpisodeActions.userEpisodesRequestTest(token, accountId, withFollowing)),
     requestUserEpisodes: (token, accountId, withFollowing) => dispatch(EpisodeActions.userEpisodesRequest(token, accountId, withFollowing)),
     requestMoreFeeds: (token, accountId, withFollowing, before) => dispatch(EpisodeActions.moreFeedsRequest(token, accountId, withFollowing, before)),
 
     openComment: (visible) => dispatch(CommentActions.openComment(visible)),
     getComment: (token, episodeId, contentId) => dispatch(CommentActions.commentGet(token, episodeId, contentId)),
 
-    reportEpisode: (episodeId) => dispatch(EpisodeActions.reportEpisode(episodeId))
+    reportEpisode: (episodeId) => dispatch(EpisodeActions.reportEpisode(episodeId)),
+    removeEpisode: (episodeId) => dispatch(EpisodeActions.removeEpisode(episodeId))
   }
 }
 

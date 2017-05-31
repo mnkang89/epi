@@ -4,6 +4,18 @@ import Immutable from 'seamless-immutable'
 /* ------------- Types and Action Creators ------------- */
 
 const { Types, Creators } = createActions({
+  userEpisodesRequestTest: [
+    'token',
+    'accountId',
+    'active'
+  ],
+  userEpisodesTestSuccess: [
+    'episodes'
+  ],
+  userEpisodesTestFailure: [
+    'episodesError'
+  ],
+
   userEpisodesRequest: [
     'token',
     'accountId',
@@ -165,6 +177,14 @@ const { Types, Creators } = createActions({
   reportEpisodeSuccess: [
   ],
   reportEpisodeFailure: [
+  ],
+
+  removeEpisode: [
+    'episodeId'
+  ],
+  removeEpisodeSuccess: [
+  ],
+  removeEpisodeFailure: [
   ]
 })
 
@@ -211,11 +231,23 @@ export const INITIAL_STATE = Immutable({
 
   moreOtherEpisodes: [],
   moreOtherEpisodesRequesting: false,
-  moreOtherEpisodesError: null
+  moreOtherEpisodesError: null,
+
+  reportEpisodeRequesting: false,
+  removeEpisodeRequesting: false
 })
 
 /* ------------- Reducers ------------- */
 // we're attempting to get Episodes
+export const userEpisodesRequestTest = (state: Object, { token, accountId, active }: Object) =>
+  state.merge({ episodesRequesting: true })
+
+export const userEpisodesTestSuccess = (state: Object, { episodes }: Object) =>
+  state.merge({ episodesRequesting: false, episodesError: null, episodes })
+
+export const userEpisodesTestFailure = (state: Object, { episodesError }: Object) =>
+  state.merge({ episodesRequesting: false, episodesError })
+
 export const userEpisodesRequest = (state: Object, { token, accountId, active }: Object) =>
   state.merge({ episodesRequesting: true })
 
@@ -437,9 +469,22 @@ export const reportEpisodeSuccess = (state: Object) =>
 
 export const reportEpisodeFailure = (state: Object) =>
   state.merge({ reportEpisodeRequesting: false })
+
+export const removeEpisode = (state: Object) =>
+  state.merge({ removeEpisodeRequesting: true })
+
+export const removeEpisodeSuccess = (state: Object) =>
+  state.merge({ removeEpisodeRequesting: false })
+
+export const removeEpisodeFailure = (state: Object) =>
+  state.merge({ removeEpisodeRequesting: false })
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
+  [Types.USER_EPISODES_TEST_REQUEST]: userEpisodesRequestTest,
+  [Types.USER_EPISODES_TEST_SUCCESS]: userEpisodesTestSuccess,
+  [Types.USER_EPISODES_TEST_FAILURE]: userEpisodesTestFailure,
+
   [Types.USER_EPISODES_REQUEST]: userEpisodesRequest,
   [Types.USER_EPISODES_SUCCESS]: userEpisodesSuccess,
   [Types.USER_EPISODES_FAILURE]: userEpisodesFailure,
@@ -493,5 +538,9 @@ export const reducer = createReducer(INITIAL_STATE, {
 
   [Types.REPORT_EPISODE]: reportEpisode,
   [Types.REPORT_EPISODE_SUCCESS]: reportEpisodeSuccess,
-  [Types.REPORT_EPISODE_FAILURE]: reportEpisodeFailure
+  [Types.REPORT_EPISODE_FAILURE]: reportEpisodeFailure,
+
+  [Types.REMOVE_EPISODE]: removeEpisode,
+  [Types.REMOVE_EPISODE_SUCCESS]: removeEpisodeSuccess,
+  [Types.REMOVE_EPISODE_FAILURE]: removeEpisodeFailure
 })

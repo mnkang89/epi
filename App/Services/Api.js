@@ -203,6 +203,12 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     return api.post(`/api/episodes/${episodeId}/report`, {}, getTokenHeader())
   }
 
+  const removeEpisode = (episodeId) => {
+    console.log('DELETE removeEpisode api콜 발생')
+
+    return api.delete(`/api/episodes/${episodeId}`, {}, getTokenHeader())
+  }
+
   // content
   const postContent = (token, episodeId, fileType, file, thumbnail, message) => {
     console.log('POST content api콜 발생')
@@ -329,6 +335,7 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     requestMoreFeeds,
     requestMoreOtherFeeds,
     reportEpisode,
+    removeEpisode,
 
     postFollow,
     deleteFollow,

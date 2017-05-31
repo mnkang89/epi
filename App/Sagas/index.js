@@ -21,8 +21,8 @@ import { login } from './LoginSagas'
 import { email, password, nickname, profile, profileModification, signup } from './SignupSagas'
 import { account, otherInfo, getActiveUserEpisode, postFollow, deleteFollow, getFollowing, getFollower } from './AccountSagas'
 import {
-  userEpisodes, userEpisodesWithFalse, otherEpisodes, postEpisode, putEpisode, singleEpisode, newEpisode,
-  newEpisodeWithFalse, newOtherEpisode, deactivateEpisode, moreFeeds, moreEpisodes, moreOtherEpisodes, reportEpisode } from './EpisodeSagas'
+  userEpisodes, userEpisodesTest, userEpisodesWithFalse, otherEpisodes, postEpisode, putEpisode, singleEpisode, newEpisode,
+  newEpisodeWithFalse, newOtherEpisode, deactivateEpisode, moreFeeds, moreEpisodes, moreOtherEpisodes, reportEpisode, removeEpisode } from './EpisodeSagas'
 import { postContent, postLike, deleteLike } from './ContentSagas'
 import { postComment, getComment, deleteComment } from './CommentSagas'
 import { getBestFeeds, moreBestFeeds } from './FeedSagas'
@@ -87,6 +87,8 @@ export default function * root () {
     takeLatest(EpisodeTypes.USER_EPISODE_POST, postEpisode, api),
     // put episode
     takeLatest(EpisodeTypes.USER_EPISODE_PUT, putEpisode, api),
+    // get test episode
+    takeLatest(EpisodeTypes.USER_EPISODES_REQUEST_TEST, userEpisodesTest, api),
     // get user episodes
     takeLatest(EpisodeTypes.USER_EPISODES_REQUEST, userEpisodes, api),
     // get user episodes with falses
@@ -109,6 +111,8 @@ export default function * root () {
     takeLatest(EpisodeTypes.MORE_OTHER_EPISODES_REQUEST, moreOtherEpisodes, api),
     // report episode
     takeLatest(EpisodeTypes.REPORT_EPISODE, reportEpisode, api),
+    // remove episode
+    takeLatest(EpisodeTypes.REMOVE_EPISODE, removeEpisode, api),
 
     /* --- Content --- */
     // post content
