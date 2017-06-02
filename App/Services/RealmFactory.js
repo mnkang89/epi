@@ -8,13 +8,25 @@ const AccountSchema = {
   }
 }
 
+const UserSchema = {
+  name: 'user',
+  properties: {
+    id: { type: 'int', indexed: true },
+    followerCount: {type: 'int', default: 0},
+    followingCount: {type: 'int', default: 0},
+    followStatus: {type: 'bool'}
+  }
+}
+
 const EpisodeSchema = {
   name: 'episode',
   primaryKey: 'id',
   properties: {
     id: { type: 'int', indexed: true },
     offset: {type: 'int', default: 0},
-    like: {type: 'bool', default: false}
+    like: {type: 'bool', default: false},
+    likeCount: {type: 'int', default: 0},
+    commentCount: {type: 'int', default: 0}
   }
 }
 
@@ -46,5 +58,5 @@ const PushTokenSchema = {
 }
 
 export const getRealm = () => {
-  return new Realm({schema: [AccountSchema, EpisodeSchema, CacheImageSchema, CacheVideoSchema, PushTokenSchema]})
+  return new Realm({schema: [AccountSchema, UserSchema, EpisodeSchema, CacheImageSchema, CacheVideoSchema, PushTokenSchema]})
 }

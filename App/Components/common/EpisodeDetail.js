@@ -46,6 +46,7 @@ class EpisodeDetail extends React.PureComponent {
   constructor (props) {
     super(props)
     this.state = {
+      commentCount: this.props.episode.contents.map(content => content.commentCount).reduce((a, b) => a + b, 0),
       renderLikeHeart: this.props.episode.liked,
       likeCount: this.props.episode.likeCount,
       // data: this.props.episode.contents,
@@ -76,15 +77,6 @@ class EpisodeDetail extends React.PureComponent {
   }
 
   componentWillMount () {
-    // this.setState({
-    //   accountId: this.props.episode.accountId,
-    //   renderLikeHeart: this.props.episode.liked,
-    //   likeCount: this.props.episode.likeCount,
-    //   data: this.props.episode.contents,
-    //   episode: this.props.episode,
-    //   index: this.props.index,
-    //   parentHandler: this.props.parentHandler
-    // })
     this._wrapperPanResponder = PanResponder.create({
       onStartShouldSetPanResponder: (e, g) => {
         return true
@@ -124,6 +116,9 @@ class EpisodeDetail extends React.PureComponent {
     // const liked = this.state.episode.liked
     const episodeId = this.props.episode.id
     const liked = this.props.episode.liked
+    const likeCount = this.props.episode.likeCount
+    const commentCount = this.props.episode.contents.map(content => content.commentCount).reduce((a, b) => a + b, 0)
+
     let episode = realm.objects('episode').filtered('id = ' + episodeId)
     const contentTypeArray = []
 
@@ -159,51 +154,55 @@ class EpisodeDetail extends React.PureComponent {
       realm.write(() => {
         realm.delete(episode)
         if (liked === undefined) {
-          realm.create('episode', {id: episodeId, like: false})
+          realm.create('episode', {id: episodeId, like: false, likeCount: 0, commentCount: 0})
         } else {
-          realm.create('episode', {id: episodeId, like: liked})
+          console.log('라이크카운트라이크카운트라이크카운트')
+          console.log(likeCount)
+          console.log('라이크드')
+          console.log(liked)
+          realm.create('episode', {id: episodeId, like: liked, likeCount: likeCount, commentCount: commentCount})
         }
       })
     } else {
-      return
+      realm.write(() => {
+        realm.delete(episode)
+        if (liked === undefined) {
+          realm.create('episode', {id: episodeId, like: false, likeCount: 0, commentCount: 0})
+        } else {
+          console.log('라이크카운트라이크카운트라이크카운트')
+          console.log(likeCount)
+          console.log('라이크드')
+          console.log(liked)
+          realm.create('episode', {id: episodeId, like: liked, likeCount: likeCount, commentCount: commentCount})
+        }
+      })
     }
+    // 에피소드 like 관련 리스너
+    realm.objects('episode').filtered('id = ' + episodeId).addListener((episodes, changes) => {
+      setTimeout(() => {console.log(realm.objects('episode').filtered('id = ' + episodeId))}, 10000)
+      // console.log(realm.objects('episode').filtered('id = ' + episodeId))
+      this.setState({
+        likeCount: realm.objects('episode').filtered('id = ' + episodeId).likeCount,
+        renderLikeHeart: realm.objects('episode').filtered('id = ' + episodeId).liked
+      })
+    })
+    // setTimeout(() => {
+    //   realm.addListener('change', () => {
+    //     console.log('라이크관련 리스너 콜콜')
+    //     this.setState({
+    //       likeCount: realm.objects('episode').filtered('id = ' + episodeId).likeCount,
+    //       renderLikeHeart: realm.objects('episode').filtered('id = ' + episodeId).liked
+    //     })
+    //   })
+    // }, 3000)
   }
-
-  // componentWillReceiveProps (nextProps) {
-  //   if (this.props.episode.id !== nextProps.episode.id) {
-  //     const centerIndex = nextProps.currentCenterIndex // 센터인덱스를 잘못 설정하면 문제 생기는 부분이지만 이곳에서 문제가 생기고 있진 않아.(ok)
-  //     // const episodeId = nextProps.episode.id
-  //     // const liked = nextProps.episode.liked
-  //     // let episode = realm.objects('episode').filtered('id = ' + episodeId)
-  //     // const contentTypeArray = []
-  //
-  //     this.setState({
-  //       data: nextProps.episode.contents,
-  //       episode: nextProps.episode,
-  //       renderLikeHeart: nextProps.episode.liked,
-  //       likeCount: nextProps.episode.likeCount,
-  //       index: nextProps.index,
-  //       parentHandler: nextProps.parentHandler
-  //     }, () => {
-      //   setTimeout(
-      //     () => {
-      //   this._listRef.scrollToIndex({animated: false, index: centerIndex})
-      //     }, 200)
-      // })
-  //   }
-  //
-  //   if (this.state.footer) {
-  //     this.setState({
-  //       footer: false
-  //     })
-  //   }
-  // }
 
   componentDidUpdate (prevProps, prevState) {
     if (prevProps.episode !== this.props.episode) {
       this.setState({
         renderLikeHeart: this.props.episode.liked,
-        likeCount: this.props.episode.likeCount
+        likeCount: this.props.episode.likeCount,
+        commentCount: this.props.episode.contents.map(content => content.commentCount).reduce((a, b) => a + b, 0)
       })
       const centerIndex = this.currentCenterIndex // 센터인덱스를 잘못 설정하면 문제 생기는 부분이지만 이곳에서 문제가 생기고 있진 않아.(ok)
       // const episodeId = this.state.episode.id
@@ -211,6 +210,9 @@ class EpisodeDetail extends React.PureComponent {
       const index = this.props.index
       const episodeId = this.props.episode.id
       const liked = this.props.episode.liked
+      const likeCount = this.props.episode.likeCount
+      const commentCount = this.props.episode.contents.map(content => content.commentCount).reduce((a, b) => a + b, 0)
+
       let episode = realm.objects('episode').filtered('id = ' + episodeId)
       const contentTypeArray = []
 
@@ -252,20 +254,15 @@ class EpisodeDetail extends React.PureComponent {
         realm.write(() => {
           realm.delete(episode)
           if (liked === undefined) {
-            realm.create('episode', {id: episodeId, like: false})
+            realm.create('episode', {id: episodeId, like: false, likeCount: 0, commentCount: 0})
           } else {
-            realm.create('episode', {id: episodeId, like: liked})
+            realm.create('episode', {id: episodeId, like: liked, likeCount: likeCount, commentCount: commentCount})
           }
         })
       } else {
         return
       }
     }
-    // this.setState({
-    //   renderLikeHeart: this.props.episode.liked,
-    //   likeCount: this.props.episode.likeCount,
-    //   parentHandler: this.props.parentHandler
-    // })
   }
 
   stopEpisodeVideo = () => {
@@ -295,16 +292,42 @@ class EpisodeDetail extends React.PureComponent {
   }
 
   like () {
-    this.setState({
-      likeCount: this.state.likeCount + 1,
-      renderLikeHeart: true
+    // this.setState({
+    //   likeCount: this.state.likeCount + 1,
+    //   renderLikeHeart: true
+    // })
+    // 해당 에피소드 뤰오브젝트의 라이크카운트와 코멘트카운트를 증가시키자.
+    console.log('라이크콜')
+    realm.write(() => {
+      let episode = realm.objects('episode').filtered('id = ' + this.props.episode.id)
+
+      episode.liked = true
+      episode.likeCount = episode.likeCount + 1
+      setTimeout(() => {
+        console.log(episode.liked)
+        console.log(episode.likeCount)
+        console.log('라이크콜끝')
+      }, 3000)
     })
   }
 
   dislike () {
-    this.setState({
-      likeCount: this.state.likeCount - 1,
-      renderLikeHeart: false
+    // this.setState({
+    //   likeCount: this.state.likeCount - 1,
+    //   renderLikeHeart: false
+    // })
+    // 해당 에피소드 뤰오브젝트의 라이크카운트와 코멘트카운트를 감소시키자.
+    console.log('디스라이크콜')
+    realm.write(() => {
+      let episode = realm.objects('episode').filtered('id = ' + this.props.episode.id)
+
+      episode.liked = false
+      episode.likeCount = episode.likeCount - 1
+      setTimeout(() => {
+        console.log(episode.liked)
+        console.log(episode.likeCount)
+        console.log('디스라이크콜끝')
+      }, 3000)
     })
   }
 
@@ -316,30 +339,11 @@ class EpisodeDetail extends React.PureComponent {
         this.props.type === 'other') {
     } else if (this.props.type === 'single') {
       if (this.props.singleType === 'noti') {
-        // NavigationActions.notiTouserProfileScreen({
-        //   type: 'push',
-        //   id: accountId,
-        //   screen: 'NotiScreen'
-        // })
         this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'NotiScreen'})
       } else {
-        // NavigationActions.searchTouserProfileScreen({
-        //   type: 'push',
-        //   id: accountId,
-        //   screen: 'SearchScreen'
-        // })
         this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'SearchScreen'})
       }
     } else {
-      // NavigationActions.feedTouserProfileScreen({
-      //   type: 'push',
-      //   id: accountId,
-      //   screen: 'FeedScreen',
-      //   topOfStack: true,
-      //   onBack: () => {
-      //     NavigationActions.pop()
-      //   }
-      // })
       this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'FeedScreen'})
     }
   }
@@ -351,7 +355,6 @@ class EpisodeDetail extends React.PureComponent {
 
     if (active && type !== 'single') {
       this.dragStartingOffset = event.nativeEvent.contentOffset.x
-      // this.lastContentOffset - (windowSize.width - 22)
       if (this.dragStartingOffset >= this.lastContentOffset - (windowSize.width - 22)) {
         this.setState({footer: true})
       }
@@ -460,10 +463,8 @@ class EpisodeDetail extends React.PureComponent {
   }
 
   renderLikeHeart () {
-    console.log('라이크하트리렌더맨')
     if (this.state.renderLikeHeart) {
     // if (this.props.renderLikeHeart) {
-      console.log('라이크')
       return (
         <Image style={{width: 24, height: 20}} source={Images.likeHeart} />
       )
@@ -502,10 +503,6 @@ class EpisodeDetail extends React.PureComponent {
       const activeEpisodeLength = this.props.episode.contents.length
       const commentCount = this.props.episode.contents.map(content => content.commentCount).reduce((a, b) => a + b, 0)
       const timeDiffString = convert2TimeDiffString(this.props.episode.updatedDateTime || this.props.episode.createDateTime)
-      // const episodeId = this.state.episode.id
-      // const activeEpisodeLength = this.state.episode.contents.length
-      // const commentCount = this.state.episode.contents.map(content => content.commentCount).reduce((a, b) => a + b, 0)
-      // const timeDiffString = convert2TimeDiffString(this.state.episode.updatedDateTime || this.state.episode.createDateTime)
       const { headerContentStyle } = styles
 
       let episode = realm.objects('episode').filtered('id = ' + episodeId)
@@ -521,8 +518,6 @@ class EpisodeDetail extends React.PureComponent {
         }
         this.currentCenterIndex = xPosition / (windowSize.width - 22) // 여기서도 문제 생길 수 있음(x)
       } else {
-        // this.currentCenterIndex = this.props.xPosition / (windowSize.width - 22) // 여기서도 문제 생길 수 있음(x)
-        // xPosition = this.props.xPosition
         this.currentCenterIndex = xPosition
       }
       return (
@@ -559,7 +554,6 @@ class EpisodeDetail extends React.PureComponent {
             </View>
           </View>
           <FlatListE
-            // extraData={this.state}
             removeClippedSubviews={false}
             initialNumToRender={1}
             windowSize={2}
@@ -569,7 +563,6 @@ class EpisodeDetail extends React.PureComponent {
             // data={this.state.data}
             data={this.props.episode.contents}
             renderItem={this._renderItemComponent}
-            // ItemComponent={this._renderItemComponent}
             ListFooterComponent={this._renderFooter.bind(this)}
             disableVirtualization={false}
             horizontal
