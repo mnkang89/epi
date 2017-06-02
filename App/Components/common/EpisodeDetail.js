@@ -111,20 +111,16 @@ class EpisodeDetail extends React.PureComponent {
   }
 
   componentDidMount () {
-    const centerIndex = this.currentCenterIndex // 센터인덱스를 잘못 설정하면 문제 생기는 부분이지만 이곳에서 문제가 생기고 있진 않아.(ok)
-    // const episodeId = this.state.episode.id
-    // const liked = this.state.episode.liked
+    const centerIndex = this.currentCenterIndex
     const episodeId = this.props.episode.id
     const liked = this.props.episode.liked
     const likeCount = this.props.episode.likeCount
     const commentCount = this.props.episode.contents.map(content => content.commentCount).reduce((a, b) => a + b, 0)
 
+    // let episode = Array.from(realm.objects('episode').filtered('id = ' + episodeId))[0]
     let episode = realm.objects('episode').filtered('id = ' + episodeId)
     const contentTypeArray = []
 
-    // for (let i = 0; i < this.state.episode.contents.length; i++) {
-    //   contentTypeArray.push(this.state.episode.contents[i].type)
-    // }
     for (let i = 0; i < this.props.episode.contents.length; i++) {
       contentTypeArray.push(this.props.episode.contents[i].type)
     }
@@ -145,7 +141,7 @@ class EpisodeDetail extends React.PureComponent {
         this.contentRefs[centerIndex] !== null &&
         this.contentRefs[centerIndex] !== undefined) {
       this.contentRefs[centerIndex].getWrappedInstance().ref._component.playVideo()
-      this.currentCenterIndex = centerIndex // 이 코드까지 왔다는건 문제없다는 것
+      this.currentCenterIndex = centerIndex
     }
 
     this.contentTypeArray = contentTypeArray
@@ -156,57 +152,31 @@ class EpisodeDetail extends React.PureComponent {
         if (liked === undefined) {
           realm.create('episode', {id: episodeId, like: false, likeCount: 0, commentCount: 0})
         } else {
-          console.log('라이크카운트라이크카운트라이크카운트')
-          console.log(likeCount)
-          console.log('라이크드')
-          console.log(liked)
           realm.create('episode', {id: episodeId, like: liked, likeCount: likeCount, commentCount: commentCount})
         }
       })
-    } else {
-      realm.write(() => {
-        realm.delete(episode)
-        if (liked === undefined) {
-          realm.create('episode', {id: episodeId, like: false, likeCount: 0, commentCount: 0})
-        } else {
-          console.log('라이크카운트라이크카운트라이크카운트')
-          console.log(likeCount)
-          console.log('라이크드')
-          console.log(liked)
-          realm.create('episode', {id: episodeId, like: liked, likeCount: likeCount, commentCount: commentCount})
-        }
-      })
-    }
+    } else { }
     // 에피소드 like 관련 리스너
     realm.objects('episode').filtered('id = ' + episodeId).addListener((episodes, changes) => {
-      setTimeout(() => {console.log(realm.objects('episode').filtered('id = ' + episodeId))}, 10000)
-      // console.log(realm.objects('episode').filtered('id = ' + episodeId))
-      this.setState({
-        likeCount: realm.objects('episode').filtered('id = ' + episodeId).likeCount,
-        renderLikeHeart: realm.objects('episode').filtered('id = ' + episodeId).liked
-      })
+      let episode = Array.from(realm.objects('episode').filtered('id = ' + this.props.episode.id))[0]
+      setTimeout(() => {
+        this.setState({
+          likeCount: episode.likeCount,
+          renderLikeHeart: episode.like
+        })
+      }, 500)
     })
-    // setTimeout(() => {
-    //   realm.addListener('change', () => {
-    //     console.log('라이크관련 리스너 콜콜')
-    //     this.setState({
-    //       likeCount: realm.objects('episode').filtered('id = ' + episodeId).likeCount,
-    //       renderLikeHeart: realm.objects('episode').filtered('id = ' + episodeId).liked
-    //     })
-    //   })
-    // }, 3000)
   }
 
   componentDidUpdate (prevProps, prevState) {
     if (prevProps.episode !== this.props.episode) {
+      console.log('디드업뎃?')
       this.setState({
         renderLikeHeart: this.props.episode.liked,
         likeCount: this.props.episode.likeCount,
         commentCount: this.props.episode.contents.map(content => content.commentCount).reduce((a, b) => a + b, 0)
       })
       const centerIndex = this.currentCenterIndex // 센터인덱스를 잘못 설정하면 문제 생기는 부분이지만 이곳에서 문제가 생기고 있진 않아.(ok)
-      // const episodeId = this.state.episode.id
-      // const liked = this.state.episode.liked
       const index = this.props.index
       const episodeId = this.props.episode.id
       const liked = this.props.episode.liked
@@ -218,9 +188,6 @@ class EpisodeDetail extends React.PureComponent {
 
       setTimeout(() => { this._listRef.scrollToIndex({animated: false, index: centerIndex}) }, 15)
 
-      // for (let i = 0; i < this.state.episode.contents.length; i++) {
-      //   contentTypeArray.push(this.state.episode.contents[i].type)
-      // }
       for (let i = 0; i < this.props.episode.contents.length; i++) {
         contentTypeArray.push(this.props.episode.contents[i].type)
       }
@@ -259,9 +226,16 @@ class EpisodeDetail extends React.PureComponent {
             realm.create('episode', {id: episodeId, like: liked, likeCount: likeCount, commentCount: commentCount})
           }
         })
-      } else {
-        return
-      }
+      } else { }
+      realm.objects('episode').filtered('id = ' + episodeId).addListener((episodes, changes) => {
+        let episode = Array.from(realm.objects('episode').filtered('id = ' + this.props.episode.id))[0]
+        setTimeout(() => {
+          this.setState({
+            likeCount: episode.likeCount,
+            renderLikeHeart: episode.like
+          })
+        }, 500)
+      })
     }
   }
 
@@ -299,15 +273,11 @@ class EpisodeDetail extends React.PureComponent {
     // 해당 에피소드 뤰오브젝트의 라이크카운트와 코멘트카운트를 증가시키자.
     console.log('라이크콜')
     realm.write(() => {
-      let episode = realm.objects('episode').filtered('id = ' + this.props.episode.id)
+      let episode = Array.from(realm.objects('episode').filtered('id = ' + this.props.episode.id))[0]
 
-      episode.liked = true
+      episode.like = true
       episode.likeCount = episode.likeCount + 1
-      setTimeout(() => {
-        console.log(episode.liked)
-        console.log(episode.likeCount)
-        console.log('라이크콜끝')
-      }, 3000)
+      console.log(episode.likeCount)
     })
   }
 
@@ -319,15 +289,11 @@ class EpisodeDetail extends React.PureComponent {
     // 해당 에피소드 뤰오브젝트의 라이크카운트와 코멘트카운트를 감소시키자.
     console.log('디스라이크콜')
     realm.write(() => {
-      let episode = realm.objects('episode').filtered('id = ' + this.props.episode.id)
+      let episode = Array.from(realm.objects('episode').filtered('id = ' + this.props.episode.id))[0]
 
       episode.liked = false
       episode.likeCount = episode.likeCount - 1
-      setTimeout(() => {
-        console.log(episode.liked)
-        console.log(episode.likeCount)
-        console.log('디스라이크콜끝')
-      }, 3000)
+      console.log(episode.likeCount)
     })
   }
 
@@ -540,15 +506,13 @@ class EpisodeDetail extends React.PureComponent {
                 </View>
                 <View style={{flexDirection: 'row'}}>
                   <Text style={{color: '#B2B2B2', fontSize: 13}}>{timeDiffString}</Text>
-                  {this.props.type === 'me' ? null
-                    : <TouchableOpacity style={{alignItems: 'flex-end', width: 20}} onPress={this.commentSetting.bind(this)}>
-                      <View>
-                        <View style={{width: 3, height: 3, marginTop: 2, backgroundColor: 'rgb(178,178,178)'}} />
-                        <View style={{width: 3, height: 3, marginTop: 2, backgroundColor: 'rgb(178,178,178)'}} />
-                        <View style={{width: 3, height: 3, marginTop: 2, backgroundColor: 'rgb(178,178,178)'}} />
-                      </View>
-                    </TouchableOpacity>
-                  }
+                  <TouchableOpacity style={{alignItems: 'flex-end', width: 20}} onPress={this.commentSetting.bind(this)}>
+                    <View>
+                      <View style={{width: 3, height: 3, marginTop: 2, backgroundColor: 'rgb(178,178,178)'}} />
+                      <View style={{width: 3, height: 3, marginTop: 2, backgroundColor: 'rgb(178,178,178)'}} />
+                      <View style={{width: 3, height: 3, marginTop: 2, backgroundColor: 'rgb(178,178,178)'}} />
+                    </View>
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>
