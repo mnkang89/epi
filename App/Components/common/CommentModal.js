@@ -12,12 +12,14 @@ import {
 } from 'react-native'
 import KeyboardSpacer from 'react-native-keyboard-spacer'
 import {AutoGrowingTextInput} from 'react-native-autogrow-textinput'
+import { getRealm } from '../../Services/RealmFactory'
 // import Icon from 'react-native-vector-icons/FontAwesome'
 // import _ from 'lodash'
 
 import CommentContainer from '../../Containers/common/CommentContainer'
 
 const windowSize = Dimensions.get('window')
+const realm = getRealm()
 
 class CommentModal extends Component {
 
@@ -124,6 +126,11 @@ class CommentModal extends Component {
       this.message = ''
       this.refs.commentInput.clear()
     }
+    realm.write(() => {
+      let episode = Array.from(realm.objects('episode').filtered('id = ' + episodeId))[0]
+
+      episode.commentCount = episode.commentCount + 1
+    })
   }
 
   renderCommentContainer () {

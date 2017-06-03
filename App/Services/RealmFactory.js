@@ -14,7 +14,7 @@ const UserSchema = {
     id: { type: 'int', indexed: true },
     followerCount: {type: 'int', default: 0},
     followingCount: {type: 'int', default: 0},
-    followStatus: {type: 'bool'}
+    followStatus: {type: 'bool', default: false}
   }
 }
 

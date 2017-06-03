@@ -96,10 +96,10 @@ class ExploreScreen extends Component {
       }
     }
 
-    if ((this.props.followPosting === true && nextProps.followPosting === false) ||
-        (this.props.followDeleting === true && nextProps.followDeleting === false)) {
-      this.props.requestBestFeeds(null)
-    }
+    // if ((this.props.followPosting === true && nextProps.followPosting === false) ||
+    //     (this.props.followDeleting === true && nextProps.followDeleting === false)) {
+    //   this.props.requestBestFeeds(null)
+    // }
 
     this.setState({data: nextProps.items})
 

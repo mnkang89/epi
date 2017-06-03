@@ -7,10 +7,13 @@ import Permissions from 'react-native-permissions'
 import ConfirmError from './ConfirmError'
 import { Images } from '../../Themes'
 import styles from '../../Containers/Styles/FeedScreenStyle'
-// import { Actions as NavigationActions } from 'react-native-router-flux'
+
 // import CachableImage from '../../Common/CachableImage'
 import { getAccountId } from '../../Services/Auth'
 import ImageResizer from 'react-native-image-resizer'
+import { getRealm } from '../../Services/RealmFactory'
+
+const realm = getRealm()
 
 class ProfileInfo extends Component {
 
@@ -45,13 +48,81 @@ class ProfileInfo extends Component {
 
       photoSource: this.props.profileImagePath,
       follow: this.props.following,
+      followingCount: this.props.followingCount,
+      followerCount: this.props.followerCount,
       photoViewerVisible: false
     }
   }
 
   componentDidMount () {
-    // console.log(this.props)
+    const id = this.props.type === 'me' ? getAccountId() : this.props.id
+    let user = realm.objects('user').filtered('id = ' + id)
+    // id: { type: 'int', indexed: true },
+    // followerCount: {type: 'int', default: 0},
+    // followingCount: {type: 'int', default: 0},
+    // followStatus: {type: 'bool'}
+    if (this.props.type === 'me') {
+      if (user.length === 0) {
+        realm.write(() => {
+          realm.delete(user)
+          realm.create('user',
+            {
+              id: id,
+              followStatus: false,
+              followingCount: this.props.followingCount,
+              followerCount: this.props.followerCount
+            }
+          )
+        })
+      } else {
+        realm.write(() => {
+          let user = Array.from(realm.objects('user').filtered('id = ' + id))[0]
+
+          user.followStatus = false
+          user.followingCount = this.props.followingCount
+          user.followerCount = this.props.followerCount
+        })
+      }
+    } else {
+      if (user.length === 0) {
+        realm.write(() => {
+          realm.delete(user)
+          realm.create('user',
+            {
+              id: id,
+              followStatus: this.props.following,
+              followingCount: this.props.followingCount,
+              followerCount: this.props.followerCount
+            }
+          )
+        })
+      } else {
+        realm.write(() => {
+          let user = Array.from(realm.objects('user').filtered('id = ' + id))[0]
+
+          user.followStatus = this.props.following
+          user.followingCount = this.props.followingCount
+          user.followerCount = this.props.followerCount
+        })
+      }
+    }
+
+    realm.objects('user').filtered('id = ' + id).addListener((users, changes) => {
+      let user = Array.from(realm.objects('user').filtered('id = ' + id))[0]
+      setTimeout(() => {
+        this.setState({
+          follow: user.followStatus,
+          followingCount: user.followingCount,
+          followerCount: user.followerCount
+        })
+      }, 500)
+    })
   }
+
+    // id: { type: 'int', indexed: true },
+    // followerCount: {type: 'int', default: 0},
+    // followingCount: {type: 'int', default: 0},
+    // followStatus: {type: 'bool'}
 
   componentWillReceiveProps (nextProps) {
     this.setState({ photoSource: nextProps.profileImagePath })
@@ -148,10 +219,26 @@ class ProfileInfo extends Component {
 
     if (this.state.follow) {
       this.props.deleteFollow(token, id)
-      this.setState({ follow: false })
+      // this.setState({ follow: false })
+      realm.write(() => {
+        let user = Array.from(realm.objects('user').filtered('id = ' + id))[0]
+        let me = Array.from(realm.objects('user').filtered('id = ' + getAccountId()))[0]
+
+        user.followStatus = false
+        user.followerCount = user.followerCount - 1
+        me.followingCount = me.followingCount - 1
+      })
     } else {
       this.props.postFollow(token, id)
-      this.setState({ follow: true })
+      // this.setState({ follow: true })
+      realm.write(() => {
+        let user = Array.from(realm.objects('user').filtered('id = ' + id))[0]
+        let me = Array.from(realm.objects('user').filtered('id = ' + getAccountId()))[0]
+
+        user.followStatus = true
+        user.followerCount = user.followerCount + 1
+        me.followingCount = me.followingCount + 1
+      })
     }
   }
 
@@ -264,13 +351,13 @@ class ProfileInfo extends Component {
             <Text style={{color: '#626262', fontSize: 18, fontWeight: 'bold'}}>{this.props.nickname}</Text>
             <View style={{flexDirection: 'row', marginTop: 7, marginBottom: 25.5}}>
               <TouchableOpacity onPress={this.onFollowerPress.bind(this)} >
-                <Text style={{color: '#8E8E8E', fontSize: 14}}>팔로워 <Text style={{fontWeight: 'bold'}}>{this.props.followerCount}</Text></Text>
+                <Text style={{color: '#8E8E8E', fontSize: 14}}>팔로워 <Text style={{fontWeight: 'bold'}}>{this.state.followerCount}</Text></Text>
               </TouchableOpacity>
               <View style={{top: 3, marginLeft: 9, marginRight: 9}}>
                 <Text style={{color: '#8E8E8E', fontSize: 10}}> | </Text>
               </View>
               <TouchableOpacity onPress={this.onFollowingPress.bind(this)} >
-                <Text style={{color: '#8E8E8E', fontSize: 14}}>팔로잉 <Text style={{fontWeight: 'bold'}}>{this.props.followingCount}</Text></Text>
+                <Text style={{color: '#8E8E8E', fontSize: 14}}>팔로잉 <Text style={{fontWeight: 'bold'}}>{this.state.followingCount}</Text></Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -288,13 +375,13 @@ class ProfileInfo extends Component {
             <Text style={{color: '#626262', fontSize: 18, fontWeight: 'bold'}}>{this.props.nickname}</Text>
             <View style={{flexDirection: 'row', marginTop: 7, marginBottom: 25.5}}>
               <TouchableOpacity onPress={this.onFollowerPress.bind(this)} >
-                <Text style={{color: '#8E8E8E', fontSize: 14}}>팔로워 <Text style={{fontWeight: 'bold'}}>{this.props.followerCount}</Text></Text>
+                <Text style={{color: '#8E8E8E', fontSize: 14}}>팔로워 <Text style={{fontWeight: 'bold'}}>{this.state.followerCount}</Text></Text>
               </TouchableOpacity>
               <View style={{top: 3, marginLeft: 9, marginRight: 9}}>
                 <Text style={{color: '#8E8E8E', fontSize: 10}}> | </Text>
               </View>
               <TouchableOpacity onPress={this.onFollowingPress.bind(this)} >
-                <Text style={{color: '#8E8E8E', fontSize: 14}}>팔로잉 <Text style={{fontWeight: 'bold'}}>{this.props.followingCount} </Text></Text>
+                <Text style={{color: '#8E8E8E', fontSize: 14}}>팔로잉 <Text style={{fontWeight: 'bold'}}>{this.state.followingCount} </Text></Text>
               </TouchableOpacity>
             </View>
           </View>

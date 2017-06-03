@@ -87,29 +87,6 @@ class EpisodeDetail extends React.PureComponent {
     })
   }
 
-  commentSetting () {
-    this.setState({
-      settingModal: true
-    }, () => {
-      Animated.timing(this.animatedValue, {
-        toValue: 10,
-        duration: 150
-      }).start()
-    })
-  }
-
-  cancelPress () {
-    Animated.timing(this.animatedValue, {
-      toValue: -200,
-      duration: 150
-    }).start()
-    setTimeout(() => {
-      this.setState({
-        settingModal: false
-      })
-    }, 200)
-  }
-
   componentDidMount () {
     const centerIndex = this.currentCenterIndex
     const episodeId = this.props.episode.id
@@ -155,14 +132,33 @@ class EpisodeDetail extends React.PureComponent {
           realm.create('episode', {id: episodeId, like: liked, likeCount: likeCount, commentCount: commentCount})
         }
       })
-    } else { }
+    } else {
+      if (liked === undefined) {
+        realm.write(() => {
+          let episode = Array.from(realm.objects('episode').filtered('id = ' + this.props.episode.id))[0]
+
+          episode.like = false
+          episode.likeCount = 0
+          episode.commentCount = 0
+        })
+      } else {
+        realm.write(() => {
+          let episode = Array.from(realm.objects('episode').filtered('id = ' + this.props.episode.id))[0]
+
+          episode.like = liked
+          episode.likeCount = likeCount
+          episode.commentCount = commentCount
+        })
+      }
+    }
     // 에피소드 like 관련 리스너
     realm.objects('episode').filtered('id = ' + episodeId).addListener((episodes, changes) => {
       let episode = Array.from(realm.objects('episode').filtered('id = ' + this.props.episode.id))[0]
       setTimeout(() => {
         this.setState({
           likeCount: episode.likeCount,
-          renderLikeHeart: episode.like
+          renderLikeHeart: episode.like,
+          commentCount: episode.commentCount
         })
       }, 500)
     })
@@ -170,7 +166,6 @@ class EpisodeDetail extends React.PureComponent {
 
   componentDidUpdate (prevProps, prevState) {
     if (prevProps.episode !== this.props.episode) {
-      console.log('디드업뎃?')
       this.setState({
         renderLikeHeart: this.props.episode.liked,
         likeCount: this.props.episode.likeCount,
@@ -226,17 +221,59 @@ class EpisodeDetail extends React.PureComponent {
             realm.create('episode', {id: episodeId, like: liked, likeCount: likeCount, commentCount: commentCount})
           }
         })
-      } else { }
+      } else {
+        if (liked === undefined) {
+          realm.write(() => {
+            let episode = Array.from(realm.objects('episode').filtered('id = ' + this.props.episode.id))[0]
+
+            episode.like = false
+            episode.likeCount = 0
+            episode.commentCount = 0
+          })
+        } else {
+          realm.write(() => {
+            let episode = Array.from(realm.objects('episode').filtered('id = ' + this.props.episode.id))[0]
+
+            episode.like = liked
+            episode.likeCount = likeCount
+            episode.commentCount = commentCount
+          })
+        }
+      }
       realm.objects('episode').filtered('id = ' + episodeId).addListener((episodes, changes) => {
         let episode = Array.from(realm.objects('episode').filtered('id = ' + this.props.episode.id))[0]
         setTimeout(() => {
           this.setState({
             likeCount: episode.likeCount,
-            renderLikeHeart: episode.like
+            renderLikeHeart: episode.like,
+            commentCount: episode.commentCount
           })
         }, 500)
       })
     }
+  }
+
+  commentSetting () {
+    this.setState({
+      settingModal: true
+    }, () => {
+      Animated.timing(this.animatedValue, {
+        toValue: 10,
+        duration: 150
+      }).start()
+    })
+  }
+
+  cancelPress () {
+    Animated.timing(this.animatedValue, {
+      toValue: -200,
+      duration: 150
+    }).start()
+    setTimeout(() => {
+      this.setState({
+        settingModal: false
+      })
+    }, 200)
   }
 
   stopEpisodeVideo = () => {
@@ -270,14 +307,11 @@ class EpisodeDetail extends React.PureComponent {
     //   likeCount: this.state.likeCount + 1,
     //   renderLikeHeart: true
     // })
-    // 해당 에피소드 뤰오브젝트의 라이크카운트와 코멘트카운트를 증가시키자.
-    console.log('라이크콜')
     realm.write(() => {
       let episode = Array.from(realm.objects('episode').filtered('id = ' + this.props.episode.id))[0]
 
       episode.like = true
       episode.likeCount = episode.likeCount + 1
-      console.log(episode.likeCount)
     })
   }
 
@@ -286,14 +320,11 @@ class EpisodeDetail extends React.PureComponent {
     //   likeCount: this.state.likeCount - 1,
     //   renderLikeHeart: false
     // })
-    // 해당 에피소드 뤰오브젝트의 라이크카운트와 코멘트카운트를 감소시키자.
-    console.log('디스라이크콜')
     realm.write(() => {
       let episode = Array.from(realm.objects('episode').filtered('id = ' + this.props.episode.id))[0]
 
       episode.liked = false
       episode.likeCount = episode.likeCount - 1
-      console.log(episode.likeCount)
     })
   }
 
@@ -316,7 +347,6 @@ class EpisodeDetail extends React.PureComponent {
 
   _onScrollBeginDrag (event) {
     const active = this.props.episode.active
-    // const active = this.state.episode.active
     const type = this.props.type
 
     if (active && type !== 'single') {
@@ -329,11 +359,10 @@ class EpisodeDetail extends React.PureComponent {
 
   _onScrollEndDrag (event) {
     const active = this.props.episode.active
-    // const active = this.state.episode.active
     const type = this.props.type
 
     if (active && type !== 'single') {
-      const { episode } = this.props
+      const episodeId = this.props.episode.id
       this.dragEndingOffset = event.nativeEvent.contentOffset.x
 
       // 오른쪽에서 왼쪽컨텐츠로 가면 푸터취소
@@ -343,10 +372,10 @@ class EpisodeDetail extends React.PureComponent {
           this.setState({footer: false})
         }
       } else if (
-        this.dragStartingOffset >= this.lastContentOffset - (windowSize.width - 22) &&
         this.dragStartingOffset - this.dragEndingOffset < 0 &&
+        this.dragStartingOffset > this.lastContentOffset - (windowSize.width) &&
         this.props.type !== 'other') {
-        this.props.requestNewEpisode(null, episode.id)
+        this.props.requestNewEpisode(null, episodeId)
       }
     }
   }
@@ -357,7 +386,6 @@ class EpisodeDetail extends React.PureComponent {
 
   _onPressHeart () {
     const episodeId = this.props.episode.id
-    // const episodeId = this.state.episode.id
     let episode = realm.objects('episode').filtered('id = ' + episodeId)
 
     if (this.contentRefs[this.currentCenterIndex] !== null &&
@@ -375,15 +403,12 @@ class EpisodeDetail extends React.PureComponent {
   _onPressComment () {
     const episodeId = this.props.episode.id
     const contentId = this.props.episode.contents[this.currentCenterIndex].id
-    // const episodeId = this.state.episode.id
-    // const contentId = this.state.episode.contents[this.currentCenterIndex].id
 
     this.props.commentModalHandler()
     this.props.getComment(null, episodeId, contentId)
   }
 
   _onPressRemove () {
-    // const episodeId = this.state.episode.id
     const episodeId = this.props.episode.id
 
     this.setState({ hide: true })
@@ -391,7 +416,6 @@ class EpisodeDetail extends React.PureComponent {
   }
 
   _onPressReport () {
-    // const episodeId = this.state.episode.id
     const episodeId = this.props.episode.id
 
     this.setState({ hide: true })
@@ -418,7 +442,6 @@ class EpisodeDetail extends React.PureComponent {
   }
 
   renderActiveRed () {
-    // if (this.state.episode.active) {
     if (this.props.episode.active) {
       return (
         <View style={{top: 7, left: 33, height: 5.5, width: 5.5, borderRadius: 2.75, backgroundColor: '#D02C2C'}} />
@@ -467,7 +490,6 @@ class EpisodeDetail extends React.PureComponent {
     if (!this.state.hide) {
       const episodeId = this.props.episode.id
       const activeEpisodeLength = this.props.episode.contents.length
-      const commentCount = this.props.episode.contents.map(content => content.commentCount).reduce((a, b) => a + b, 0)
       const timeDiffString = convert2TimeDiffString(this.props.episode.updatedDateTime || this.props.episode.createDateTime)
       const { headerContentStyle } = styles
 
@@ -533,8 +555,8 @@ class EpisodeDetail extends React.PureComponent {
             getItemLayout={this._getItemLayout}
             key={'hf'}
             initialScrollIndex={Math.round(this.currentCenterIndex)}
-            onScrollBeginDrag={this._onScrollBeginDrag.bind(this)}
-            onScrollEndDrag={this._onScrollEndDrag.bind(this)}
+            // onScrollBeginDrag={this._onScrollBeginDrag.bind(this)}
+            // onScrollEndDrag={this._onScrollEndDrag.bind(this)}
             onMomentumScrollBegin={this._onMomentumScrollBegin.bind(this)}
             onViewableItemsChanged={this._onViewableItemsChanged}
             // shouldItemUpdate={this._shouldItemUpdate}
@@ -554,7 +576,7 @@ class EpisodeDetail extends React.PureComponent {
                 <View style={{marginLeft: 21, justifyContent: 'center'}}>
                   <Image style={{width: 11, height: 10}} source={Images.commentCount} />
                 </View>
-                <Text style={{fontSize: 13, paddingLeft: 9, color: '#909090'}}>{commentCount}</Text>
+                <Text style={{fontSize: 13, paddingLeft: 9, color: '#909090'}}>{this.state.commentCount}</Text>
               </View>
               <View style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-end', marginRight: 24}}>
                 <TouchableOpacity onPress={this._onPressHeart.bind(this)} >

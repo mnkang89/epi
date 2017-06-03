@@ -4,8 +4,10 @@ import { Text, Image, View, TouchableOpacity, Dimensions } from 'react-native'
 
 import { Colors, Metrics, Images } from '../Themes/'
 import CachableImage from '../Common/CachableImage'
-import { Actions as NavigationActions } from 'react-native-router-flux'
+import { getAccountId } from '../Services/Auth'
+import { getRealm } from '../Services/RealmFactory'
 
+const realm = getRealm()
 const windowSize = Dimensions.get('window')
 
 class FollowDetail extends Component {
@@ -26,16 +28,58 @@ class FollowDetail extends Component {
     }
   }
 
+  componentDidMount () {
+    const id = this.props.follow.id
+    let user = realm.objects('user').filtered('id = ' + id)
+
+    if (user.length === 0) {
+      realm.write(() => {
+        realm.delete(user)
+        realm.create('user', { id: id })
+      })
+    } else {
+      realm.write(() => {
+        let user = Array.from(realm.objects('user').filtered('id = ' + id))[0]
+
+        user.followStatus = this.props.follow.following
+      })
+    }
+
+    realm.objects('user').filtered('id = ' + id).addListener((users, changes) => {
+      let user = Array.from(realm.objects('user').filtered('id = ' + id))[0]
+
+      setTimeout(() => {
+        this.setState({ follow: user.followStatus })
+      }, 500)
+    })
+  }
+
   onFollowPress () {
     const { token } = this.props
     const id = this.props.follow.id
 
     if (this.state.follow) {
       this.props.deleteFollow(token, id)
-      this.setState({ follow: false })
+      // this.setState({ follow: false })
+      realm.write(() => {
+        let user = Array.from(realm.objects('user').filtered('id = ' + id))[0]
+        let me = Array.from(realm.objects('user').filtered('id = ' + getAccountId()))[0]
+
+        user.followStatus = false
+        user.followerCount = user.followerCount - 1
+        me.followingCount = me.followingCount - 1
+      })
     } else {
       this.props.postFollow(token, id)
-      this.setState({ follow: true })
+      // this.setState({ follow: true })
+      realm.write(() => {
+        let user = Array.from(realm.objects('user').filtered('id = ' + id))[0]
+        let me = Array.from(realm.objects('user').filtered('id = ' + getAccountId()))[0]
+
+        user.followStatus = true
+        user.followerCount = user.followerCount + 1
+        me.followingCount = me.followingCount + 1
+      })
     }
   }
 
@@ -46,36 +90,19 @@ class FollowDetail extends Component {
     if (this.props.screen === 'FeedScreen') {
       setTimeout(() => {
         this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'FeedScreen'})
-        // NavigationActions.feedTouserProfileScreen({
-        //   type: 'push',
-        //   id: accountId,
-        //   screen: 'FeedScreen',
-        // })
       }, 500)
     } else if (this.props.screen === 'NotiScreen') {
       setTimeout(() => {
         this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'NotiScreen'})
       }, 500)
-      // NavigationActions.notiTouserProfileScreen({
-      //   type: 'push',
-      //   id: accountId
-      // })
     } else if (this.props.screen === 'SearchScreen') {
       setTimeout(() => {
         this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'SearchScreen'})
       }, 500)
-      // NavigationActions.searchTouserProfileScreen({
-      //   type: 'push',
-      //   id: accountId
-      // })
     } else if (this.props.screen === 'ProfileScreen') {
       setTimeout(() => {
         this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'ProfileScreen'})
       }, 500)
-      // NavigationActions.profileTouserProfileScreen({
-      //   type: 'push',
-      //   id: accountId
-      // })
     }
   }
 
@@ -122,9 +149,7 @@ class FollowDetail extends Component {
   }
 
   render () {
-    const {
-            userTextStyle
-          } = styles
+    const { userTextStyle } = styles
     const { nickname } = this.props.follow
 
     return (

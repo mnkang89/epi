@@ -2,11 +2,12 @@ import React, { Component, PropTypes } from 'react'
 import { Text, View, Image, TouchableOpacity, Modal, Animated, PanResponder } from 'react-native'
 // import CachableImage from '../Common/CachableImage'
 
-import { Actions as NavigationActions } from 'react-native-router-flux'
 import { Colors, Images, Metrics } from '../Themes/'
 import { convert2TimeDiffString } from '../Lib/Utilities'
 import { getAccountId } from '../Services/Auth'
+import { getRealm } from '../Services/RealmFactory'
 
+const realm = getRealm()
 const accountId = getAccountId()
 
 class CommentDetail extends Component {
@@ -80,6 +81,11 @@ class CommentDetail extends Component {
     const commentId = this.props.comment.id
 
     this.props.deleteComment(null, episodeId, contentId, commentId)
+    realm.write(() => {
+      let episode = Array.from(realm.objects('episode').filtered('id = ' + episodeId))[0]
+
+      episode.commentCount = episode.commentCount - 1
+    })
 
     Animated.timing(this.animatedValue, {
       toValue: -200,
@@ -100,38 +106,18 @@ class CommentDetail extends Component {
       setTimeout(() => {
         this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'FeedScreen'})
       }, 500)
-      // NavigationActions.feedTouserProfileScreen({
-      //   type: 'push',
-      //   id: accountId,
-      //   screen: 'FeedScreen',
-      //   onBack: () => {
-      //     NavigationActions.pop()
-      //   }
-      // })
     } else if (this.props.screen === 'NotiScreen') {
       setTimeout(() => {
         this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'NotiScreen'})
       }, 500)
-      // NavigationActions.notiTouserProfileScreen({
-      //   type: 'push',
-      //   id: accountId
-      // })
     } else if (this.props.screen === 'SearchScreen') {
       setTimeout(() => {
         this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'SearchScreen'})
       }, 500)
-      // NavigationActions.searchTouserProfileScreen({
-      //   type: 'push',
-      //   id: accountId
-      // })
     } else if (this.props.screen === 'ProfileScreen') {
       setTimeout(() => {
         this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'ProfileScreen'})
       }, 500)
-      // NavigationActions.profileTouserProfileScreen({
-      //   type: 'push',
-      //   id: accountId
-      // })
     }
   }
 

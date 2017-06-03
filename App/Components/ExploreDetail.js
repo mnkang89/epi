@@ -8,7 +8,10 @@ import CachableVideo from '../Common/CachableVideo'
 // import Video from 'react-native-video'
 import { Colors, Images, Metrics } from '../Themes/'
 import FlatListE from '../Experimental/FlatList0.44/FlatList_E44'
+import { getAccountId } from '../Services/Auth'
+import { getRealm } from '../Services/RealmFactory'
 
+const realm = getRealm()
 const windowSize = Dimensions.get('window')
 const screenWidth = Dimensions.get('window').width
 const scrollViewWidth = Math.round(screenWidth * 0.90)
@@ -36,6 +39,32 @@ class ExploreDetail extends Component {
     }
   }
 
+  componentDidMount () {
+    const id = this.props.episode.accountId
+    let user = realm.objects('user').filtered('id = ' + id)
+
+    if (user.length === 0) {
+      realm.write(() => {
+        realm.delete(user)
+        realm.create('user', { id: id })
+      })
+    } else {
+      realm.write(() => {
+        let user = Array.from(realm.objects('user').filtered('id = ' + id))[0]
+
+        user.followStatus = this.props.following
+      })
+    }
+
+    realm.objects('user').filtered('id = ' + id).addListener((users, changes) => {
+      let user = Array.from(realm.objects('user').filtered('id = ' + id))[0]
+
+      setTimeout(() => {
+        this.setState({ follow: user.followStatus })
+      }, 500)
+    })
+  }
+
   componentWillReceiveProps (nextProps) {
     this.setState({
       follow: nextProps.following
@@ -47,37 +76,39 @@ class ExploreDetail extends Component {
 
     if (this.state.follow) {
       this.props.deleteFollow(null, id)
-      this.setState({follow: false})
+      // this.setState({follow: false})
+      realm.write(() => {
+        let user = Array.from(realm.objects('user').filtered('id = ' + id))[0]
+        let me = Array.from(realm.objects('user').filtered('id = ' + getAccountId()))[0]
+
+        user.followStatus = false
+        user.followerCount = user.followerCount - 1
+        me.followingCount = me.followingCount - 1
+      })
     } else {
       this.props.postFollow(null, id)
-      this.setState({follow: true})
+      // this.setState({follow: true})
+      realm.write(() => {
+        let user = Array.from(realm.objects('user').filtered('id = ' + id))[0]
+        let me = Array.from(realm.objects('user').filtered('id = ' + getAccountId()))[0]
+
+        user.followStatus = true
+        user.followerCount = user.followerCount + 1
+        me.followingCount = me.followingCount + 1
+      })
     }
   }
 
   onProfileImagePress () {
     const accountId = this.props.account.id
 
-    // NavigationActions.searchTouserProfileScreen({
-    //   type: 'push',
-    //   screen: 'SearchScreen',
-    //   id: accountId
-    // })
     this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'SearchScreen'})
   }
 
   onEpisodePress (contentId) {
     const episodeId = this.props.episode.id
     const account = this.props.account
-    // NavigationActions.searchTosingleEpisodeScreen({
-    //   type: 'push',
-    //   screen: 'SearchScreen',
-    //   detailType: 'single',
-    //   singleType: 'search',
-    //   modal: false,
-    //   episodeId,
-    //   contentId,
-    //   account
-    // })
+
     this.props.navigation.navigate('SingleEpisode', {
       screen: 'SearchScreen',
       detailType: 'single',
@@ -138,23 +169,6 @@ class ExploreDetail extends Component {
         </TouchableOpacity>
       )
     }
-    // return (
-    //   <ContentContainer
-    //     ref={(component) => {
-    //       this.contentRefs[index] = component
-    //     }}
-    //     playerRef={(player) => {
-    //       this.player[index] = player
-    //     }}
-    //     key={index}
-    //     length={length}
-    //     number={index}
-    //     episodeId={episodeId}
-    //     content={content.item}
-    //     commentModalHandler={this.props.commentModalHandler}
-    //     like={this.like.bind(this)}
-    //     dislike={this.dislike.bind(this)} />
-    // )
   }
 
   renderContents () {
@@ -245,18 +259,6 @@ class ExploreDetail extends Component {
             snapToInterval={cardWidth + paddingCard + paddingCard + 1}
             showsHorizontalScrollIndicator
             decelerationRate={'fast'} />
-          {/* <ScrollView
-            scrollsToTop={false}
-            style={{backgroundColor: '#FFFFFF'}}
-            snapToAlignment={'center'}
-            scrollEventThrottle={299}
-            directionalLockEnabled
-            decelerationRate={'fast'}
-            snapToInterval={cardWidth + paddingCard + paddingCard + 1}
-            showsHorizontalScrollIndicator
-            horizontal >
-            {this.renderContents()}
-          </ScrollView> */}
         </View>
       </View>
     )
