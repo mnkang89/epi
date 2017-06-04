@@ -145,7 +145,7 @@ class SingleEpisodeScreen extends Component {
   })
 
   _renderItemComponent = ({item, index}) => {
-    const { account, detailType, singleType } = this.props.navigation.state.params
+    const { account, detailType, singleType, pressedEpiIndex } = this.props.navigation.state.params
     // const { contentId, account, detailType, singleType } = this.props
 
     return (
@@ -153,7 +153,7 @@ class SingleEpisodeScreen extends Component {
         navigation={this.props.navigation}
         type={detailType}
         singleType={singleType}
-        xPosition={index}
+        xPosition={pressedEpiIndex}
         index={index}
         ref={(component) => {
           if (component !== null) {

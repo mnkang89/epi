@@ -105,7 +105,7 @@ class ExploreDetail extends Component {
     this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'SearchScreen'})
   }
 
-  onEpisodePress (contentId) {
+  onEpisodePress (contentId, index) {
     const episodeId = this.props.episode.id
     const account = this.props.account
 
@@ -116,7 +116,8 @@ class ExploreDetail extends Component {
       modal: false,
       account,
       episodeId,
-      contentId
+      contentId,
+      pressedEpiIndex: index
     })
   }
 
@@ -147,7 +148,7 @@ class ExploreDetail extends Component {
 
     if (item.type === 'Image') {
       return (
-        <TouchableOpacity key={index} onPress={this.onEpisodePress.bind(this, item.id)} >
+        <TouchableOpacity key={index} onPress={this.onEpisodePress.bind(this, item.id, index)} >
           <View style={{marginLeft: marginLeft, marginRight: 10}} >
             <CachableImage style={{width: windowSize.width - 220.4, height: windowSize.width - 220.4}} source={{ uri: item.path }} />
           </View>
@@ -156,7 +157,7 @@ class ExploreDetail extends Component {
     } else {
       const uri = item.thumbnailPath === undefined ? 'https://facebook.github.io/react/img/logo_og.png' : item.thumbnailPath
       return (
-        <TouchableOpacity key={index} onPress={this.onEpisodePress.bind(this, item.id)} >
+        <TouchableOpacity key={index} onPress={this.onEpisodePress.bind(this, item.id, index)} >
           <View style={{marginLeft: marginLeft, marginRight: 10}}>
             <View style={{width: windowSize.width - 220.4, height: windowSize.width - 220.4}}>
               <CachableImage style={{width: windowSize.width - 220.4, height: windowSize.width - 220.4}} source={{ uri: uri }}>
