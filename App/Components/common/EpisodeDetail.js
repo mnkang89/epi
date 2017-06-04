@@ -154,6 +154,7 @@ class EpisodeDetail extends React.PureComponent {
     // 에피소드 like 관련 리스너
     realm.objects('episode').filtered('id = ' + episodeId).addListener((episodes, changes) => {
       let episode = Array.from(realm.objects('episode').filtered('id = ' + this.props.episode.id))[0]
+
       setTimeout(() => {
         this.setState({
           likeCount: episode.likeCount,
@@ -242,6 +243,7 @@ class EpisodeDetail extends React.PureComponent {
       }
       realm.objects('episode').filtered('id = ' + episodeId).addListener((episodes, changes) => {
         let episode = Array.from(realm.objects('episode').filtered('id = ' + this.props.episode.id))[0]
+        console.log('에드리스너')
         setTimeout(() => {
           this.setState({
             likeCount: episode.likeCount,
@@ -506,7 +508,8 @@ class EpisodeDetail extends React.PureComponent {
         }
         this.currentCenterIndex = xPosition / (windowSize.width - 22) // 여기서도 문제 생길 수 있음(x)
       } else {
-        this.currentCenterIndex = xPosition
+        console.log('싱글에피: ' + this.props.xPosition)
+        this.currentCenterIndex = this.props.xPosition
       }
       return (
         <View
@@ -514,18 +517,17 @@ class EpisodeDetail extends React.PureComponent {
           <View style={headerContentStyle}>
             <View style={{width: windowSize.width - 30, marginTop: 10, marginBottom: 10}}>
               <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-                <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
-                  <View>
-                    {this.renderActiveRed()}
-                    <TouchableOpacity
-                      onPress={this.onPressProfile.bind(this)}>
+                <TouchableOpacity onPress={this.onPressProfile.bind(this)}>
+                  <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
+                    <View>
+                      {this.renderActiveRed()}
                       {this.renderProfileImage()}
-                    </TouchableOpacity>
+                    </View>
+                    <View style={{justifyContent: 'flex-start', paddingLeft: 5}}>
+                      <Text style={{color: '#626262', fontWeight: 'bold'}}>{this.props.account.nickname}</Text>
+                    </View>
                   </View>
-                  <View style={{justifyContent: 'flex-start', paddingLeft: 5}}>
-                    <Text style={{color: '#626262', fontWeight: 'bold'}}>{this.props.account.nickname}</Text>
-                  </View>
-                </View>
+                </TouchableOpacity>
                 <View style={{flexDirection: 'row'}}>
                   <Text style={{color: '#B2B2B2', fontSize: 13}}>{timeDiffString}</Text>
                   <TouchableOpacity style={{alignItems: 'flex-end', width: 20}} onPress={this.commentSetting.bind(this)}>
