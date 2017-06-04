@@ -228,14 +228,14 @@ class ExploreDetail extends Component {
     return (
       <View style={{borderBottomWidth: 1, borderBottomColor: '#F1F1F1'}}>
         <View style={{flexDirection: 'row', justifyContent: 'space-between', height: 57.5, paddingLeft: 15, paddingRight: 14.45, backgroundColor: '#FFFFFF'}}>
-          <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-            <TouchableOpacity onPress={this.onProfileImagePress.bind(this)}>
+          <TouchableOpacity onPress={this.onProfileImagePress.bind(this)}>
+            <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
               {this.renderProfileImage()}
-            </TouchableOpacity>
-            <View style={{marginLeft: 5}}>
-              <Text style={userTextStyle}>{this.props.account.nickname}</Text>
+              <View style={{marginLeft: 5}}>
+                <Text style={userTextStyle}>{this.props.account.nickname}</Text>
+              </View>
             </View>
-          </View>
+          </TouchableOpacity>
           <View style={{justifyContent: 'center'}}>
             {this.renderFollowButton()}
           </View>
