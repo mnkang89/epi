@@ -4,7 +4,8 @@ import { getToken, getAccountId } from './Auth'
 const getTokenHeader = () => {
   const token = getToken()
   return {headers: {'x-auth': token}}
-  // return {headers: {'x-auth': '$2a$10$qD4PU9v5lPKW0wmLROd9geA7Yev.LoVIVBQW1qHxjhjG8CtnEbmem'}}
+  // Test : errCode 401
+  // return {headers: {'x-auth': '$2a$10$9gPasx2g5gTH2NP/jhxu.u2gmior9AE/OH5WvcJpe64QnUFJDPB.O'}}
 }
 
 // our "constructor"

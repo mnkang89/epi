@@ -1,17 +1,3 @@
-// import { put } from 'redux-saga/effects'
-// import LoginActions from '../Redux/LoginRedux'
-//
-// // attempts to login
-// export function * login ({ username, password }) {
-//   if (password === '') {
-//     // dispatch failure
-//     yield put(LoginActions.loginFailure('WRONG'))
-//   } else {
-//     // dispatch successful logins
-//     yield put(LoginActions.loginSuccess(username))
-//   }
-// }
-
 import { put, call } from 'redux-saga/effects'
 import { path } from 'ramda'
 import LoginActions from '../Redux/LoginRedux'
@@ -19,8 +5,6 @@ import TokenActions from '../Redux/TokenRedux'
 import { setToken } from '../Services/Auth'
 
 let validateEmail = (email) => {
-  // const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-  // i think this is more readable?
   const re = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/
   return re.test(email)
 }

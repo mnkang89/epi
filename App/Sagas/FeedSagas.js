@@ -1,6 +1,7 @@
 import { put, call } from 'redux-saga/effects'
 import { path } from 'ramda'
 import FeedActions from '../Redux/FeedRedux'
+import { tokenChecker } from '../Services/Auth'
 
 // attempts to get episodes
 export function * getBestFeeds (api, action) {
@@ -19,6 +20,7 @@ export function * getBestFeeds (api, action) {
     console.log('error')
     console.log(response)
     yield put(FeedActions.bestFeedsFailure('WRONG'))
+    tokenChecker(response.status)
   }
 }
 
@@ -38,5 +40,6 @@ export function * moreBestFeeds (api, action) {
     console.log('error')
     console.log(response)
     yield put(FeedActions.moreBestFeedsFailure('WRONG'))
+    tokenChecker(response.status)
   }
 }

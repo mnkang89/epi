@@ -1,5 +1,18 @@
-// @flow
 import { getRealm } from './RealmFactory'
+import * as NavigationService from '../Services/NavigationService'
+
+export const tokenChecker = (errCode) => {
+  let realm = getRealm()
+  let accounts = realm.objects('account')
+
+  if (errCode === 401) {
+    realm.write(() => {
+      realm.delete(accounts)
+    })
+    NavigationService.reset('Login')
+  }
+  return
+}
 
 export const getToken = () => {
   let realm = getRealm()

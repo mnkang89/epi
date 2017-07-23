@@ -1,8 +1,8 @@
 import { put, call } from 'redux-saga/effects'
 import { path } from 'ramda'
 import NotiActions from '../Redux/NotiRedux'
+import { tokenChecker } from '../Services/Auth'
 
-// attempts to get episodes
 export function * getNoties (api, action) {
   console.log('getNoties 사가 진입')
   const { token, page } = action
@@ -18,6 +18,7 @@ export function * getNoties (api, action) {
     console.log('error')
     console.log(response)
     yield put(NotiActions.notiesFailure('WRONG'))
+    tokenChecker(response.status)
   }
 }
 
@@ -36,5 +37,6 @@ export function * moreNoties (api, action) {
     console.log('error')
     console.log(response)
     yield put(NotiActions.moreNotiesFailure('WRONG'))
+    tokenChecker(response.status)
   }
 }

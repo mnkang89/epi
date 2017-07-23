@@ -1,6 +1,7 @@
 import { put, call } from 'redux-saga/effects'
 import { path } from 'ramda'
 import CommentActions from '../Redux/CommentRedux'
+import { tokenChecker } from '../Services/Auth'
 
 // attempts to post comment
 export function * postComment (api, action) {
@@ -21,6 +22,7 @@ export function * postComment (api, action) {
 
     // TODO: 에러케이스 구분
     yield put(CommentActions.commentPostFailure('WRONG'))
+    tokenChecker(response.status)
   }
 }
 
@@ -42,6 +44,7 @@ export function * deleteComment (api, action) {
 
     // TODO: 에러케이스 구분
     yield put(CommentActions.commentDeleteFailure('WRONG'))
+    tokenChecker(response.status)
   }
 }
 
@@ -64,5 +67,6 @@ export function * getComment (api, action) {
 
     // TODO: 에러케이스 구분
     yield put(CommentActions.commentGetFailure('WRONG'))
+    tokenChecker(response.status)
   }
 }

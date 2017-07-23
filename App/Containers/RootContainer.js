@@ -9,7 +9,8 @@ import { connect } from 'react-redux'
 import AccountActions from '../Redux/AccountRedux'
 import ScreenActions from '../Redux/ScreenRedux'
 
-import { TabNavigator, StackNavigator, TabBarBottom, NavigationActions } from 'react-navigation'
+import { TabNavigator, StackNavigator, TabBarBottom, NavigationActions, addNavigationHelpers } from 'react-navigation'
+
 import FeedScreen from '../Containers/FeedScreen'
 import NotiScreen from '../Containers/NotiScreen'
 import CameraScreen from '../Containers/CameraScreen'
@@ -19,11 +20,11 @@ import UserProfileScreen from '../Containers/UserProfileScreen'
 import SingleEpisodeScreen from '../Containers/SingleEpisodeScreen'
 import GreetingScreen from '../Containers/Auth/GreetingScreen'
 
-import { enhance } from '../NavigationAddon'
 // Styles
 import styles from './Styles/RootContainerStyles'
 import { Images } from '../Themes'
 import { isLoggedIn } from '../Services/Auth'
+import * as NavigationService from '../Services/NavigationService'
 
 const FeedStack = StackNavigator({
   Feed: {
@@ -203,7 +204,6 @@ const Tab = TabNavigator({
                 }))
               }
             } else {
-              console.log('쩜프투 인덱스' + index)
               jumpToIndex(index)
             }
           }} />
@@ -242,10 +242,10 @@ const AppNavigator = StackNavigator(
 
 class RootContainer extends Component {
   componentDidMount () {
+    NavigationService.setNavigator(this.navigator)
   }
 
   render () {
-    console.tron.log('root container')
     console.disableYellowBox = !DebugSettings.yellowBox
     return (
       <View style={styles.applicationView}>
@@ -254,6 +254,7 @@ class RootContainer extends Component {
           barStyle='dark-content' />
         {/* <NavigationRouter /> */}
         <AppNavigator
+          ref={nav => { this.navigator = nav }}
           onNavigationStateChange={(prevState, currentState) => {
             return
           }}

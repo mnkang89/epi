@@ -3,7 +3,7 @@ import { path } from 'ramda'
 import EpisodeActions from '../Redux/EpisodeRedux'
 import ContentActions from '../Redux/ContentRedux'
 import CameraScreenActions from '../Redux/CameraScreenRedux'
-import { getToken, getAccountId } from '../Services/Auth'
+import { getToken, getAccountId, tokenChecker } from '../Services/Auth'
 
 // attempts to get episodes
 export function * userEpisodes (api, action) {
@@ -22,6 +22,7 @@ export function * userEpisodes (api, action) {
     console.log('error')
     console.log(response)
     yield put(EpisodeActions.userEpisodesFailure('WRONG'))
+    tokenChecker(response.status)
   }
 }
 
@@ -42,6 +43,7 @@ export function * userEpisodesTest (api, action) {
     console.log('error')
     console.log(response)
     yield put(EpisodeActions.userEpisodesTestFailure('WRONG'))
+    tokenChecker(response.status)
   }
 }
 
@@ -63,6 +65,7 @@ export function * userEpisodesWithFalse (api, action) {
     console.log(response)
 
     yield put(EpisodeActions.userEpisodesWithFalseFailure('WRONG'))
+    tokenChecker(response.status)
   }
 }
 
@@ -84,6 +87,7 @@ export function * otherEpisodes (api, action) {
     console.log('error')
     console.log(response)
     yield put(EpisodeActions.otherEpisodesFailure('WRONG'))
+    tokenChecker(response.status)
   }
 }
 
@@ -103,6 +107,7 @@ export function * moreFeeds (api, action) {
     console.log('error')
     console.log(response)
     yield put(EpisodeActions.moreFeedsFailure('WRONG'))
+    tokenChecker(response.status)
   }
 }
 
@@ -122,6 +127,7 @@ export function * moreEpisodes (api, action) {
     console.log('error')
     console.log(response)
     yield put(EpisodeActions.moreEpisodesFailure('WRONG'))
+    tokenChecker(response.status)
   }
 }
 
@@ -145,6 +151,7 @@ export function * moreOtherEpisodes (api, action) {
     console.log('error')
     console.log(response)
     yield put(EpisodeActions.moreOtherEpisodesFailure('WRONG'))
+    tokenChecker(response.status)
   }
 }
 
@@ -170,6 +177,7 @@ export function * postEpisode (api, action) {
     console.log(response)
     // TODO: 에러케이스 구분
     yield put(EpisodeActions.userEpisodePostFailure('WRONG'))
+    tokenChecker(response.status)
   }
 }
 
@@ -193,6 +201,7 @@ export function * putEpisode (api, action) {
     console.log(response)
     // TODO: 에러케이스 구분
     yield put(EpisodeActions.userEpisodePutFailure('WRONG'))
+    tokenChecker(response.status)
   }
 }
 
@@ -206,6 +215,7 @@ export function * deactivateEpisode (api, action) {
     yield put(EpisodeActions.userEpisodesRequest(null, getAccountId(), true))
   } else {
     console.log('fail to deactivate episode')
+    tokenChecker(response.status)
   }
 }
 
@@ -225,6 +235,7 @@ export function * singleEpisode (api, action) {
     console.log('error')
     console.log(response)
     yield put(EpisodeActions.singleEpisodeFailure('WRONG'))
+    tokenChecker(response.status)
   }
 }
 
@@ -244,6 +255,7 @@ export function * newEpisode (api, action) {
     console.log('error')
     console.log(response)
     yield put(EpisodeActions.newEpisodeFailure('WRONG'))
+    tokenChecker(response.status)
   }
 }
 
@@ -262,6 +274,7 @@ export function * newEpisodeWithFalse (api, action) {
     console.log('error')
     console.log(response)
     yield put(EpisodeActions.newEpisodeWithFalseFailure('WRONG'))
+    tokenChecker(response.status)
   }
 }
 
@@ -282,6 +295,7 @@ export function * newOtherEpisode (api, action) {
     console.log('error')
     console.log(response)
     yield put(EpisodeActions.newOtherEpisodeFailure('WRONG'))
+    tokenChecker(response.status)
   }
 }
 
@@ -299,6 +313,7 @@ export function * reportEpisode (api, action) {
     console.log('error')
     console.log(response)
     yield put(EpisodeActions.reportEpisodeFailure())
+    tokenChecker(response.status)
   }
 }
 
@@ -316,5 +331,6 @@ export function * removeEpisode (api, action) {
     console.log('error')
     console.log(response)
     yield put(EpisodeActions.removeEpisodeFailure())
+    tokenChecker(response.status)
   }
 }

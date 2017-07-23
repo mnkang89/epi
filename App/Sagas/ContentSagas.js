@@ -1,7 +1,7 @@
 import { put, call } from 'redux-saga/effects'
 import { path } from 'ramda'
 import ContentActions from '../Redux/ContentRedux'
-import { getToken, getAccountId } from '../Services/Auth'
+import { getToken, getAccountId, tokenChecker } from '../Services/Auth'
 import CameraScreenActions from '../Redux/CameraScreenRedux'
 import EpisodeActions from '../Redux/EpisodeRedux'
 
@@ -32,6 +32,7 @@ export function * postContentToEpisode (api, token, episodeId, contentType, cont
   if (response.ok) {
     return true
   } else {
+    tokenChecker(response.status)
     return false
   }
 }
@@ -52,6 +53,7 @@ export function * getActiveEpisodeIdOrCreateNewEpisode (api, token) {
       }
     }
   } else {
+    tokenChecker(response.status)
     return null
   }
 }
@@ -75,6 +77,7 @@ export function * postLike (api, action) {
 
     // TODO: 에러케이스 구분
     yield put(ContentActions.likePostFailure('WRONG'))
+    tokenChecker(response.status)
   }
 }
 
@@ -97,5 +100,6 @@ export function * deleteLike (api, action) {
 
     // TODO: 에러케이스 구분
     yield put(ContentActions.likeDeleteFailure('WRONG'))
+    tokenChecker(response.status)
   }
 }

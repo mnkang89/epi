@@ -1,7 +1,7 @@
 import { put, call } from 'redux-saga/effects'
 import { path } from 'ramda'
 import AccountActions from '../Redux/AccountRedux'
-import { getToken, getAccountId } from '../Services/Auth'
+import { getToken, getAccountId, tokenChecker } from '../Services/Auth'
 import CameraScreenActions from '../Redux/CameraScreenRedux'
 
 // attempts to get account
@@ -24,11 +24,10 @@ export function * account (api, action) {
   } else {
     console.log('error')
     console.log(response)
-    const message = path(['data', 'responseMessage'], response)
 
     // TODO: 에러 케이스 다루기
-    console.log(message)
     yield put(AccountActions.infoFailure('WRONG'))
+    tokenChecker(response.status)
   }
 }
 // attempts to get account
@@ -61,6 +60,7 @@ export function * otherInfo (api, action) {
     // TODO: 에러 케이스 다루기
     console.log(message)
     yield put(AccountActions.otherInfoFailure('WRONG'))
+    tokenChecker(response.status)
   }
 }
 
@@ -83,6 +83,7 @@ export function * checkUserEpisode (api, action) {
     console.log('error')
     console.log(response)
     yield put(AccountActions.userEpisodeCheckFailure('WRONG'))
+    tokenChecker(response.status)
   }
 }
 
@@ -104,6 +105,7 @@ export function * postFollow (api, action) {
 
     // TODO: 에러케이스 구분
     yield put(AccountActions.followPostFailure('WRONG'))
+    tokenChecker(response.status)
   }
 }
 
@@ -125,6 +127,7 @@ export function * deleteFollow (api, action) {
 
     // TODO: 에러케이스 구분
     yield put(AccountActions.followDeleteFailure('WRONG'))
+    tokenChecker(response.status)
   }
 }
 
@@ -155,6 +158,7 @@ export function * getFollowing (api, action) {
 
     // TODO: 에러케이스 구분
     yield put(AccountActions.getFollowingFailure('WRONG'))
+    tokenChecker(response.status)
   }
 }
 
@@ -184,6 +188,7 @@ export function * getFollower (api, action) {
 
     // TODO: 에러케이스 구분
     yield put(AccountActions.getFollowerFailure('WRONG'))
+    tokenChecker(response.status)
   }
 }
 
@@ -200,5 +205,6 @@ export function * getActiveUserEpisode (api, action) {
     }
   } else {
     console.log('fail to get active user episode')
+    tokenChecker(response.status)
   }
 }
