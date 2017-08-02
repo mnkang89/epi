@@ -14,6 +14,7 @@ import {
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import { StackNavigator } from 'react-navigation'
 
+import CachableImage from '../../Common/CachableImage'
 import { Colors, Images, Metrics } from '../../Themes/'
 import { convert2TimeDiffString } from '../../Lib/Utilities'
 import { getRealm } from '../../Services/RealmFactory'
@@ -430,7 +431,7 @@ class EpisodeDetail extends React.PureComponent {
 
     if (this.props.account.profileImagePath) {
       return (
-        <Image
+        <CachableImage
           style={styles.profileStyle}
           source={{uri: uri}} />
       )

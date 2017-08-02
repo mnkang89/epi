@@ -8,7 +8,7 @@ import ConfirmError from './ConfirmError'
 import { Images } from '../../Themes'
 import styles from '../../Containers/Styles/FeedScreenStyle'
 
-// import CachableImage from '../../Common/CachableImage'
+import CachableImage from '../../Common/CachableImage'
 import { getAccountId } from '../../Services/Auth'
 import ImageResizer from 'react-native-image-resizer'
 import { getRealm } from '../../Services/RealmFactory'
@@ -289,7 +289,7 @@ class ProfileInfo extends Component {
         const uri = `${this.state.photoSource}?random_number=${randomTime}`
 
         return (
-          <Image
+          <CachableImage
             style={[styles.image, {borderWidth: 1, borderColor: 'white', marginBottom: 9, marginTop: 19}]}
             source={{uri: uri}} />
         )
@@ -303,7 +303,7 @@ class ProfileInfo extends Component {
     } else {
       if (this.props.profileImagePath) {
         return (
-          <Image
+          <CachableImage
             style={[styles.image, {borderWidth: 1, borderColor: 'white', marginBottom: 9, marginTop: 19}]}
             source={{uri: this.props.profileImagePath}} />)
       } else {

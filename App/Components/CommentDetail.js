@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { Text, View, Image, TouchableOpacity, Modal, Animated, PanResponder } from 'react-native'
 // import CachableImage from '../Common/CachableImage'
 
+import CachableImage from '../Common/CachableImage'
 import { Colors, Images, Metrics } from '../Themes/'
 import { convert2TimeDiffString } from '../Lib/Utilities'
 import { getAccountId } from '../Services/Auth'
@@ -128,7 +129,7 @@ class CommentDetail extends Component {
 
     if (profileImagePath) {
       return (
-        <Image
+        <CachableImage
           style={styles.imageStyle}
           source={{uri: uri}} />
       )
