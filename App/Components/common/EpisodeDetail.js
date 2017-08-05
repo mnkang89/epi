@@ -461,7 +461,6 @@ class EpisodeDetail extends React.PureComponent {
         <Image style={{width: 24, height: 20}} source={Images.likeHeart} />
       )
     } else {
-      console.log('언라이크')
       return (
         <Image style={{width: 24, height: 20}} source={Images.unlikeHeart} />
       )

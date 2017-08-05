@@ -1,5 +1,27 @@
 import Realm from 'realm'
 
+const logQueueSchema = {
+  name: 'logQueue',
+  properties: {
+    logType: { type: 'string' },
+    log: { type: 'log' }
+  }
+}
+
+const logSchema = {
+  name: 'log',
+  properties: {
+    logTime: { type: 'string' },
+    userId: { type: 'string' },
+    contentIndex: { type: 'string' },
+    contentId: { type: 'string' },
+    episodeId: { type: 'string' },
+    type: { type: 'string' },
+    path: { type: 'string' },
+    panel: { type: 'string' }
+  }
+}
+
 const AccountSchema = {
   name: 'account',
   properties: {
@@ -58,5 +80,5 @@ const PushTokenSchema = {
 }
 
 export const getRealm = () => {
-  return new Realm({schema: [AccountSchema, UserSchema, EpisodeSchema, CacheImageSchema, CacheVideoSchema, PushTokenSchema]})
+  return new Realm({schema: [logQueueSchema, logSchema, AccountSchema, UserSchema, EpisodeSchema, CacheImageSchema, CacheVideoSchema, PushTokenSchema]})
 }

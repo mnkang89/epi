@@ -11,7 +11,11 @@ import {
   Dimensions
 } from 'react-native'
 import { connect } from 'react-redux'
-import { getAccountId, getToken } from '../Services/Auth'
+
+import { getAccountId } from '../Services/Auth'
+import { impressionLogGenerator } from '../Services/Logger/LogGenerator'
+import { insertToLogQueue } from '../Services/Logger/LogSender'
+
 import { getObjectDiff, getArrayDiff } from '../Lib/Utilities'
 import FlatListE from '../Experimental/FlatList0.44/FlatList_E44'
 import PushConfig from '../Config/PushConfig'
@@ -24,8 +28,6 @@ import CommentActions from '../Redux/CommentRedux'
 import AccountActions from '../Redux/AccountRedux'
 import { Images } from '../Themes'
 import { getRealm } from '../Services/RealmFactory'
-
-import _ from 'lodash'
 
 const windowSize = Dimensions.get('window')
 const realm = getRealm()
@@ -371,6 +373,14 @@ class FeedScreen extends Component {
 
     for (let i = 0; i < info.viewableItems.length; i++) {
       viewableItemsArray.push(info.viewableItems[i].index)
+    }
+    // Logging
+    if (info.viewableItems.length !== 0) {
+      const viewableIndex = info.viewableItems[0].index
+      const log = impressionLogGenerator(this.episodeRefs, viewableIndex, 'feed')
+
+      console.log(log)
+      insertToLogQueue(log)
     }
     // 보이는 아이템들 어레이
     this.viewableItemsArray = viewableItemsArray
