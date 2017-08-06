@@ -8,13 +8,15 @@ import {
 } from 'react-native'
 import { connect } from 'react-redux'
 
-import { getObjectDiff } from '../Lib/Utilities'
-import styles from './Styles/FeedScreenStyle'
-import ExploreDetail from '../Components/ExploreDetail'
+import { impressionLogGenerator } from '../Services/Logger/LogGenerator'
+import { insertToLogQueue } from '../Services/Logger/LogSender'
 
+import ExploreDetail from '../Components/ExploreDetail'
 import FeedActions from '../Redux/FeedRedux'
 import AccountActions from '../Redux/AccountRedux'
+
 import { Images } from '../Themes'
+import styles from './Styles/FeedScreenStyle'
 
 const windowSize = Dimensions.get('window')
 const ITEM_HEIGHT = 57.5 + (windowSize - 220)
@@ -67,12 +69,10 @@ class ExploreScreen extends Component {
     }
     this.updatedDateTime
     this.profileModifiedFlag = false
+    this.episodeRefs = {}
   }
 
   componentDidMount () {
-    // setTimeout(() => {
-    //   this.props.requestBestFeeds(null)
-    // }, 300)
     this.props.requestBestFeeds(null)
     setTimeout(() => {
       this.props.navigation.setParams({
@@ -96,11 +96,6 @@ class ExploreScreen extends Component {
       }
     }
 
-    // if ((this.props.followPosting === true && nextProps.followPosting === false) ||
-    //     (this.props.followDeleting === true && nextProps.followDeleting === false)) {
-    //   this.props.requestBestFeeds(null)
-    // }
-
     this.setState({data: nextProps.items})
 
     if (this.state.refreshing) {
@@ -111,17 +106,6 @@ class ExploreScreen extends Component {
     }
   }
 
-  // shouldComponentUpdate (nextProps, nextState) {
-  //   if (this.props.profileModified !== nextProps.profileModified) {
-  //     this.profileModifiedFlag = true
-  //     return true
-  //   }
-  //   if (_.isEqual(this.props.items, nextProps.items)) {
-  //     return false
-  //   } else {
-  //     return true
-  //   }
-  // }
   scrollsToTop = () => {
     this._listRef.scrollToOffset({x: 0, y: 0})
   }
@@ -154,7 +138,7 @@ class ExploreScreen extends Component {
             legacyImplementation={false}
             onRefresh={this._onRefresh}
             refreshing={this.state.refreshing}
-            // onViewableItemsChanged={this._onViewableItemsChanged}
+            onViewableItemsChanged={this._onViewableItemsChanged}
             onEndReached={this._onEndReached}
             onEndReachedThreshold={0}
             shouldItemUpdate={this._shouldItemUpdate.bind(this)} />
@@ -177,6 +161,11 @@ class ExploreScreen extends Component {
       <ExploreDetail
         navigation={this.props.navigation}
         key={noti.item.episode.id}
+        ref={(component) => {
+          if (component !== null) {
+            this.episodeRefs[index] = component
+          }
+        }}
         length={length}
         number={index}
         following={noti.item.following}
@@ -217,6 +206,29 @@ class ExploreScreen extends Component {
     return prev.item !== next.item
   }
 
+  _onViewableItemsChanged = (info: {
+      changed: Array<{
+        key: string, isViewable: boolean, item: any, index: ?number, section?: any
+      }>
+    }) => {
+    // Logging
+    if (info.changed.length !== 0) {
+      for (let changed in info.changed) {
+        if (info.changed[changed].isViewable) {
+          const viewableIndex = info.changed[changed].index
+          const logBundle = impressionLogGenerator(this.episodeRefs, viewableIndex, 'explore')
+
+          for (let logIndex in logBundle) {
+            const log = logBundle[logIndex]
+
+            console.log(log)
+            insertToLogQueue(log)
+          }
+        }
+      }
+    }
+  }
+
   _onRefresh = () => {
     this.setState({refreshing: true}, () => {
       this.props.requestBestFeeds(null)
@@ -239,10 +251,6 @@ const mapStateToProps = (state) => {
 
     followPosting: state.account.followPosting,
     followDeleting: state.account.followDeleting
-
-    // trigger: state.screen.trigger,
-    // beforeScreen: state.screen.beforeScreen,
-    // pastScreen: state.screen.pastScreen
   }
 }
 

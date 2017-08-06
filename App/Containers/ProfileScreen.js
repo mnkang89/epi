@@ -9,6 +9,8 @@ import {
 import { connect } from 'react-redux'
 
 import { getAccountId } from '../Services/Auth'
+import { impressionLogGenerator } from '../Services/Logger/LogGenerator'
+import { insertToLogQueue } from '../Services/Logger/LogSender'
 import { getArrayDiff } from '../Lib/Utilities'
 
 import ProfileInfo from '../Components/common/ProfileInfo'
@@ -92,11 +94,6 @@ class ProfileScreen extends Component {
     setTimeout(() => {
       this.props.requestUserEpisodesWithFalse(null, accountId, withFollowing)
     }, 100)
-    // setTimeout(() => {
-    //   this.props.navigation.setParams({
-    //     function: this.scrollsToTop
-    //   })
-    // }, 1000)
   }
 
   componentWillReceiveProps (nextProps) {
@@ -262,6 +259,15 @@ class ProfileScreen extends Component {
 
     for (let i = 0; i < info.viewableItems.length; i++) {
       viewableItemsArray.push(info.viewableItems[i].index)
+    }
+
+    // Logging
+    if (info.viewableItems.length !== 0) {
+      const viewableIndex = info.viewableItems[0].index
+      const log = impressionLogGenerator(this.episodeRefs, viewableIndex, 'profile')
+
+      console.log(log)
+      insertToLogQueue(log)
     }
 
     this.viewableItemsArray = viewableItemsArray

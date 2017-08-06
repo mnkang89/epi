@@ -5,13 +5,14 @@ import {
   Image,
   ActivityIndicator,
   FlatList,
-  Dimensions,
-  Button
+  Dimensions
 } from 'react-native'
 import { connect } from 'react-redux'
 
+import { impressionLogGenerator } from '../Services/Logger/LogGenerator'
+import { insertToLogQueue } from '../Services/Logger/LogSender'
+
 import { getArrayDiff } from '../Lib/Utilities'
-import { NavigationActions } from 'react-navigation'
 import ProfileInfo from '../Components/common/ProfileInfo'
 import EpisodeDetail from '../Components/common/EpisodeDetail'
 import CommentModalContainer from './common/CommentModalContainer'
@@ -305,6 +306,15 @@ class UserProfileScreen extends Component {
 
     for (let i = 0; i < info.viewableItems.length; i++) {
       viewableItemsArray.push(info.viewableItems[i].index)
+    }
+
+    // Logging
+    if (info.viewableItems.length !== 0) {
+      const viewableIndex = info.viewableItems[0].index
+      const log = impressionLogGenerator(this.episodeRefs, viewableIndex, 'userProfile')
+
+      console.log(log)
+      insertToLogQueue(log)
     }
 
     this.viewableItemsArray = viewableItemsArray
