@@ -1,24 +1,51 @@
 import Realm from 'realm'
 
-const logQueueSchema = {
-  name: 'logQueue',
+const visitLogQueueSchema = {
+  name: 'visitLogQueue',
   properties: {
-    logType: { type: 'string' },
-    log: { type: 'log' }
+    log: { type: 'visitLog' }
   }
 }
 
-const logSchema = {
-  name: 'log',
+const impLogQueueSchema = {
+  name: 'impLogQueue',
   properties: {
-    logTime: { type: 'string' },
-    userId: { type: 'string' },
-    contentIndex: { type: 'string' },
-    contentId: { type: 'string' },
-    episodeId: { type: 'string' },
+    log: { type: 'impViewLog' }
+  }
+}
+
+const viewLogQueueSchema = {
+  name: 'viewLogQueue',
+  properties: {
+    log: { type: 'impViewLog' }
+  }
+}
+
+const visitLog = {
+  name: 'visitLog',
+  properties: {
+    accountId: { type: 'int' },
+    datetime: { type: 'string' },
+    ip: { type: 'string' },
     type: { type: 'string' },
-    path: { type: 'string' },
-    panel: { type: 'string' }
+    version: { type: 'string' },
+    visitAccountId: { type: 'int' }
+  }
+}
+
+const impViewLog = {
+  name: 'impViewLog',
+  properties: {
+    accountId: { type: 'int' },
+    contentId: { type: 'int' },
+    datetime: { type: 'string' },
+    episodeId: { type: 'int' },
+    episodeIdx: { type: 'int' },
+    feedIdx: { type: 'int' },
+    ip: { type: 'string' },
+    screenType: { type: 'string' },
+    type: { type: 'string' },
+    version: { type: 'string' }
   }
 }
 
@@ -80,5 +107,5 @@ const PushTokenSchema = {
 }
 
 export const getRealm = () => {
-  return new Realm({schema: [logQueueSchema, logSchema, AccountSchema, UserSchema, EpisodeSchema, CacheImageSchema, CacheVideoSchema, PushTokenSchema]})
+  return new Realm({schema: [visitLogQueueSchema, impLogQueueSchema, viewLogQueueSchema, impViewLog, visitLog, AccountSchema, UserSchema, EpisodeSchema, CacheImageSchema, CacheVideoSchema, PushTokenSchema]})
 }

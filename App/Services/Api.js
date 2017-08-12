@@ -318,6 +318,22 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     return api.post(`/api/accounts/${accountId}/register-push-notification`, formData, getTokenHeader())
   }
 
+  // logging
+  const postVisitLogs = (JSONbody) => {
+    console.log('POST visitLogs api콜 발생')
+    return api.post(`/api/logs/visit`, JSONbody, getTokenHeader())
+  }
+
+  const postImpLogs = (JSONbody) => {
+    console.log('POST impLogs api콜 발생')
+    return api.post(`/api/logs/imp`, JSONbody, getTokenHeader())
+  }
+
+  const postViewLogs = (JSONbody) => {
+    console.log('POST viewLogs api콜 발생')
+    return api.post(`/api/logs/view`, JSONbody, getTokenHeader())
+  }
+
   return {
     // a list of the API functions from step 2
     checkEmail,
@@ -359,7 +375,11 @@ const create = (baseURL = 'http://alphaca-staging.ap-northeast-2.elasticbeanstal
     requestMoreBestFeeds,
 
     getNoties,
-    registerPushToken
+    registerPushToken,
+
+    postVisitLogs,
+    postImpLogs,
+    postViewLogs
   }
 }
 
