@@ -1,4 +1,3 @@
-// TODO: 헤애함
 import React, { Component, PropTypes } from 'react'
 import { Text, Image, View, TouchableOpacity, Dimensions } from 'react-native'
 
@@ -6,6 +5,9 @@ import { Colors, Metrics, Images } from '../Themes/'
 import CachableImage from '../Common/CachableImage'
 import { getAccountId } from '../Services/Auth'
 import { getRealm } from '../Services/RealmFactory'
+
+import { visitLogGenerator } from '../Services/Logger/LogGenerator'
+import { insertToLogQueue } from '../Services/Logger/LogSender'
 
 const realm = getRealm()
 const windowSize = Dimensions.get('window')
@@ -85,23 +87,28 @@ class FollowDetail extends Component {
 
   onProfilePress () {
     const accountId = this.props.follow.id
+    const visitLog = visitLogGenerator(accountId, 'Visit')
     this.props.resetFollowModal()
 
     if (this.props.screen === 'FeedScreen') {
       setTimeout(() => {
         this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'FeedScreen'})
+        insertToLogQueue(visitLog)
       }, 500)
     } else if (this.props.screen === 'NotiScreen') {
       setTimeout(() => {
         this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'NotiScreen'})
+        insertToLogQueue(visitLog)
       }, 500)
     } else if (this.props.screen === 'SearchScreen') {
       setTimeout(() => {
         this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'SearchScreen'})
+        insertToLogQueue(visitLog)
       }, 500)
     } else if (this.props.screen === 'ProfileScreen') {
       setTimeout(() => {
         this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'ProfileScreen'})
+        insertToLogQueue(visitLog)
       }, 500)
     }
   }

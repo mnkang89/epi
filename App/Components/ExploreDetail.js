@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react'
-import { ScrollView, Dimensions, Text, View, Image, TouchableOpacity } from 'react-native'
-import { Actions as NavigationActions } from 'react-native-router-flux'
+import { Dimensions, Text, View, Image, TouchableOpacity } from 'react-native'
+import moment from 'moment'
+import { getUniqueID, getVersion } from 'react-native-device-info'
 
 import CachableImage from '../Common/CachableImage'
 import CachableVideo from '../Common/CachableVideo'
@@ -10,6 +11,8 @@ import { Colors, Images, Metrics } from '../Themes/'
 import FlatListE from '../Experimental/FlatList0.44/FlatList_E44'
 import { getAccountId } from '../Services/Auth'
 import { getRealm } from '../Services/RealmFactory'
+import { visitLogGenerator, logGenerator } from '../Services/Logger/LogGenerator'
+import { insertToLogQueue } from '../Services/Logger/LogSender'
 
 const realm = getRealm()
 const windowSize = Dimensions.get('window')
@@ -37,6 +40,8 @@ class ExploreDetail extends Component {
     this.state = {
       follow: this.props.following
     }
+    this.horizontalLock = true
+    this.exploreRefs = {}
   }
 
   componentDidMount () {
@@ -101,8 +106,10 @@ class ExploreDetail extends Component {
 
   onProfileImagePress () {
     const accountId = this.props.account.id
+    const visitLog = visitLogGenerator(accountId, 'Visit')
 
     this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'SearchScreen'})
+    insertToLogQueue(visitLog)
   }
 
   onEpisodePress (contentId, index) {
@@ -144,6 +151,7 @@ class ExploreDetail extends Component {
   }
 
   _renderItemComponent = ({item, index}) => {
+    this.exploreRefs[index] = item
     const marginLeft = index === 0 ? 15 : 0
 
     if (item.type === 'Image') {
@@ -254,6 +262,8 @@ class ExploreDetail extends Component {
             horizontal
             key={'hf'}
             // shouldItemUpdate={this._shouldItemUpdate}
+            onMomentumScrollBegin={this._onScrollBegin}
+            onViewableItemsChanged={this._onViewableItemsChanged}
             style={{backgroundColor: '#FFFFFF'}}
             scrollEventThrottle={100}
             snapToAlignment={'center'}
@@ -264,6 +274,79 @@ class ExploreDetail extends Component {
       </View>
     )
   }
+
+  _onScrollBegin = (event) => {
+    this.horizontalLock = false
+  }
+
+  _onViewableItemsChanged = (info: {
+      changed: Array<{
+        key: string, isViewable: boolean, item: any, index: ?number, section?: any
+      }>
+    }
+  ) => {
+    // Logging
+    if (info.changed.length !== 0 && !this.horizontalLock) {
+      for (let changed in info.changed) {
+        if (info.changed[changed].isViewable) {
+          const viewableIndex = info.changed[changed].index
+          const accountId = getAccountId()
+          const episodeIdx = viewableIndex
+          const contentId = this.exploreRefs[viewableIndex].id
+          const datetime = moment(Date.now()).format('YYYY-MM-DDTHH:mm:ss.SSSZ').toString()
+          const episodeId = this.exploreRefs[viewableIndex].episodeId
+          const feedIdx = this.props.index
+          const ip = getUniqueID()
+          const type = 'Impression'
+          const version = getVersion()
+          const screenType = 'explore'
+
+          const impLog = {
+            logQueueType: 'impLogQueue',
+            log: {
+              accountId,
+              contentId,
+              datetime,
+              episodeId,
+              episodeIdx,
+              feedIdx,
+              ip,
+              screenType,
+              type,
+              version
+            }
+          }
+
+          const viewLog = {
+            logQueueType: 'impLogQueue',
+            log: {
+              accountId,
+              contentId,
+              datetime,
+              episodeId,
+              episodeIdx,
+              feedIdx,
+              ip,
+              screenType,
+              type: 'View',
+              version
+            }
+          }
+          console.log('횡imp로그')
+          console.log(impLog)
+          insertToLogQueue(impLog)
+          clearTimeout(this.viewTimer)
+          this.viewTimer = setTimeout(() => {
+            console.log('횡view로그')
+            console.log(viewLog)
+            insertToLogQueue(viewLog)
+            clearTimeout(this.viewTimer)
+          }, 5000)
+        }
+      }
+    }
+  }
+
 }
 
 const styles = {

@@ -1,9 +1,11 @@
 import React, { Component, PropTypes } from 'react'
 import { Text, View, Image, TouchableOpacity, Dimensions } from 'react-native'
-import { Actions as NavigationActions } from 'react-native-router-flux'
 import { Colors, Images, Metrics } from '../Themes/'
 import CachableImage from '../Common/CachableImage'
 import { convert2TimeDiffString } from '../Lib/Utilities'
+
+import { visitLogGenerator } from '../Services/Logger/LogGenerator'
+import { insertToLogQueue } from '../Services/Logger/LogSender'
 
 const windowSize = Dimensions.get('window')
 
@@ -102,12 +104,10 @@ class NotiDetail extends Component {
 
   onProfilePress () {
     const accountId = this.props.noti.notiCreateAccount.id
+    const visitLog = visitLogGenerator(accountId, 'Visit')
+
     this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'NotiScreen'})
-    // NavigationActions.notiTouserProfileScreen({
-    //   type: 'push',
-    //   screen: 'NotiScreen',
-    //   id: accountId
-    // })
+    insertToLogQueue(visitLog)
   }
 
   renderProfileImage () {

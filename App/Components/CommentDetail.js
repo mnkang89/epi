@@ -7,6 +7,8 @@ import { Colors, Images, Metrics } from '../Themes/'
 import { convert2TimeDiffString } from '../Lib/Utilities'
 import { getAccountId } from '../Services/Auth'
 import { getRealm } from '../Services/RealmFactory'
+import { visitLogGenerator } from '../Services/Logger/LogGenerator'
+import { insertToLogQueue } from '../Services/Logger/LogSender'
 
 const realm = getRealm()
 const accountId = getAccountId()
@@ -101,23 +103,28 @@ class CommentDetail extends Component {
 
   onProfilePress () {
     const accountId = this.props.comment.account.id
+    const visitLog = visitLogGenerator(accountId, 'Visit')
     this.props.resetCommentModal()
 
     if (this.props.screen === 'FeedScreen') {
       setTimeout(() => {
         this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'FeedScreen'})
+        insertToLogQueue(visitLog)
       }, 500)
     } else if (this.props.screen === 'NotiScreen') {
       setTimeout(() => {
         this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'NotiScreen'})
+        insertToLogQueue(visitLog)
       }, 500)
     } else if (this.props.screen === 'SearchScreen') {
       setTimeout(() => {
         this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'SearchScreen'})
+        insertToLogQueue(visitLog)
       }, 500)
     } else if (this.props.screen === 'ProfileScreen') {
       setTimeout(() => {
         this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'ProfileScreen'})
+        insertToLogQueue(visitLog)
       }, 500)
     }
   }
