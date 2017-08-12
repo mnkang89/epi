@@ -9,7 +9,7 @@ import {
 import { connect } from 'react-redux'
 
 import { getAccountId } from '../Services/Auth'
-import { impressionLogGenerator } from '../Services/Logger/LogGenerator'
+import { logGenerator } from '../Services/Logger/LogGenerator'
 import { insertToLogQueue } from '../Services/Logger/LogSender'
 import { getArrayDiff } from '../Lib/Utilities'
 
@@ -264,10 +264,17 @@ class ProfileScreen extends Component {
     // Logging
     if (info.viewableItems.length !== 0) {
       const viewableIndex = info.viewableItems[0].index
-      const log = impressionLogGenerator(this.episodeRefs, viewableIndex, 'profile')
+      const impLog = logGenerator(this.episodeRefs, viewableIndex, 'profile', 'Impression')
+      const viewLog = logGenerator(this.episodeRefs, viewableIndex, 'profile', 'View')
 
-      console.log(log)
-      insertToLogQueue(log)
+      console.log(impLog)
+      insertToLogQueue(impLog)
+      clearTimeout(this.viewTimer)
+      this.viewTimer = setTimeout(() => {
+        console.log(viewLog)
+        insertToLogQueue(viewLog)
+        clearTimeout(this.viewTimer)
+      }, 3000)
     }
 
     this.viewableItemsArray = viewableItemsArray

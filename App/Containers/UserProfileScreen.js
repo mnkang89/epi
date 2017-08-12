@@ -9,7 +9,7 @@ import {
 } from 'react-native'
 import { connect } from 'react-redux'
 
-import { impressionLogGenerator } from '../Services/Logger/LogGenerator'
+import { logGenerator } from '../Services/Logger/LogGenerator'
 import { insertToLogQueue } from '../Services/Logger/LogSender'
 
 import { getArrayDiff } from '../Lib/Utilities'
@@ -311,10 +311,17 @@ class UserProfileScreen extends Component {
     // Logging
     if (info.viewableItems.length !== 0) {
       const viewableIndex = info.viewableItems[0].index
-      const log = impressionLogGenerator(this.episodeRefs, viewableIndex, 'userProfile')
+      const impLog = logGenerator(this.episodeRefs, viewableIndex, 'userProfile', 'Impression')
+      const viewLog = logGenerator(this.episodeRefs, viewableIndex, 'userProfile', 'View')
 
-      console.log(log)
-      insertToLogQueue(log)
+      console.log(impLog)
+      insertToLogQueue(impLog)
+      clearTimeout(this.viewTimer)
+      this.viewTimer = setTimeout(() => {
+        console.log(viewLog)
+        insertToLogQueue(viewLog)
+        clearTimeout(this.viewTimer)
+      }, 5000)
     }
 
     this.viewableItemsArray = viewableItemsArray

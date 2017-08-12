@@ -8,7 +8,7 @@ import {
 } from 'react-native'
 import { connect } from 'react-redux'
 
-import { impressionLogGenerator } from '../Services/Logger/LogGenerator'
+import { logGenerator } from '../Services/Logger/LogGenerator'
 import { insertToLogQueue } from '../Services/Logger/LogSender'
 
 import ExploreDetail from '../Components/ExploreDetail'
@@ -159,6 +159,7 @@ class ExploreScreen extends Component {
 
     return (
       <ExploreDetail
+        index={index}
         navigation={this.props.navigation}
         key={noti.item.episode.id}
         ref={(component) => {
@@ -216,7 +217,7 @@ class ExploreScreen extends Component {
       for (let changed in info.changed) {
         if (info.changed[changed].isViewable) {
           const viewableIndex = info.changed[changed].index
-          const logBundle = impressionLogGenerator(this.episodeRefs, viewableIndex, 'explore')
+          const logBundle = logGenerator(this.episodeRefs, viewableIndex, 'explore', 'Impression')
 
           for (let logIndex in logBundle) {
             const log = logBundle[logIndex]

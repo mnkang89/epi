@@ -13,7 +13,7 @@ import {
 import { connect } from 'react-redux'
 
 import { getAccountId } from '../Services/Auth'
-import { impressionLogGenerator } from '../Services/Logger/LogGenerator'
+import { logGenerator } from '../Services/Logger/LogGenerator'
 import { insertToLogQueue } from '../Services/Logger/LogSender'
 
 import { getObjectDiff, getArrayDiff } from '../Lib/Utilities'
@@ -103,6 +103,7 @@ class FeedScreen extends Component {
     this.viewableItemsArray = []
     this.episodeRefs = {}
     this.hide = []
+    this.viewTimer = null
   }
 
   componentWillMount () {
@@ -377,10 +378,17 @@ class FeedScreen extends Component {
     // Logging
     if (info.viewableItems.length !== 0) {
       const viewableIndex = info.viewableItems[0].index
-      const log = impressionLogGenerator(this.episodeRefs, viewableIndex, 'feed')
+      const impLog = logGenerator(this.episodeRefs, viewableIndex, 'feed', 'Impression')
+      const viewLog = logGenerator(this.episodeRefs, viewableIndex, 'feed', 'View')
 
-      console.log(log)
-      insertToLogQueue(log)
+      console.log(impLog)
+      insertToLogQueue(impLog)
+      clearTimeout(this.viewTimer)
+      this.viewTimer = setTimeout(() => {
+        console.log(viewLog)
+        insertToLogQueue(viewLog)
+        clearTimeout(this.viewTimer)
+      }, 5000)
     }
     // 보이는 아이템들 어레이
     this.viewableItemsArray = viewableItemsArray

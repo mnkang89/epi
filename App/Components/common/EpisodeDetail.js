@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react'
+import React, { PropTypes } from 'react'
 import {
   Text,
   View,
@@ -11,20 +11,17 @@ import {
   ActivityIndicator,
   Dimensions
  } from 'react-native'
-import { Actions as NavigationActions } from 'react-native-router-flux'
-import { StackNavigator } from 'react-navigation'
 
 import CachableImage from '../../Common/CachableImage'
 import { Colors, Images, Metrics } from '../../Themes/'
 import { convert2TimeDiffString } from '../../Lib/Utilities'
 import { getRealm } from '../../Services/RealmFactory'
 import { getAccountId } from '../../Services/Auth'
+import { logGenerator, visitLogGenerator } from '../../Services/Logger/LogGenerator'
+import { insertToLogQueue } from '../../Services/Logger/LogSender'
 
 import ContentContainer from '../../Containers/common/ContentContainer'
 import FlatListE from '../../Experimental/FlatList0.44/FlatList_E44'
-import FeedScreen from '../../Containers/FeedScreen'
-import ProfileScreen from '../../Containers/ProfileScreen'
-// import FlatListE from '../../Experimental/FlatList_e'
 
 const windowSize = Dimensions.get('window')
 const realm = getRealm()
@@ -333,7 +330,7 @@ class EpisodeDetail extends React.PureComponent {
 
   onPressProfile () {
     const accountId = this.props.episode.accountId
-    // const accountId = this.state.episode.accountId
+    const visitLog = visitLogGenerator(accountId, 'Visit')
 
     if (this.props.type === 'me' ||
         this.props.type === 'other') {
@@ -346,6 +343,9 @@ class EpisodeDetail extends React.PureComponent {
     } else {
       this.props.navigation.navigate('UserProfile', {id: accountId, screen: 'FeedScreen'})
     }
+
+    console.log(visitLog)
+    insertToLogQueue(visitLog)
   }
 
   _onScrollBeginDrag (event) {
@@ -683,17 +683,32 @@ class EpisodeDetail extends React.PureComponent {
       }>
     }
   ) => {
+    // Logging
+    if (info.viewableItems.length !== 0 && !this.horizontalLock) {
+      const viewableIndex = info.viewableItems[0].index
+      const impLog = logGenerator(this.episodeRefs, viewableIndex, 'feed', 'Impression')
+      const viewLog = logGenerator(this.episodeRefs, viewableIndex, 'feed', 'View')
+
+      console.log('횡imp로그')
+      console.log(impLog)
+      insertToLogQueue(impLog)
+      clearTimeout(this.props.parentHandler.viewTimer)
+      this.props.parentHandler.viewTimer = setTimeout(() => {
+        console.log('횡view로그')
+        console.log(viewLog)
+        insertToLogQueue(viewLog)
+        clearTimeout(this.props.parentHandler.viewTimer)
+      }, 5000)
+    }
     /*
       this.horizontalLock은 해당 에피소드가 좌우 스크롤된적이 없을 경우 true이다.
       onMomentumScrollBegin을 이용해 스크롤시 false로 변경한다.
     */
     if (info.viewableItems.length === 1 && !this.horizontalLock) {
       const episodeId = this.props.episode.id
-      // const episodeId = this.state.episode.id
       const offset = info.viewableItems[0].index * (windowSize.width - 22)
 
       const { parentHandler, index } = this.props
-      // const { parentHandler, index } = this.state
       const episodeViewability = parentHandler.viewableItemsArray.includes(index)
 
       const centerIndex = info.viewableItems[0].index

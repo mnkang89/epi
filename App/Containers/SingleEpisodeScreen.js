@@ -2,8 +2,9 @@ import React, { Component, PropTypes } from 'react'
 import { View, TouchableOpacity, ActivityIndicator, Image, FlatList, Dimensions } from 'react-native'
 import { connect } from 'react-redux'
 
-import { getAccountId } from '../Services/Auth'
-import { getObjectDiff, getArrayDiff } from '../Lib/Utilities'
+import { logGenerator } from '../Services/Logger/LogGenerator'
+import { insertToLogQueue } from '../Services/Logger/LogSender'
+import { getArrayDiff } from '../Lib/Utilities'
 
 import styles from './Styles/FeedScreenStyle'
 import EpisodeDetail from '../Components/common/EpisodeDetail'
@@ -82,17 +83,6 @@ class SingleEpisodeScreen extends Component {
     }
   }
 
-  // shouldComponentUpdate (nextProps, nextState) {
-    // if (this.state.commentModalVisible !== nextState.commentModalVisible) {
-    //   return true
-    // }
-    // if (_.isEqual(this.props.items, nextProps.items)) {
-    //   return false
-    // } else {
-    //   return true
-    // }
-  // }
-
   render () {
     const { screen } = this.props.navigation.state.params
 
@@ -146,7 +136,6 @@ class SingleEpisodeScreen extends Component {
 
   _renderItemComponent = ({item, index}) => {
     const { account, detailType, singleType, pressedEpiIndex } = this.props.navigation.state.params
-    // const { contentId, account, detailType, singleType } = this.props
 
     return (
       <EpisodeDetail
@@ -185,6 +174,22 @@ class SingleEpisodeScreen extends Component {
 
     for (let i = 0; i < info.viewableItems.length; i++) {
       viewableItemsArray.push(info.viewableItems[i].index)
+    }
+
+    // Logging
+    if (info.viewableItems.length !== 0) {
+      const viewableIndex = info.viewableItems[0].index
+      const impLog = logGenerator(this.episodeRefs, viewableIndex, 'singleEpisode', 'Impression')
+      const viewLog = logGenerator(this.episodeRefs, viewableIndex, 'singleEpisode', 'View')
+
+      console.log(impLog)
+      insertToLogQueue(impLog)
+      clearTimeout(this.viewTimer)
+      this.viewTimer = setTimeout(() => {
+        console.log(viewLog)
+        insertToLogQueue(viewLog)
+        clearTimeout(this.viewTimer)
+      }, 3000)
     }
 
     this.viewableItemsArray = viewableItemsArray
